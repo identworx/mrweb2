@@ -38,14 +38,6 @@ export default function HeroSection() {
         <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-20 md:pb-28 lg:pb-32">
           <div className="max-w-xl lg:max-w-[620px]">
 
-            {/* Eyebrow */}
-            <div className="flex items-center gap-4 mb-7 md:mb-9">
-              <div className="w-12 h-px bg-pumpkin" />
-              <p className="font-accent text-white/70 text-[10px] md:text-[11px] tracking-[0.3em] uppercase">
-                Outdoor Textilien &amp; Möbel
-              </p>
-            </div>
-
             {/* Headline */}
             <h1 className="font-heading text-white text-[2.75rem] md:text-[4rem] lg:text-[5rem] xl:text-[5.5rem] font-extrabold leading-[1.02] tracking-[-0.02em] mb-6 md:mb-8">
               Stilvolles Leben
@@ -54,7 +46,7 @@ export default function HeroSection() {
             </h1>
 
             {/* Subline */}
-            <p className="font-body text-white/80 text-base md:text-lg leading-[1.7] mb-10 md:mb-12 max-w-[24rem] md:max-w-[28rem]">
+            <p className="font-body text-white/80 text-lg md:text-xl lg:text-[1.375rem] leading-[1.65] mb-10 md:mb-12 max-w-[26rem] md:max-w-[30rem]">
               Hochwertige Textilien, Kissen und Möbel für Terrasse,
               Garten und Balkon – mediterran inspiriert, zeitlos designt.
             </p>
