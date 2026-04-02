@@ -1,32 +1,32 @@
 export const categories = [
   {
     title: "Sitzkissen",
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=700&h=900&fit=crop&q=80",
     alt: "Hochwertige Sitzkissen für den Außenbereich",
   },
   {
     title: "Dekokissen",
-    image: "https://images.unsplash.com/photo-1586105251261-72a756497a11?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1586105251261-72a756497a11?w=700&h=900&fit=crop&q=80",
     alt: "Stilvolle Dekokissen für Outdoor-Lounges",
   },
   {
     title: "Bankauflagen",
-    image: "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1595515106969-1ce29566ff1c?w=700&h=900&fit=crop&q=80",
     alt: "Komfortable Bankauflagen in Premium-Qualität",
   },
   {
     title: "Gartenmöbel",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&h=900&fit=crop&q=80",
     alt: "Elegante Gartenmöbel für stilvolle Außenbereiche",
   },
   {
     title: "Loungesets",
-    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=700&h=900&fit=crop&q=80",
     alt: "Luxuriöse Loungesets für den Garten",
   },
   {
     title: "Outdoor-Textilien",
-    image: "https://images.unsplash.com/photo-1616137466211-f939a420be84?w=600&h=700&fit=crop",
+    image: "https://images.unsplash.com/photo-1616137466211-f939a420be84?w=700&h=900&fit=crop&q=80",
     alt: "Hochwertige Outdoor-Textilien von MOSAROMA",
   },
 ];
@@ -37,7 +37,7 @@ export const inspirations = [
     title: "Unser Katalog 2026",
     description:
       "Entdecken Sie die gesamte MOSAROMA-Kollektion auf einen Blick – sorgfältig kuratiert für anspruchsvolle Outdoor-Liebhaber.",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=900&h=1100&fit=crop&q=80",
     alt: "MOSAROMA Katalog 2026",
   },
   {
@@ -45,7 +45,7 @@ export const inspirations = [
     title: "Outdoor Trends 2026",
     description:
       "Warme Erdtöne, natürliche Materialien und organische Formen – die Trends des Jahres im Überblick.",
-    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=400&fit=crop&q=80",
     alt: "Outdoor Trends 2026",
   },
   {
@@ -53,7 +53,7 @@ export const inspirations = [
     title: "Pflege & Materialien",
     description:
       "So bleiben Ihre MOSAROMA-Produkte über Jahre hinweg schön. Unser Pflegeleitfaden für alle Materialien.",
-    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop&q=80",
     alt: "Pflege und Materialien Ratgeber",
   },
   {
@@ -61,40 +61,35 @@ export const inspirations = [
     title: "Ideen für Balkon & Terrasse",
     description:
       "Auch auf kleinem Raum entsteht großes Ambiente. Lassen Sie sich von unseren Gestaltungsideen inspirieren.",
-    image: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&h=400&fit=crop&q=80",
     alt: "Balkon und Terrasse Gestaltungsideen",
   },
 ];
 
 export const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=500&h=500&fit=crop",
+    src: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=900&fit=crop&q=80",
     alt: "Outdoor Lounge Setting",
-    span: "col-span-1 row-span-1",
+    span: "col-span-1 row-span-2",
   },
   {
-    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=500&h=500&fit=crop",
+    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop&q=80",
     alt: "Stilvoller Gartenbereich",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=500&h=600&fit=crop",
+    src: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&h=400&fit=crop&q=80",
     alt: "Premium Gartenmöbel Detail",
-    span: "col-span-1 row-span-2",
+    span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=500&h=500&fit=crop",
+    src: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop&q=80",
     alt: "Elegante Terrassengestaltung",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=500&h=500&fit=crop",
+    src: "https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?w=600&h=400&fit=crop&q=80",
     alt: "Mediterranean Outdoor Living",
-    span: "col-span-1 row-span-1",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=600&h=500&fit=crop",
-    alt: "Outdoor Textilien Kollektion",
     span: "col-span-1 row-span-1",
   },
 ];
