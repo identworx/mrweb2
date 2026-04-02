@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { navLinks } from "@/lib/data";
 
 export default function Header() {
@@ -37,7 +38,14 @@ export default function Header() {
         <div className="flex items-center justify-between h-[70px] md:h-[80px]">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
-            <MosароmaLogo className={`transition-all duration-300 ${scrolled ? "h-8" : "h-9"} md:${scrolled ? "h-9" : "h-10"} w-auto`} />
+            <Image
+              src="/mosaroma_logo.png"
+              alt="Mosaroma Logo"
+              width={200}
+              height={50}
+              priority
+              className={`transition-all duration-300 ${scrolled ? "h-8 md:h-9" : "h-9 md:h-10"} w-auto`}
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -129,38 +137,5 @@ export default function Header() {
         </nav>
       </div>
     </header>
-  );
-}
-
-/* Inline SVG Logo */
-function MosароmaLogo({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 320 60"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Horse silhouette */}
-      <g transform="translate(0, 2) scale(0.55)">
-        <path
-          d="M45 95 C42 88, 38 80, 35 72 C32 64, 30 58, 28 52 C26 46, 25 42, 26 38 C27 34, 30 30, 34 28 C38 26, 42 26, 46 24 C50 22, 52 18, 54 14 C56 10, 58 8, 62 8 C66 8, 68 10, 70 14 C72 18, 72 22, 70 26 C68 30, 66 34, 64 36 C62 38, 62 42, 64 46 C66 50, 70 54, 74 58 C78 62, 82 66, 84 72 C86 78, 86 82, 84 86 C82 90, 78 92, 74 94 C70 96, 66 96, 62 94 C58 92, 54 90, 50 92 C48 93, 46 94, 45 95Z"
-          fill="#E07B12"
-        />
-      </g>
-      {/* Text */}
-      <text
-        x="68"
-        y="43"
-        fontFamily="Montserrat, sans-serif"
-        fontWeight="800"
-        fontSize="34"
-        letterSpacing="3"
-        fill="#E07B12"
-        fontStyle="italic"
-      >
-        MOSAROMA
-      </text>
-    </svg>
   );
 }
