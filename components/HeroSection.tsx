@@ -1,13 +1,13 @@
 export default function HeroSection() {
   return (
     <section className="relative w-full h-screen min-h-[700px] max-h-[1100px] overflow-hidden">
-      {/* Background Image — outdoor lounge with cushions and textiles */}
+      {/* Background Image — luxury outdoor space with premium garden furniture */}
       <div
         className="absolute inset-0 bg-cover bg-no-repeat"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1920&h=1200&fit=crop&crop=center&q=85')",
-          backgroundPosition: "center 40%",
+            "url('/Luxury-Outdoor-Space-with-Premium-Garden-Furniture.jpg')",
+          backgroundPosition: "center 45%",
         }}
       />
 
