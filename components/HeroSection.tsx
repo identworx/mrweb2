@@ -11,43 +11,57 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Gradient overlays — refined for text readability without killing the image */}
-      {/* Bottom: text backdrop */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/25 to-transparent" />
-      {/* Top: header scrim, constrained height */}
+      {/* Gradient overlays */}
+      {/* Bottom-left: strong localized scrim behind text area */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 28%, rgba(0,0,0,0.18) 55%, transparent 75%)",
+        }}
+      />
+      {/* Left edge: subtle side scrim for text contrast */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.10) 35%, transparent 60%)",
+        }}
+      />
+      {/* Top: header scrim */}
       <div
         className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/25 to-transparent"
-        style={{ height: "30%" }}
+        style={{ height: "28%" }}
       />
 
-      {/* Content — bottom-aligned with generous breathing room */}
+      {/* Content */}
       <div className="relative h-full flex items-end">
-        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-28 md:pb-36 lg:pb-40">
-          <div className="max-w-xl lg:max-w-2xl">
+        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-24 md:pb-32 lg:pb-36">
+          <div className="max-w-xl lg:max-w-[600px]">
 
-            {/* Eyebrow — accent line + label */}
-            <div className="flex items-center gap-4 mb-8 md:mb-10">
+            {/* Eyebrow */}
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
               <div className="w-10 h-px bg-pumpkin" />
-              <p className="font-accent text-white/50 text-[10px] md:text-[11px] tracking-[0.35em] uppercase">
+              <p className="font-accent text-white/60 text-[10px] md:text-[11px] tracking-[0.3em] uppercase">
                 Outdoor Textilien &amp; Möbel
               </p>
             </div>
 
-            {/* Headline — two-line, strong typographic weight */}
-            <h1 className="font-heading text-white text-[2.5rem] md:text-[3.5rem] lg:text-[4.5rem] xl:text-[5rem] font-bold leading-[1.04] tracking-[-0.015em] mb-6 md:mb-8">
+            {/* Headline */}
+            <h1 className="font-heading text-white text-[2.5rem] md:text-[3.5rem] lg:text-[4.25rem] xl:text-[4.75rem] font-bold leading-[1.06] tracking-[-0.015em] mb-5 md:mb-7">
               Stilvolles Leben
               <br />
-              <span className="text-white/85">im Freien</span>
+              im Freien
             </h1>
 
-            {/* Subline — concise, brand-positioning */}
-            <p className="font-body text-white/50 text-base md:text-lg leading-[1.75] mb-10 md:mb-14 max-w-sm md:max-w-md">
+            {/* Subline */}
+            <p className="font-body text-white/70 text-[0.9375rem] md:text-[1.0625rem] leading-[1.75] mb-8 md:mb-11 max-w-sm md:max-w-[26rem]">
               Hochwertige Textilien, Kissen und Möbel für Terrasse,
               Garten und Balkon – mediterran inspiriert, zeitlos designt.
             </p>
 
-            {/* CTA — single primary for clarity, secondary as text link */}
-            <div className="flex flex-wrap items-center gap-6">
+            {/* CTA */}
+            <div className="flex flex-wrap items-center gap-5 md:gap-6">
               <a href="#kollektion" className="btn-primary">
                 Kollektion entdecken
                 <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -56,7 +70,7 @@ export default function HeroSection() {
               </a>
               <a
                 href="#produkte"
-                className="group inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45 hover:text-white/80 transition-colors duration-400"
+                className="group inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60 hover:text-white transition-colors duration-400"
               >
                 Alle Produkte
                 <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="group-hover:translate-x-0.5 transition-transform duration-300">
@@ -68,7 +82,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scroll indicator — minimal */}
+      {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
         <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
       </div>
