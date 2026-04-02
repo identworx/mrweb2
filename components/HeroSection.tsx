@@ -11,17 +11,17 @@ export default function HeroSection() {
       />
 
       {/* Layered gradient overlays for depth */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-black/5" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/25 via-transparent to-transparent" />
 
       {/* Content */}
       <div className="relative h-full flex items-end">
-        <div className="mx-auto max-w-[1400px] w-full px-5 md:px-10 pb-20 md:pb-28 lg:pb-32">
+        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 pb-20 md:pb-28 lg:pb-32">
           <div className="max-w-2xl">
             {/* Accent line + label */}
             <div className="flex items-center gap-4 mb-6">
               <div className="w-10 h-px bg-pumpkin" />
-              <p className="font-accent text-white/70 text-xs tracking-[0.3em] uppercase">
+              <p className="font-accent text-white/60 text-[11px] tracking-[0.3em] uppercase">
                 Kollektion 2026
               </p>
             </div>
@@ -32,7 +32,7 @@ export default function HeroSection() {
               Outdoor Living
             </h1>
 
-            <p className="font-body text-white/75 text-lg md:text-xl leading-relaxed mb-10 max-w-lg">
+            <p className="font-body text-white/70 text-lg md:text-xl leading-relaxed mb-10 max-w-lg">
               Design trifft Performance – stilvolle Lösungen für
               anspruchsvolle Außenbereiche.
             </p>
@@ -40,7 +40,7 @@ export default function HeroSection() {
             <div className="flex flex-wrap items-center gap-4">
               <a href="#kollektion" className="btn-primary">
                 Kollektion entdecken
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="ml-1">
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <path d="M4.5 12h15m0 0l-6-6m6 6l-6 6" />
                 </svg>
               </a>
@@ -54,17 +54,17 @@ export default function HeroSection() {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="font-heading text-white/40 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
-        <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent animate-pulse" />
+        <span className="font-heading text-white/30 text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+        <div className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent animate-pulse" />
       </div>
 
       {/* Side accent */}
       <div className="hidden lg:flex absolute right-10 top-1/2 -translate-y-1/2 flex-col items-center gap-3">
-        <div className="w-px h-16 bg-white/20" />
-        <span className="font-accent text-white/30 text-[10px] tracking-[0.3em] uppercase writing-mode-vertical" style={{ writingMode: "vertical-rl" }}>
+        <div className="w-px h-16 bg-white/15" />
+        <span className="font-accent text-white/20 text-[10px] tracking-[0.3em] uppercase" style={{ writingMode: "vertical-rl" }}>
           MOSAROMA
         </span>
-        <div className="w-px h-16 bg-white/20" />
+        <div className="w-px h-16 bg-white/15" />
       </div>
     </section>
   );

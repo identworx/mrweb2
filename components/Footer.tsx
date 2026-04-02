@@ -3,42 +3,52 @@ import { footerLinks } from "@/lib/data";
 
 export default function Footer() {
   return (
-    <footer className="bg-white">
-      {/* Subtle top border */}
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="h-px bg-gradient-to-r from-transparent via-light-gray to-transparent" />
-      </div>
-
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+    <footer className="bg-anthracite">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         {/* Main footer */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8 lg:gap-12 py-16 md:py-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8 lg:gap-12 pt-20 pb-16 md:pt-28 md:pb-20">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-3 mb-4 lg:mb-0">
             <Image
               src="/mosaroma_logo.png"
               alt="Mosaroma Logo"
-              width={160}
-              height={40}
-              className="h-9 w-auto mb-5"
+              width={180}
+              height={45}
+              className="h-10 w-auto mb-6 brightness-0 invert"
             />
-            <p className="font-body text-text-gray text-sm leading-[1.8] max-w-xs">
+            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-6">
               Premium Outdoor Living – stilvolle Lösungen für anspruchsvolle
               Außenbereiche seit 2020.
             </p>
+            {/* Social */}
+            <div className="flex items-center gap-4">
+              {["facebook", "instagram", "pinterest", "youtube", "linkedin"].map(
+                (social) => (
+                  <a
+                    key={social}
+                    href="#"
+                    aria-label={social}
+                    className="text-white/25 hover:text-pumpkin transition-colors duration-400"
+                  >
+                    <SocialIcon name={social} />
+                  </a>
+                )
+              )}
+            </div>
           </div>
 
           {/* Link columns */}
           {Object.values(footerLinks).map((section) => (
             <div key={section.title} className="lg:col-span-2">
-              <h4 className="font-heading text-anthracite text-[11px] font-semibold uppercase tracking-[0.15em] mb-5 pb-3 border-b border-light-gray">
+              <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
                 {section.title}
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-3.5">
                 {section.links.map((link) => (
                   <li key={link}>
                     <a
                       href="#"
-                      className="font-body text-text-gray text-sm hover:text-pumpkin transition-colors duration-300"
+                      className="font-body text-white/35 text-sm hover:text-white/80 transition-colors duration-400"
                     >
                       {link}
                     </a>
@@ -50,10 +60,10 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div className="col-span-2 lg:col-span-3">
-            <h4 className="font-heading text-anthracite text-[11px] font-semibold uppercase tracking-[0.15em] mb-5 pb-3 border-b border-light-gray">
+            <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
               Newsletter
             </h4>
-            <p className="font-body text-text-gray text-sm leading-[1.8] mb-5">
+            <p className="font-body text-white/35 text-sm leading-[1.8] mb-5">
               Exklusive Angebote, Neuheiten und Inspirationen rund um
               Outdoor Living.
             </p>
@@ -61,9 +71,9 @@ export default function Footer() {
               <input
                 type="email"
                 placeholder="E-Mail-Adresse"
-                className="flex-1 min-w-0 px-4 py-2.5 bg-light-gray border-0 font-body text-sm text-anthracite placeholder:text-medium-gray focus:outline-none focus:ring-1 focus:ring-pumpkin/30"
+                className="flex-1 min-w-0 px-4 py-3 bg-white/[0.06] border border-white/[0.08] font-body text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-pumpkin/40 transition-colors duration-300"
               />
-              <button className="px-5 py-2.5 bg-anthracite text-white font-heading text-[10px] font-semibold uppercase tracking-[0.15em] hover:bg-pumpkin transition-colors duration-300 flex-shrink-0">
+              <button className="px-5 py-3 bg-pumpkin text-white font-heading text-[10px] font-semibold uppercase tracking-[0.15em] hover:bg-burnt-orange transition-colors duration-300 flex-shrink-0">
                 OK
               </button>
             </div>
@@ -71,35 +81,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-light-gray py-8 flex flex-col md:flex-row items-center justify-between gap-5">
-          <span className="font-body text-medium-gray text-xs tracking-wide">
+        <div className="border-t border-white/[0.06] py-8 flex flex-col md:flex-row items-center justify-between gap-5">
+          <span className="font-body text-white/20 text-xs tracking-wide">
             &copy; 2026 MOSAROMA. Alle Rechte vorbehalten.
           </span>
 
-          {/* Social */}
-          <div className="flex items-center gap-5">
-            {["facebook", "instagram", "pinterest", "youtube", "linkedin"].map(
-              (social) => (
-                <a
-                  key={social}
-                  href="#"
-                  aria-label={social}
-                  className="text-medium-gray hover:text-pumpkin transition-colors duration-300"
-                >
-                  <SocialIcon name={social} />
-                </a>
-              )
-            )}
-          </div>
-
           {/* Legal links */}
-          <div className="flex flex-wrap justify-center gap-5 text-xs">
+          <div className="flex flex-wrap justify-center gap-6 text-xs">
             {["Datenschutz", "Nutzungsbedingungen", "Impressum"].map(
               (item) => (
                 <a
                   key={item}
                   href="#"
-                  className="font-body text-medium-gray hover:text-anthracite transition-colors duration-300"
+                  className="font-body text-white/20 hover:text-white/50 transition-colors duration-400"
                 >
                   {item}
                 </a>

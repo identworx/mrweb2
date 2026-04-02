@@ -116,7 +116,7 @@ html {
   padding: 1rem 2.5rem;
   background-color: transparent;
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.75rem;
@@ -127,9 +127,9 @@ html {
 }
 
 .btn-outline-white:hover {
-  background-color: white;
-  color: var(--color-anthracite);
-  border-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 /* Decorative line */
