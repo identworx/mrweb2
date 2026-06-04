@@ -10,9 +10,7 @@ const ALLOWED_MIME_TYPES = [
   "image/png",
   "image/gif",
   "image/webp",
-  "image/svg+xml",
   "image/avif",
-  "application/pdf",
 ];
 
 function sanitizeFilename(filename: string): string {
@@ -26,6 +24,9 @@ function sanitizeFilename(filename: string): string {
 }
 
 export async function GET() {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
+
   try {
     const assets = await prisma.mediaAsset.findMany({
       orderBy: { createdAt: "desc" },

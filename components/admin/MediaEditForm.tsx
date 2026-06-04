@@ -147,7 +147,7 @@ export default function MediaEditForm({ asset }: { asset: MediaAssetData | null 
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*,.pdf,.svg"
+              accept="image/jpeg,image/png,image/gif,image/webp,image/avif"
               onChange={handleFileChange}
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
             />
