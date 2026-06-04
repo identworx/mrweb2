@@ -4,7 +4,7 @@ interface CollectionCardProps {
   name: string;
   slug: string;
   description: string;
-  moodColors: [string, string, string, string];
+  moodColors: string[];
   fabric: string;
   image: string;
   alt: string;

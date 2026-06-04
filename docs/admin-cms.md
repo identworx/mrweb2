@@ -65,7 +65,7 @@ pm2 restart mosaroma
 | `NavigationItem`  | Einzelne Menu-Eintraege                        |
 | `Page`            | CMS-Seiten mit Status und SEO-Feldern         |
 | `PageSection`     | Sektionen innerhalb einer Seite               |
-| `Collection`      | Stoff-Kollektionen                            |
+| `Collection`      | Stoff-Kollektionen (mit Hero/Card-Bild, MoodColors, SEO) |
 | `ProductGroup`    | Produktkategorien (Dekokissen, Hochlehner...) |
 | `Product`         | Einzelprodukte                                |
 | `ProductImage`    | Produktbilder-Galerie                         |
@@ -85,7 +85,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 1 SiteSettings-Eintrag
 - 10 Seiten (Home, Kollektionen, Materialien, Kataloge, Kontakt, etc.)
 - 4 Navigations-Menues (Header, Footer, Service, Legal) mit Eintraegen
-- 7 Kollektionen
+- 7 Kollektionen (mit Eyebrow, Beschreibungen, MoodColors, SEO-Daten)
 - 4 Materialien
 - 9 Produktkategorien
 - 1 Footer-Settings
@@ -171,11 +171,11 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.jpg`)
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
 
-## 9. Frontend-Anbindung (Phase 2A — aktiv)
+## 9. Frontend-Anbindung (Phase 2A + 2B — aktiv)
 
 ### Status
 
-Das oeffentliche Frontend liest jetzt Daten aus der CMS-Datenbank. Alle 15 oeffentlichen Seiten sind angebunden. Wenn die DB leer ist oder CMS-Felder fehlen, greifen automatisch die statischen Fallback-Daten.
+Das oeffentliche Frontend liest Daten aus der CMS-Datenbank. Alle 15 oeffentlichen Seiten sind angebunden (Phase 2A), Kollektionen sind vollstaendig datenbankfaehig (Phase 2B). Wenn die DB leer ist oder CMS-Felder fehlen, greifen automatisch die statischen Fallback-Daten.
 
 ### Revalidierung (ISR)
 
@@ -195,8 +195,8 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | `media-url.ts`     | `getMediaUrl(asset, fallback)`                            | Aktiv (URL-Aufloesung) |
 | `public-layout.ts` | `getPublicLayoutData()`                                   | Aktiv (alle Seiten) |
 | `page-hero.ts`     | `getPageHeroData(slug, fallbackKey)`                      | Aktiv (alle Seiten) |
-| `collections.ts`   | `getCollections()`, `getCollectionBySlug()`                | Noch nicht (Phase 2B) |
-| `products.ts`      | `getProducts()`, `getProductBySlug()`                     | Noch nicht (Phase 2B) |
+| `collections.ts`   | `getPublishedCollections()`, `getCollectionBySlug()`, `getCollectionStaticParams()`, `mapCollectionForFrontend()` | Aktiv (Phase 2B) |
+| `products.ts`      | `getProducts()`, `getProductBySlug()`                     | Noch nicht (Phase 2C) |
 | `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht (Phase 2C) |
 
 ### Was aus der DB gelesen wird
@@ -219,6 +219,16 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | Hero-Bild              | `Page.heroImage` (MediaAsset)    | `lib/mosaroma/pageHeroes.ts`          |
 | SEO-Titel (pro Seite)  | `Page.seoTitle`                  | Globaler Default                      |
 | SEO-Beschreibung       | `Page.seoDescription`            | Globaler Default                      |
+| Kollektionen-Uebersicht| `Collection` (PUBLISHED, order)  | `lib/mosaroma/collections.ts`         |
+| Kollektion-Name        | `Collection.name`                | `lib/mosaroma/collections.ts`         |
+| Kollektion-Eyebrow     | `Collection.eyebrow`             | "Kollektion {number}"                 |
+| Kollektion-Beschreibung| `Collection.shortDescription`    | `lib/mosaroma/collections.ts`         |
+| Kollektion-Langtext    | `Collection.longDescription`     | `lib/mosaroma/collections.ts`         |
+| Kollektion-Hero-Bild   | `Collection.heroImage` (MediaAsset) | `/images/placeholders/collections/hero/` |
+| Kollektion-Card-Bild   | `Collection.cardImage` (MediaAsset) | `/images/placeholders/collections/`  |
+| Kollektion-MoodColors  | `Collection.moodColors` (JSON)   | `lib/mosaroma/collections.ts`         |
+| Kollektion-Stoff       | `Collection.fabric`              | `lib/mosaroma/collections.ts`         |
+| Kollektion-SEO         | `Collection.seoTitle/Description`| Name-basierter Fallback               |
 
 ### Architektur-Muster
 
@@ -246,6 +256,12 @@ Server Page (async) → getPublicLayoutData() + getPageHeroData()
 | SEO-Titel einer Seite         | Seiten → Seite waehlen → SEO Titel   |
 | Globaler SEO-Titel            | Einstellungen → Standard SEO Titel   |
 | Kontaktdaten                  | Einstellungen → E-Mail, Telefon, Adresse |
+| Kollektion-Name/Beschreibung  | Kollektionen → Kollektion waehlen → Name, Kurzbeschreibung, Langbeschreibung |
+| Kollektion-Hero-Bild          | Kollektionen → Kollektion waehlen → Bilder → Hero-Bild |
+| Kollektion-Card-Bild          | Kollektionen → Kollektion waehlen → Bilder → Card-Bild |
+| Kollektion-Stimmungsfarben    | Kollektionen → Kollektion waehlen → Stimmungsfarben (Farben hinzufuegen/entfernen) |
+| Kollektion-SEO                | Kollektionen → Kollektion waehlen → SEO Titel / Beschreibung |
+| Kollektion veroeffentlichen   | Kollektionen → Kollektion waehlen → Status auf PUBLISHED setzen |
 
 ### Persistenz in Produktion (TODO)
 
@@ -292,10 +308,20 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - Hero-Bereich (Eyebrow, Headline, Einleitungstext, Bild) pro Seite aus CMS
 - SEO-Metadaten (Titel + Beschreibung) global und pro Seite aus CMS
 - Admin-Hinweistexte bei CMS-relevanten Feldern
+
+### Frontend (Phase 2B)
+- /kollektionen liest Kollektion-Uebersicht aus DB (nur PUBLISHED, sortiert nach order)
+- /kollektionen/[slug] liest Kollektion-Kopfdaten aus DB (Name, Eyebrow, Beschreibungen, Hero, MoodColors, SEO)
+- Kollektion-Hero-Bild und Card-Bild aus MediaAsset mit Fallback auf Platzhalter
+- MoodColors robust geparst (JSON Array, Komma-String, null)
+- Kollektion-SEO dynamisch aus DB mit Fallback
+- generateStaticParams aus DB + statischen Kollektionen kombiniert
+- Admin: Hero/Card-Bildauswahl mit Vorschau, Mood-Color-Editor mit Farbfeldern
+- Produkte auf Kollektions-Detailseiten noch aus statischen Daten (Phase 2C)
 - TypeScript-Build ohne Fehler (269 Routen)
 - ESLint ohne Fehler
 
-## 11. Was noch fehlt (Phase 2B / 2C / spaeter)
+## 11. Was noch fehlt (Phase 2C / spaeter)
 
 ### Phase 2A — erledigt
 - [x] Frontend mit DB verbinden (SiteSettings, Logo, Navigation, Footer, Hero, SEO)
@@ -304,14 +330,25 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - [x] Admin-Hinweistexte fuer CMS-relevante Felder
 - [x] ESLint fehlerfrei
 
-### Phase 2B — Kollektionen, Produkte, Produktgruppen
-1. **Kollektionen-Seiten** — `/kollektionen` und `/kollektionen/[slug]` mit DB-Daten
-2. **Produktkategorien-Seiten** — `/produktkategorien` und `/produktkategorien/[slug]` mit DB-Daten
-3. **Produkt-Detailseiten** — `/produkte/[slug]` mit DB-Daten und Galerie
-4. **Produkt-Galerie** — Mehrere Bilder pro Produkt hochladen und verwalten
-5. **Bild-Zuweisung in Formularen** — Hero/Card-Image-Picker fuer Kollektionen, Produkte
+### Phase 2B — erledigt
+- [x] Kollektionen-Uebersicht aus DB (`/kollektionen`)
+- [x] Kollektion-Detailseite aus DB (`/kollektionen/[slug]`)
+- [x] Kollektion-Hero/Card-Bilder aus MediaAsset mit Fallback
+- [x] MoodColors robust (JSON Array, Komma-String, null)
+- [x] Kollektion-SEO dynamisch aus DB
+- [x] generateStaticParams aus DB + Fallback
+- [x] Admin: Hero/Card-Bildauswahl mit Vorschau
+- [x] Admin: Mood-Color-Editor (hinzufuegen/entfernen/bearbeiten)
+- [x] Admin: Eyebrow-Feld, Public-URL-Link
+- [x] Seed-Daten erweitert (Beschreibungen, SEO, Eyebrow)
+- [x] Prisma-Migration fuer `Collection.eyebrow`
 
-### Phase 2C — Formulare, Delete, weitere Features
+### Phase 2C — Produkte, Produktgruppen, Formulare
+1. **Produktkategorien-Seiten** — `/produktkategorien` und `/produktkategorien/[slug]` mit DB-Daten
+2. **Produkt-Detailseiten** — `/produkte/[slug]` mit DB-Daten und Galerie
+3. **Produkt-Galerie** — Mehrere Bilder pro Produkt hochladen und verwalten
+4. **Produkte auf Kollektions-Detailseiten** — Statische Produkte durch DB-Produkte ersetzen
+5. **Bild-Zuweisung fuer Produkte** — Hero/Card-Image-Picker
 6. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
 7. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
 8. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)

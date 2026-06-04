@@ -212,6 +212,7 @@ model Collection {
   slug             String     @unique
   name             String
   number           Int?
+  eyebrow          String?
   subtitle         String?
   shortDescription String?
   longDescription  String?

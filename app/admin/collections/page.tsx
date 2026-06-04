@@ -12,6 +12,7 @@ export default async function CollectionsListPage() {
     orderBy: { order: "asc" },
     include: {
       _count: { select: { products: true } },
+      cardImage: { select: { url: true } },
     },
   });
 
@@ -37,6 +38,9 @@ export default async function CollectionsListPage() {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Bild
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -52,7 +56,10 @@ export default async function CollectionsListPage() {
                 Farben
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Reihenfolge
+                Nr.
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -60,7 +67,7 @@ export default async function CollectionsListPage() {
             {collections.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={8}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Kollektionen vorhanden.
@@ -71,12 +78,24 @@ export default async function CollectionsListPage() {
               const colors = Array.isArray(collection.moodColors)
                 ? (collection.moodColors as string[])
                 : [];
+              const cardUrl =
+                collection.cardImage?.url ||
+                `/images/placeholders/collections/${collection.slug}.svg`;
 
               return (
                 <tr
                   key={collection.id}
                   className="hover:bg-gray-50 transition-colors"
                 >
+                  <td className="px-6 py-4">
+                    <div className="w-16 h-10 rounded overflow-hidden bg-gray-100">
+                      <img
+                        src={cardUrl}
+                        alt={collection.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </td>
                   <td className="px-6 py-4">
                     <Link
                       href={`/admin/collections/${collection.id}`}
@@ -115,6 +134,25 @@ export default async function CollectionsListPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {collection.order}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <Link
+                        href={`/admin/collections/${collection.id}`}
+                        className="text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                      >
+                        Bearbeiten
+                      </Link>
+                      <a
+                        href={`/kollektionen/${collection.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Öffentliche Seite ansehen"
+                      >
+                        ↗
+                      </a>
+                    </div>
                   </td>
                 </tr>
               );

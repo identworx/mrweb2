@@ -11,15 +11,22 @@ export default async function CollectionEditPage({
   const { id } = await params;
 
   const isNew = id === "new";
-  const collection = isNew ? null : await prisma.collection.findUnique({ where: { id } });
+  const [collection, mediaAssets] = await Promise.all([
+    isNew ? null : prisma.collection.findUnique({ where: { id } }),
+    prisma.mediaAsset.findMany({
+      orderBy: { createdAt: "desc" },
+      select: { id: true, url: true, alt: true, originalName: true },
+    }),
+  ]);
 
   if (!isNew && !collection) {
     redirect("/admin/collections");
   }
 
-  const moodColors = collection && Array.isArray(collection.moodColors)
-    ? (collection.moodColors as string[])
-    : [];
+  const moodColors =
+    collection && Array.isArray(collection.moodColors)
+      ? (collection.moodColors as string[])
+      : [];
 
   const collectionData = collection
     ? {
@@ -27,30 +34,36 @@ export default async function CollectionEditPage({
         name: collection.name,
         slug: collection.slug,
         number: collection.number ?? 0,
+        eyebrow: collection.eyebrow ?? "",
         subtitle: collection.subtitle ?? "",
         shortDescription: collection.shortDescription ?? "",
         longDescription: collection.longDescription ?? "",
-        moodColors: moodColors.join(", "),
+        moodColors,
         fabric: collection.fabric ?? "",
         status: collection.status,
         seoTitle: collection.seoTitle ?? "",
         seoDescription: collection.seoDescription ?? "",
         order: collection.order,
+        heroImageId: collection.heroImageId ?? "",
+        cardImageId: collection.cardImageId ?? "",
       }
     : {
         id: "",
         name: "",
         slug: "",
         number: 0,
+        eyebrow: "",
         subtitle: "",
         shortDescription: "",
         longDescription: "",
-        moodColors: "",
+        moodColors: [],
         fabric: "",
         status: "DRAFT",
         seoTitle: "",
         seoDescription: "",
         order: 0,
+        heroImageId: "",
+        cardImageId: "",
       };
 
   return (
@@ -68,7 +81,7 @@ export default async function CollectionEditPage({
         </h1>
       </div>
 
-      <CollectionEditForm collection={collectionData} />
+      <CollectionEditForm collection={collectionData} mediaAssets={mediaAssets} />
     </div>
   );
 }

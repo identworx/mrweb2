@@ -11,6 +11,7 @@ export async function GET() {
       orderBy: { order: "asc" },
       include: {
         _count: { select: { products: true } },
+        cardImage: { select: { url: true } },
       },
     });
     return NextResponse.json(collections);
@@ -34,9 +35,12 @@ export async function POST(request: NextRequest) {
       name: data.name,
       slug: data.slug,
       number: data.number ? parseInt(data.number, 10) : null,
+      eyebrow: data.eyebrow || null,
       subtitle: data.subtitle || null,
       shortDescription: data.shortDescription || null,
       longDescription: data.longDescription || null,
+      heroImageId: data.heroImageId || null,
+      cardImageId: data.cardImageId || null,
       moodColors: data.moodColors || null,
       fabric: data.fabric || null,
       status: data.status || "DRAFT",

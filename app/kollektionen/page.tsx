@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import CollectionCard from "@/components/CollectionCard";
-import { collections } from "@/lib/mosaroma/collections";
+import { getPublishedCollections } from "@/lib/cms/collections";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 
@@ -20,9 +20,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KollektionenPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, collections] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kollektionen", "kollektionen"),
+    getPublishedCollections(),
   ]);
 
   return (
@@ -45,11 +46,11 @@ export default async function KollektionenPage() {
                   key={collection.slug}
                   name={collection.name}
                   slug={collection.slug}
-                  description={collection.description}
+                  description={collection.shortDescription}
                   moodColors={collection.moodColors}
                   fabric={collection.fabric}
-                  image={collection.image}
-                  alt={collection.alt}
+                  image={collection.cardImage}
+                  alt={collection.cardAlt}
                 />
               ))}
             </div>
