@@ -55,4 +55,28 @@ export const pageHeroes: Record<string, PageHeroData> = {
     image: "/images/placeholders/page-heroes/kontakt-hero.svg",
     alt: "Mosaroma Kontakt Hero Platzhalter",
   },
+  produktmasse: {
+    eyebrow: "Service",
+    title: "Produktmaße",
+    description:
+      "Übersicht der wichtigsten Abmessungen für Mosaroma Produktformen.",
+    image: "/images/placeholders/page-heroes/produktmasse-hero.svg",
+    alt: "Mosaroma Produktmaße Hero Platzhalter mit technischen Linien und Maßangaben",
+  },
+  pflegeGarantie: {
+    eyebrow: "Service",
+    title: "Pflege & Garantie",
+    description:
+      "Hinweise zur Reinigung, Lagerung und Garantie von Mosaroma Outdoor-Produkten.",
+    image: "/images/placeholders/page-heroes/pflege-garantie-hero.svg",
+    alt: "Mosaroma Pflege und Garantie Hero Platzhalter",
+  },
+  stoffTechnischeDaten: {
+    eyebrow: "Service",
+    title: "Stoff- & technische Daten",
+    description:
+      "Technische Informationen zu Stoffqualitäten, Materialaufbau und Prüfwerten.",
+    image: "/images/placeholders/page-heroes/stoff-technische-daten-hero.svg",
+    alt: "Mosaroma Stoff und technische Daten Hero Platzhalter",
+  },
 };

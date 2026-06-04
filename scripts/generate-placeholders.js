@@ -658,6 +658,99 @@ function pageHeroKontakt() {
   });
 }
 
+function pageHeroProduktmasse() {
+  const w = 1920;
+  let shapes = '';
+  // Technical dimension lines
+  const lines = [
+    [w * 0.15, 250, w * 0.45, 250], [w * 0.15, 400, w * 0.45, 400],
+    [w * 0.55, 200, w * 0.55, 500], [w * 0.75, 200, w * 0.75, 500],
+  ];
+  lines.forEach(([x1, y1, x2, y2]) => {
+    shapes += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+  });
+  // Dimension arrows / markers
+  const markers = [
+    [w * 0.15, 250, 8], [w * 0.45, 250, 8], [w * 0.15, 400, 8], [w * 0.45, 400, 8],
+    [w * 0.55, 200, 8], [w * 0.55, 500, 8], [w * 0.75, 200, 8], [w * 0.75, 500, 8],
+  ];
+  markers.forEach(([x, y, r]) => {
+    shapes += `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>`;
+  });
+  // Product silhouettes (bench cushion, pouf)
+  shapes += `<rect x="${w * 0.2}" y="280" width="360" height="90" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
+  shapes += `<rect x="${w * 0.6}" y="300" width="120" height="120" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
+  // Measurement text placeholders
+  shapes += `<line x1="${w * 0.2}" y1="260" x2="${w * 0.2 + 60}" y2="260" stroke="rgba(224,123,18,0.3)" stroke-width="2"/>`;
+  shapes += `<line x1="${w * 0.6}" y1="280" x2="${w * 0.6 + 50}" y2="280" stroke="rgba(224,123,18,0.3)" stroke-width="2"/>`;
+  return pageHeroPlaceholder({
+    bgColor1: '#3D4045',
+    bgColor2: '#2D3035',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroPflegeGarantie() {
+  const w = 1920, h = 720;
+  let shapes = '';
+  // Water droplets on fabric surface
+  const drops = [
+    [w * 0.25, 280, 14], [w * 0.32, 340, 10], [w * 0.28, 400, 12],
+    [w * 0.65, 260, 11], [w * 0.72, 320, 13], [w * 0.68, 390, 9],
+    [w * 0.45, 300, 8], [w * 0.52, 370, 10], [w * 0.80, 350, 7],
+  ];
+  drops.forEach(([x, y, r]) => {
+    shapes += `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" stroke-width="0.6"/>`;
+    shapes += `<circle cx="${x - r * 0.25}" cy="${y - r * 0.25}" r="${r * 0.3}" fill="rgba(255,255,255,0.07)"/>`;
+  });
+  // Fabric texture lines (horizontal weave)
+  for (let y = 160; y < h - 100; y += 16) {
+    const opacity = (y % 32 === 0) ? 0.04 : 0.02;
+    shapes += `<line x1="${w * 0.1}" y1="${y}" x2="${w * 0.9}" y2="${y}" stroke="rgba(255,255,255,${opacity})" stroke-width="0.6"/>`;
+  }
+  // Shield / protection symbol
+  shapes += `<path d="M${w * 0.5},220 L${w * 0.5 + 40},250 L${w * 0.5 + 40},310 Q${w * 0.5 + 40},340 ${w * 0.5},360 Q${w * 0.5 - 40},340 ${w * 0.5 - 40},310 L${w * 0.5 - 40},250 Z" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>`;
+  return pageHeroPlaceholder({
+    bgColor1: '#3A4540',
+    bgColor2: '#2A3530',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroStoffTechnischeDaten() {
+  const w = 1920, h = 720;
+  let shapes = '';
+  // Technical grid pattern
+  for (let x = w * 0.15; x < w * 0.85; x += 60) {
+    shapes += `<line x1="${x}" y1="160" x2="${x}" y2="${h - 100}" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>`;
+  }
+  for (let y = 160; y < h - 100; y += 60) {
+    shapes += `<line x1="${w * 0.15}" y1="${y}" x2="${w * 0.85}" y2="${y}" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/>`;
+  }
+  // Data point circles at intersections
+  const dataPoints = [
+    [w * 0.27, 280], [w * 0.39, 340], [w * 0.51, 220], [w * 0.63, 380],
+    [w * 0.75, 260], [w * 0.33, 440], [w * 0.57, 400], [w * 0.69, 320],
+  ];
+  dataPoints.forEach(([x, y]) => {
+    shapes += `<circle cx="${x}" cy="${y}" r="4" fill="rgba(224,123,18,0.25)" stroke="rgba(224,123,18,0.4)" stroke-width="0.8"/>`;
+  });
+  // Connecting lines between data points
+  for (let i = 0; i < dataPoints.length - 1; i++) {
+    shapes += `<line x1="${dataPoints[i][0]}" y1="${dataPoints[i][1]}" x2="${dataPoints[i + 1][0]}" y2="${dataPoints[i + 1][1]}" stroke="rgba(224,123,18,0.15)" stroke-width="0.8"/>`;
+  }
+  // Fabric weave pattern overlay (diagonal)
+  for (let i = 0; i < 30; i++) {
+    const x = w * 0.1 + i * 60;
+    shapes += `<line x1="${x}" y1="160" x2="${x + 200}" y2="${h - 100}" stroke="rgba(255,255,255,0.015)" stroke-width="0.6"/>`;
+  }
+  return pageHeroPlaceholder({
+    bgColor1: '#3D3838',
+    bgColor2: '#2D2828',
+    extraShapes: shapes,
+  });
+}
+
 function pageHeroDefault() {
   return pageHeroPlaceholder({
     bgColor1: '#3D3D3D',
@@ -813,7 +906,48 @@ gen('page-heroes', 'ueber-uns-hero.svg', pageHeroUeberUns());
 gen('page-heroes', 'kataloge-hero.svg', pageHeroKataloge());
 gen('page-heroes', 'neuigkeiten-hero.svg', pageHeroNeuigkeiten());
 gen('page-heroes', 'kontakt-hero.svg', pageHeroKontakt());
+gen('page-heroes', 'produktmasse-hero.svg', pageHeroProduktmasse());
+gen('page-heroes', 'pflege-garantie-hero.svg', pageHeroPflegeGarantie());
+gen('page-heroes', 'stoff-technische-daten-hero.svg', pageHeroStoffTechnischeDaten());
 gen('page-heroes', 'default-hero.svg', pageHeroDefault());
+
+// ── Service page images ──
+console.log('\n  Service page images:');
+gen('service', 'produktmasse-bankauflagen.svg', premiumPlaceholder({
+  w: 800, h: 400,
+  bgColor1: '#3D4045', bgColor2: '#2D3035', label: 'Bankauflagen',
+  extraShapes: `<rect x="200" y="140" width="400" height="80" rx="6" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <line x1="200" y1="120" x2="600" y2="120" stroke="rgba(224,123,18,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="200" y1="240" x2="600" y2="240" stroke="rgba(224,123,18,0.3)" stroke-width="1" stroke-dasharray="4,4"/>`,
+}));
+gen('service', 'produktmasse-poufs.svg', premiumPlaceholder({
+  w: 800, h: 400,
+  bgColor1: '#3D4045', bgColor2: '#2D3035', label: 'Poufs',
+  extraShapes: `<rect x="280" y="120" width="100" height="100" rx="12" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    <rect x="420" y="140" width="140" height="72" rx="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`,
+}));
+gen('service', 'produktmasse-tischset.svg', premiumPlaceholder({
+  w: 800, h: 400,
+  bgColor1: '#3D4045', bgColor2: '#2D3035', label: 'Tischset',
+  extraShapes: `<rect x="280" y="130" width="240" height="140" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`,
+}));
+gen('service', 'produktmasse-tischlaeufer.svg', premiumPlaceholder({
+  w: 800, h: 400,
+  bgColor1: '#3D4045', bgColor2: '#2D3035', label: 'Tischläufer',
+  extraShapes: `<rect x="200" y="160" width="400" height="80" rx="4" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`,
+}));
+gen('service', 'pflege-garantie.svg', premiumPlaceholder({
+  w: 800, h: 600,
+  bgColor1: '#3A4540', bgColor2: '#2A3530', label: 'Pflege & Garantie',
+  extraShapes: `<path d="M400,180 L440,210 L440,270 Q440,300 400,320 Q360,300 360,270 L360,210 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`,
+}));
+gen('service', 'stoff-technische-daten.svg', premiumPlaceholder({
+  w: 800, h: 600,
+  bgColor1: '#3D3838', bgColor2: '#2D2828', label: 'Stoff- & technische Daten',
+  extraShapes: `<circle cx="350" cy="250" r="4" fill="rgba(224,123,18,0.3)"/><circle cx="400" cy="220" r="4" fill="rgba(224,123,18,0.3)"/><circle cx="450" cy="260" r="4" fill="rgba(224,123,18,0.3)"/>
+    <line x1="350" y1="250" x2="400" y2="220" stroke="rgba(224,123,18,0.2)" stroke-width="0.8"/>
+    <line x1="400" y1="220" x2="450" y2="260" stroke="rgba(224,123,18,0.2)" stroke-width="0.8"/>`,
+}));
 
 // ── Summary ──
 console.log(`\n  Done! Generated ${count} SVG files.`);

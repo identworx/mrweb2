@@ -47,9 +47,9 @@ export const footerData: FooterData = {
       title: "Service",
       links: [
         { label: "Kataloge", href: "/kataloge" },
-        { label: "Produktmaße", href: "/kataloge" },
-        { label: "Pflege & Garantie", href: "/kataloge" },
-        { label: "Stoff- & technische Daten", href: "/kataloge" },
+        { label: "Produktmaße", href: "/kataloge/produktmasse" },
+        { label: "Pflege & Garantie", href: "/kataloge/pflege-garantie" },
+        { label: "Stoff- & technische Daten", href: "/kataloge/stoff-technische-daten" },
         { label: "Kontakt", href: "/kontakt" },
       ],
     },

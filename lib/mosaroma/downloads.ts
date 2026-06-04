@@ -6,6 +6,7 @@ export interface Download {
   href: string;
 }
 
+// TODO: PDF-Download-Links einsetzen, sobald verfügbar
 export const downloads: Download[] = [
   {
     title: "Katalog 2027",
@@ -13,7 +14,7 @@ export const downloads: Download[] = [
       "Vollständiger Produktkatalog mit allen Kollektionen, Maßen und Stoffqualitäten der Saison 2027.",
     type: "PDF",
     languages: ["Deutsch", "English"],
-    href: "#", // TODO: finalen PDF-Link einsetzen
+    href: "#",
   },
   {
     title: "Produktmaße",
@@ -21,7 +22,7 @@ export const downloads: Download[] = [
       "Alle Maße und Abmessungen unserer Produktkategorien auf einen Blick.",
     type: "PDF",
     languages: ["Deutsch"],
-    href: "#", // TODO: finalen PDF-Link einsetzen
+    href: "#",
   },
   {
     title: "Pflege & Garantie",
@@ -29,7 +30,7 @@ export const downloads: Download[] = [
       "Pflegehinweise, Lagerempfehlungen und Garantiebedingungen für alle MOSAROMA-Produkte.",
     type: "PDF",
     languages: ["Deutsch"],
-    href: "#", // TODO: finalen PDF-Link einsetzen
+    href: "#",
   },
   {
     title: "Stoff- & technische Daten",
@@ -37,14 +38,6 @@ export const downloads: Download[] = [
       "Technische Datenblätter zu allen Stoffqualitäten: Gewicht, Breite, Prüfmethoden und Ergebnisse.",
     type: "PDF",
     languages: ["Deutsch"],
-    href: "#", // TODO: finalen PDF-Link einsetzen
-  },
-  {
-    title: "Kollektionen 2027",
-    description:
-      "Übersicht aller Farbwelten und Muster der aktuellen Saison.",
-    type: "PDF",
-    languages: ["Deutsch"],
-    href: "#", // TODO: finalen PDF-Link einsetzen
+    href: "#",
   },
 ];

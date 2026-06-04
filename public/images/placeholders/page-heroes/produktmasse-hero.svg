@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 720" width="1920" height="720">
+<defs>
+    <linearGradient id="bg-tvtmwt" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3D4045"/><stop offset="100%" stop-color="#2D3035"/></linearGradient>
+    <pattern id="weave-bk2tkz" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+      <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.03)" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="weave-bk2tkz-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.05)" stroke-width="0.6"/>
+      <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.03)" stroke-width="0.4"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="720" fill="url(#bg-tvtmwt)"/>
+  <rect width="1920" height="720" fill="url(#weave-bk2tkz)"/>
+  <rect width="1920" height="720" fill="url(#weave-bk2tkz-h)" opacity="0.7"/>
+  <line x1="288" y1="250" x2="864" y2="250" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><line x1="288" y1="400" x2="864" y2="400" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><line x1="1056" y1="200" x2="1056" y2="500" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><line x1="1440" y1="200" x2="1440" y2="500" stroke="rgba(255,255,255,0.08)" stroke-width="1"/><circle cx="288" cy="250" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="864" cy="250" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="288" cy="400" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="864" cy="400" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="1056" cy="200" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="1056" cy="500" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="1440" cy="200" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><circle cx="1440" cy="500" r="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/><rect x="384" y="280" width="360" height="90" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/><rect x="1152" y="300" width="120" height="120" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.07)" stroke-width="1"/><line x1="384" y1="260" x2="444" y2="260" stroke="rgba(224,123,18,0.3)" stroke-width="2"/><line x1="1152" y1="280" x2="1202" y2="280" stroke="rgba(224,123,18,0.3)" stroke-width="2"/>
+  <line x1="288" y1="680" x2="1632" y2="680" stroke="#E07B12" stroke-width="0" stroke-linecap="round" opacity="0.85"/>
+  <text x="960" y="354.3333333333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="300" fill="rgba(255,255,255,0)" text-anchor="middle" letter-spacing="2"></text>
+  <text x="960" y="702" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" letter-spacing="4" fill="rgba(255,255,255,0.2)" text-anchor="middle" font-variant="small-caps">MOSAROMA</text>
+</svg>
