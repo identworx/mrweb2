@@ -1,0 +1,429 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PageType {
+  HOME
+  STANDARD
+  COLLECTION_INDEX
+  COLLECTION_DETAIL
+  MATERIAL_INDEX
+  CATALOG_INDEX
+  SERVICE
+  NEWS_INDEX
+  CONTACT
+  LEGAL
+}
+
+enum SectionType {
+  HERO
+  TEXT
+  IMAGE_TEXT
+  CARD_GRID
+  COLLECTION_GRID
+  PRODUCT_GRID
+  DOWNLOAD_GRID
+  TECHNICAL_TABLE
+  MEASUREMENT_TABLE
+  CTA
+  FAQ
+  CONTACT_FORM
+  CUSTOM
+}
+
+enum NavLocation {
+  HEADER
+  FOOTER
+  SERVICE
+  LEGAL
+  MOBILE
+}
+
+enum FormFieldType {
+  TEXT
+  EMAIL
+  PHONE
+  TEXTAREA
+  SELECT
+  CHECKBOX
+  RADIO
+  FILE
+  CONSENT
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(VIEWER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SiteSettings {
+  id                    String   @id @default(cuid())
+  siteName              String?
+  logoDarkUrl           String?
+  logoLightUrl          String?
+  faviconUrl            String?
+  primaryColor          String?
+  secondaryColor        String?
+  contactEmail          String?
+  phone                 String?
+  address               String?
+  socialLinks           Json?
+  defaultSeoTitle       String?
+  defaultSeoDescription String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model MediaAsset {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  url          String
+  mimeType     String
+  size         Int
+  width        Int?
+  height       Int?
+  alt          String?
+  title        String?
+  caption      String?
+  folder       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Reverse relations
+  pageHeroImages        Page[]         @relation("PageHeroImage")
+  pageSectionImages     PageSection[]  @relation("SectionImage")
+  collectionHeroImages  Collection[]   @relation("CollectionHeroImage")
+  collectionCardImages  Collection[]   @relation("CollectionCardImage")
+  productGroupIcons     ProductGroup[] @relation("ProductGroupIcon")
+  productGroupImages    ProductGroup[] @relation("ProductGroupImage")
+  productHeroImages     Product[]      @relation("ProductHeroImage")
+  productMainImages     Product[]      @relation("ProductMainImage")
+  productImages         ProductImage[] @relation("ProductImageAsset")
+  materialImages        Material[]     @relation("MaterialImage")
+  downloadImages        Download[]     @relation("DownloadImage")
+  newsHeroImages        NewsArticle[]  @relation("NewsHeroImage")
+  newsCardImages        NewsArticle[]  @relation("NewsCardImage")
+}
+
+model NavigationMenu {
+  id        String      @id @default(cuid())
+  name      String
+  location  NavLocation
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  items NavigationItem[]
+}
+
+model NavigationItem {
+  id           String   @id @default(cuid())
+  menuId       String
+  label        String
+  href         String?
+  target       String   @default("_self")
+  order        Int
+  isActive     Boolean  @default(true)
+  parentId     String?
+  linkedPageId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  menu       NavigationMenu  @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  parent     NavigationItem? @relation("NavItemChildren", fields: [parentId], references: [id])
+  children   NavigationItem[] @relation("NavItemChildren")
+  linkedPage Page?           @relation(fields: [linkedPageId], references: [id], onDelete: SetNull)
+}
+
+model Page {
+  id               String     @id @default(cuid())
+  slug             String     @unique
+  title            String
+  eyebrow          String?
+  headline         String?
+  introText        String?
+  heroImageId      String?
+  status           PageStatus @default(DRAFT)
+  type             PageType   @default(STANDARD)
+  seoTitle         String?
+  seoDescription   String?
+  canonicalUrl     String?
+  showInNavigation Boolean    @default(false)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  heroImage       MediaAsset?      @relation("PageHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  sections        PageSection[]
+  navigationItems NavigationItem[]
+}
+
+model PageSection {
+  id          String      @id @default(cuid())
+  pageId      String
+  type        SectionType @default(CUSTOM)
+  title       String?
+  eyebrow     String?
+  content     String?
+  imageId     String?
+  buttonLabel String?
+  buttonHref  String?
+  settings    Json?
+  order       Int
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  page  Page        @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  image MediaAsset? @relation("SectionImage", fields: [imageId], references: [id], onDelete: SetNull)
+}
+
+model Collection {
+  id               String     @id @default(cuid())
+  slug             String     @unique
+  name             String
+  number           Int?
+  subtitle         String?
+  shortDescription String?
+  longDescription  String?
+  heroImageId      String?
+  cardImageId      String?
+  moodColors       Json?
+  fabric           String?
+  status           PageStatus @default(DRAFT)
+  seoTitle         String?
+  seoDescription   String?
+  order            Int        @default(0)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  heroImage MediaAsset? @relation("CollectionHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  cardImage MediaAsset? @relation("CollectionCardImage", fields: [cardImageId], references: [id], onDelete: SetNull)
+  products  Product[]
+}
+
+model ProductGroup {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  iconId      String?
+  imageId     String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  icon     MediaAsset? @relation("ProductGroupIcon", fields: [iconId], references: [id], onDelete: SetNull)
+  image    MediaAsset? @relation("ProductGroupImage", fields: [imageId], references: [id], onDelete: SetNull)
+  products Product[]
+}
+
+model Product {
+  id               String     @id @default(cuid())
+  slug             String     @unique
+  name             String
+  collectionId     String
+  productGroupId   String
+  materialId       String?
+  shortDescription String?
+  description      String?
+  code             String?
+  size             String?
+  colorName        String?
+  patternName      String?
+  features         Json?
+  heroImageId      String?
+  mainImageId      String?
+  status           PageStatus @default(DRAFT)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  collection   Collection    @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  productGroup ProductGroup  @relation(fields: [productGroupId], references: [id], onDelete: Cascade)
+  material     Material?     @relation(fields: [materialId], references: [id], onDelete: SetNull)
+  heroImage    MediaAsset?   @relation("ProductHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  mainImage    MediaAsset?   @relation("ProductMainImage", fields: [mainImageId], references: [id], onDelete: SetNull)
+  images       ProductImage[]
+}
+
+model ProductImage {
+  id           String   @id @default(cuid())
+  productId    String
+  mediaAssetId String?
+  url          String?
+  alt          String?
+  order        Int
+  isMain       Boolean  @default(false)
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaAsset MediaAsset? @relation("ProductImageAsset", fields: [mediaAssetId], references: [id], onDelete: SetNull)
+}
+
+model Material {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  subtitle         String?
+  description      String?
+  materialComp     String?
+  weight           String?
+  dyeing           String?
+  comfort          String?
+  cushionThickness String?
+  highlights       Json?
+  imageId          String?
+  order            Int      @default(0)
+  isActive         Boolean  @default(true)
+  seoTitle         String?
+  seoDescription   String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  image    MediaAsset? @relation("MaterialImage", fields: [imageId], references: [id], onDelete: SetNull)
+  products Product[]
+}
+
+model Measurement {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  groupSlug   String?
+  drawingType String?
+  variants    Json?
+  notes       Json?
+  sourceNote  String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Download {
+  id            String   @id @default(cuid())
+  title         String
+  description   String?
+  type          String?
+  fileUrl       String?
+  externalUrl   String?
+  language      String?
+  imageId       String?
+  buttonLabel   String?
+  opensInNewTab Boolean  @default(false)
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  image MediaAsset? @relation("DownloadImage", fields: [imageId], references: [id], onDelete: SetNull)
+}
+
+model NewsArticle {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  title          String
+  eyebrow        String?
+  excerpt        String?
+  content        String?
+  heroImageId    String?
+  cardImageId    String?
+  category       String?
+  status         PageStatus @default(DRAFT)
+  publishedAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  heroImage MediaAsset? @relation("NewsHeroImage", fields: [heroImageId], references: [id], onDelete: SetNull)
+  cardImage MediaAsset? @relation("NewsCardImage", fields: [cardImageId], references: [id], onDelete: SetNull)
+}
+
+model FooterSettings {
+  id            String   @id @default(cuid())
+  logoUrl       String?
+  description   String?
+  copyrightText String?
+  socialLinks   Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Form {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  title          String?
+  description    String?
+  submitLabel    String?
+  successMessage String?
+  errorMessage   String?
+  recipientEmail String?
+  privacyText    String?
+  honeypotField  String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  fields      FormField[]
+  submissions FormSubmission[]
+}
+
+model FormField {
+  id          String        @id @default(cuid())
+  formId      String
+  type        FormFieldType @default(TEXT)
+  label       String
+  placeholder String?
+  name        String
+  helpText    String?
+  required    Boolean       @default(false)
+  options     Json?
+  order       Int
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+}
+
+model FormSubmission {
+  id        String   @id @default(cuid())
+  formId    String
+  data      Json?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+}
