@@ -11,7 +11,7 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Overlay 1: Strong bottom-to-top scrim — covers text zone densely */}
+      {/* Overlay 1: Strong bottom-to-top scrim */}
       <div
         className="absolute inset-0"
         style={{
@@ -19,7 +19,7 @@ export default function HeroSection() {
             "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.65) 22%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.08) 65%, transparent 80%)",
         }}
       />
-      {/* Overlay 2: Left scrim — localized behind text column */}
+      {/* Overlay 2: Left scrim */}
       <div
         className="absolute inset-0"
         style={{
@@ -40,20 +40,21 @@ export default function HeroSection() {
 
             {/* Headline */}
             <h1 className="font-heading text-white text-[2.75rem] md:text-[4rem] lg:text-[5rem] xl:text-[5.5rem] font-extrabold leading-[1.02] tracking-[-0.02em] mb-6 md:mb-8">
-              Stilvolles Leben
+              Design trifft
               <br />
-              im Freien
+              Performance.
             </h1>
 
             {/* Subline */}
             <p className="font-body text-white/80 text-lg md:text-xl lg:text-[1.375rem] leading-[1.65] mb-10 md:mb-12 max-w-[26rem] md:max-w-[30rem]">
-              Hochwertige Textilien, Kissen und Möbel für Terrasse,
-              Garten und Balkon – mediterran inspiriert, zeitlos designt.
+              Outdoor-Textilien und Polster aus wetterfestem Olefin –
+              spinnfarbgefärbt, UV-beständig und PFAS-frei. Gefertigt mit
+              Mackintosh® Technology.
             </p>
 
             {/* Single CTA */}
-            <a href="#kollektion" className="btn-primary">
-              Kollektion entdecken
+            <a href="#produkte" className="btn-primary">
+              Produkte entdecken
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
               </svg>

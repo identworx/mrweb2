@@ -1,5 +1,5 @@
 import CategoryCard from "./CategoryCard";
-import { categories } from "@/lib/data";
+import { categories, additionalCategories } from "@/lib/data";
 
 export default function CategoriesSection() {
   return (
@@ -14,13 +14,13 @@ export default function CategoriesSection() {
             </p>
           </div>
           <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
-            Unsere Produkte
+            Produktkategorien
           </h2>
         </div>
 
         {/* Editorial grid - asymmetric layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 md:gap-6">
-          {/* First two cards - larger */}
+          {/* First row - three large cards */}
           <div className="lg:col-span-4">
             <CategoryCard {...categories[0]} size="large" />
           </div>
@@ -31,7 +31,7 @@ export default function CategoriesSection() {
             <CategoryCard {...categories[2]} size="large" />
           </div>
 
-          {/* Bottom row - three smaller cards */}
+          {/* Second row - 3+6+3 */}
           <div className="lg:col-span-3">
             <CategoryCard {...categories[3]} size="medium" />
           </div>
@@ -41,6 +41,20 @@ export default function CategoriesSection() {
           <div className="lg:col-span-3">
             <CategoryCard {...categories[5]} size="medium" />
           </div>
+        </div>
+
+        {/* Additional categories */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <span className="font-body text-text-gray text-sm mr-2">Weitere Kategorien:</span>
+          {additionalCategories.map((cat) => (
+            <a
+              key={cat.title}
+              href={cat.href}
+              className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em] px-5 py-2.5 border border-anthracite/15 text-anthracite hover:bg-anthracite hover:text-white transition-all duration-300"
+            >
+              {cat.title}
+            </a>
+          ))}
         </div>
       </div>
     </section>

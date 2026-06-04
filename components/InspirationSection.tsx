@@ -6,7 +6,7 @@ export default function InspirationSection() {
   const rest = inspirations.slice(1);
 
   return (
-    <section id="inspiration" className="section-padding bg-white">
+    <section className="section-padding bg-white">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         {/* Section header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-14 md:mb-20">
@@ -18,26 +18,10 @@ export default function InspirationSection() {
               </p>
             </div>
             <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold leading-tight tracking-tight">
-              Lass dich
+              Wissen &
               <br />
-              inspirieren
+              Inspiration
             </h2>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {["Alle", "Kataloge", "Trends", "Ratgeber", "Ideen"].map(
-              (filter) => (
-                <button
-                  key={filter}
-                  className={`font-heading text-[10px] font-semibold uppercase tracking-[0.15em] px-4 py-2 transition-all duration-300 ${
-                    filter === "Alle"
-                      ? "bg-anthracite text-white"
-                      : "text-medium-gray hover:text-anthracite border border-light-gray hover:border-anthracite"
-                  }`}
-                >
-                  {filter}
-                </button>
-              )
-            )}
           </div>
         </div>
 

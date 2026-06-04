@@ -16,9 +16,16 @@ export default function Footer() {
               height={45}
               className="h-10 w-auto mb-6 brightness-0 invert"
             />
-            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-6">
-              Premium Outdoor Living – stilvolle Lösungen für anspruchsvolle
-              Außenbereiche seit 2020.
+            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-4">
+              Premium Outdoor-Textilien und Polster – gefertigt mit
+              Mackintosh® Technology in Oyten bei Bremen. Seit 2021.
+            </p>
+            <p className="font-body text-white/25 text-xs leading-[1.8] mb-6">
+              Rudolf-Diesel-Str. 11-13
+              <br />
+              28876 Oyten
+              <br />
+              info@mosaroma.de
             </p>
             {/* Social */}
             <div className="flex items-center gap-4">
@@ -64,7 +71,7 @@ export default function Footer() {
               Newsletter
             </h4>
             <p className="font-body text-white/35 text-sm leading-[1.8] mb-5">
-              Exklusive Angebote, Neuheiten und Inspirationen rund um
+              Neue Kollektionen, Pflegetipps und Inspirationen rund um
               Outdoor Living.
             </p>
             <div className="flex">
@@ -83,12 +90,12 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/[0.06] py-8 flex flex-col md:flex-row items-center justify-between gap-5">
           <span className="font-body text-white/20 text-xs tracking-wide">
-            &copy; 2026 MOSAROMA. Alle Rechte vorbehalten.
+            &copy; 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.
           </span>
 
           {/* Legal links */}
           <div className="flex flex-wrap justify-center gap-6 text-xs">
-            {["Datenschutz", "Nutzungsbedingungen", "Impressum"].map(
+            {["Impressum", "Datenschutz", "AGB"].map(
               (item) => (
                 <a
                   key={item}

@@ -1,9 +1,9 @@
-export default function SplitHighlightSection() {
+export default function MaterialTechnologySection() {
   return (
-    <section id="ueber-uns" className="bg-cream overflow-hidden">
+    <section className="bg-cream overflow-hidden">
       <div className="mx-auto max-w-[1400px]">
         <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px] lg:min-h-[720px]">
-          {/* Image - full bleed left */}
+          {/* Image */}
           <div className="relative overflow-hidden min-h-[450px] lg:min-h-full">
             <div
               className="absolute inset-0 bg-cover bg-center img-zoom"
@@ -27,53 +27,49 @@ export default function SplitHighlightSection() {
             </div>
           </div>
 
-          {/* Text content */}
+          {/* Text */}
           <div className="flex flex-col justify-center px-8 py-16 md:px-16 lg:px-20 xl:px-28 lg:py-24">
             <div className="flex items-center gap-4 mb-8">
               <div className="accent-line" />
               <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Über MOSAROMA
+                Materialien & Technologie
               </p>
             </div>
 
             <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] xl:text-5xl font-bold leading-[1.1] tracking-tight mb-8">
-              Komfort. Design.
+              Mackintosh®
               <br />
-              Qualität.
+              Technology
             </h2>
 
             <div className="space-y-5 mb-10">
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-md">
-                MOSAROMA wurde 2021 in Oyten bei Bremen gegründet. Von unserem
-                14.000 m² großen Standort aus entwickeln und vertreiben wir
-                hochwertige Outdoor-Textilien und Polster für den
-                DACH-Raum – mit Lieferung in 2–4 Werktagen.
+                Unsere Stoffe werden aus 100 % Olefin gefertigt –
+                spinnfarbgefärbt, UV-beständig und wasserabweisend ohne
+                PFAS-Chemikalien. Das Ergebnis: Premium-Textilien, die Wind und
+                Wetter standhalten.
               </p>
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-md">
-                Unsere Stoffe werden aus wetterfestem Olefin gefertigt,
-                spinnfarbgefärbt und PFAS-frei veredelt. Jedes Produkt vereint
-                mediterran inspiriertes Design mit industrieller Haltbarkeit.
+                Die Spinnfärbung verbraucht 42 % weniger Wasser und 38 % weniger
+                Chemikalien als konventionelle Verfahren – für Outdoor-Stoffe,
+                die genauso gut für die Umwelt sind wie für Ihren Garten.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-x-8 gap-y-4 mb-10 text-sm">
-              <div>
-                <span className="font-heading text-anthracite font-bold text-2xl">3</span>
-                <span className="font-body text-text-gray ml-1.5">Jahre Garantie</span>
-              </div>
-              <div>
-                <span className="font-heading text-anthracite font-bold text-2xl">5</span>
-                <span className="font-body text-text-gray ml-1.5">Jahre auf Olefin</span>
-              </div>
-              <div>
-                <span className="font-heading text-anthracite font-bold text-2xl">2–4</span>
-                <span className="font-body text-text-gray ml-1.5">Tage Lieferung</span>
-              </div>
+            <div className="flex flex-wrap gap-3 mb-10">
+              {["UV-beständig", "Wasserabweisend", "PFAS-frei", "5 Jahre Garantie"].map((tag) => (
+                <span
+                  key={tag}
+                  className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 border border-pumpkin/20 text-pumpkin"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
 
             <div>
-              <a href="#kataloge" className="btn-primary">
-                Katalog ansehen
+              <a href="#produkte" className="btn-primary">
+                Stoffe entdecken
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="ml-1">
                   <path d="M4.5 12h15m0 0l-6-6m6 6l-6 6" />
                 </svg>
