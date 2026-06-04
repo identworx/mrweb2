@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 720" width="1920" height="720">
 <defs>
-    <linearGradient id="bg-51gu6a" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#42523F"/><stop offset="100%" stop-color="#354535"/></linearGradient>
-    <pattern id="weave-biad2q" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+    <linearGradient id="bg-zsnfu6" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#42523F"/><stop offset="100%" stop-color="#354535"/></linearGradient>
+    <pattern id="weave-mxtqlu" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
       <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
       <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.03)" stroke-width="0.5"/>
     </pattern>
-    <pattern id="weave-biad2q-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+    <pattern id="weave-mxtqlu-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
       <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.05)" stroke-width="0.6"/>
       <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.03)" stroke-width="0.4"/>
     </pattern>
   </defs>
 
-  <rect width="1920" height="720" fill="url(#bg-51gu6a)"/>
-  <rect width="1920" height="720" fill="url(#weave-biad2q)"/>
-  <rect width="1920" height="720" fill="url(#weave-biad2q-h)" opacity="0.7"/>
+  <rect width="1920" height="720" fill="url(#bg-zsnfu6)"/>
+  <rect width="1920" height="720" fill="url(#weave-mxtqlu)"/>
+  <rect width="1920" height="720" fill="url(#weave-mxtqlu-h)" opacity="0.7"/>
   <rect x="288" y="180" width="280" height="180" rx="2" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><rect x="729.6" y="180" width="280" height="180" rx="2" fill="rgba(255,255,255,0.033)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><rect x="1171.2" y="180" width="280" height="180" rx="2" fill="rgba(255,255,255,0.041)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><rect x="288" y="380" width="280" height="180" rx="2" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><rect x="729.6" y="380" width="280" height="180" rx="2" fill="rgba(255,255,255,0.033)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><rect x="1171.2" y="380" width="280" height="180" rx="2" fill="rgba(255,255,255,0.041)" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
   <line x1="288" y1="680" x2="1632" y2="680" stroke="#E07B12" stroke-width="0" stroke-linecap="round" opacity="0.85"/>
   <text x="960" y="354.3333333333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="300" fill="rgba(255,255,255,0)" text-anchor="middle" letter-spacing="2"></text>

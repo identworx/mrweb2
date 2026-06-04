@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
 <defs>
-    <linearGradient id="bg-7kjx34" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
-    <pattern id="weave-n53253" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+    <linearGradient id="bg-gd7ew7" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
+    <pattern id="weave-k7deme" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
       <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
       <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
     </pattern>
-    <pattern id="weave-n53253-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+    <pattern id="weave-k7deme-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
       <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
       <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.04)" stroke-width="0.4"/>
     </pattern>
   </defs>
 
-  <rect width="1200" height="500" fill="url(#bg-7kjx34)"/>
-  <rect width="1200" height="500" fill="url(#weave-n53253)"/>
-  <rect width="1200" height="500" fill="url(#weave-n53253-h)" opacity="0.7"/>
+  <rect width="1200" height="500" fill="url(#bg-gd7ew7)"/>
+  <rect width="1200" height="500" fill="url(#weave-k7deme)"/>
+  <rect width="1200" height="500" fill="url(#weave-k7deme-h)" opacity="0.7"/>
   
       <rect x="0" y="0" width="300" height="6" fill="#2C5F7C"/><rect x="300" y="0" width="300" height="6" fill="#4A8BAD"/><rect x="600" y="0" width="300" height="6" fill="#7AB3CC"/><rect x="900" y="0" width="300" height="6" fill="#B5D5E2"/>
       <!-- Large color swatches -->
