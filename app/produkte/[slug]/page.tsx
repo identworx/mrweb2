@@ -6,79 +6,112 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
-import { products, getProductBySlug } from "@/lib/mosaroma/products";
-import { getCategoryBySlug } from "@/lib/mosaroma/categories";
-import { getCollectionBySlug } from "@/lib/mosaroma/collections";
+import {
+  getProductBySlugWithStatus,
+  getProductStaticParams,
+  getProductsByCollectionSlug,
+  type FrontendProduct,
+} from "@/lib/cms/products";
+import {
+  getProductBySlug as getStaticProductBySlug,
+  products as staticProducts,
+} from "@/lib/mosaroma/products";
+import { getCollectionBySlug as getStaticCollectionBySlug } from "@/lib/mosaroma/collections";
 import { fabricQualities } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getSiteSettings } from "@/lib/cms/settings";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return getProductStaticParams();
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const product = getProductBySlug(slug);
-  if (!product) {
-    return { title: "Produkt nicht gefunden | Mosaroma" };
-  }
-  const category = getCategoryBySlug(product.categorySlug);
-  const collection = getCollectionBySlug(product.collectionSlug);
-  const parts = [
-    `${product.name}`,
-    category?.title,
-    "Mosaroma",
-  ].filter(Boolean);
+async function resolveProduct(slug: string): Promise<FrontendProduct | null> {
+  const result = await getProductBySlugWithStatus(slug);
 
-  const descParts = [
-    `${product.name} aus der ${collection?.name ?? ""} Collection.`,
-    `Material: ${product.material}.`,
-    product.size ? `Größe: ${product.size}.` : "",
-    product.code ? `Artikelcode: ${product.code}.` : "",
-    "Hochwertige Outdoor-Textilien von Mosaroma.",
-  ].filter(Boolean);
+  if (result.state === "published") return result.product;
+  if (result.state === "not-public") return null;
+
+  const staticProduct = getStaticProductBySlug(slug);
+  if (!staticProduct) return null;
 
   return {
-    title: parts.join(" | "),
-    description: descParts.join(" "),
+    ...staticProduct,
+    shortDescription: "",
+    heroImage: staticProduct.image,
+    seoTitle: null,
+    seoDescription: null,
+    collectionName: staticProduct.collectionSlug,
+    productGroupName: staticProduct.categorySlug,
   };
 }
 
-export const revalidate = 60;
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await resolveProduct(slug);
+  if (!product) {
+    return { title: "Produkt nicht gefunden | Mosaroma" };
+  }
+  const settings = await getSiteSettings();
+  const title =
+    product.seoTitle ||
+    `${product.name} | Mosaroma`;
+  const description =
+    product.seoDescription ||
+    product.shortDescription ||
+    (product.description ? product.description.slice(0, 160) : null) ||
+    settings?.defaultSeoDescription ||
+    "";
+  return { title, description };
+}
 
 export default async function ProduktPage({ params }: PageProps) {
   const { slug } = await params;
-  const layout = await getPublicLayoutData();
-  const product = getProductBySlug(slug);
+  const [layout, product] = await Promise.all([
+    getPublicLayoutData(),
+    resolveProduct(slug),
+  ]);
 
   if (!product) {
     notFound();
   }
 
-  const category = getCategoryBySlug(product.categorySlug);
-  const collection = getCollectionBySlug(product.collectionSlug);
-  const fabric = fabricQualities.find(
-    (f) => f.slug === product.materialSlug,
-  );
+  const staticCollection = getStaticCollectionBySlug(product.collectionSlug);
+  const fabric = fabricQualities.find((f) => f.slug === product.materialSlug);
 
-  const relatedProducts = products
-    .filter(
-      (p) =>
-        p.slug !== product.slug &&
-        (p.collectionSlug === product.collectionSlug ||
-          p.categorySlug === product.categorySlug),
-    )
-    .slice(0, 4);
+  let relatedProducts: FrontendProduct[] = [];
+  try {
+    const collectionProducts = await getProductsByCollectionSlug(product.collectionSlug);
+    relatedProducts = collectionProducts
+      .filter((p) => p.slug !== product.slug)
+      .slice(0, 4);
+  } catch {
+    relatedProducts = staticProducts
+      .filter(
+        (p) =>
+          p.slug !== product.slug &&
+          (p.collectionSlug === product.collectionSlug ||
+            p.categorySlug === product.categorySlug),
+      )
+      .slice(0, 4)
+      .map((sp) => ({
+        ...sp,
+        shortDescription: "",
+        heroImage: sp.image,
+        seoTitle: null,
+        seoDescription: null,
+        collectionName: sp.collectionSlug,
+        productGroupName: sp.categorySlug,
+      }));
+  }
 
-  const galleryImages = product.gallery?.length
-    ? product.gallery
-    : [product.image];
+  const galleryImages = product.gallery.length > 0 ? product.gallery : [product.image];
+  const moodColors = staticCollection?.moodColors || [];
 
   return (
     <>
@@ -90,7 +123,7 @@ export default async function ProduktPage({ params }: PageProps) {
             items={[
               { label: "Kollektionen", href: "/kollektionen" },
               {
-                label: collection?.name ?? "",
+                label: product.collectionName || product.collectionSlug,
                 href: `/kollektionen/${product.collectionSlug}`,
               },
               { label: product.name },
@@ -132,11 +165,10 @@ export default async function ProduktPage({ params }: PageProps) {
 
               {/* Product Info */}
               <div className="lg:pt-4">
-                {/* Collection badge */}
-                {collection && (
+                {moodColors.length > 0 && (
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex">
-                      {collection.moodColors.map((color, i) => (
+                      {moodColors.map((color, i) => (
                         <div
                           key={i}
                           className="w-4 h-4 first:rounded-l last:rounded-r"
@@ -145,10 +177,10 @@ export default async function ProduktPage({ params }: PageProps) {
                       ))}
                     </div>
                     <Link
-                      href={`/kollektionen/${collection.slug}`}
+                      href={`/kollektionen/${product.collectionSlug}`}
                       className="font-accent text-text-gray/60 text-xs tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
                     >
-                      {collection.name} Collection
+                      {product.collectionName || product.collectionSlug} Collection
                     </Link>
                   </div>
                 )}
@@ -157,12 +189,12 @@ export default async function ProduktPage({ params }: PageProps) {
                   {product.name}
                 </h1>
 
-                {category && (
+                {product.productGroupName && (
                   <Link
-                    href={`/kollektionen/${product.collectionSlug}#kategorie-${category.slug}`}
+                    href={`/produktkategorien/${product.categorySlug}`}
                     className="inline-block mt-2 font-body text-text-gray text-base hover:text-pumpkin transition-colors"
                   >
-                    {category.title}
+                    {product.productGroupName}
                   </Link>
                 )}
 
@@ -172,7 +204,9 @@ export default async function ProduktPage({ params }: PageProps) {
 
                 {/* Details */}
                 <div className="mt-8 space-y-4 border-t border-light-gray pt-8">
-                  <DetailRow label="Material" value={product.material} />
+                  {product.material && (
+                    <DetailRow label="Material" value={product.material} />
+                  )}
                   {product.size && (
                     <DetailRow label="Größe" value={product.size} />
                   )}
@@ -268,7 +302,7 @@ export default async function ProduktPage({ params }: PageProps) {
         )}
 
         {/* Collection Link */}
-        {collection && (
+        {staticCollection && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="flex items-center gap-4 mb-5">
@@ -278,29 +312,31 @@ export default async function ProduktPage({ params }: PageProps) {
                 </p>
               </div>
               <div className="bg-white p-8 md:p-10 border border-light-gray max-w-2xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex">
-                    {collection.moodColors.map((color, i) => (
-                      <div
-                        key={i}
-                        className="w-6 h-6 first:rounded-l last:rounded-r"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
+                {moodColors.length > 0 && (
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="flex">
+                      {moodColors.map((color, i) => (
+                        <div
+                          key={i}
+                          className="w-6 h-6 first:rounded-l last:rounded-r"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
                 <h3 className="font-heading text-anthracite text-xl font-bold">
-                  {collection.name} Collection
+                  {product.collectionName || staticCollection.name} Collection
                 </h3>
                 <p className="font-body text-text-gray text-sm leading-[1.8] mt-2">
-                  {collection.description}
+                  {staticCollection.description}
                 </p>
                 <Link
-                  href={`/kollektionen/${collection.slug}`}
+                  href={`/kollektionen/${product.collectionSlug}`}
                   className="inline-flex items-center gap-3 text-pumpkin mt-6 group"
                 >
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
-                    Zur {collection.name} Collection
+                    Zur {product.collectionName || staticCollection.name} Collection
                   </span>
                   <svg
                     width="14"

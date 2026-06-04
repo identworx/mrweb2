@@ -15,8 +15,7 @@ import {
   getCollectionBySlug as getStaticCollectionBySlug,
   type Collection as StaticCollection,
 } from "@/lib/mosaroma/collections";
-import { categories } from "@/lib/mosaroma/categories";
-import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
+import { getProductsByCollectionSlug, type FrontendProduct } from "@/lib/cms/products";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 
@@ -79,23 +78,40 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return { title, description };
 }
 
+function groupProductsByCategory(products: FrontendProduct[]) {
+  const groups: { slug: string; name: string; products: FrontendProduct[] }[] = [];
+  const map = new Map<string, FrontendProduct[]>();
+  const nameMap = new Map<string, string>();
+
+  for (const p of products) {
+    const key = p.categorySlug;
+    if (!map.has(key)) {
+      map.set(key, []);
+      nameMap.set(key, p.productGroupName || key);
+    }
+    map.get(key)!.push(p);
+  }
+
+  for (const [slug, prods] of map) {
+    groups.push({ slug, name: nameMap.get(slug) || slug, products: prods });
+  }
+
+  return groups;
+}
+
 export default async function KollektionPage({ params }: PageProps) {
   const { slug } = await params;
-  const [layout, collection] = await Promise.all([
+  const [layout, collection, products] = await Promise.all([
     getPublicLayoutData(),
     resolveCollection(slug),
+    getProductsByCollectionSlug(slug),
   ]);
 
   if (!collection) {
     notFound();
   }
 
-  // Phase 2C: Replace static products with DB products
-  const staticCol = getStaticCollectionBySlug(slug);
-  const productCategories = staticCol?.productCategories ?? [];
-  const collectionCategories = categories.filter((cat) =>
-    productCategories.includes(cat.slug),
-  );
+  const productGroups = groupProductsByCategory(products);
 
   return (
     <>
@@ -130,7 +146,6 @@ export default async function KollektionPage({ params }: PageProps) {
 
             <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-4 md:pt-6">
               <div className="max-w-2xl">
-                {/* Mood color swatches */}
                 {collection.moodColors.length > 0 && (
                   <div className="flex w-fit mb-5">
                     {collection.moodColors.map((color, i) => (
@@ -220,8 +235,8 @@ export default async function KollektionPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Products grouped by category — Phase 2C: Replace with DB products */}
-        {collectionCategories.length > 0 && (
+        {/* Products grouped by category */}
+        {productGroups.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="flex items-center gap-4 mb-5">
@@ -235,36 +250,27 @@ export default async function KollektionPage({ params }: PageProps) {
               </h2>
 
               <div className="space-y-10 md:space-y-14">
-                {collectionCategories.map((cat) => {
-                  const categoryProducts = getProductsByCollectionAndCategory(
-                    slug,
-                    cat.slug,
-                  );
-                  if (categoryProducts.length === 0) return null;
-                  return (
-                    <div key={cat.slug} id={`kategorie-${cat.slug}`}>
-                      <div className="mb-6">
-                        <div className="flex items-center gap-4 mb-2">
-                          <div className="accent-line" />
-                          <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                            {categoryProducts.length}{" "}
-                            {categoryProducts.length === 1
-                              ? "Produkt"
-                              : "Produkte"}
-                          </p>
-                        </div>
-                        <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
-                          {cat.title}
-                        </h3>
+                {productGroups.map((group) => (
+                  <div key={group.slug} id={`kategorie-${group.slug}`}>
+                    <div className="mb-6">
+                      <div className="flex items-center gap-4 mb-2">
+                        <div className="accent-line" />
+                        <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                          {group.products.length}{" "}
+                          {group.products.length === 1 ? "Produkt" : "Produkte"}
+                        </p>
                       </div>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                        {categoryProducts.map((product) => (
-                          <ProductCard key={product.slug} product={product} />
-                        ))}
-                      </div>
+                      <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
+                        {group.name}
+                      </h3>
                     </div>
-                  );
-                })}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                      {group.products.map((product) => (
+                        <ProductCard key={product.slug} product={product} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </section>

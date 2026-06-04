@@ -1,6 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
-import type { Product } from "@/lib/mosaroma/products";
+
+interface ProductCardProps {
+  slug: string;
+  name: string;
+  categorySlug: string;
+  collectionSlug: string;
+  material: string;
+  size: string;
+  code: string;
+  features: string[];
+  image: string;
+  alt: string;
+  collectionName?: string;
+  productGroupName?: string;
+}
 
 const categoryTitles: Record<string, string> = {
   dekokissen: "Dekokissen",
@@ -11,6 +25,7 @@ const categoryTitles: Record<string, string> = {
   bankauflagen: "Bankauflage",
   poufs: "Pouf",
   "tischsets-tischlaeufer": "Tischset & Tischläufer",
+  "tischsets-tischlaufer": "Tischset & Tischläufer",
   decken: "Decke",
 };
 
@@ -24,13 +39,17 @@ const collectionNames: Record<string, string> = {
   basic: "Basic",
 };
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: ProductCardProps }) {
+  const displayCollection =
+    product.collectionName || collectionNames[product.collectionSlug] || product.collectionSlug;
+  const displayCategory =
+    product.productGroupName || categoryTitles[product.categorySlug] || product.categorySlug;
+
   return (
     <Link
       href={`/produkte/${product.slug}`}
       className="group block bg-cream transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
     >
-      {/* Product Image */}
       <div className="relative aspect-square bg-light-gray overflow-hidden">
         <Image
           src={product.image}
@@ -41,11 +60,9 @@ export default function ProductCard({ product }: { product: Product }) {
         />
       </div>
 
-      {/* Content */}
       <div className="p-4 md:p-5">
         <p className="font-accent text-text-gray/40 text-[10px] tracking-[0.15em] uppercase">
-          {collectionNames[product.collectionSlug] ?? product.collectionSlug} ·{" "}
-          {categoryTitles[product.categorySlug] ?? product.categorySlug}
+          {displayCollection} · {displayCategory}
         </p>
 
         <h3 className="font-heading text-anthracite text-sm md:text-base font-bold leading-snug mt-1.5 group-hover:text-pumpkin transition-colors duration-300">
@@ -53,9 +70,9 @@ export default function ProductCard({ product }: { product: Product }) {
         </h3>
 
         <div className="mt-2.5 space-y-1">
-          <p className="font-body text-text-gray text-xs">
-            {product.material}
-          </p>
+          {product.material && (
+            <p className="font-body text-text-gray text-xs">{product.material}</p>
+          )}
           {product.size && (
             <p className="font-body text-text-gray text-xs">{product.size}</p>
           )}

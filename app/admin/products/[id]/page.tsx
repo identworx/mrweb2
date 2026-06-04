@@ -11,11 +11,12 @@ export default async function ProductEditPage({
   const { id } = await params;
 
   const isNew = id === "new";
-  const [product, collections, productGroups, materials] = await Promise.all([
+  const [product, collections, productGroups, materials, mediaAssets] = await Promise.all([
     isNew ? Promise.resolve(null) : prisma.product.findUnique({ where: { id } }),
     prisma.collection.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.productGroup.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.material.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true } }),
   ]);
 
   if (!isNew && !product) {
@@ -34,12 +35,15 @@ export default async function ProductEditPage({
         collectionId: product.collectionId,
         productGroupId: product.productGroupId,
         materialId: product.materialId ?? "",
+        shortDescription: product.shortDescription ?? "",
         description: product.description ?? "",
         code: product.code ?? "",
         size: product.size ?? "",
         colorName: product.colorName ?? "",
         patternName: product.patternName ?? "",
         features,
+        heroImageId: product.heroImageId ?? "",
+        mainImageId: product.mainImageId ?? "",
         status: product.status,
         seoTitle: product.seoTitle ?? "",
         seoDescription: product.seoDescription ?? "",
@@ -51,12 +55,15 @@ export default async function ProductEditPage({
         collectionId: "",
         productGroupId: "",
         materialId: "",
+        shortDescription: "",
         description: "",
         code: "",
         size: "",
         colorName: "",
         patternName: "",
         features: "",
+        heroImageId: "",
+        mainImageId: "",
         status: "DRAFT",
         seoTitle: "",
         seoDescription: "",
@@ -82,6 +89,7 @@ export default async function ProductEditPage({
         collections={collections}
         productGroups={productGroups}
         materials={materials}
+        mediaAssets={mediaAssets}
       />
     </div>
   );

@@ -87,7 +87,8 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 4 Navigations-Menues (Header, Footer, Service, Legal) mit Eintraegen
 - 7 Kollektionen (mit Eyebrow, Beschreibungen, MoodColors, SEO-Daten)
 - 4 Materialien
-- 9 Produktkategorien
+- 9 Produktgruppen (mit Beschreibungen)
+- 12 Beispiel-Produkte (Green, Blue, Basic)
 - 1 Footer-Settings
 - 1 Kontaktformular mit 5 Feldern
 
@@ -119,8 +120,10 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | `/admin/pages/[id]`             | Seite bearbeiten / erstellen    | Funktional |
 | `/admin/collections`            | Kollektionen-Liste              | Funktional |
 | `/admin/collections/[id]`       | Kollektion bearbeiten/erstellen | Funktional |
-| `/admin/products`               | Produkte-Liste                  | Funktional |
-| `/admin/products/[id]`          | Produkt bearbeiten/erstellen    | Funktional |
+| `/admin/products`               | Produkte-Liste (mit Bild, Slug, Aktionen) | Funktional |
+| `/admin/products/[id]`          | Produkt bearbeiten/erstellen (mit Bildauswahl) | Funktional |
+| `/admin/product-groups`         | Produktgruppen-Liste            | Funktional |
+| `/admin/product-groups/[id]`    | Produktgruppe bearbeiten/erstellen | Funktional |
 | `/admin/materials`              | Materialien-Liste               | Funktional |
 | `/admin/materials/[id]`         | Material bearbeiten/erstellen   | Funktional |
 | `/admin/media`                  | Medien-Uebersicht               | Funktional |
@@ -150,7 +153,9 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | GET     | `/api/admin/collections` | Alle Kollektionen laden                   |
 | POST    | `/api/admin/collections` | Kollektion erstellen / aktualisieren      |
 | GET     | `/api/admin/products`    | Alle Produkte laden                       |
-| POST    | `/api/admin/products`    | Produkt erstellen / aktualisieren         |
+| POST    | `/api/admin/products`    | Produkt erstellen / aktualisieren (inkl. shortDescription, heroImageId, mainImageId) |
+| GET     | `/api/admin/product-groups` | Alle Produktgruppen laden              |
+| POST    | `/api/admin/product-groups` | Produktgruppe erstellen / aktualisieren |
 | GET     | `/api/admin/materials`   | Alle Materialien laden                    |
 | POST    | `/api/admin/materials`   | Material erstellen / aktualisieren        |
 | GET     | `/api/admin/media`       | Alle Medien laden                         |
@@ -201,8 +206,9 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | `public-layout.ts` | `getPublicLayoutData()`                                   | Aktiv (alle Seiten) |
 | `page-hero.ts`     | `getPageHeroData(slug, fallbackKey)`                      | Aktiv (alle Seiten) |
 | `collections.ts`   | `getPublishedCollections()`, `getCollectionBySlug()`, `getCollectionStaticParams()`, `mapCollectionForFrontend()` | Aktiv (Phase 2B) |
-| `products.ts`      | `getProducts()`, `getProductBySlug()`                     | Noch nicht (Phase 2C) |
-| `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht (Phase 2C) |
+| `products.ts`      | `getPublishedProducts()`, `getProductBySlugWithStatus()`, `getProductsByCollectionSlug()`, `getProductsByProductGroupSlug()`, `getProductStaticParams()`, `mapProductForFrontend()` | Aktiv (Phase 2C) |
+| `product-groups.ts`| `getActiveProductGroups()`, `getProductGroupBySlugWithStatus()`, `getProductGroupStaticParams()`, `mapProductGroupForFrontend()` | Aktiv (Phase 2C) |
+| `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht |
 
 ### Was aus der DB gelesen wird
 
@@ -234,6 +240,15 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | Kollektion-MoodColors  | `Collection.moodColors` (JSON)   | `lib/mosaroma/collections.ts`         |
 | Kollektion-Stoff       | `Collection.fabric`              | `lib/mosaroma/collections.ts`         |
 | Kollektion-SEO         | `Collection.seoTitle/Description`| Name-basierter Fallback               |
+| Produkte (Kollektion)  | `Product` (PUBLISHED, nach Gruppe) | `lib/mosaroma/products.ts`          |
+| Produkte (Kategorie)   | `Product` (PUBLISHED, nach Kollektion) | `lib/mosaroma/products.ts`      |
+| Produkt-Detail         | `Product` (PUBLISHED, slug)      | `lib/mosaroma/products.ts`            |
+| Produkt-Hauptbild      | `Product.mainImage` (MediaAsset) | `/images/placeholders/products/`      |
+| Produkt-Hero-Bild      | `Product.heroImage` (MediaAsset) | mainImage / Kollektion-Hero / Default |
+| Produkt-Galerie        | `ProductImage` (sortiert nach order) | mainImage als Fallback             |
+| Produkt-SEO            | `Product.seoTitle/Description`   | Name-basierter Fallback               |
+| Produktgruppen-Liste   | `ProductGroup` (isActive, order) | `lib/mosaroma/categories.ts`          |
+| Produktgruppe-Detail   | `ProductGroup` (isActive, slug)  | `lib/mosaroma/categories.ts`          |
 
 ### Architektur-Muster
 
@@ -267,6 +282,13 @@ Server Page (async) → getPublicLayoutData() + getPageHeroData()
 | Kollektion-Stimmungsfarben    | Kollektionen → Kollektion waehlen → Stimmungsfarben (Farben hinzufuegen/entfernen) |
 | Kollektion-SEO                | Kollektionen → Kollektion waehlen → SEO Titel / Beschreibung |
 | Kollektion veroeffentlichen   | Kollektionen → Kollektion waehlen → Status auf PUBLISHED setzen |
+| Produkt-Name/Beschreibung     | Produkte → Produkt waehlen → Name, Kurzbeschreibung, Beschreibung |
+| Produkt-Hauptbild             | Produkte → Produkt waehlen → Bilder → Hauptbild |
+| Produkt-Hero-Bild             | Produkte → Produkt waehlen → Bilder → Hero-Bild |
+| Produkt-Status                | Produkte → Produkt waehlen → Status (DRAFT/PUBLISHED/ARCHIVED) |
+| Produkt-SEO                   | Produkte → Produkt waehlen → SEO Titel / Beschreibung |
+| Produktgruppe bearbeiten      | Produktgruppen → Gruppe waehlen → Name, Beschreibung, Bild |
+| Produktgruppe (de)aktivieren  | Produktgruppen → Gruppe waehlen → Aktiv-Checkbox |
 
 ### Persistenz in Produktion (TODO)
 
@@ -322,9 +344,18 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - Kollektion-SEO dynamisch aus DB mit Fallback
 - generateStaticParams aus DB + statischen Kollektionen kombiniert
 - Admin: Hero/Card-Bildauswahl mit Vorschau, Mood-Color-Editor mit Farbfeldern
-- Produkte auf Kollektions-Detailseiten noch aus statischen Daten (Phase 2C)
 - **DRAFT/ARCHIVED Kollektionen** werden auf Detailseiten nicht angezeigt (404), auch wenn ein statischer Fallback mit gleichem Slug existiert. Statischer Fallback greift nur, wenn die Kollektion in der DB nicht existiert oder die DB nicht erreichbar ist.
-- TypeScript-Build ohne Fehler (269 Routen)
+
+### Frontend (Phase 2C)
+- /kollektionen/[slug] zeigt Produkte aus DB (gruppiert nach Produktkategorie), Fallback auf statische Produkte
+- /produktkategorien liest Produktgruppen aus DB (nur isActive, sortiert nach order), Fallback auf statische Kategorien
+- /produktkategorien/[slug] liest Produktgruppe aus DB mit Statusregel, Produkte aus DB gruppiert nach Kollektion
+- /produkte/[slug] liest Produkt aus DB mit Statusregel, SEO, Galerie, verwandte Produkte aus DB
+- ProductCard akzeptiert sowohl statische als auch DB-Produkte (einheitliches Interface)
+- **DRAFT/ARCHIVED Produkte** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
+- **Inaktive Produktgruppen** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
+- Statische Fallbacks in `lib/mosaroma/` bleiben unveraendert als Absicherung
+- TypeScript-Build ohne Fehler
 - ESLint ohne Fehler
 
 ## 11. Was noch fehlt (Phase 2C / spaeter)
@@ -349,16 +380,32 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - [x] Seed-Daten erweitert (Beschreibungen, SEO, Eyebrow)
 - [x] Prisma-Migration fuer `Collection.eyebrow`
 
-### Phase 2C — Produkte, Produktgruppen, Formulare
-1. **Produktkategorien-Seiten** — `/produktkategorien` und `/produktkategorien/[slug]` mit DB-Daten
-2. **Produkt-Detailseiten** — `/produkte/[slug]` mit DB-Daten und Galerie
-3. **Produkt-Galerie** — Mehrere Bilder pro Produkt hochladen und verwalten
-4. **Produkte auf Kollektions-Detailseiten** — Statische Produkte durch DB-Produkte ersetzen
-5. **Bild-Zuweisung fuer Produkte** — Hero/Card-Image-Picker
-6. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
-7. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
-8. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
-9. **Medien-Loeschen** — Datei + DB-Eintrag entfernen
+### Phase 2C — erledigt
+- [x] CMS-Helper `products.ts` — `getPublishedProducts()`, `getProductBySlugWithStatus()`, `getProductsByCollectionSlug()`, `getProductsByProductGroupSlug()`, `getProductStaticParams()`, `mapProductForFrontend()`
+- [x] CMS-Helper `product-groups.ts` — `getActiveProductGroups()`, `getProductGroupBySlugWithStatus()`, `getProductGroupStaticParams()`, `mapProductGroupForFrontend()`
+- [x] `/produktkategorien` liest Gruppen aus DB (nur isActive, sortiert nach order)
+- [x] `/produktkategorien/[slug]` liest Gruppen aus DB mit Statusregel (isActive=false → 404, nicht gefunden → statischer Fallback)
+- [x] `/produkte/[slug]` liest Produkt aus DB mit Statusregel (PUBLISHED → anzeigen, DRAFT/ARCHIVED → 404, nicht gefunden → statischer Fallback)
+- [x] `/kollektionen/[slug]` liest Produkte pro Kollektion aus DB (gruppiert nach Produktkategorie)
+- [x] ProductCard akzeptiert sowohl statische als auch DB-Produkte
+- [x] Admin: Produktgruppen-Verwaltung (Liste, Erstellen, Bearbeiten, Icon/Bild-Picker)
+- [x] Admin: Produkt-Bearbeitung erweitert (Kurzbeschreibung, Hauptbild, Hero-Bild aus MediaAssets)
+- [x] Admin: Produkte-Liste mit Bildvorschau, Slug und Aktionen
+- [x] Admin: Produktgruppen im Sidebar
+- [x] API: `POST /api/admin/products` erweitert (shortDescription, heroImageId, mainImageId)
+- [x] API: `GET/POST /api/admin/product-groups`
+- [x] Seed: Produktgruppen mit Beschreibungen
+- [x] Seed: Slug-Fix tischsets-tischlaufer → tischsets-tischlaeufer
+- [x] Seed: 12 Beispiel-Produkte (Green, Blue, Basic — mehrere Kategorien)
+- [x] Statische Fallbacks erhalten (lib/mosaroma/ Dateien unveraendert)
+- [x] **DRAFT/ARCHIVED Produkte** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
+- [x] **Inaktive Produktgruppen** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
+
+### Offen — Formulare, Delete, Weiteres
+1. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
+2. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
+3. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
+4. **Medien-Loeschen** — Datei + DB-Eintrag entfernen
 
 ### Spaeter
 10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
@@ -403,6 +450,7 @@ app/
     pages/                  # Seiten-Verwaltung
     collections/            # Kollektionen-Verwaltung
     products/               # Produkte-Verwaltung
+    product-groups/         # Produktgruppen-Verwaltung
     materials/              # Materialien-Verwaltung
     media/                  # Medien-Verwaltung
     navigation/             # Navigations-Verwaltung
@@ -411,7 +459,7 @@ app/
     settings/page.tsx       # Website-Einstellungen
     users/                  # Benutzer-Verwaltung
   api/admin/                # Alle Admin-API-Routen
-components/admin/           # 12 Client-Formular-Komponenten
+components/admin/           # 13 Client-Formular-Komponenten
 lib/
   auth/session.ts           # JWT + bcrypt Auth-Logik
   cms/                      # CMS-Helper (server-only, aktiv in Phase 2A)
@@ -423,8 +471,9 @@ lib/
     media-url.ts            # getMediaUrl() — URL-Aufloesung mit Fallback
     public-layout.ts        # getPublicLayoutData() — zentrale Layout-Daten
     page-hero.ts            # getPageHeroData() — Hero + SEO pro Seite
-    collections.ts          # getCollections() (noch nicht im Frontend)
-    products.ts             # getProducts() (noch nicht im Frontend)
+    collections.ts          # Kollektionen-Helper (Phase 2B)
+    products.ts             # Produkte-Helper (Phase 2C)
+    product-groups.ts       # Produktgruppen-Helper (Phase 2C)
     forms.ts                # getFormBySlug() (noch nicht im Frontend)
   db/prisma.ts              # Prisma Client Singleton
   generated/prisma/         # Generierter Prisma Client (gitignored)

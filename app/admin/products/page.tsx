@@ -13,6 +13,7 @@ export default async function ProductsListPage() {
     include: {
       collection: true,
       productGroup: true,
+      mainImage: true,
     },
   });
 
@@ -22,7 +23,7 @@ export default async function ProductsListPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Produkte</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Produkte verwalten und bearbeiten.
+            {products.length} Produkte verwalten und bearbeiten.
           </p>
         </div>
         <Link
@@ -33,26 +34,30 @@ export default async function ProductsListPage() {
         </Link>
       </div>
 
-      {/* TODO: Filter/Search */}
-
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-10">
+                Bild
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Code
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Kollektion
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Kategorie
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Gruppe
               </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Status
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -60,7 +65,7 @@ export default async function ProductsListPage() {
             {products.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Produkte vorhanden.
@@ -72,29 +77,63 @@ export default async function ProductsListPage() {
                 key={product.id}
                 className="hover:bg-gray-50 transition-colors"
               >
-                <td className="px-6 py-4">
+                <td className="px-4 py-3">
+                  {product.mainImage ? (
+                    <img
+                      src={product.mainImage.url}
+                      alt=""
+                      className="w-10 h-10 object-cover rounded"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-gray-400 text-xs">
+                      --
+                    </div>
+                  )}
+                </td>
+                <td className="px-4 py-3">
                   <Link
                     href={`/admin/products/${product.id}`}
                     className="text-sm font-medium text-gray-900 hover:text-orange-600 transition-colors"
                   >
                     {product.name}
                   </Link>
+                  <p className="text-xs text-gray-400 mt-0.5">/{product.slug}</p>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-4 py-3 text-sm text-gray-500">
                   {product.code || "--"}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-4 py-3 text-sm text-gray-500">
                   {product.collection.name}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-4 py-3 text-sm text-gray-500">
                   {product.productGroup.name}
                 </td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-3">
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[product.status] ?? "bg-gray-100 text-gray-600"}`}
                   >
                     {product.status}
                   </span>
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/products/${product.id}`}
+                      className="text-xs text-orange-600 hover:text-orange-700"
+                    >
+                      Bearbeiten
+                    </Link>
+                    {product.status === "PUBLISHED" && (
+                      <a
+                        href={`/produkte/${product.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-gray-400 hover:text-orange-600"
+                      >
+                        Ansehen ↗
+                      </a>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

@@ -11,12 +11,15 @@ interface ProductData {
   collectionId: string;
   productGroupId: string;
   materialId: string;
+  shortDescription: string;
   description: string;
   code: string;
   size: string;
   colorName: string;
   patternName: string;
   features: string;
+  heroImageId: string;
+  mainImageId: string;
   status: string;
   seoTitle: string;
   seoDescription: string;
@@ -27,6 +30,11 @@ interface SelectOption {
   name: string;
 }
 
+interface MediaOption {
+  id: string;
+  filename: string;
+}
+
 const STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"];
 
 export default function ProductEditForm({
@@ -34,11 +42,13 @@ export default function ProductEditForm({
   collections,
   productGroups,
   materials,
+  mediaAssets,
 }: {
   product: ProductData;
   collections: SelectOption[];
   productGroups: SelectOption[];
   materials: SelectOption[];
+  mediaAssets: MediaOption[];
 }) {
   const router = useRouter();
   const [form, setForm] = useState<ProductData>(product);
@@ -144,6 +154,16 @@ export default function ProductEditForm({
         </div>
 
         <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Kurzbeschreibung</label>
+          <input
+            type="text"
+            value={form.shortDescription}
+            onChange={(e) => update("shortDescription", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+
+        <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>
           <textarea
             rows={3}
@@ -197,6 +217,43 @@ export default function ProductEditForm({
               {materials.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-gray-900">Bilder</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Hauptbild</label>
+            <select
+              value={form.mainImageId}
+              onChange={(e) => update("mainImageId", e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="">-- Kein Bild --</option>
+              {mediaAssets.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.filename}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Hero-Bild</label>
+            <select
+              value={form.heroImageId}
+              onChange={(e) => update("heroImageId", e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="">-- Kein Bild --</option>
+              {mediaAssets.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.filename}
                 </option>
               ))}
             </select>

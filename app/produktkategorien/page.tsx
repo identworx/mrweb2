@@ -1,11 +1,10 @@
-// TODO: Wird in späterer Ausbaustufe wieder aktiviert — Route bleibt erhalten, ist aber nicht verlinkt
 import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import CategoryCard from "@/components/CategoryCard";
-import { categories } from "@/lib/mosaroma/categories";
+import { getActiveProductGroups } from "@/lib/cms/product-groups";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 export const metadata: Metadata = {
@@ -17,7 +16,10 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ProduktkategorienPage() {
-  const layout = await getPublicLayoutData();
+  const [layout, groups] = await Promise.all([
+    getPublicLayoutData(),
+    getActiveProductGroups(),
+  ]);
 
   return (
     <>
@@ -32,14 +34,14 @@ export default async function ProduktkategorienPage() {
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map((category) => (
+              {groups.map((group) => (
                 <CategoryCard
-                  key={category.slug}
-                  title={category.title}
-                  image={category.image}
-                  alt={category.alt}
-                  description={category.shortDescription}
-                  href={`/produktkategorien/${category.slug}`}
+                  key={group.slug}
+                  title={group.name}
+                  image={group.image}
+                  alt={group.imageAlt}
+                  description={group.shortDescription}
+                  href={`/produktkategorien/${group.slug}`}
                 />
               ))}
             </div>

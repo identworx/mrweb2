@@ -351,28 +351,118 @@ async function main() {
   // 7. Product groups
   // ---------------------------------------------------------------------------
   const productGroups = [
-    { slug: "dekokissen", name: "Dekokissen", order: 1 },
-    { slug: "hochlehner", name: "Hochlehner", order: 2 },
-    { slug: "niedriglehner", name: "Niedriglehner", order: 3 },
-    { slug: "sitzkissen", name: "Sitzkissen", order: 4 },
-    { slug: "sitzpolster", name: "Sitzpolster", order: 5 },
-    { slug: "bankauflagen", name: "Bankauflagen", order: 6 },
-    { slug: "poufs", name: "Poufs", order: 7 },
-    { slug: "tischsets-tischlaufer", name: "Tischsets & Tischläufer", order: 8 },
-    { slug: "decken", name: "Decken", order: 9 },
+    { slug: "dekokissen", name: "Dekokissen", order: 1, description: "Dekorative Akzentkissen für den Außenbereich — vielseitig kombinierbar in allen Stoffqualitäten." },
+    { slug: "hochlehner", name: "Hochlehner", order: 2, description: "Auflagen für Hochlehner-Gartenstühle — komfortable Polsterung mit durchgehender Rückenlehne." },
+    { slug: "niedriglehner", name: "Niedriglehner", order: 3, description: "Auflagen für Niedriglehner-Stühle — komfortabel gepolstert mit kürzerer Rückenlehne." },
+    { slug: "sitzkissen", name: "Sitzkissen", order: 4, description: "Vielseitige Sitzkissen für Gartenstühle — bequem gepolstert und outdoor-tauglich." },
+    { slug: "sitzpolster", name: "Sitzpolster", order: 5, description: "Flache Sitzpolster für Stühle und Bänke — schlank, leicht und unkompliziert im Einsatz." },
+    { slug: "bankauflagen", name: "Bankauflagen", order: 6, description: "Maßgefertigte Bankauflagen in vier Längen — von der Gartenbank bis zur XXL-Sitzfläche." },
+    { slug: "poufs", name: "Poufs", order: 7, description: "Vielseitige Outdoor-Poufs — als Sitzgelegenheit, Beistelltisch oder Fußablage einsetzbar." },
+    { slug: "tischsets-tischlaeufer", name: "Tischsets & Tischläufer", order: 8, description: "Elegante Tischsets und Tischläufer für den gedeckten Tisch im Freien — wetterfest und stilvoll." },
+    { slug: "decken", name: "Decken", order: 9, description: "Weiche Outdoor-Decken für kühle Abende — in Bambusfaser und Acryl erhältlich." },
   ];
+
+  // Fix old slug if it exists
+  const oldTischsets = await prisma.productGroup.findUnique({ where: { slug: "tischsets-tischlaufer" } });
+  if (oldTischsets) {
+    await prisma.productGroup.update({
+      where: { slug: "tischsets-tischlaufer" },
+      data: { slug: "tischsets-tischlaeufer", name: "Tischsets & Tischläufer", description: "Elegante Tischsets und Tischläufer für den gedeckten Tisch im Freien — wetterfest und stilvoll.", order: 8 },
+    });
+    console.log("✔ Fixed tischsets slug: tischsets-tischlaufer → tischsets-tischlaeufer");
+  }
 
   for (const pg of productGroups) {
     await prisma.productGroup.upsert({
       where: { slug: pg.slug },
-      update: { name: pg.name, order: pg.order },
-      create: { slug: pg.slug, name: pg.name, order: pg.order },
+      update: { name: pg.name, order: pg.order, description: pg.description },
+      create: { slug: pg.slug, name: pg.name, order: pg.order, description: pg.description },
     });
   }
   console.log(`✔ ProductGroups: ${productGroups.length} seeded`);
 
   // ---------------------------------------------------------------------------
-  // 8. Footer settings
+  // 8. Sample products (Green, Blue, Basic)
+  // ---------------------------------------------------------------------------
+  const collectionMap = new Map<string, string>();
+  const allCollections = await prisma.collection.findMany({ select: { id: true, slug: true } });
+  for (const c of allCollections) collectionMap.set(c.slug, c.id);
+
+  const groupMap = new Map<string, string>();
+  const allGroups = await prisma.productGroup.findMany({ select: { id: true, slug: true } });
+  for (const g of allGroups) groupMap.set(g.slug, g.id);
+
+  const materialMap = new Map<string, string>();
+  const allMaterials = await prisma.material.findMany({ select: { id: true, slug: true } });
+  for (const m of allMaterials) materialMap.set(m.slug, m.id);
+
+  const sampleProducts = [
+    // Green — Dekokissen
+    { slug: "longitude-olive-dekokissen-401226", name: "Longitude Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh", size: "48 × 48 cm", code: "401.226", features: [], description: "Longitude Olive Dekokissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Longitude" },
+    { slug: "palmway-olive-dekokissen-401223", name: "Palmway Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh", size: "48 × 48 cm", code: "401.223", features: [], description: "Palmway Olive Dekokissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Palmway" },
+    { slug: "st-tropez-olive-dekokissen-403804", name: "St. Tropez Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh-lite", size: "48 × 48 cm", code: "403.804", features: ["mit Keder"], description: "St. Tropez Olive Dekokissen aus der Green Collection. Material: Mackintosh® Lite.", colorName: "Olive", patternName: "St. Tropez" },
+    // Green — Hochlehner
+    { slug: "rocky-mountain-olive-hochlehner-405813", name: "Rocky Mountain Olive", categorySlug: "hochlehner", collectionSlug: "green", materialSlug: "mackintosh", size: "120 × 48 × 6 cm", code: "405.813", features: ["mit Keder"], description: "Rocky Mountain Olive Hochlehner aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Rocky Mountain" },
+    { slug: "st-tropez-olive-hochlehner-403804", name: "St. Tropez Olive", categorySlug: "hochlehner", collectionSlug: "green", materialSlug: "mackintosh-lite", size: "120 × 48 × 6 cm", code: "403.804", features: ["mit Keder"], description: "St. Tropez Olive Hochlehner aus der Green Collection. Material: Mackintosh® Lite.", colorName: "Olive", patternName: "St. Tropez" },
+    // Green — Sitzkissen
+    { slug: "rocky-mountain-olive-sitzkissen-405813", name: "Rocky Mountain Olive", categorySlug: "sitzkissen", collectionSlug: "green", materialSlug: "mackintosh", size: "46 × 45 × 7 cm", code: "405.813", features: ["mit Keder"], description: "Rocky Mountain Olive Sitzkissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Rocky Mountain" },
+    // Blue — Dekokissen
+    { slug: "caribbean-midnight-dekokissen-502209", name: "Caribbean Midnight", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "502.209", features: [], description: "Caribbean Midnight Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Midnight", patternName: "Caribbean" },
+    { slug: "bean-azure-dekokissen-504203", name: "Bean Azure", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "504.203", features: [], description: "Bean Azure Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Azure", patternName: "Bean" },
+    { slug: "longitude-dazzling-blue-dekokissen-501226", name: "Longitude Dazzling Blue", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "501.226", features: [], description: "Longitude Dazzling Blue Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Dazzling Blue", patternName: "Longitude" },
+    // Basic — Dekokissen
+    { slug: "creme-au-lait-dekokissen-15815809", name: "Creme au Lait", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815809", features: [], description: "Creme au Lait Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Creme au Lait" },
+    { slug: "stone-blue-dekokissen-15815834", name: "Stone Blue", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815834", features: [], description: "Stone Blue Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Stone Blue" },
+    { slug: "boletus-brown-dekokissen-15815530", name: "Boletus Brown", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815530", features: [], description: "Boletus Brown Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Boletus Brown" },
+  ];
+
+  let productCount = 0;
+  for (const sp of sampleProducts) {
+    const collectionId = collectionMap.get(sp.collectionSlug);
+    const productGroupId = groupMap.get(sp.categorySlug);
+    const materialId = materialMap.get(sp.materialSlug) ?? null;
+
+    if (!collectionId || !productGroupId) {
+      console.warn(`⚠ Skipping ${sp.slug}: missing collection (${sp.collectionSlug}) or group (${sp.categorySlug})`);
+      continue;
+    }
+
+    await prisma.product.upsert({
+      where: { slug: sp.slug },
+      update: {
+        name: sp.name,
+        collectionId,
+        productGroupId,
+        materialId,
+        description: sp.description,
+        code: sp.code,
+        size: sp.size,
+        colorName: sp.colorName ?? null,
+        patternName: sp.patternName ?? null,
+        features: sp.features,
+        status: "PUBLISHED",
+      },
+      create: {
+        slug: sp.slug,
+        name: sp.name,
+        collectionId,
+        productGroupId,
+        materialId,
+        description: sp.description,
+        code: sp.code,
+        size: sp.size,
+        colorName: sp.colorName ?? null,
+        patternName: sp.patternName ?? null,
+        features: sp.features,
+        status: "PUBLISHED",
+      },
+    });
+    productCount++;
+  }
+  console.log(`✔ Products: ${productCount} sample products seeded`);
+
+  // ---------------------------------------------------------------------------
+  // 9. Footer settings
   // ---------------------------------------------------------------------------
   const footer = await prisma.footerSettings.upsert({
     where: { id: "footer-settings" },
