@@ -10,6 +10,7 @@ import ProductCard from "@/components/ProductCard";
 import { categories, getCategoryBySlug } from "@/lib/mosaroma/categories";
 import { collections } from "@/lib/mosaroma/collections";
 import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -33,8 +34,11 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 60;
+
 export default async function KategoriePage({ params }: PageProps) {
   const { slug } = await params;
+  const layout = await getPublicLayoutData();
   const category = getCategoryBySlug(slug);
 
   if (!category) {
@@ -47,7 +51,7 @@ export default async function KategoriePage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero with image */}
         <section className="bg-cream pb-16 md:pb-24">
@@ -355,7 +359,7 @@ export default async function KategoriePage({ params }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -171,25 +171,104 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.jpg`)
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
 
-## 9. Frontend-Anbindung (CMS-Helper)
+## 9. Frontend-Anbindung (Phase 2A — aktiv)
 
-Die folgenden Helper-Funktionen existieren in `lib/cms/`, sind aber **noch nicht** im Frontend eingebunden:
+### Status
 
-| Datei              | Funktionen                                                |
-| ------------------ | --------------------------------------------------------- |
-| `pages.ts`         | `getPublishedPages()`, `getPublishedPageBySlug()`         |
-| `collections.ts`   | `getCollections()`, `getCollectionBySlug()`                |
-| `products.ts`      | `getProducts()`, `getProductBySlug()`                     |
-| `navigation.ts`    | `getNavigationByLocation()`                               |
-| `footer.ts`        | `getFooterSettings()`                                     |
-| `media.ts`         | `getMediaAsset()`, `getMediaAssets()`                     |
-| `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   |
-| `settings.ts`      | `getSiteSettings()`                                       |
+Das oeffentliche Frontend liest jetzt Daten aus der CMS-Datenbank. Alle 15 oeffentlichen Seiten sind angebunden. Wenn die DB leer ist oder CMS-Felder fehlen, greifen automatisch die statischen Fallback-Daten.
 
-**Aktueller Stand:** Das Frontend liest NULL Daten aus der Datenbank. Alle Inhalte sind statisch in den React-Komponenten.
+### Revalidierung (ISR)
+
+Alle oeffentlichen Seiten nutzen `export const revalidate = 60` (Incremental Static Regeneration). Aenderungen im Admin sind nach maximal 60 Sekunden auf der oeffentlichen Website sichtbar.
+
+### CMS-Helper (`lib/cms/`)
+
+Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null` bzw. `[]`.
+
+| Datei              | Funktionen                                                | Frontend-Status     |
+| ------------------ | --------------------------------------------------------- | ------------------- |
+| `settings.ts`      | `getSiteSettings()`                                       | Aktiv (alle Seiten) |
+| `navigation.ts`    | `getHeaderNavigation()`, `getFooterNavigation()`          | Aktiv (alle Seiten) |
+| `footer.ts`        | `getFooterSettings()`                                     | Aktiv (alle Seiten) |
+| `pages.ts`         | `getPublishedPages()`, `getPublishedPageBySlug()`         | Aktiv (Hero + SEO)  |
+| `media.ts`         | `getMediaAssets()`, `getMediaAssetById()`                 | Aktiv (Hero-Bilder) |
+| `media-url.ts`     | `getMediaUrl(asset, fallback)`                            | Aktiv (URL-Aufloesung) |
+| `public-layout.ts` | `getPublicLayoutData()`                                   | Aktiv (alle Seiten) |
+| `page-hero.ts`     | `getPageHeroData(slug, fallbackKey)`                      | Aktiv (alle Seiten) |
+| `collections.ts`   | `getCollections()`, `getCollectionBySlug()`                | Noch nicht (Phase 2B) |
+| `products.ts`      | `getProducts()`, `getProductBySlug()`                     | Noch nicht (Phase 2B) |
+| `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht (Phase 2C) |
+
+### Was aus der DB gelesen wird
+
+| Bereich                | DB-Quelle                        | Fallback                              |
+| ---------------------- | -------------------------------- | ------------------------------------- |
+| Header-Logo            | `SiteSettings.logoDarkUrl`       | `/mosaroma_logo.png`                  |
+| Header-Navigation      | `NavigationMenu` (HEADER)        | `lib/mosaroma/navigation.ts`          |
+| Footer-Navigation      | `NavigationMenu` (FOOTER + LEGAL)| `lib/mosaroma/footer.ts`              |
+| Footer-Logo            | `FooterSettings.logoUrl`         | `/mosaroma_logo.png`                  |
+| Footer-Beschreibung    | `FooterSettings.description`     | `lib/mosaroma/footer.ts`              |
+| Footer-Copyright       | `FooterSettings.copyrightText`   | Hardcoded Fallback                    |
+| Footer-Social-Links    | `FooterSettings.socialLinks`     | Statische Platzhalter-Icons           |
+| Seitenname             | `SiteSettings.siteName`          | "Mosaroma"                            |
+| SEO-Titel (global)     | `SiteSettings.defaultSeoTitle`   | "Mosaroma \| Design trifft Performance" |
+| SEO-Beschreibung       | `SiteSettings.defaultSeoDescription` | Statischer Text                   |
+| Hero-Eyebrow           | `Page.eyebrow`                   | `lib/mosaroma/pageHeroes.ts`          |
+| Hero-Headline          | `Page.headline`                  | `lib/mosaroma/pageHeroes.ts`          |
+| Hero-Einleitungstext   | `Page.introText`                 | `lib/mosaroma/pageHeroes.ts`          |
+| Hero-Bild              | `Page.heroImage` (MediaAsset)    | `lib/mosaroma/pageHeroes.ts`          |
+| SEO-Titel (pro Seite)  | `Page.seoTitle`                  | Globaler Default                      |
+| SEO-Beschreibung       | `Page.seoDescription`            | Globaler Default                      |
+
+### Architektur-Muster
+
+```
+Server Page (async) → getPublicLayoutData() + getPageHeroData()
+  ├─ <Header navItems={...} logoUrl={...} siteName={...} />  (Client Component)
+  ├─ <PageHero eyebrow={...} title={...} ... />
+  ├─ ... (Seiten-Inhalt, statisch oder CMS)
+  └─ <Footer description={...} columns={...} ... />          (Server Component)
+```
+
+- **Kein Prisma in Client Components** — Alle DB-Zugriffe erfolgen in Server Components bzw. async Page-Funktionen. Daten werden als Props an Client Components uebergeben.
+- **`server-only`** — Alle CMS-Helper importieren `server-only`, was einen Build-Fehler erzeugt, falls sie versehentlich in einem Client Bundle landen.
+
+### So aendern Sie Inhalte im Admin
+
+| Was Sie aendern wollen        | Wo im Admin                          |
+| ----------------------------- | ------------------------------------ |
+| Header-Logo                   | Einstellungen → Logo (dunkel)        |
+| Header-Links                  | Navigation → HEADER Menu bearbeiten  |
+| Footer-Links                  | Navigation → FOOTER / LEGAL Menus    |
+| Footer-Logo / Beschreibung    | Footer-Einstellungen                 |
+| Footer-Social-Links           | Footer-Einstellungen → Social Links  |
+| Hero einer Seite              | Seiten → Seite waehlen → Eyebrow, Headline, Einleitungstext, Hero-Bild |
+| SEO-Titel einer Seite         | Seiten → Seite waehlen → SEO Titel   |
+| Globaler SEO-Titel            | Einstellungen → Standard SEO Titel   |
+| Kontaktdaten                  | Einstellungen → E-Mail, Telefon, Adresse |
+
+### Persistenz in Produktion (TODO)
+
+Aktuell liegen DB und Uploads im Projektverzeichnis. Fuer Produktions-Deployments mit Zero-Downtime wird empfohlen:
+
+```
+/var/www/web.mosaroma.de/
+  shared/
+    mosaroma.db          ← SQLite DB (persistent)
+    uploads/             ← Hochgeladene Medien (persistent)
+  releases/
+    current/             ← Aktueller Build (Symlink)
+```
+
+**Notwendige Symlinks / Env-Anpassungen:**
+- `DATABASE_URL=file:/var/www/web.mosaroma.de/shared/mosaroma.db`
+- `public/uploads → /var/www/web.mosaroma.de/shared/uploads`
+
+Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 
 ## 10. Was funktioniert (vollstaendig geprueft)
 
+### Admin
 - Login / Logout / Session-Management
 - Alle 12 Admin-Listenseiten laden und zeigen Seed-Daten
 - Alle Erstellungsformulare (`/new`) laden korrekt
@@ -202,31 +281,51 @@ Die folgenden Helper-Funktionen existieren in `lib/cms/`, sind aber **noch nicht
 - Benutzer-Verwaltung (nur ADMIN-Rolle)
 - Kontaktformular-Konfiguration
 - Health-Check Endpunkt
-- TypeScript-Build ohne Fehler (269 Routen)
 - Proxy-basierter Auth-Schutz fuer alle Admin-Routen
 
-## 11. Was noch fehlt (Phase 2)
+### Frontend (Phase 2A)
+- Alle 15 oeffentlichen Seiten lesen Header/Footer/Hero/SEO aus der DB
+- ISR mit 60s Revalidierung auf allen oeffentlichen Seiten
+- Sichere Fallbacks: Frontend funktioniert auch bei leerer DB
+- Header-Logo, Navigation und Sitename aus CMS
+- Footer-Logo, Beschreibung, Copyright, Navigation, Legal-Links und Social-Links aus CMS
+- Hero-Bereich (Eyebrow, Headline, Einleitungstext, Bild) pro Seite aus CMS
+- SEO-Metadaten (Titel + Beschreibung) global und pro Seite aus CMS
+- Admin-Hinweistexte bei CMS-relevanten Feldern
+- TypeScript-Build ohne Fehler (269 Routen)
+- ESLint ohne Fehler
 
-### Hohe Prioritaet
-1. **Frontend mit DB verbinden** — CMS-Helper in Frontend-Komponenten importieren
-2. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
-3. **Bild-Zuweisung in Formularen** — Hero/Card-Image-Picker fuer Kollektionen, Produkte, Seiten
+## 11. Was noch fehlt (Phase 2B / 2C / spaeter)
+
+### Phase 2A — erledigt
+- [x] Frontend mit DB verbinden (SiteSettings, Logo, Navigation, Footer, Hero, SEO)
+- [x] ISR mit 60s Revalidierung auf allen oeffentlichen Seiten
+- [x] Alle CMS-Helper mit `server-only` und Fehlerbehandlung
+- [x] Admin-Hinweistexte fuer CMS-relevante Felder
+- [x] ESLint fehlerfrei
+
+### Phase 2B — Kollektionen, Produkte, Produktgruppen
+1. **Kollektionen-Seiten** — `/kollektionen` und `/kollektionen/[slug]` mit DB-Daten
+2. **Produktkategorien-Seiten** — `/produktkategorien` und `/produktkategorien/[slug]` mit DB-Daten
+3. **Produkt-Detailseiten** — `/produkte/[slug]` mit DB-Daten und Galerie
 4. **Produkt-Galerie** — Mehrere Bilder pro Produkt hochladen und verwalten
+5. **Bild-Zuweisung in Formularen** — Hero/Card-Image-Picker fuer Kollektionen, Produkte
 
-### Mittlere Prioritaet
-5. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
-6. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
-7. **Medien-Loeschen** — Datei + DB-Eintrag entfernen
-8. **Formular-Einreichungen** — Frontend-Formular mit API verbinden
-9. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
+### Phase 2C — Formulare, Delete, weitere Features
+6. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
+7. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
+8. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
+9. **Medien-Loeschen** — Datei + DB-Eintrag entfernen
 
-### Niedrige Prioritaet
-10. **News-Verwaltung** — Admin-UI fuer NewsArticle
-11. **Downloads-Verwaltung** — Admin-UI fuer Download-Eintraege
-12. **Measurement-Verwaltung** — Admin-UI fuer Produktmasse
-13. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
-14. **Medien-Browser** — Modale Bildauswahl statt manueller ID-Eingabe
-15. **Audit-Log** — Aenderungen nachverfolgen
+### Spaeter
+10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
+11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
+12. **News-Verwaltung** — Admin-UI fuer NewsArticle
+13. **Downloads-Verwaltung** — Admin-UI fuer Download-Eintraege
+14. **Measurement-Verwaltung** — Admin-UI fuer Produktmasse
+15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
+16. **Medien-Browser** — Modale Bildauswahl statt manueller ID-Eingabe
+17. **Audit-Log** — Aenderungen nachverfolgen
 
 ## 12. Sicherheits-Status
 
@@ -272,7 +371,18 @@ app/
 components/admin/           # 12 Client-Formular-Komponenten
 lib/
   auth/session.ts           # JWT + bcrypt Auth-Logik
-  cms/                      # 8 Frontend-Helper (noch ungenutzt)
+  cms/                      # CMS-Helper (server-only, aktiv in Phase 2A)
+    settings.ts             # getSiteSettings()
+    navigation.ts           # getHeaderNavigation(), getFooterNavigation()
+    footer.ts               # getFooterSettings()
+    pages.ts                # getPublishedPages(), getPublishedPageBySlug()
+    media.ts                # getMediaAssets(), getMediaAssetById()
+    media-url.ts            # getMediaUrl() — URL-Aufloesung mit Fallback
+    public-layout.ts        # getPublicLayoutData() — zentrale Layout-Daten
+    page-hero.ts            # getPageHeroData() — Hero + SEO pro Seite
+    collections.ts          # getCollections() (noch nicht im Frontend)
+    products.ts             # getProducts() (noch nicht im Frontend)
+    forms.ts                # getFormBySlug() (noch nicht im Frontend)
   db/prisma.ts              # Prisma Client Singleton
   generated/prisma/         # Generierter Prisma Client (gitignored)
 prisma/

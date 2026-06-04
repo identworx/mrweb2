@@ -3,27 +3,45 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import {
   fabricQualities,
   propertiesComparison,
   mackintoshTechnology,
   olefinBenefits,
 } from "@/lib/mosaroma/materials";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Materialien & Technologie | Mosaroma",
-  description:
-    "Mackintosh® Technology: spinnduesengefaerbtes Olefin fuer hoechste Lichtechtheit, UV-Bestaendigkeit und niedrige CO2-Bilanz. Entdecken Sie unsere Stoffqualitaeten.",
-};
+export const revalidate = 60;
 
-export default function MaterialienPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("materialien", "materialien");
+  return {
+    title: hero.seoTitle || "Materialien & Technologie | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Mackintosh® Technology: spinnduesengefaerbtes Olefin fuer hoechste Lichtechtheit, UV-Bestaendigkeit und niedrige CO2-Bilanz. Entdecken Sie unsere Stoffqualitaeten.",
+  };
+}
+
+export default async function MaterialienPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("materialien", "materialien"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero */}
-        <PageHero {...pageHeroes.materialien} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         {/* Mackintosh® Technologie */}
         <section className="section-padding bg-white">
@@ -408,7 +426,7 @@ export default function MaterialienPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -3,14 +3,21 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import { catalogLinks, servicePages } from "@/lib/mosaroma/servicePages";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Kataloge & Downloads | Mosaroma",
-  description:
-    "Mosaroma Katalog 2027, Produktmaße, Pflegehinweise, Garantieinformationen und technische Stoffdaten.",
-};
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("kataloge", "kataloge");
+  return {
+    title: hero.seoTitle || "Kataloge & Downloads | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Mosaroma Katalog 2027, Produktmaße, Pflegehinweise, Garantieinformationen und technische Stoffdaten.",
+  };
+}
 
 function ServiceIcon({ icon }: { icon: string }) {
   if (icon === "ruler") {
@@ -37,12 +44,23 @@ function ServiceIcon({ icon }: { icon: string }) {
   );
 }
 
-export default function KatalogePage() {
+export default async function KatalogePage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("kataloge", "kataloge"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
-        <PageHero {...pageHeroes.kataloge} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         {/* Katalog 2027 Feature Card */}
         <section className="section-padding bg-white">
@@ -181,7 +199,7 @@ export default function KatalogePage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -1,15 +1,26 @@
+import "server-only";
 import { prisma } from "@/lib/db/prisma";
 
 export async function getPublishedCollections() {
-  return prisma.collection.findMany({
-    where: { status: "PUBLISHED" },
-    orderBy: { order: "asc" },
-  });
+  try {
+    return await prisma.collection.findMany({
+      where: { status: "PUBLISHED" },
+      orderBy: { order: "asc" },
+    });
+  } catch (error) {
+    console.error("CMS: getPublishedCollections failed", error);
+    return [];
+  }
 }
 
 export async function getCollectionBySlug(slug: string) {
-  return prisma.collection.findUnique({
-    where: { slug },
-    include: { products: { orderBy: { name: "asc" } } },
-  });
+  try {
+    return await prisma.collection.findUnique({
+      where: { slug },
+      include: { products: { orderBy: { name: "asc" } } },
+    });
+  } catch (error) {
+    console.error(`CMS: getCollectionBySlug("${slug}") failed`, error);
+    return null;
+  }
 }

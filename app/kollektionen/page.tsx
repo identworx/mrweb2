@@ -4,20 +4,38 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import CollectionCard from "@/components/CollectionCard";
 import { collections } from "@/lib/mosaroma/collections";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Kollektionen 2027 | Mosaroma",
-  description:
-    "Entdecken Sie die 7 Kollektionen von MOSAROMA -- kuratierte Farbwelten für den Außenbereich, gefertigt in Mackintosh®, Nerio und Basic Qualitäten.",
-};
+export const revalidate = 60;
 
-export default function KollektionenPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("kollektionen", "kollektionen");
+  return {
+    title: hero.seoTitle || "Kollektionen 2027 | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Entdecken Sie die 7 Kollektionen von MOSAROMA -- kuratierte Farbwelten für den Außenbereich, gefertigt in Mackintosh®, Nerio und Basic Qualitäten.",
+  };
+}
+
+export default async function KollektionenPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("kollektionen", "kollektionen"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
-        <PageHero {...pageHeroes.kollektionen} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -38,7 +56,7 @@ export default function KollektionenPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

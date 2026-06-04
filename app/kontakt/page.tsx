@@ -3,21 +3,39 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Kontakt | Mosaroma",
-  description:
-    "Kontaktieren Sie MOSAROMA — Mosaroma Industries GmbH in Oyten bei Bremen. Wir freuen uns auf Ihre Nachricht.",
-};
+export const revalidate = 60;
 
-export default function KontaktPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("kontakt", "kontakt");
+  return {
+    title: hero.seoTitle || "Kontakt | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Kontaktieren Sie MOSAROMA — Mosaroma Industries GmbH in Oyten bei Bremen. Wir freuen uns auf Ihre Nachricht.",
+  };
+}
+
+export default async function KontaktPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("kontakt", "kontakt"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero */}
-        <PageHero {...pageHeroes.kontakt} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         {/* Contact info + form */}
         <section className="section-padding bg-white">
@@ -254,7 +272,7 @@ export default function KontaktPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

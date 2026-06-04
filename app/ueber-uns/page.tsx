@@ -3,13 +3,20 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Über uns | Mosaroma",
-  description:
-    "Seit Generationen entwickeln und produzieren wir hochwertige Outdoor-Textilien. Design, Leistungsfähigkeit und verantwortungsvolles Handeln — das ist MOSAROMA.",
-};
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("ueber-uns", "ueberUns");
+  return {
+    title: hero.seoTitle || "Über uns | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Seit Generationen entwickeln und produzieren wir hochwertige Outdoor-Textilien. Design, Leistungsfähigkeit und verantwortungsvolles Handeln — das ist MOSAROMA.",
+  };
+}
 
 const promises = [
   {
@@ -40,13 +47,24 @@ const sustainabilityStats = [
   { value: "71 %", label: "weniger CO₂" },
 ];
 
-export default function UeberUnsPage() {
+export default async function UeberUnsPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("ueber-uns", "ueberUns"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero */}
-        <PageHero {...pageHeroes.ueberUns} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         {/* About text */}
         <section className="section-padding bg-white">
@@ -225,7 +243,7 @@ export default function UeberUnsPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import CategoryCard from "@/components/CategoryCard";
 import { categories } from "@/lib/mosaroma/categories";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 export const metadata: Metadata = {
   title: "Produktkategorien | Mosaroma Outdoor-Textilien",
@@ -13,10 +14,14 @@ export const metadata: Metadata = {
     "Entdecken Sie Dekokissen, Hochlehner, Niedriglehner, Sitzkissen, Sitzpolster, Bankauflagen, Poufs, Tischsets und Decken von Mosaroma.",
 };
 
-export default function ProduktkategorienPage() {
+export const revalidate = 60;
+
+export default async function ProduktkategorienPage() {
+  const layout = await getPublicLayoutData();
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         <PageHero
           eyebrow="Entdecken"
@@ -53,7 +58,7 @@ export default function ProduktkategorienPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -4,13 +4,20 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Pflege & Garantie | Mosaroma",
-  description:
-    "Hinweise zur Reinigung, Lagerung und Garantie von Mosaroma Outdoor-Produkten.",
-};
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("pflege-garantie", "pflegeGarantie");
+  return {
+    title: hero.seoTitle || "Pflege & Garantie | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Hinweise zur Reinigung, Lagerung und Garantie von Mosaroma Outdoor-Produkten.",
+  };
+}
 
 // TODO: Finale Pflege- und Garantiebedingungen aus dem Katalog vollständig übernehmen.
 
@@ -76,12 +83,24 @@ function CheckIcon() {
   );
 }
 
-export default function PflegeGarantiePage() {
+export default async function PflegeGarantiePage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("pflege-garantie", "pflegeGarantie"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
-        <PageHero {...pageHeroes.pflegeGarantie} height="compact" />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+          height="compact"
+        />
 
         <Breadcrumbs
           items={[
@@ -180,7 +199,7 @@ export default function PflegeGarantiePage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

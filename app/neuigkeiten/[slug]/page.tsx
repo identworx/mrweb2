@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { newsItems } from "@/lib/mosaroma/news";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 export async function generateStaticParams() {
   return newsItems.map((item) => ({
@@ -30,12 +31,15 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 60;
+
 export default async function NeuigkeitDetailPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const layout = await getPublicLayoutData();
   const item = newsItems.find((n) => n.slug === slug);
 
   if (!item) {
@@ -44,7 +48,7 @@ export default async function NeuigkeitDetailPage({
 
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero area */}
         <section className="relative min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-end overflow-hidden">
@@ -123,7 +127,7 @@ export default async function NeuigkeitDetailPage({
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

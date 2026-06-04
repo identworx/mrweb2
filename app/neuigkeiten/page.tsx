@@ -2,23 +2,41 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import NewsCard from "@/components/NewsCard";
 import { newsItems } from "@/lib/mosaroma/news";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Neuigkeiten | Mosaroma",
-  description:
-    "Aktuelle Neuigkeiten, Kollektionen und Materialinnovationen von MOSAROMA.",
-};
+export const revalidate = 60;
 
-export default function NeuigkeitenPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("neuigkeiten", "neuigkeiten");
+  return {
+    title: hero.seoTitle || "Neuigkeiten | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Aktuelle Neuigkeiten, Kollektionen und Materialinnovationen von MOSAROMA.",
+  };
+}
+
+export default async function NeuigkeitenPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("neuigkeiten", "neuigkeiten"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Hero */}
-        <PageHero {...pageHeroes.neuigkeiten} />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+        />
 
         {/* News Grid */}
         <section className="section-padding bg-cream">
@@ -39,7 +57,7 @@ export default function NeuigkeitenPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -88,6 +88,10 @@ export default function PageEditForm({ page }: { page: PageData }) {
         </div>
       )}
 
+      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
+        Eyebrow, Headline, Einleitungstext und Hero-Bild steuern den Hero-Bereich der öffentlichen Seite. SEO-Titel und -Beschreibung steuern die Metadaten. Nur veröffentlichte Seiten werden öffentlich angezeigt.
+      </div>
+
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Allgemein</h2>
 

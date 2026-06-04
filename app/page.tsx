@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SectionTeaser from "@/components/SectionTeaser";
@@ -6,6 +7,20 @@ import Link from "next/link";
 import { collections } from "@/lib/mosaroma/collections";
 import { newsItems } from "@/lib/mosaroma/news";
 import Footer from "@/components/Footer";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getSiteSettings } from "@/lib/cms/settings";
+
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+    title: settings?.defaultSeoTitle || "Mosaroma | Design trifft Performance",
+    description:
+      settings?.defaultSeoDescription ||
+      "Hochwertige Outdoor-Textilien, Sitzauflagen, Kissen, Poufs und Kollektionen für Garten, Terrasse, Hospitality und Fachhandel.",
+  };
+}
 
 const brandPromises = [
   {
@@ -76,10 +91,12 @@ const catalogs = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const layout = await getPublicLayoutData();
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         <HeroSection />
 
@@ -279,7 +296,7 @@ export default function Home() {
           </div>
         </SectionTeaser>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

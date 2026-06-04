@@ -2,7 +2,47 @@ import Image from "next/image";
 import Link from "next/link";
 import { footerData } from "@/lib/mosaroma/footer";
 
-export default function Footer() {
+export interface FooterNavColumn {
+  title: string;
+  links: { label: string; href: string; target?: string }[];
+}
+
+export interface FooterProps {
+  description?: string | null;
+  copyrightText?: string | null;
+  logoUrl?: string | null;
+  siteName?: string | null;
+  columns?: FooterNavColumn[];
+  legalLinks?: { label: string; href: string; target?: string }[];
+  socialLinks?: { platform: string; url: string }[] | null;
+}
+
+export default function Footer({
+  description,
+  copyrightText,
+  logoUrl,
+  siteName,
+  columns,
+  legalLinks,
+  socialLinks,
+}: FooterProps) {
+  const brandDescription =
+    description || footerData.brand.description;
+  const copyright =
+    copyrightText || "© 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.";
+  const footerColumns: FooterNavColumn[] =
+    columns && columns.length > 0
+      ? columns
+      : footerData.columns.map((c) => ({
+          title: c.title,
+          links: c.links.map((l) => ({ label: l.label, href: l.href })),
+        }));
+  const legal: { label: string; href: string; target?: string }[] =
+    legalLinks && legalLinks.length > 0
+      ? legalLinks
+      : footerData.legal.map((l) => ({ label: l.label, href: l.href }));
+  const socials = socialLinks && socialLinks.length > 0 ? socialLinks : null;
+
   return (
     <footer className="bg-anthracite">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
@@ -11,34 +51,47 @@ export default function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-3 mb-4 lg:mb-0">
             <Image
-              src="/mosaroma_logo.png"
-              alt="Mosaroma Logo"
+              src={logoUrl || "/mosaroma_logo.png"}
+              alt={siteName ? `${siteName} Logo` : "Mosaroma Logo"}
               width={180}
               height={45}
               className="h-10 w-auto mb-6 brightness-0 invert"
             />
             <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-6">
-              {footerData.brand.description}
+              {brandDescription}
             </p>
             {/* Social */}
             <div className="flex items-center gap-4">
-              {["facebook", "instagram", "pinterest", "youtube", "linkedin"].map(
-                (social) => (
-                  <a
-                    key={social}
-                    href="#"
-                    aria-label={social}
-                    className="text-white/25 hover:text-pumpkin transition-colors duration-400"
-                  >
-                    <SocialIcon name={social} />
-                  </a>
-                )
-              )}
+              {socials
+                ? socials.map((s) => (
+                    <a
+                      key={s.platform}
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.platform}
+                      className="text-white/25 hover:text-pumpkin transition-colors duration-400"
+                    >
+                      <SocialIcon name={s.platform} />
+                    </a>
+                  ))
+                : ["facebook", "instagram", "pinterest", "youtube", "linkedin"].map(
+                    (social) => (
+                      <a
+                        key={social}
+                        href="#"
+                        aria-label={social}
+                        className="text-white/25 hover:text-pumpkin transition-colors duration-400"
+                      >
+                        <SocialIcon name={social} />
+                      </a>
+                    )
+                  )}
             </div>
           </div>
 
-          {/* Link columns from footerData */}
-          {footerData.columns.map((column) => (
+          {/* Link columns */}
+          {footerColumns.map((column) => (
             <div key={column.title} className="lg:col-span-3">
               <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
                 {column.title}
@@ -48,6 +101,9 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      {...(link.target === "_blank"
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                       className="font-body text-white/35 text-sm hover:text-white/80 transition-colors duration-400"
                     >
                       {link.label}
@@ -62,12 +118,12 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-white/[0.06] py-8 flex flex-col md:flex-row items-center justify-between gap-5">
           <span className="font-body text-white/20 text-xs tracking-wide">
-            &copy; 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.
+            {copyright}
           </span>
 
           {/* Legal links */}
           <div className="flex flex-wrap justify-center gap-6 text-xs">
-            {footerData.legal.map((item) => (
+            {legal.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
@@ -111,5 +167,5 @@ function SocialIcon({ name }: { name: string }) {
       </svg>
     ),
   };
-  return <>{icons[name]}</>;
+  return <>{icons[name] || null}</>;
 }

@@ -4,26 +4,43 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import {
   fabricQualities,
   propertiesComparison,
 } from "@/lib/mosaroma/materials";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Stoff- & technische Daten | Mosaroma",
-  description:
-    "Technische Informationen zu Mosaroma Stoffqualitäten, Materialien, Gewichten und Prüfwerten.",
-};
+export const revalidate = 60;
 
-// TODO: Prüfwerte / Dobby / Jacquard aus dem Katalog ergänzen, sobald vollständig extrahiert.
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten");
+  return {
+    title: hero.seoTitle || "Stoff- & technische Daten | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Technische Informationen zu Mosaroma Stoffqualitäten, Materialien, Gewichten und Prüfwerten.",
+  };
+}
 
-export default function StoffTechnischeDatenPage() {
+export default async function StoffTechnischeDatenPage() {
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
-        <PageHero {...pageHeroes.stoffTechnischeDaten} height="compact" />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+          height="compact"
+        />
 
         <Breadcrumbs
           items={[
@@ -225,7 +242,7 @@ export default function StoffTechnischeDatenPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

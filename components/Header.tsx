@@ -5,9 +5,26 @@ import Link from "next/link";
 import Image from "next/image";
 import { mainNavLinks } from "@/lib/mosaroma/navigation";
 
-export default function Header() {
+export interface HeaderNavItem {
+  label: string;
+  href: string;
+  target?: string;
+}
+
+interface HeaderProps {
+  navItems?: HeaderNavItem[];
+  logoUrl?: string | null;
+  siteName?: string | null;
+}
+
+export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const links: HeaderNavItem[] =
+    navItems && navItems.length > 0
+      ? navItems
+      : mainNavLinks.map((l) => ({ label: l.label, href: l.href }));
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -25,6 +42,8 @@ export default function Header() {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
+
+  const logoAlt = siteName ? `${siteName} Logo` : "Mosaroma Logo";
 
   return (
     <header
@@ -48,8 +67,8 @@ export default function Header() {
         }`}>
           <Link href="/" className="flex-shrink-0">
             <Image
-              src="/mosaroma_logo.png"
-              alt="Mosaroma Logo"
+              src={logoUrl || "/mosaroma_logo.png"}
+              alt={logoAlt}
               width={280}
               height={70}
               priority
@@ -62,10 +81,11 @@ export default function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
-            {mainNavLinks.map((link) => (
+            {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
+                {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
                   scrolled
                     ? "text-anthracite/85 hover:text-pumpkin"
@@ -141,10 +161,11 @@ export default function Header() {
               <path d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </Link>
-          {mainNavLinks.map((link, i) => (
+          {links.map((link, i) => (
             <Link
               key={link.href}
               href={link.href}
+              {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               onClick={() => setMobileOpen(false)}
               className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
               style={{ animationDelay: `${i * 50}ms` }}

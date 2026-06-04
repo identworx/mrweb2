@@ -9,6 +9,7 @@ import ProductCard from "@/components/ProductCard";
 import { collections, getCollectionBySlug } from "@/lib/mosaroma/collections";
 import { categories } from "@/lib/mosaroma/categories";
 import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -30,8 +31,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+export const revalidate = 60;
+
 export default async function KollektionPage({ params }: PageProps) {
   const { slug } = await params;
+  const layout = await getPublicLayoutData();
   const collection = getCollectionBySlug(slug);
 
   if (!collection) {
@@ -44,7 +48,7 @@ export default async function KollektionPage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Compact hero with background image, breadcrumbs inside */}
         <section className="relative overflow-hidden">
@@ -278,7 +282,7 @@ export default async function KollektionPage({ params }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

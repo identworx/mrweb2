@@ -4,7 +4,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
-import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import {
   measurements,
   measurementGroups,
@@ -14,14 +13,22 @@ import BenchMeasurement from "@/components/measurements/BenchMeasurement";
 import MeasurementNav from "@/components/measurements/MeasurementNav";
 import MaterialQualityBox from "@/components/measurements/MaterialQualityBox";
 import CustomSizeCta from "@/components/measurements/CustomSizeCta";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getPageHeroData } from "@/lib/cms/page-hero";
 
-export const metadata: Metadata = {
-  title: "Produktmaße | Mosaroma",
-  description:
-    "Übersicht der wichtigsten Mosaroma Produktmaße für Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets und Tischläufer.",
-};
+export const revalidate = 60;
 
-export default function ProduktmassePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPageHeroData("produktmasse", "produktmasse");
+  return {
+    title: hero.seoTitle || "Produktmaße | Mosaroma",
+    description:
+      hero.seoDescription ||
+      "Übersicht der wichtigsten Mosaroma Produktmaße für Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets und Tischläufer.",
+  };
+}
+
+export default async function ProduktmassePage() {
   const kissenItems = measurements.filter(
     (m) => m.group === "kissen-auflagen",
   );
@@ -32,11 +39,23 @@ export default function ProduktmassePage() {
   const poufItems = measurements.filter((m) => m.group === "poufs");
   const tischItems = measurements.filter((m) => m.group === "tischsets");
 
+  const [layout, hero] = await Promise.all([
+    getPublicLayoutData(),
+    getPageHeroData("produktmasse", "produktmasse"),
+  ]);
+
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
-        <PageHero {...pageHeroes.produktmasse} height="compact" />
+        <PageHero
+          eyebrow={hero.eyebrow}
+          title={hero.title}
+          description={hero.description}
+          image={hero.image}
+          alt={hero.alt}
+          height="compact"
+        />
 
         <Breadcrumbs
           items={[
@@ -200,7 +219,7 @@ export default function ProduktmassePage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }

@@ -47,7 +47,10 @@ async function main() {
       primaryColor: "#E07B12",
       secondaryColor: "#2D2D2D",
       contactEmail: "info@mosaroma.de",
+      phone: "+49 (0) 4207 / XXXX",
+      address: "Rudolf-Diesel-Str. 11–13, 28876 Oyten",
       defaultSeoTitle: "Mosaroma | Design trifft Performance",
+      defaultSeoDescription: "Hochwertige Outdoor-Textilien, Sitzauflagen, Kissen, Poufs und Kollektionen für Garten, Terrasse, Hospitality und Fachhandel.",
     },
   });
   console.log(`✔ SiteSettings: ${siteSettings.siteName}`);
@@ -56,23 +59,33 @@ async function main() {
   // 3. Pages
   // ---------------------------------------------------------------------------
   const pages = [
-    { slug: "home", title: "Startseite", type: "HOME" as const },
-    { slug: "kollektionen", title: "Kollektionen", type: "COLLECTION_INDEX" as const },
-    { slug: "materialien", title: "Materialien", type: "MATERIAL_INDEX" as const },
-    { slug: "ueber-uns", title: "Über uns", type: "STANDARD" as const },
-    { slug: "kataloge", title: "Kataloge", type: "CATALOG_INDEX" as const },
-    { slug: "neuigkeiten", title: "Neuigkeiten", type: "NEWS_INDEX" as const },
-    { slug: "kontakt", title: "Kontakt", type: "CONTACT" as const },
-    { slug: "produktmasse", title: "Produktmaße", type: "SERVICE" as const },
-    { slug: "pflege-garantie", title: "Pflege & Garantie", type: "SERVICE" as const },
-    { slug: "stoff-technische-daten", title: "Stoff- & technische Daten", type: "SERVICE" as const },
+    { slug: "home", title: "Startseite", type: "HOME" as const, headline: "Design trifft Performance", eyebrow: null, introText: null, seoTitle: "Mosaroma | Design trifft Performance", seoDescription: "Hochwertige Outdoor-Textilien, Sitzauflagen, Kissen, Poufs und Kollektionen für Garten, Terrasse, Hospitality und Fachhandel." },
+    { slug: "kollektionen", title: "Kollektionen", type: "COLLECTION_INDEX" as const, eyebrow: "Saison 2027", headline: "Unsere Kollektionen", introText: "Sieben kuratierte Farbwelten für den Außenbereich — jede Kollektion erzählt ihre eigene Geschichte aus Farbe, Material und Stimmung.", seoTitle: "Kollektionen 2027 | Mosaroma", seoDescription: "Entdecken Sie die 7 Kollektionen von MOSAROMA — kuratierte Farbwelten für den Außenbereich." },
+    { slug: "materialien", title: "Materialien", type: "MATERIAL_INDEX" as const, eyebrow: "Material & Technologie", headline: "Materialien, die draußen bestehen.", introText: "Outdoor-Textilien, entwickelt für Komfort, Beständigkeit und zuverlässige Performance im Freien.", seoTitle: "Materialien & Technologie | Mosaroma", seoDescription: "Mackintosh® Technology: spinndüsengefärbtes Olefin für höchste Lichtechtheit und UV-Beständigkeit." },
+    { slug: "ueber-uns", title: "Über uns", type: "STANDARD" as const, eyebrow: "Über Mosaroma", headline: "Das sind wir.", introText: "Design, Performance und verantwortungsvolles Handeln für langlebige Outdoor-Textilien.", seoTitle: "Über uns | Mosaroma", seoDescription: "Seit Generationen entwickeln und produzieren wir hochwertige Outdoor-Textilien." },
+    { slug: "kataloge", title: "Kataloge", type: "CATALOG_INDEX" as const, eyebrow: "Downloads", headline: "Kataloge & Downloads", introText: "Dokumente rund um Produkte, Stoffe, Kollektionen, Pflege und technische Daten.", seoTitle: "Kataloge & Downloads | Mosaroma", seoDescription: "Mosaroma Katalog 2027, Produktmaße, Pflegehinweise und technische Stoffdaten." },
+    { slug: "neuigkeiten", title: "Neuigkeiten", type: "NEWS_INDEX" as const, eyebrow: "Aktuelles", headline: "Neuigkeiten", introText: "Aktuelle Themen rund um Kollektionen, Materialien und Outdoor-Textilien.", seoTitle: "Neuigkeiten | Mosaroma", seoDescription: "Aktuelle Neuigkeiten, Kollektionen und Materialinnovationen von MOSAROMA." },
+    { slug: "kontakt", title: "Kontakt", type: "CONTACT" as const, eyebrow: "Kontakt", headline: "Sprechen Sie uns an.", introText: "Wir unterstützen Sie bei Fragen zu Kollektionen, Materialien, Katalogen und Produkten.", seoTitle: "Kontakt | Mosaroma", seoDescription: "Kontaktieren Sie MOSAROMA — Mosaroma Industries GmbH in Oyten bei Bremen." },
+    { slug: "produktmasse", title: "Produktmaße", type: "SERVICE" as const, eyebrow: "Übersicht · Bemaßung am Produkt", headline: "Produktmaße", introText: "Alle relevanten Maße und Abmessungen der Mosaroma Produktformen auf einen Blick.", seoTitle: "Produktmaße | Mosaroma", seoDescription: "Übersicht der wichtigsten Mosaroma Produktmaße." },
+    { slug: "pflege-garantie", title: "Pflege & Garantie", type: "SERVICE" as const, eyebrow: "Service", headline: "Pflege & Garantie", introText: "Hinweise zur Reinigung, Lagerung und Garantie von Mosaroma Outdoor-Produkten.", seoTitle: "Pflege & Garantie | Mosaroma", seoDescription: "Hinweise zur Reinigung, Lagerung und Garantie von Mosaroma Outdoor-Produkten." },
+    { slug: "stoff-technische-daten", title: "Stoff- & technische Daten", type: "SERVICE" as const, eyebrow: "Service", headline: "Stoff- & technische Daten", introText: "Technische Informationen zu Stoffqualitäten, Materialaufbau und Prüfwerten.", seoTitle: "Stoff- & technische Daten | Mosaroma", seoDescription: "Technische Informationen zu Mosaroma Stoffqualitäten." },
   ];
 
   for (const p of pages) {
     await prisma.page.upsert({
       where: { slug: p.slug },
       update: { title: p.title, type: p.type, status: "PUBLISHED" },
-      create: { slug: p.slug, title: p.title, type: p.type, status: "PUBLISHED" },
+      create: {
+        slug: p.slug,
+        title: p.title,
+        type: p.type,
+        status: "PUBLISHED",
+        eyebrow: p.eyebrow,
+        headline: p.headline,
+        introText: p.introText,
+        seoTitle: p.seoTitle,
+        seoDescription: p.seoDescription,
+      },
     });
   }
   console.log(`✔ Pages: ${pages.length} seeded`);
@@ -81,78 +94,69 @@ async function main() {
   // 4. Navigation menus
   // ---------------------------------------------------------------------------
 
-  // -- HEADER -----------------------------------------------------------------
-  const headerMenu = await prisma.navigationMenu.create({
-    data: {
+  const navMenus = [
+    {
       name: "Header",
-      location: "HEADER",
-      items: {
-        create: [
-          { label: "Kollektionen", href: "/kollektionen", order: 1 },
-          { label: "Materialien", href: "/materialien", order: 2 },
-          { label: "Über uns", href: "/ueber-uns", order: 3 },
-          { label: "Kataloge", href: "/kataloge", order: 4 },
-          { label: "Neuigkeiten", href: "/neuigkeiten", order: 5 },
-          { label: "Kontakt", href: "/kontakt", order: 6 },
-        ],
-      },
+      location: "HEADER" as const,
+      items: [
+        { label: "Kollektionen", href: "/kollektionen", order: 1 },
+        { label: "Materialien", href: "/materialien", order: 2 },
+        { label: "Über uns", href: "/ueber-uns", order: 3 },
+        { label: "Kataloge", href: "/kataloge", order: 4 },
+        { label: "Neuigkeiten", href: "/neuigkeiten", order: 5 },
+        { label: "Kontakt", href: "/kontakt", order: 6 },
+      ],
     },
-  });
-  console.log(`✔ Navigation: ${headerMenu.name}`);
-
-  // -- FOOTER "Kollektionen" --------------------------------------------------
-  const footerMenu = await prisma.navigationMenu.create({
-    data: {
+    {
       name: "Kollektionen",
-      location: "FOOTER",
-      items: {
-        create: [
-          { label: "Green", href: "/kollektionen/green", order: 1 },
-          { label: "Blue", href: "/kollektionen/blue", order: 2 },
-          { label: "Red", href: "/kollektionen/red", order: 3 },
-          { label: "Golden", href: "/kollektionen/golden", order: 4 },
-          { label: "Earth & Grey", href: "/kollektionen/earth-grey", order: 5 },
-          { label: "NERIO · Oceana", href: "/kollektionen/nerio-oceana", order: 6 },
-          { label: "Basic", href: "/kollektionen/basic", order: 7 },
-        ],
-      },
+      location: "FOOTER" as const,
+      items: [
+        { label: "Green", href: "/kollektionen/green", order: 1 },
+        { label: "Blue", href: "/kollektionen/blue", order: 2 },
+        { label: "Red", href: "/kollektionen/red", order: 3 },
+        { label: "Golden", href: "/kollektionen/golden", order: 4 },
+        { label: "Earth & Grey", href: "/kollektionen/earth-grey", order: 5 },
+        { label: "NERIO · Oceana", href: "/kollektionen/nerio-oceana", order: 6 },
+        { label: "Basic", href: "/kollektionen/basic", order: 7 },
+      ],
     },
-  });
-  console.log(`✔ Navigation: ${footerMenu.name}`);
-
-  // -- SERVICE ----------------------------------------------------------------
-  const serviceMenu = await prisma.navigationMenu.create({
-    data: {
+    {
       name: "Service",
-      location: "SERVICE",
-      items: {
-        create: [
-          { label: "Kataloge", href: "/kataloge", order: 1 },
-          { label: "Produktmaße", href: "/kataloge/produktmasse", order: 2 },
-          { label: "Pflege & Garantie", href: "/kataloge/pflege-garantie", order: 3 },
-          { label: "Stoff- & technische Daten", href: "/kataloge/stoff-technische-daten", order: 4 },
-          { label: "Kontakt", href: "/kontakt", order: 5 },
-        ],
-      },
+      location: "SERVICE" as const,
+      items: [
+        { label: "Kataloge", href: "/kataloge", order: 1 },
+        { label: "Produktmaße", href: "/kataloge/produktmasse", order: 2 },
+        { label: "Pflege & Garantie", href: "/kataloge/pflege-garantie", order: 3 },
+        { label: "Stoff- & technische Daten", href: "/kataloge/stoff-technische-daten", order: 4 },
+        { label: "Kontakt", href: "/kontakt", order: 5 },
+      ],
     },
-  });
-  console.log(`✔ Navigation: ${serviceMenu.name}`);
-
-  // -- LEGAL ------------------------------------------------------------------
-  const legalMenu = await prisma.navigationMenu.create({
-    data: {
+    {
       name: "Rechtliches",
-      location: "LEGAL",
-      items: {
-        create: [
-          { label: "Impressum", href: "/impressum", order: 1 },
-          { label: "Datenschutz", href: "/datenschutz", order: 2 },
-          { label: "AGB", href: "/agb", order: 3 },
-        ],
-      },
+      location: "LEGAL" as const,
+      items: [
+        { label: "Impressum", href: "/impressum", order: 1 },
+        { label: "Datenschutz", href: "/datenschutz", order: 2 },
+        { label: "AGB", href: "/agb", order: 3 },
+      ],
     },
-  });
-  console.log(`✔ Navigation: ${legalMenu.name}`);
+  ];
+
+  for (const nav of navMenus) {
+    const existing = await prisma.navigationMenu.findFirst({
+      where: { location: nav.location },
+    });
+    if (!existing) {
+      await prisma.navigationMenu.create({
+        data: {
+          name: nav.name,
+          location: nav.location,
+          items: { create: nav.items },
+        },
+      });
+    }
+    console.log(`✔ Navigation: ${nav.name}`);
+  }
 
   // ---------------------------------------------------------------------------
   // 5. Collections

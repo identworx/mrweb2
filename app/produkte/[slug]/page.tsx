@@ -10,6 +10,7 @@ import { products, getProductBySlug } from "@/lib/mosaroma/products";
 import { getCategoryBySlug } from "@/lib/mosaroma/categories";
 import { getCollectionBySlug } from "@/lib/mosaroma/collections";
 import { fabricQualities } from "@/lib/mosaroma/materials";
+import { getPublicLayoutData } from "@/lib/cms/public-layout";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -49,8 +50,11 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 60;
+
 export default async function ProduktPage({ params }: PageProps) {
   const { slug } = await params;
+  const layout = await getPublicLayoutData();
   const product = getProductBySlug(slug);
 
   if (!product) {
@@ -78,7 +82,7 @@ export default async function ProduktPage({ params }: PageProps) {
 
   return (
     <>
-      <Header />
+      <Header {...layout.header} />
       <main>
         {/* Product Hero with breadcrumbs inside */}
         <section className="bg-cream pb-16 md:pb-24">
@@ -358,7 +362,7 @@ export default async function ProduktPage({ params }: PageProps) {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer {...layout.footer} />
     </>
   );
 }
