@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface UserData {
   id: string;
@@ -17,7 +18,15 @@ const ROLES = [
   { value: "VIEWER", label: "Betrachter" },
 ];
 
-export default function UserEditForm({ user }: { user: UserData | null }) {
+export default function UserEditForm({
+  user,
+  currentUserId = "",
+  userRole = "VIEWER",
+}: {
+  user: UserData | null;
+  currentUserId?: string;
+  userRole?: string;
+}) {
   const router = useRouter();
   const isNew = !user;
   const [form, setForm] = useState({
@@ -166,6 +175,22 @@ export default function UserEditForm({ user }: { user: UserData | null }) {
           Abbrechen
         </Link>
       </div>
+
+      {user && (
+        <DangerZone
+          entityId={user.id}
+          entityName={user.name || user.email}
+          apiEndpoint="/api/admin/users"
+          redirectTo="/admin/users"
+          deleteAction={{
+            enabled: user.id !== currentUserId,
+            disabledReason: user.id === currentUserId
+              ? "Du kannst dein eigenes Konto nicht löschen."
+              : undefined,
+          }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }

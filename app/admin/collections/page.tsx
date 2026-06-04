@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -8,13 +10,17 @@ const statusColors: Record<string, string> = {
 };
 
 export default async function CollectionsListPage() {
-  const collections = await prisma.collection.findMany({
-    orderBy: { order: "asc" },
-    include: {
-      _count: { select: { products: true } },
-      cardImage: { select: { url: true } },
-    },
-  });
+  const [collections, sessionUser] = await Promise.all([
+    prisma.collection.findMany({
+      orderBy: { order: "asc" },
+      include: {
+        _count: { select: { products: true } },
+        cardImage: { select: { url: true } },
+      },
+    }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -136,23 +142,15 @@ export default async function CollectionsListPage() {
                     {collection.order}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <Link
-                        href={`/admin/collections/${collection.id}`}
-                        className="text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors"
-                      >
-                        Bearbeiten
-                      </Link>
-                      <a
-                        href={`/kollektionen/${collection.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
-                        title="Öffentliche Seite ansehen"
-                      >
-                        ↗
-                      </a>
-                    </div>
+                    <ListActions
+                      entityId={collection.id}
+                      entityName={collection.name}
+                      apiEndpoint="/api/admin/collections"
+                      editHref={`/admin/collections/${collection.id}`}
+                      viewHref={`/kollektionen/${collection.slug}`}
+                      archiveAction={{ currentStatus: collection.status }}
+                      userRole={userRole}
+                    />
                   </td>
                 </tr>
               );

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface ProductGroupData {
   id: string;
@@ -23,9 +24,13 @@ interface MediaOption {
 export default function ProductGroupEditForm({
   productGroup,
   mediaAssets,
+  userRole = "VIEWER",
+  productCount = 0,
 }: {
   productGroup: ProductGroupData;
   mediaAssets: MediaOption[];
+  userRole?: string;
+  productCount?: number;
 }) {
   const router = useRouter();
   const [form, setForm] = useState<ProductGroupData>(productGroup);
@@ -191,6 +196,23 @@ export default function ProductGroupEditForm({
           Abbrechen
         </Link>
       </div>
+
+      {form.id && (
+        <DangerZone
+          entityId={form.id}
+          entityName={form.name || "Produktgruppe"}
+          apiEndpoint="/api/admin/product-groups"
+          redirectTo="/admin/product-groups"
+          deactivateAction={{ isActive: form.isActive }}
+          deleteAction={{
+            enabled: productCount === 0,
+            disabledReason: productCount > 0
+              ? `Produktgruppe enthält ${productCount} Produkt(e). Bitte zuerst alle Produkte entfernen oder verschieben.`
+              : undefined,
+          }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }

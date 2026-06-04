@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
-import { writeFile, mkdir } from "fs/promises";
+import { getMediaAssetUsage } from "@/lib/admin/delete-guards";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -127,5 +128,42 @@ export async function POST(request: NextRequest) {
       { error: "Fehler beim Hochladen des Mediums" },
       { status: 500 },
     );
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role !== "ADMIN")
+    return NextResponse.json({ error: "Nur Administratoren können Medien löschen" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const usage = await getMediaAssetUsage(id);
+    if (usage.length > 0) {
+      const details = usage.map((u) => `${u.model}: ${u.count}x`).join(", ");
+      return NextResponse.json(
+        { error: `Medium wird noch verwendet: ${details}. Bitte zuerst alle Verknüpfungen entfernen.`, usage },
+        { status: 409 },
+      );
+    }
+
+    const asset = await prisma.mediaAsset.findUnique({ where: { id }, select: { url: true } });
+    await prisma.mediaAsset.delete({ where: { id } });
+
+    if (asset?.url?.startsWith("/uploads/")) {
+      const filePath = path.join(process.cwd(), "public", asset.url);
+      try {
+        await unlink(filePath);
+      } catch {
+        // File may already be missing
+      }
+    }
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Löschen des Mediums" }, { status: 500 });
   }
 }

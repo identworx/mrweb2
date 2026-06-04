@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import MediaEditForm from "@/components/admin/MediaEditForm";
+import { getSessionUser } from "@/lib/auth/session";
+import { getMediaAssetUsage } from "@/lib/admin/delete-guards";
 
 export default async function MediaEditPage({
   params,
@@ -9,6 +11,7 @@ export default async function MediaEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const sessionUser = await getSessionUser();
 
   if (id === "new") {
     return (
@@ -28,7 +31,7 @@ export default async function MediaEditPage({
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Medium hochladen</h1>
         </div>
 
-        <MediaEditForm asset={null} />
+        <MediaEditForm asset={null} userRole={sessionUser?.role ?? "VIEWER"} mediaUsage={[]} />
       </div>
     );
   }
@@ -66,6 +69,8 @@ export default async function MediaEditPage({
           mimeType: asset.mimeType,
           size: asset.size,
         }}
+        userRole={sessionUser?.role ?? "VIEWER"}
+        mediaUsage={await getMediaAssetUsage(asset.id)}
       />
     </div>
   );

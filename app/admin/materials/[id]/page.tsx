@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import MaterialEditForm from "@/components/admin/MaterialEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function MaterialEditPage({
   params,
@@ -9,6 +10,7 @@ export default async function MaterialEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const sessionUser = await getSessionUser();
 
   if (id === "new") {
     return (
@@ -40,6 +42,9 @@ export default async function MaterialEditPage({
             comfort: "",
             order: 0,
           }}
+          userRole={sessionUser?.role ?? "VIEWER"}
+          productCount={0}
+          isActive={true}
         />
       </div>
     );
@@ -80,6 +85,9 @@ export default async function MaterialEditPage({
           comfort: material.comfort ?? "",
           order: material.order,
         }}
+        userRole={sessionUser?.role ?? "VIEWER"}
+        productCount={await prisma.product.count({ where: { materialId: material.id } })}
+        isActive={material.isActive}
       />
     </div>
   );

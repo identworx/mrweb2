@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface ProductData {
   id: string;
@@ -43,12 +44,14 @@ export default function ProductEditForm({
   productGroups,
   materials,
   mediaAssets,
+  userRole = "VIEWER",
 }: {
   product: ProductData;
   collections: SelectOption[];
   productGroups: SelectOption[];
   materials: SelectOption[];
   mediaAssets: MediaOption[];
+  userRole?: string;
 }) {
   const router = useRouter();
   const [form, setForm] = useState<ProductData>(product);
@@ -347,6 +350,18 @@ export default function ProductEditForm({
           Abbrechen
         </Link>
       </div>
+
+      {form.id && (
+        <DangerZone
+          entityId={form.id}
+          entityName={form.name || "Produkt"}
+          apiEndpoint="/api/admin/products"
+          redirectTo="/admin/products"
+          archiveAction={{ currentStatus: form.status }}
+          deleteAction={{ enabled: true }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }

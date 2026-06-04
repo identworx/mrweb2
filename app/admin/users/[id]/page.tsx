@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import UserEditForm from "@/components/admin/UserEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function UserEditPage({
   params,
@@ -9,6 +10,7 @@ export default async function UserEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const sessionUser = await getSessionUser();
 
   if (id === "new") {
     return (
@@ -28,7 +30,7 @@ export default async function UserEditPage({
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Neuer Benutzer</h1>
         </div>
 
-        <UserEditForm user={null} />
+        <UserEditForm user={null} currentUserId={sessionUser?.id ?? ""} userRole={sessionUser?.role ?? "VIEWER"} />
       </div>
     );
   }
@@ -73,6 +75,8 @@ export default async function UserEditPage({
           email: user.email,
           role: user.role,
         }}
+        currentUserId={sessionUser?.id ?? ""}
+        userRole={sessionUser?.role ?? "VIEWER"}
       />
     </div>
   );

@@ -513,6 +513,70 @@ prisma/
   schema.prisma             # Datenbank-Schema (17 Modelle)
   seed.ts                   # Seed-Daten
   migrations/               # SQLite Migrationen
+  admin/
+    delete-guards.ts          # Lösch-Guards (Referenz-Prüfungen)
+    validation.ts             # Zod-Schemas
 proxy.ts                    # Auth-Proxy (Next.js 16 Middleware)
 public/uploads/             # Hochgeladene Medien
 ```
+
+## 12. Löschen / Archivieren / Deaktivieren
+
+### Strategie pro Datentyp
+
+| Modell | Soft Delete | Deaktivieren | Hard Delete | Guard |
+|--------|-------------|-------------|-------------|-------|
+| Page | `status → ARCHIVED` | — | ADMIN only | Sections cascaden |
+| Collection | `status → ARCHIVED` | — | ADMIN only | Blockiert wenn Produkte vorhanden |
+| Product | `status → ARCHIVED` | — | ADMIN only | Images cascaden |
+| NewsArticle | `status → ARCHIVED` | — | ADMIN only | — |
+| ProductGroup | — | `isActive → false` | ADMIN only | Blockiert wenn Produkte vorhanden |
+| Material | — | `isActive → false` | ADMIN only | Blockiert wenn Produkte zugeordnet |
+| NavigationItem | — | — | ADMIN only | Kinder werden entkoppelt (parentId → null) |
+| Download | — | `isActive → false` | ADMIN only | — |
+| Measurement | — | `isActive → false` | ADMIN only | — |
+| MediaAsset | — | — | ADMIN only | Blockiert wenn irgendwo referenziert + Datei wird gelöscht |
+| FormSubmission | — | — | Alle auth. User | — |
+| User | — | — | ADMIN only | Letzter Admin geschützt, Selbstlöschung verboten |
+
+### Rollen-Berechtigungen
+
+| Aktion | ADMIN | EDITOR | VIEWER |
+|--------|-------|--------|--------|
+| Archivieren / Wiederherstellen | Ja | Ja | Nein |
+| Deaktivieren / Reaktivieren | Ja | Ja | Nein |
+| Endgültig löschen (Hard Delete) | Ja | Nein | Nein |
+
+### API-Endpunkte
+
+Alle DELETE- und PATCH-Handler liegen unter `app/api/admin/`:
+
+- **PATCH** `?id=<id>&action=status` — Status ändern (DRAFT / PUBLISHED / ARCHIVED)
+- **PATCH** `?id=<id>&action=toggle` — isActive umschalten
+- **DELETE** `?id=<id>` — Endgültig löschen (nur ADMIN)
+
+### Guard-Utilities (`lib/admin/delete-guards.ts`)
+
+- `getMediaAssetUsage(id)` — Prüft 13 Reverse-Relationen, gibt `{ model, count }[]` zurück
+- `canDeleteUser(targetId, currentUserId)` — Letzter-Admin und Selbstlösch-Schutz
+- `canDeleteCollection(id)` — Blockiert wenn Produkte vorhanden (Cascade-Schutz)
+- `canDeleteProductGroup(id)` — Blockiert wenn Produkte vorhanden (Cascade-Schutz)
+- `canDeleteMaterial(id)` — Blockiert wenn Produkte zugeordnet
+
+### UI-Komponenten
+
+- `ConfirmDialog` — Wiederverwendbarer Bestätigungsdialog (danger / warning)
+- `DangerZone` — Gefahrenzone für Bearbeitungsseiten (Archivieren, Deaktivieren, Löschen)
+- `ListActions` — Inline-Aktionsbuttons für Listenansichten
+
+### Admin-Sidebar
+
+Die Admin-Sidebar (`AdminShell.tsx`) ist Systemnavigation und wird **nicht** aus der Datenbank verwaltet. Änderungen an der Sidebar erfordern Code-Änderungen.
+
+### Öffentliche Seiten
+
+Alle CMS-Helpers filtern automatisch:
+- `status: "PUBLISHED"` für Content-Modelle
+- `isActive: true` für strukturelle Modelle
+
+Archivierte und deaktivierte Einträge erscheinen niemals auf der öffentlichen Website.

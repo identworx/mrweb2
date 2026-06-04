@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -8,14 +10,18 @@ const statusColors: Record<string, string> = {
 };
 
 export default async function ProductsListPage() {
-  const products = await prisma.product.findMany({
-    orderBy: { name: "asc" },
-    include: {
-      collection: true,
-      productGroup: true,
-      mainImage: true,
-    },
-  });
+  const [products, sessionUser] = await Promise.all([
+    prisma.product.findMany({
+      orderBy: { name: "asc" },
+      include: {
+        collection: true,
+        productGroup: true,
+        mainImage: true,
+      },
+    }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -116,24 +122,15 @@ export default async function ProductsListPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Link
-                      href={`/admin/products/${product.id}`}
-                      className="text-xs text-orange-600 hover:text-orange-700"
-                    >
-                      Bearbeiten
-                    </Link>
-                    {product.status === "PUBLISHED" && (
-                      <a
-                        href={`/produkte/${product.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-gray-400 hover:text-orange-600"
-                      >
-                        Ansehen ↗
-                      </a>
-                    )}
-                  </div>
+                  <ListActions
+                    entityId={product.id}
+                    entityName={product.name}
+                    apiEndpoint="/api/admin/products"
+                    editHref={`/admin/products/${product.id}`}
+                    viewHref={product.status === "PUBLISHED" ? `/produkte/${product.slug}` : undefined}
+                    archiveAction={{ currentStatus: product.status }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}

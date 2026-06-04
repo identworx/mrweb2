@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import CollectionEditForm from "@/components/admin/CollectionEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function CollectionEditPage({
   params,
@@ -10,6 +11,7 @@ export default async function CollectionEditPage({
 }) {
   const { id } = await params;
 
+  const sessionUser = await getSessionUser();
   const isNew = id === "new";
   const [collection, mediaAssets] = await Promise.all([
     isNew ? null : prisma.collection.findUnique({ where: { id } }),
@@ -81,7 +83,12 @@ export default async function CollectionEditPage({
         </h1>
       </div>
 
-      <CollectionEditForm collection={collectionData} mediaAssets={mediaAssets} />
+      <CollectionEditForm
+        collection={collectionData}
+        mediaAssets={mediaAssets}
+        userRole={sessionUser?.role ?? "VIEWER"}
+        productCount={collection ? await prisma.product.count({ where: { collectionId: collection.id } }) : 0}
+      />
     </div>
   );
 }

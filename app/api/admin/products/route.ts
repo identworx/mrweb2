@@ -72,3 +72,48 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role === "VIEWER")
+    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const body = await request.json();
+    const { status } = body;
+
+    if (!["DRAFT", "PUBLISHED", "ARCHIVED"].includes(status)) {
+      return NextResponse.json({ error: "Ungültiger Status" }, { status: 400 });
+    }
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: { status },
+    });
+
+    return NextResponse.json(product);
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role !== "ADMIN")
+    return NextResponse.json({ error: "Nur Administratoren können Produkte löschen" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    await prisma.product.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Löschen des Produkts" }, { status: 500 });
+  }
+}

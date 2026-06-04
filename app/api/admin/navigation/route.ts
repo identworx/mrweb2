@@ -69,3 +69,27 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role !== "ADMIN")
+    return NextResponse.json({ error: "Nur Administratoren können Navigationspunkte löschen" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    await prisma.$transaction(async (tx) => {
+      await tx.navigationItem.updateMany({
+        where: { parentId: id },
+        data: { parentId: null },
+      });
+      await tx.navigationItem.delete({ where: { id } });
+    });
+
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Löschen des Navigationspunkts" }, { status: 500 });
+  }
+}

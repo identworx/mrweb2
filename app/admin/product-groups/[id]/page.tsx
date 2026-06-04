@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import ProductGroupEditForm from "@/components/admin/ProductGroupEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function ProductGroupEditPage({
   params,
@@ -10,6 +11,7 @@ export default async function ProductGroupEditPage({
 }) {
   const { id } = await params;
 
+  const sessionUser = await getSessionUser();
   const isNew = id === "new";
   const [productGroup, mediaAssets] = await Promise.all([
     isNew ? Promise.resolve(null) : prisma.productGroup.findUnique({ where: { id } }),
@@ -60,6 +62,8 @@ export default async function ProductGroupEditPage({
       <ProductGroupEditForm
         productGroup={groupData}
         mediaAssets={mediaAssets}
+        userRole={sessionUser?.role ?? "VIEWER"}
+        productCount={productGroup ? await prisma.product.count({ where: { productGroupId: productGroup.id } }) : 0}
       />
     </div>
   );

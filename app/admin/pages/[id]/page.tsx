@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import PageEditForm from "@/components/admin/PageEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function PageEditPage({
   params,
@@ -9,6 +10,7 @@ export default async function PageEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const sessionUser = await getSessionUser();
 
   const isNew = id === "new";
   const page = isNew ? null : await prisma.page.findUnique({ where: { id } });
@@ -58,7 +60,7 @@ export default async function PageEditPage({
         </h1>
       </div>
 
-      <PageEditForm page={pageData} />
+      <PageEditForm page={pageData} userRole={sessionUser?.role ?? "VIEWER"} />
     </div>
   );
 }

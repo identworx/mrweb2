@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface PageData {
   id: string;
@@ -31,7 +32,7 @@ const PAGE_TYPES = [
   "LEGAL",
 ];
 
-export default function PageEditForm({ page }: { page: PageData }) {
+export default function PageEditForm({ page, userRole = "VIEWER" }: { page: PageData; userRole?: string }) {
   const router = useRouter();
   const [form, setForm] = useState<PageData>(page);
   const [saving, setSaving] = useState(false);
@@ -214,6 +215,18 @@ export default function PageEditForm({ page }: { page: PageData }) {
           Abbrechen
         </Link>
       </div>
+
+      {form.id && (
+        <DangerZone
+          entityId={form.id}
+          entityName={form.title || "Seite"}
+          apiEndpoint="/api/admin/pages"
+          redirectTo="/admin/pages"
+          archiveAction={{ currentStatus: form.status }}
+          deleteAction={{ enabled: true }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }

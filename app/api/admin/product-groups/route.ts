@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { canDeleteProductGroup } from "@/lib/admin/delete-guards";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -53,5 +54,51 @@ export async function POST(request: NextRequest) {
       { error: "Fehler beim Speichern der Produktgruppe" },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role === "VIEWER")
+    return NextResponse.json({ error: "Nicht autorisiert" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const body = await request.json();
+    const { isActive } = body;
+
+    const productGroup = await prisma.productGroup.update({
+      where: { id },
+      data: { isActive: Boolean(isActive) },
+    });
+
+    return NextResponse.json(productGroup);
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user || user.role !== "ADMIN")
+    return NextResponse.json({ error: "Nur Administratoren können Produktgruppen löschen" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const guard = await canDeleteProductGroup(id);
+    if (!guard.allowed) {
+      return NextResponse.json({ error: guard.reason }, { status: 409 });
+    }
+
+    await prisma.productGroup.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Löschen der Produktgruppe" }, { status: 500 });
   }
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser, hashPassword } from "@/lib/auth/session";
+import { canDeleteUser } from "@/lib/admin/delete-guards";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -107,5 +108,27 @@ export async function POST(request: NextRequest) {
       ? "Ein Benutzer mit dieser E-Mail existiert bereits"
       : "Fehler beim Speichern des Benutzers";
     return NextResponse.json({ error: message }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  const currentUser = await getSessionUser();
+  if (!currentUser || currentUser.role !== "ADMIN")
+    return NextResponse.json({ error: "Nur Administratoren können Benutzer löschen" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const guard = await canDeleteUser(id, currentUser.id);
+    if (!guard.allowed) {
+      return NextResponse.json({ error: guard.reason }, { status: 409 });
+    }
+
+    await prisma.user.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Löschen des Benutzers" }, { status: 500 });
   }
 }

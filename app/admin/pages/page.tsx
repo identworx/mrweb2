@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -8,9 +10,11 @@ const statusColors: Record<string, string> = {
 };
 
 export default async function PagesListPage() {
-  const pages = await prisma.page.findMany({
-    orderBy: { title: "asc" },
-  });
+  const [pages, sessionUser] = await Promise.all([
+    prisma.page.findMany({ orderBy: { title: "asc" } }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -48,13 +52,16 @@ export default async function PagesListPage() {
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Aktualisiert
               </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {pages.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Seiten vorhanden.
@@ -89,6 +96,16 @@ export default async function PagesListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {page.updatedAt.toLocaleDateString("de-DE")}
+                </td>
+                <td className="px-6 py-4">
+                  <ListActions
+                    entityId={page.id}
+                    entityName={page.title}
+                    apiEndpoint="/api/admin/pages"
+                    editHref={`/admin/pages/${page.id}`}
+                    archiveAction={{ currentStatus: page.status }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}

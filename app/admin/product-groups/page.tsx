@@ -1,15 +1,21 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
 
 export default async function ProductGroupsListPage() {
-  const productGroups = await prisma.productGroup.findMany({
-    orderBy: { order: "asc" },
-    include: {
-      _count: {
-        select: { products: true },
+  const [productGroups, sessionUser] = await Promise.all([
+    prisma.productGroup.findMany({
+      orderBy: { order: "asc" },
+      include: {
+        _count: {
+          select: { products: true },
+        },
       },
-    },
-  });
+    }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -50,13 +56,16 @@ export default async function ProductGroupsListPage() {
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Produkte
               </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {productGroups.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Produktgruppen vorhanden.
@@ -98,6 +107,16 @@ export default async function ProductGroupsListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {group._count.products}
+                </td>
+                <td className="px-6 py-4">
+                  <ListActions
+                    entityId={group.id}
+                    entityName={group.name}
+                    apiEndpoint="/api/admin/product-groups"
+                    editHref={`/admin/product-groups/${group.id}`}
+                    deactivateAction={{ isActive: group.isActive }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}

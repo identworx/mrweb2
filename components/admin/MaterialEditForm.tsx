@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface MaterialData {
   id: string;
@@ -16,7 +17,17 @@ interface MaterialData {
   order: number;
 }
 
-export default function MaterialEditForm({ material }: { material: MaterialData }) {
+export default function MaterialEditForm({
+  material,
+  userRole = "VIEWER",
+  productCount = 0,
+  isActive = true,
+}: {
+  material: MaterialData;
+  userRole?: string;
+  productCount?: number;
+  isActive?: boolean;
+}) {
   const router = useRouter();
   const [form, setForm] = useState<MaterialData>(material);
   const [saving, setSaving] = useState(false);
@@ -175,6 +186,23 @@ export default function MaterialEditForm({ material }: { material: MaterialData 
           Abbrechen
         </Link>
       </div>
+
+      {form.id && (
+        <DangerZone
+          entityId={form.id}
+          entityName={form.name || "Material"}
+          apiEndpoint="/api/admin/materials"
+          redirectTo="/admin/materials"
+          deactivateAction={{ isActive }}
+          deleteAction={{
+            enabled: productCount === 0,
+            disabledReason: productCount > 0
+              ? `Material wird von ${productCount} Produkt(en) verwendet. Bitte zuerst die Zuordnung entfernen.`
+              : undefined,
+          }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }

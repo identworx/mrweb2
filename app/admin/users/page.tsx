@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrator",
@@ -8,16 +9,19 @@ const roleLabels: Record<string, string> = {
 };
 
 export default async function UsersListPage() {
-  const users = await prisma.user.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      createdAt: true,
-    },
-  });
+  const [users, sessionUser] = await Promise.all([
+    prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+    }),
+    getSessionUser(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -56,13 +60,16 @@ export default async function UsersListPage() {
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Erstellt am
               </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {users.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Benutzer vorhanden.
@@ -92,6 +99,14 @@ export default async function UsersListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {user.createdAt.toLocaleDateString("de-DE")}
+                </td>
+                <td className="px-6 py-4">
+                  <Link
+                    href={`/admin/users/${user.id}`}
+                    className="text-xs text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                  >
+                    Bearbeiten
+                  </Link>
                 </td>
               </tr>
             ))}

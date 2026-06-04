@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface MediaAssetData {
   id: string;
@@ -20,7 +21,20 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default function MediaEditForm({ asset }: { asset: MediaAssetData | null }) {
+interface UsageEntry {
+  model: string;
+  count: number;
+}
+
+export default function MediaEditForm({
+  asset,
+  userRole = "VIEWER",
+  mediaUsage = [],
+}: {
+  asset: MediaAssetData | null;
+  userRole?: string;
+  mediaUsage?: UsageEntry[];
+}) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [alt, setAlt] = useState(asset?.alt ?? "");
@@ -198,6 +212,34 @@ export default function MediaEditForm({ asset }: { asset: MediaAssetData | null 
           Abbrechen
         </Link>
       </div>
+
+      {asset && (
+        <>
+          {mediaUsage.length > 0 && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800">
+              <p className="font-medium mb-1">Dieses Medium wird verwendet in:</p>
+              <ul className="space-y-0.5">
+                {mediaUsage.map((u, i) => (
+                  <li key={i}>• {u.model}: {u.count}x</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <DangerZone
+            entityId={asset.id}
+            entityName={asset.filename}
+            apiEndpoint="/api/admin/media"
+            redirectTo="/admin/media"
+            deleteAction={{
+              enabled: mediaUsage.length === 0,
+              disabledReason: mediaUsage.length > 0
+                ? "Medium wird noch verwendet. Bitte zuerst alle Verknüpfungen entfernen."
+                : undefined,
+            }}
+            userRole={userRole}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import ProductEditForm from "@/components/admin/ProductEditForm";
+import { getSessionUser } from "@/lib/auth/session";
 
 export default async function ProductEditPage({
   params,
@@ -9,6 +10,7 @@ export default async function ProductEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const sessionUser = await getSessionUser();
 
   const isNew = id === "new";
   const [product, collections, productGroups, materials, mediaAssets] = await Promise.all([
@@ -90,6 +92,7 @@ export default async function ProductEditPage({
         productGroups={productGroups}
         materials={materials}
         mediaAssets={mediaAssets}
+        userRole={sessionUser?.role ?? "VIEWER"}
       />
     </div>
   );

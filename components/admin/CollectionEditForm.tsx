@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import DangerZone from "./DangerZone";
 
 interface MediaItem {
   id: string;
@@ -33,12 +34,14 @@ interface CollectionData {
 interface Props {
   collection: CollectionData;
   mediaAssets: MediaItem[];
+  userRole?: string;
+  productCount?: number;
 }
 
 const STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"];
 const HEX_REGEX = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
 
-export default function CollectionEditForm({ collection, mediaAssets }: Props) {
+export default function CollectionEditForm({ collection, mediaAssets, userRole = "VIEWER", productCount = 0 }: Props) {
   const router = useRouter();
   const [form, setForm] = useState<CollectionData>(collection);
   const [saving, setSaving] = useState(false);
@@ -417,6 +420,23 @@ export default function CollectionEditForm({ collection, mediaAssets }: Props) {
           </a>
         )}
       </div>
+
+      {form.id && (
+        <DangerZone
+          entityId={form.id}
+          entityName={form.name || "Kollektion"}
+          apiEndpoint="/api/admin/collections"
+          redirectTo="/admin/collections"
+          archiveAction={{ currentStatus: form.status }}
+          deleteAction={{
+            enabled: productCount === 0,
+            disabledReason: productCount > 0
+              ? `Kollektion enthält ${productCount} Produkt(e). Bitte zuerst alle Produkte entfernen oder verschieben.`
+              : undefined,
+          }}
+          userRole={userRole}
+        />
+      )}
     </div>
   );
 }
