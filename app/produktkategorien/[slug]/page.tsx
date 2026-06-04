@@ -49,18 +49,14 @@ export default async function KategoriePage({ params }: PageProps) {
     <>
       <Header />
       <main>
-        {/* Breadcrumbs */}
-        <div className="bg-cream">
+        {/* Hero with image */}
+        <section className="bg-cream pb-16 md:pb-24">
           <Breadcrumbs
             items={[
               { label: "Produktkategorien", href: "/produktkategorien" },
               { label: category.title },
             ]}
           />
-        </div>
-
-        {/* Hero with image */}
-        <section className="bg-cream pb-16 md:pb-24">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>

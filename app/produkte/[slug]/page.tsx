@@ -80,20 +80,18 @@ export default async function ProduktPage({ params }: PageProps) {
     <>
       <Header />
       <main>
-        {/* Breadcrumbs */}
-        <Breadcrumbs
-          items={[
-            { label: "Kollektionen", href: "/kollektionen" },
-            {
-              label: collection?.name ?? "",
-              href: `/kollektionen/${product.collectionSlug}`,
-            },
-            { label: product.name },
-          ]}
-        />
-
-        {/* Product Hero */}
+        {/* Product Hero with breadcrumbs inside */}
         <section className="bg-cream pb-16 md:pb-24">
+          <Breadcrumbs
+            items={[
+              { label: "Kollektionen", href: "/kollektionen" },
+              {
+                label: collection?.name ?? "",
+                href: `/kollektionen/${product.collectionSlug}`,
+              },
+              { label: product.name },
+            ]}
+          />
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
               {/* Gallery */}
