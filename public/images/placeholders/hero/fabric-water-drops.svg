@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
 <defs>
-    <linearGradient id="bg-5lwqf0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
-    <pattern id="weave-lfkg0e" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+    <linearGradient id="bg-zch0fd" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
+    <pattern id="weave-8tl2z7" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
       <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
       <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
     </pattern>
-    <pattern id="weave-lfkg0e-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+    <pattern id="weave-8tl2z7-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
       <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
       <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.04)" stroke-width="0.4"/>
     </pattern>
   </defs>
 
-  <rect width="1200" height="800" fill="url(#bg-5lwqf0)"/>
-  <rect width="1200" height="800" fill="url(#weave-lfkg0e)"/>
-  <rect width="1200" height="800" fill="url(#weave-lfkg0e-h)" opacity="0.7"/>
+  <rect width="1200" height="800" fill="url(#bg-zch0fd)"/>
+  <rect width="1200" height="800" fill="url(#weave-8tl2z7)"/>
+  <rect width="1200" height="800" fill="url(#weave-8tl2z7-h)" opacity="0.7"/>
   <circle cx="300" cy="200" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="297.6" cy="197.6" r="2.4" fill="rgba(255,255,255,0.1)"/><circle cx="450" cy="280" r="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="448.2" cy="278.2" r="1.7999999999999998" fill="rgba(255,255,255,0.1)"/><circle cx="700" cy="180" r="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="697" cy="177" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="850" cy="320" r="7" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="847.9" cy="317.9" r="2.1" fill="rgba(255,255,255,0.1)"/><circle cx="200" cy="350" r="5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="198.5" cy="348.5" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="550" cy="150" r="9" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="547.3" cy="147.3" r="2.6999999999999997" fill="rgba(255,255,255,0.1)"/><circle cx="900" cy="250" r="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="898.2" cy="248.2" r="1.7999999999999998" fill="rgba(255,255,255,0.1)"/><circle cx="350" cy="400" r="4" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="348.8" cy="398.8" r="1.2" fill="rgba(255,255,255,0.1)"/><circle cx="650" cy="350" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="647.6" cy="347.6" r="2.4" fill="rgba(255,255,255,0.1)"/><circle cx="1000" cy="200" r="5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="998.5" cy="198.5" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="150" cy="250" r="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="148.2" cy="248.2" r="1.7999999999999998" fill="rgba(255,255,255,0.1)"/><circle cx="780" cy="400" r="7" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/><circle cx="777.9" cy="397.9" r="2.1" fill="rgba(255,255,255,0.1)"/>
   <line x1="180" y1="760" x2="1020" y2="760" stroke="#E07B12" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
   <text x="600" y="394.3333333333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="300" fill="rgba(255,255,255,0.9)" text-anchor="middle" letter-spacing="2">Mackintosh® Technology</text>
