@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-04 | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-04 (CRUD/Delete-Abdeckung finalisiert) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -138,11 +138,14 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | `/admin/settings`               | Website-Einstellungen           | Funktional |
 | `/admin/users`                  | Benutzer-Liste                  | Funktional |
 | `/admin/users/[id]`             | Benutzer bearbeiten/erstellen   | Funktional |
-| `/admin/downloads`              | Kataloge & Downloads (Liste)    | Funktional |
-| `/admin/measurements`           | Produktmaße (Liste)             | Funktional |
+| `/admin/downloads`              | Kataloge & Downloads (Liste + Filter) | Funktional |
+| `/admin/downloads/[id]`         | Download bearbeiten/erstellen   | Funktional |
+| `/admin/measurements`           | Produktmaße (Liste + Filter)    | Funktional |
+| `/admin/measurements/[id]`      | Produktmaß bearbeiten/erstellen | Funktional |
+| `/admin/news`                   | Neuigkeiten (Liste + Filter)    | Funktional |
+| `/admin/news/[id]`              | News-Artikel bearbeiten/erstellen | Funktional |
 | `/admin/service/pflege-garantie`| Service: Pflege & Garantie      | Funktional |
 | `/admin/service/stoff-technische-daten` | Service: Stoff- & techn. Daten | Funktional |
-| `/admin/news`                   | Neuigkeiten (Liste)             | Funktional |
 
 ## 7. API-Endpunkte
 
@@ -172,6 +175,33 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | POST    | `/api/admin/settings`    | Website-Einstellungen speichern           |
 | GET     | `/api/admin/users`       | Alle Benutzer laden                       |
 | POST    | `/api/admin/users`       | Benutzer erstellen / aktualisieren        |
+| DELETE  | `/api/admin/users`       | Benutzer loeschen (ADMIN, Guards)         |
+| GET     | `/api/admin/downloads`   | Alle Downloads laden                      |
+| POST    | `/api/admin/downloads`   | Download erstellen / aktualisieren        |
+| PATCH   | `/api/admin/downloads`   | Download (de)aktivieren                   |
+| DELETE  | `/api/admin/downloads`   | Download loeschen (ADMIN)                 |
+| GET     | `/api/admin/measurements`| Alle Produktmasse laden                   |
+| POST    | `/api/admin/measurements`| Produktmass erstellen / aktualisieren     |
+| PATCH   | `/api/admin/measurements`| Produktmass (de)aktivieren                |
+| DELETE  | `/api/admin/measurements`| Produktmass loeschen (ADMIN)              |
+| GET     | `/api/admin/news`        | Alle News-Artikel laden                   |
+| POST    | `/api/admin/news`        | News-Artikel erstellen / aktualisieren    |
+| PATCH   | `/api/admin/news`        | News-Status aendern                       |
+| DELETE  | `/api/admin/news`        | News-Artikel loeschen (ADMIN)             |
+| PATCH   | `/api/admin/pages`       | Seiten-Status aendern                     |
+| DELETE  | `/api/admin/pages`       | Seite loeschen (ADMIN)                    |
+| PATCH   | `/api/admin/collections` | Kollektion-Status aendern                 |
+| DELETE  | `/api/admin/collections` | Kollektion loeschen (ADMIN, Guard)        |
+| PATCH   | `/api/admin/products`    | Produkt-Status aendern                    |
+| DELETE  | `/api/admin/products`    | Produkt loeschen (ADMIN)                  |
+| PATCH   | `/api/admin/product-groups` | Produktgruppe (de)aktivieren           |
+| DELETE  | `/api/admin/product-groups` | Produktgruppe loeschen (ADMIN, Guard)  |
+| PATCH   | `/api/admin/materials`   | Material (de)aktivieren                   |
+| DELETE  | `/api/admin/materials`   | Material loeschen (ADMIN, Guard)          |
+| DELETE  | `/api/admin/media`       | Medium loeschen (ADMIN, Usage Guard)      |
+| DELETE  | `/api/admin/navigation`  | NavigationItem loeschen (ADMIN)           |
+| DELETE  | `/api/admin/submissions` | Formular-Einreichung loeschen             |
+| PATCH   | `/api/admin/submissions` | isRead-Status aendern                     |
 | GET     | `/api/health`            | Health Check (DB + Env)                   |
 
 ## 8. Medien-Upload
@@ -314,16 +344,24 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 
 ### Admin
 - Login / Logout / Session-Management
-- Alle 12 Admin-Listenseiten laden und zeigen Seed-Daten
+- Alle 15+ Admin-Listenseiten laden und zeigen Seed-Daten
 - Alle Erstellungsformulare (`/new`) laden korrekt
-- CRUD fuer alle Entitaeten (Erstellen + Aktualisieren via API getestet)
+- Vollstaendiges CRUD fuer alle Entitaeten (Create, Read, Update, Archive/Deactivate, Delete)
+- Statusfilter auf allen Listenseiten (StatusFilter-Komponente)
+- DangerZone auf allen Bearbeitungsseiten (Archivieren, Deaktivieren, Loeschen)
+- ListActions auf allen Listenseiten (Bearbeiten, Archivieren/Deaktivieren)
+- Downloads CRUD (API, Liste, Erstellen, Bearbeiten, Deaktivieren, Loeschen)
+- Measurements CRUD (API mit JSON-Validierung, Liste, Erstellen, Bearbeiten, Deaktivieren, Loeschen)
+- News CRUD (API, Liste, Erstellen, Bearbeiten, Hero/Card-Bild, Status, Loeschen)
 - Medien-Upload mit Dateivalidierung (Typ + Groesse)
+- Medien-Loeschen mit Usage Guard (blockiert wenn referenziert)
 - Dateiname-Sanitierung mit Zeitstempel
 - Navigation bearbeiten (Items hinzufuegen/entfernen/sortieren)
 - Footer-Einstellungen bearbeiten
 - Website-Einstellungen bearbeiten
-- Benutzer-Verwaltung (nur ADMIN-Rolle)
-- Kontaktformular-Konfiguration
+- Benutzer-Verwaltung (nur ADMIN-Rolle) mit Loeschguards
+- Kontaktformular-Konfiguration mit Inline-Feldverwaltung
+- Formular-Einreichungen (lesen, loeschen, gelesen/ungelesen Filter)
 - Health-Check Endpunkt
 - Proxy-basierter Auth-Schutz fuer alle Admin-Routen
 
@@ -433,18 +471,37 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 4. Status auf PUBLISHED setzen
 5. Produkt erscheint nach max. 60 Sekunden auf der Website
 
-### Offen — Formulare, Delete, Weiteres
+### Delete/Archive — erledigt
+- [x] Delete-Funktion fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
+- [x] Medien-Loeschen — Datei + DB-Eintrag entfernen (mit Usage Guard)
+- [x] DangerZone-Komponente auf allen Bearbeitungsseiten
+- [x] ListActions-Komponente auf allen Listenseiten
+- [x] Rollen-basierte Berechtigungen (ADMIN, EDITOR, VIEWER)
+- [x] Delete Guards fuer referenzierte Entitaeten
+
+### Downloads/Measurements/News CRUD — erledigt
+- [x] Downloads CRUD (API: GET/POST/PATCH/DELETE, Liste, Erstellen, Bearbeiten, Deaktivieren, Loeschen)
+- [x] Measurements CRUD (API: GET/POST/PATCH/DELETE, Liste, Erstellen, Bearbeiten, JSON-Validierung, Deaktivieren, Loeschen)
+- [x] News CRUD (API: GET/POST/PATCH/DELETE, Liste, Erstellen, Bearbeiten, Hero/Card-Bild, Archivieren, Loeschen)
+
+### Statusfilter — erledigt
+- [x] Wiederverwendbare StatusFilter-Komponente (`components/admin/StatusFilter.tsx`)
+- [x] Filter auf allen Admin-Listenseiten:
+  - Pages, Collections, Products, News: PUBLISHED / DRAFT / ARCHIVED
+  - ProductGroups, Materials, Downloads, Measurements: Aktiv / Inaktiv
+  - Users: Admin / Redakteur / Betrachter (Rollenfilter)
+  - Submissions: Ungelesen / Gelesen
+
+### Offen — Phase 2D (Formulare und Frontend-Anbindung)
 1. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
 2. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
-3. **Delete-Funktion** — Fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)
-4. **Medien-Loeschen** — Datei + DB-Eintrag entfernen
+3. **Downloads Frontend** — Oeffentliche Download-Seite aus DB statt statisch
+4. **Measurements Frontend** — Oeffentliche Produktmass-Seite aus DB statt statisch
+5. **News Frontend** — Oeffentliche News-Seite aus DB statt statisch
 
 ### Spaeter
 10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
-12. **News-Verwaltung** — Admin-UI fuer NewsArticle
-13. **Downloads-Verwaltung** — Admin-UI fuer Download-Eintraege
-14. **Measurement-Verwaltung** — Admin-UI fuer Produktmasse
 15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
 16. **Medien-Browser** — Modale Bildauswahl statt manueller ID-Eingabe
 17. **Audit-Log** — Aenderungen nachverfolgen
@@ -569,11 +626,25 @@ Alle DELETE- und PATCH-Handler liegen unter `app/api/admin/`:
 - `DangerZone` — Gefahrenzone für Bearbeitungsseiten (Archivieren, Deaktivieren, Löschen)
 - `ListActions` — Inline-Aktionsbuttons für Listenansichten
 
+### FormField-Strategie
+
+FormFields werden **inline** ueber den Kontaktformular-Editor verwaltet (nicht als eigene Admin-Seite):
+- **Anlegen:** "Feld hinzufuegen"-Button im Editor
+- **Bearbeiten:** Label, Name, Typ, Pflichtfeld direkt im Formular
+- **Entfernen:** "Entfernen"-Button pro Feld
+- **Speicherverhalten:** Beim Speichern des Formulars werden alle Felder geloescht und neu erstellt (deleteMany + createMany). Dies ist bewusst so implementiert, da FormFields keine eigene Identitaet ausserhalb ihres Formulars haben.
+- **Kein isActive-Toggle:** Da Felder nur im Kontext des Formulars existieren, gibt es kein separates Deaktivieren. Nicht benoetigte Felder werden entfernt.
+- **Submissions bleiben erhalten:** Bestehende FormSubmissions speichern Daten als JSON und werden durch Feldaenderungen nicht beeinflusst.
+
 ### Admin-Sidebar
 
-Die Admin-Sidebar (`AdminShell.tsx`) ist Systemnavigation und wird **nicht** aus der Datenbank verwaltet. Änderungen an der Sidebar erfordern Code-Änderungen.
+Die Admin-Sidebar (`AdminShell.tsx`) ist **hardcodierte Systemnavigation** und wird **nicht** aus der Datenbank verwaltet:
+- Sidebar-Links koennen nicht ueber das CMS geloescht oder umbenannt werden
+- Aenderungen erfordern Code-Aenderungen in `components/admin/AdminShell.tsx`
+- Die oeffentliche Website-Navigation (Header, Footer, Service, Legal) ist hingegen **CMS-gesteuert** ueber `/admin/navigation`
+- Dort koennen Links hinzugefuegt, bearbeitet, umsortiert und entfernt werden
 
-### Öffentliche Seiten
+### Oeffentliche Seiten
 
 Alle CMS-Helpers filtern automatisch:
 - `status: "PUBLISHED"` für Content-Modelle
