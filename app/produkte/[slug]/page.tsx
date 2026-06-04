@@ -157,7 +157,7 @@ export default async function ProduktPage({ params }: PageProps) {
 
                 {category && (
                   <Link
-                    href={`/produktkategorien/${category.slug}`}
+                    href={`/kollektionen/${product.collectionSlug}#kategorie-${category.slug}`}
                     className="inline-block mt-2 font-body text-text-gray text-base hover:text-pumpkin transition-colors"
                   >
                     {category.title}

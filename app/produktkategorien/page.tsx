@@ -1,3 +1,4 @@
+// TODO: Wird in späterer Ausbaustufe wieder aktiviert — Route bleibt erhalten, ist aber nicht verlinkt
 import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";

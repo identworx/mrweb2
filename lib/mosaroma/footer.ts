@@ -23,23 +23,6 @@ export const footerData: FooterData = {
   },
   columns: [
     {
-      title: "Produktkategorien",
-      links: [
-        { label: "Dekokissen", href: "/produktkategorien/dekokissen" },
-        { label: "Hochlehner", href: "/produktkategorien/hochlehner" },
-        { label: "Niedriglehner", href: "/produktkategorien/niedriglehner" },
-        { label: "Sitzkissen", href: "/produktkategorien/sitzkissen" },
-        { label: "Sitzpolster", href: "/produktkategorien/sitzpolster" },
-        { label: "Bankauflagen", href: "/produktkategorien/bankauflagen" },
-        { label: "Poufs", href: "/produktkategorien/poufs" },
-        {
-          label: "Tischsets & Tischläufer",
-          href: "/produktkategorien/tischsets-tischlaeufer",
-        },
-        { label: "Decken", href: "/produktkategorien/decken" },
-      ],
-    },
-    {
       title: "Kollektionen",
       links: [
         { label: "Green", href: "/kollektionen/green" },
@@ -49,6 +32,15 @@ export const footerData: FooterData = {
         { label: "Earth & Grey", href: "/kollektionen/earth-grey" },
         { label: "NERIO · Oceana", href: "/kollektionen/nerio-oceana" },
         { label: "Basic", href: "/kollektionen/basic" },
+      ],
+    },
+    {
+      title: "Materialien",
+      links: [
+        { label: "Mackintosh®", href: "/materialien" },
+        { label: "Mackintosh® Lite", href: "/materialien" },
+        { label: "Nerio", href: "/materialien" },
+        { label: "Basic", href: "/materialien" },
       ],
     },
     {

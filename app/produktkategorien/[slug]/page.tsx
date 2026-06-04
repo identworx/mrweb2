@@ -1,3 +1,4 @@
+// TODO: Wird in späterer Ausbaustufe wieder aktiviert — Route bleibt erhalten, ist aber nicht verlinkt
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";

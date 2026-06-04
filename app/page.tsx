@@ -1,10 +1,8 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import SectionTeaser from "@/components/SectionTeaser";
-import CategoryCard from "@/components/CategoryCard";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
-import { categories } from "@/lib/mosaroma/categories";
 import { collections } from "@/lib/mosaroma/collections";
 import { newsItems } from "@/lib/mosaroma/news";
 import Footer from "@/components/Footer";
@@ -106,30 +104,6 @@ export default function Home() {
                   {item.text}
                 </p>
               </div>
-            ))}
-          </div>
-        </SectionTeaser>
-
-        {/* Produktkategorien Teaser */}
-        <SectionTeaser
-          accent="Sortiment"
-          title="Produktkategorien."
-          description="Von Dekokissen über Hochlehner bis zu Poufs und Decken — neun Kategorien für Ihren Außenbereich."
-          bgColor="cream"
-          ctaLabel="Alle Produktkategorien ansehen"
-          ctaHref="/produktkategorien"
-        >
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-5">
-            {categories.map((cat) => (
-              <CategoryCard
-                key={cat.slug}
-                title={cat.title}
-                image={cat.image}
-                alt={cat.alt}
-                size="medium"
-                description={cat.shortDescription.split("—")[0].trim()}
-                href={`/produktkategorien/${cat.slug}`}
-              />
             ))}
           </div>
         </SectionTeaser>

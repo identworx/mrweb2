@@ -156,7 +156,7 @@ export default async function KollektionPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Products grouped by category */}
+        {/* Products grouped by category with subcategory hero images */}
         {collectionCategories.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -170,7 +170,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 Produkte in dieser Kollektion
               </h2>
 
-              <div className="space-y-14">
+              <div className="space-y-16">
                 {collectionCategories.map((cat) => {
                   const categoryProducts = getProductsByCollectionAndCategory(
                     collection.slug,
@@ -178,30 +178,28 @@ export default async function KollektionPage({ params }: PageProps) {
                   );
                   if (categoryProducts.length === 0) return null;
                   return (
-                    <div key={cat.slug}>
-                      <div className="flex items-center justify-between mb-6">
-                        <h3 className="font-heading text-anthracite text-lg md:text-xl font-bold">
-                          {cat.title}
-                        </h3>
-                        <Link
-                          href={`/produktkategorien/${cat.slug}`}
-                          className="inline-flex items-center gap-2 text-pumpkin group"
-                        >
-                          <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
-                            Zur Kategorie
-                          </span>
-                          <svg
-                            width="14"
-                            height="14"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            viewBox="0 0 24 24"
-                            className="group-hover:translate-x-1 transition-transform duration-300"
-                          >
-                            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                          </svg>
-                        </Link>
+                    <div key={cat.slug} id={`kategorie-${cat.slug}`}>
+                      {/* Subcategory hero image */}
+                      <div className="relative aspect-[3/1] overflow-hidden mb-6">
+                        <Image
+                          src={`/images/placeholders/subcategories/hero/${slug}-${cat.slug}.svg`}
+                          alt={`${collection.name} ${cat.title}`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1400px) 100vw, 1400px"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+                          <h3 className="font-heading text-white text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">
+                            {cat.title}
+                          </h3>
+                          <p className="font-body text-white/70 text-sm mt-1">
+                            {categoryProducts.length}{" "}
+                            {categoryProducts.length === 1
+                              ? "Produkt"
+                              : "Produkte"}
+                          </p>
+                        </div>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                         {categoryProducts.map((product) => (
@@ -272,8 +270,8 @@ export default async function KollektionPage({ params }: PageProps) {
               -- wir beraten Sie gerne.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/produktkategorien" className="btn-primary">
-                Produktkategorien ansehen
+              <Link href="/kollektionen" className="btn-primary">
+                Alle Kollektionen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen

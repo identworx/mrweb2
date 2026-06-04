@@ -403,6 +403,112 @@ function productCollectionPlaceholder(collectionKey) {
   });
 }
 
+// ── Collection+Category Mappings ──────────────────────────────
+
+const COLLECTION_CATEGORIES = {
+  green: ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'sitzpolster', 'bankauflagen', 'poufs', 'tischsets-tischlaeufer', 'decken'],
+  blue: ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'sitzpolster', 'bankauflagen', 'poufs', 'tischsets-tischlaeufer', 'decken'],
+  red: ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'poufs', 'tischsets-tischlaeufer'],
+  golden: ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'sitzpolster', 'bankauflagen', 'poufs', 'tischsets-tischlaeufer', 'decken'],
+  'earth-grey': ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'sitzpolster', 'bankauflagen', 'poufs', 'tischsets-tischlaeufer', 'decken'],
+  'nerio-oceana': ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen', 'bankauflagen'],
+  basic: ['dekokissen', 'hochlehner', 'niedriglehner', 'sitzkissen'],
+};
+
+const COLLECTION_NAMES = {
+  green: 'Green',
+  blue: 'Blue',
+  red: 'Red',
+  golden: 'Golden',
+  'earth-grey': 'Earth & Grey',
+  'nerio-oceana': 'NERIO · Oceana',
+  basic: 'Basic',
+};
+
+const CATEGORY_TITLES = {
+  dekokissen: 'Dekokissen',
+  hochlehner: 'Hochlehner',
+  niedriglehner: 'Niedriglehner',
+  sitzkissen: 'Sitzkissen',
+  sitzpolster: 'Sitzpolster',
+  bankauflagen: 'Bankauflagen',
+  poufs: 'Poufs',
+  'tischsets-tischlaeufer': 'Tischsets & Tischläufer',
+  decken: 'Decken',
+};
+
+// ── Collection Hero Placeholders (wide, 1200x500) ────────────
+
+function collectionHeroPlaceholder(key, label) {
+  const colors = COLLECTIONS[key];
+  const w = 1200, h = 500;
+
+  // Wide color band at top
+  const bandHeight = 6;
+  const bandWidth = w / 4;
+  let colorBand = '';
+  colors.forEach((c, i) => {
+    colorBand += `<rect x="${i * bandWidth}" y="0" width="${bandWidth}" height="${bandHeight}" fill="${c}"/>`;
+  });
+
+  return premiumPlaceholder({
+    w, h,
+    bgColor1: colors[0],
+    bgColor2: colors[1],
+    label,
+    extraShapes: `
+      ${colorBand}
+      <!-- Large color swatches -->
+      <rect x="${w/2 - 140}" y="120" width="65" height="65" rx="4" fill="${colors[0]}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      <rect x="${w/2 - 65}" y="120" width="65" height="65" rx="4" fill="${colors[1]}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      <rect x="${w/2 + 10}" y="120" width="65" height="65" rx="4" fill="${colors[2]}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+      <rect x="${w/2 + 85}" y="120" width="65" height="65" rx="4" fill="${colors[3]}" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    `,
+  });
+}
+
+// ── Subcategory Hero Placeholders (wide, 1200x400) ───────────
+
+function subcategoryHeroPlaceholder(collectionKey, categoryName, label) {
+  const colors = COLLECTIONS[collectionKey];
+  const w = 1200, h = 400;
+
+  // Scale category shape for wider format
+  const cx = w / 2;
+  const cy = h / 2 - 20;
+  const stroke = 'rgba(255,255,255,0.12)';
+  const fill = 'rgba(255,255,255,0.04)';
+
+  const shapes = {
+    dekokissen: `<rect x="${cx-50}" y="${cy-50}" width="100" height="100" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    hochlehner: `<rect x="${cx-30}" y="${cy-75}" width="60" height="150" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+      <line x1="${cx-30}" y1="${cy+15}" x2="${cx+30}" y2="${cy+15}" stroke="${stroke}" stroke-width="0.8" stroke-dasharray="4,3"/>`,
+    niedriglehner: `<rect x="${cx-35}" y="${cy-40}" width="70" height="100" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+      <line x1="${cx-35}" y1="${cy+10}" x2="${cx+35}" y2="${cy+10}" stroke="${stroke}" stroke-width="0.8" stroke-dasharray="4,3"/>`,
+    sitzkissen: `<rect x="${cx-45}" y="${cy-45}" width="90" height="90" rx="6" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    sitzpolster: `<rect x="${cx-55}" y="${cy-18}" width="110" height="40" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    bankauflagen: `<rect x="${cx-80}" y="${cy-18}" width="160" height="40" rx="4" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    poufs: `<ellipse cx="${cx}" cy="${cy+15}" rx="45" ry="20" fill="${fill}" stroke="${stroke}" stroke-width="1"/>
+      <rect x="${cx-40}" y="${cy-30}" width="80" height="45" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    'tischsets-tischlaeufer': `<rect x="${cx-65}" y="${cy-22}" width="130" height="48" rx="3" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+    decken: `<path d="M${cx-40},${cy+30} L${cx-40},${cy-20} Q${cx-40},${cy-38} ${cx-22},${cy-38} L${cx+30},${cy-38} Q${cx+48},${cy-38} ${cx+48},${cy-20} L${cx+48},${cy+30} Z" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>`,
+  };
+
+  const shape = shapes[categoryName] || '';
+
+  return premiumPlaceholder({
+    w, h,
+    bgColor1: colors[1],
+    bgColor2: colors[2],
+    label,
+    extraShapes: `
+      <!-- Color accent bar -->
+      <rect x="0" y="0" width="${w}" height="4" fill="${colors[0]}"/>
+      ${shape}
+    `,
+  });
+}
+
 // ── File Generation ───────────────────────────────────────────
 
 function writeFile(dir, filename, content) {
@@ -525,6 +631,21 @@ console.log('\n  Product (collection) images:');
 const productCollections = ['green', 'blue', 'red', 'golden', 'earth-grey', 'nerio-oceana', 'basic'];
 for (const key of productCollections) {
   gen('products', `product-${key}.svg`, productCollectionPlaceholder(key));
+}
+
+// ── Collections: hero images (wide format) ──
+console.log('\n  Collection hero images:');
+for (const [key, file, label] of collectionDefs) {
+  gen('collections/hero', file, collectionHeroPlaceholder(key, label));
+}
+
+// ── Subcategory hero images (collection + category) ──
+console.log('\n  Subcategory hero images:');
+for (const [colKey, colCats] of Object.entries(COLLECTION_CATEGORIES)) {
+  for (const catSlug of colCats) {
+    const label = `${COLLECTION_NAMES[colKey]} — ${CATEGORY_TITLES[catSlug]}`;
+    gen('subcategories/hero', `${colKey}-${catSlug}.svg`, subcategoryHeroPlaceholder(colKey, catSlug, label));
+  }
 }
 
 // ── Summary ──
