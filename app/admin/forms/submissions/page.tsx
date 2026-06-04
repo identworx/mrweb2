@@ -1,13 +1,34 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import StatusFilter from "@/components/admin/StatusFilter";
 
-export default async function SubmissionsListPage() {
+const READ_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "unread", label: "Ungelesen" },
+  { value: "read", label: "Gelesen" },
+];
+
+export default async function SubmissionsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: readFilter } = await searchParams;
+  const where = readFilter === "unread"
+    ? { isRead: false }
+    : readFilter === "read"
+      ? { isRead: true }
+      : {};
+
   const submissions = await prisma.formSubmission.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     include: { form: { select: { name: true } } },
   });
 
-  const unreadCount = submissions.filter((s) => !s.isRead).length;
+  const unreadCount = readFilter
+    ? undefined
+    : submissions.filter((s) => !s.isRead).length;
 
   return (
     <div className="space-y-6">
@@ -23,13 +44,22 @@ export default async function SubmissionsListPage() {
         </p>
         <div className="flex items-center gap-3 mt-1">
           <h1 className="text-2xl font-bold text-gray-900">Anfragen</h1>
-          {unreadCount > 0 && (
+          {unreadCount !== undefined && unreadCount > 0 && (
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
               {unreadCount} ungelesen
             </span>
           )}
         </div>
+        <p className="text-sm text-gray-500 mt-1">
+          {submissions.length} Anfragen verwalten.
+        </p>
       </div>
+
+      <StatusFilter
+        basePath="/admin/forms/submissions"
+        current={readFilter || "all"}
+        options={READ_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -45,7 +75,13 @@ export default async function SubmissionsListPage() {
                 E-Mail
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Formular
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -53,7 +89,7 @@ export default async function SubmissionsListPage() {
             {submissions.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={6}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Anfragen vorhanden.
@@ -96,6 +132,9 @@ export default async function SubmissionsListPage() {
                   <td className="px-6 py-4 text-sm text-gray-500">
                     {data.email || data.Email || data["e-mail"] || "-"}
                   </td>
+                  <td className="px-6 py-4 text-sm text-gray-500">
+                    {submission.form.name}
+                  </td>
                   <td className="px-6 py-4">
                     <span
                       className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -104,8 +143,16 @@ export default async function SubmissionsListPage() {
                           : "bg-green-100 text-green-800"
                       }`}
                     >
-                      {submission.isRead ? "gelesen" : "ungelesen"}
+                      {submission.isRead ? "Gelesen" : "Ungelesen"}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 flex items-center gap-2">
+                    <Link
+                      href={`/admin/forms/submissions/${submission.id}`}
+                      className="text-xs text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                    >
+                      Ansehen
+                    </Link>
                   </td>
                 </tr>
               );

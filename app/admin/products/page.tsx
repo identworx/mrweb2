@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -9,9 +10,26 @@ const statusColors: Record<string, string> = {
   ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
-export default async function ProductsListPage() {
+const STATUS_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "PUBLISHED", label: "Veröffentlicht" },
+  { value: "DRAFT", label: "Entwurf" },
+  { value: "ARCHIVED", label: "Archiviert" },
+];
+
+export default async function ProductsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter && statusFilter !== "all"
+    ? { status: statusFilter as "DRAFT" | "PUBLISHED" | "ARCHIVED" }
+    : {};
+
   const [products, sessionUser] = await Promise.all([
     prisma.product.findMany({
+      where,
       orderBy: { name: "asc" },
       include: {
         collection: true,
@@ -39,6 +57,12 @@ export default async function ProductsListPage() {
           Neues Produkt
         </Link>
       </div>
+
+      <StatusFilter
+        basePath="/admin/products"
+        current={statusFilter || "all"}
+        options={STATUS_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">

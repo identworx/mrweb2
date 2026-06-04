@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -9,9 +10,26 @@ const statusColors: Record<string, string> = {
   ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
-export default async function CollectionsListPage() {
+const STATUS_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "PUBLISHED", label: "Veröffentlicht" },
+  { value: "DRAFT", label: "Entwurf" },
+  { value: "ARCHIVED", label: "Archiviert" },
+];
+
+export default async function CollectionsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter && statusFilter !== "all"
+    ? { status: statusFilter as "DRAFT" | "PUBLISHED" | "ARCHIVED" }
+    : {};
+
   const [collections, sessionUser] = await Promise.all([
     prisma.collection.findMany({
+      where,
       orderBy: { order: "asc" },
       include: {
         _count: { select: { products: true } },
@@ -28,7 +46,7 @@ export default async function CollectionsListPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Kollektionen</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Kollektionen verwalten und bearbeiten.
+            {collections.length} Kollektionen verwalten und bearbeiten.
           </p>
         </div>
         <Link
@@ -38,6 +56,12 @@ export default async function CollectionsListPage() {
           Neue Kollektion
         </Link>
       </div>
+
+      <StatusFilter
+        basePath="/admin/collections"
+        current={statusFilter || "all"}
+        options={STATUS_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">

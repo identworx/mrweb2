@@ -2,10 +2,29 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
-export default async function ProductGroupsListPage() {
+const ACTIVE_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "active", label: "Aktiv" },
+  { value: "inactive", label: "Inaktiv" },
+];
+
+export default async function ProductGroupsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter === "active"
+    ? { isActive: true }
+    : statusFilter === "inactive"
+      ? { isActive: false }
+      : {};
+
   const [productGroups, sessionUser] = await Promise.all([
     prisma.productGroup.findMany({
+      where,
       orderBy: { order: "asc" },
       include: {
         _count: {
@@ -23,7 +42,7 @@ export default async function ProductGroupsListPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Produktgruppen</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Produktgruppen verwalten und bearbeiten.
+            {productGroups.length} Produktgruppen verwalten und bearbeiten.
           </p>
         </div>
         <Link
@@ -33,6 +52,12 @@ export default async function ProductGroupsListPage() {
           Neue Produktgruppe
         </Link>
       </div>
+
+      <StatusFilter
+        basePath="/admin/product-groups"
+        current={statusFilter || "all"}
+        options={ACTIVE_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">

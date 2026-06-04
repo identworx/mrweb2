@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import StatusFilter from "@/components/admin/StatusFilter";
 
 const roleLabels: Record<string, string> = {
   ADMIN: "Administrator",
@@ -8,9 +9,32 @@ const roleLabels: Record<string, string> = {
   VIEWER: "Betrachter",
 };
 
-export default async function UsersListPage() {
+const roleColors: Record<string, string> = {
+  ADMIN: "bg-red-100 text-red-800",
+  EDITOR: "bg-blue-100 text-blue-800",
+  VIEWER: "bg-gray-100 text-gray-700",
+};
+
+const ROLE_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "ADMIN", label: "Admin" },
+  { value: "EDITOR", label: "Redakteur" },
+  { value: "VIEWER", label: "Betrachter" },
+];
+
+export default async function UsersListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: roleFilter } = await searchParams;
+  const where = roleFilter && roleFilter !== "all"
+    ? { role: roleFilter as "ADMIN" | "EDITOR" | "VIEWER" }
+    : {};
+
   const [users, sessionUser] = await Promise.all([
     prisma.user.findMany({
+      where,
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -22,6 +46,7 @@ export default async function UsersListPage() {
     }),
     getSessionUser(),
   ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -35,14 +60,25 @@ export default async function UsersListPage() {
             Benutzer
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Benutzer</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {users.length} Benutzer verwalten.
+          </p>
         </div>
-        <Link
-          href="/admin/users/new"
-          className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
-        >
-          Neuer Benutzer
-        </Link>
+        {userRole === "ADMIN" && (
+          <Link
+            href="/admin/users/new"
+            className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+          >
+            Neuer Benutzer
+          </Link>
+        )}
       </div>
+
+      <StatusFilter
+        basePath="/admin/users"
+        current={roleFilter || "all"}
+        options={ROLE_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -93,7 +129,7 @@ export default async function UsersListPage() {
                   {user.email}
                 </td>
                 <td className="px-6 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${roleColors[user.role] ?? "bg-gray-100 text-gray-700"}`}>
                     {roleLabels[user.role] ?? user.role}
                   </span>
                 </td>

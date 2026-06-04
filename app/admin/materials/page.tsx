@@ -2,10 +2,28 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
-export default async function MaterialsListPage() {
+const ACTIVE_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "active", label: "Aktiv" },
+  { value: "inactive", label: "Inaktiv" },
+];
+
+export default async function MaterialsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter === "active"
+    ? { isActive: true }
+    : statusFilter === "inactive"
+      ? { isActive: false }
+      : {};
+
   const [materials, sessionUser] = await Promise.all([
-    prisma.material.findMany({ orderBy: { order: "asc" } }),
+    prisma.material.findMany({ where, orderBy: { order: "asc" } }),
     getSessionUser(),
   ]);
   const userRole = sessionUser?.role ?? "VIEWER";
@@ -23,7 +41,7 @@ export default async function MaterialsListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Materialien</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Materialien verwalten und bearbeiten.
+            {materials.length} Materialien verwalten und bearbeiten.
           </p>
         </div>
         <Link
@@ -33,6 +51,12 @@ export default async function MaterialsListPage() {
           Neues Material
         </Link>
       </div>
+
+      <StatusFilter
+        basePath="/admin/materials"
+        current={statusFilter || "all"}
+        options={ACTIVE_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -51,6 +75,9 @@ export default async function MaterialsListPage() {
                 Gewicht
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Reihenfolge
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -62,7 +89,7 @@ export default async function MaterialsListPage() {
             {materials.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Materialien vorhanden.
@@ -90,6 +117,17 @@ export default async function MaterialsListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {material.weight}
+                </td>
+                <td className="px-6 py-4">
+                  <span
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      material.isActive
+                        ? "bg-green-100 text-green-800"
+                        : "bg-gray-100 text-gray-600"
+                    }`}
+                  >
+                    {material.isActive ? "Aktiv" : "Inaktiv"}
+                  </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {material.order}

@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -7,10 +10,34 @@ const statusColors: Record<string, string> = {
   ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
-export default async function NewsListPage() {
-  const articles = await prisma.newsArticle.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+const STATUS_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "PUBLISHED", label: "Veröffentlicht" },
+  { value: "DRAFT", label: "Entwurf" },
+  { value: "ARCHIVED", label: "Archiviert" },
+];
+
+export default async function NewsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter && statusFilter !== "all"
+    ? { status: statusFilter as "DRAFT" | "PUBLISHED" | "ARCHIVED" }
+    : {};
+
+  const [articles, sessionUser] = await Promise.all([
+    prisma.newsArticle.findMany({
+      where: Object.keys(where).length > 0 ? where : undefined,
+      orderBy: [
+        { publishedAt: { sort: "desc", nulls: "last" } },
+        { createdAt: "desc" },
+      ],
+    }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -25,14 +52,22 @@ export default async function NewsListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Neuigkeiten</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle News-Beiträge verwalten.
+            {articles.length} News-Beiträge verwalten.
           </p>
         </div>
+        <Link
+          href="/admin/news/new"
+          className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+        >
+          Neuer Artikel
+        </Link>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
-        News-Editor (Erstellen, Bearbeiten, Löschen) folgt in einer nächsten Phase. Aktuell können vorhandene Einträge hier eingesehen werden.
-      </div>
+      <StatusFilter
+        basePath="/admin/news"
+        current={statusFilter || "all"}
+        options={STATUS_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -53,13 +88,16 @@ export default async function NewsListPage() {
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Veröffentlicht
               </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {articles.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine News-Beiträge vorhanden.
@@ -67,9 +105,17 @@ export default async function NewsListPage() {
               </tr>
             )}
             {articles.map((article) => (
-              <tr key={article.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {article.title}
+              <tr
+                key={article.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4">
+                  <Link
+                    href={`/admin/news/${article.id}`}
+                    className="text-sm font-medium text-gray-900 hover:text-orange-600 transition-colors"
+                  >
+                    {article.title}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   /{article.slug}
@@ -86,8 +132,18 @@ export default async function NewsListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString("de-DE")
+                    ? article.publishedAt.toLocaleDateString("de-DE")
                     : "–"}
+                </td>
+                <td className="px-6 py-4">
+                  <ListActions
+                    entityId={article.id}
+                    entityName={article.title}
+                    apiEndpoint="/api/admin/news"
+                    editHref={`/admin/news/${article.id}`}
+                    archiveAction={{ currentStatus: article.status }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}

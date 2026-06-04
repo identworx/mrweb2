@@ -26,7 +26,7 @@ export default async function NavigationListPage() {
         </p>
         <h1 className="text-2xl font-bold text-gray-900 mt-1">Navigation</h1>
         <p className="text-sm text-gray-500 mt-1">
-          Alle Navigationsmenus verwalten und bearbeiten.
+          {menus.length} Navigationsmenüs verwalten und bearbeiten.
         </p>
       </div>
 
@@ -41,10 +41,13 @@ export default async function NavigationListPage() {
                 Position
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Eintr&auml;ge
+                Einträge
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Aktualisiert
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -52,10 +55,10 @@ export default async function NavigationListPage() {
             {menus.length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
-                  Keine Navigationsmenus vorhanden.
+                  Keine Navigationsmenüs vorhanden.
                 </td>
               </tr>
             )}
@@ -82,6 +85,14 @@ export default async function NavigationListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {menu.updatedAt.toLocaleDateString("de-DE")}
+                </td>
+                <td className="px-6 py-4">
+                  <Link
+                    href={`/admin/navigation/${menu.id}`}
+                    className="text-xs text-orange-600 hover:text-orange-700 font-medium transition-colors"
+                  >
+                    Bearbeiten
+                  </Link>
                 </td>
               </tr>
             ))}

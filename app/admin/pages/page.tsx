@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
 const statusColors: Record<string, string> = {
   PUBLISHED: "bg-green-100 text-green-800",
@@ -9,9 +10,25 @@ const statusColors: Record<string, string> = {
   ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
-export default async function PagesListPage() {
+const STATUS_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "PUBLISHED", label: "Veröffentlicht" },
+  { value: "DRAFT", label: "Entwurf" },
+  { value: "ARCHIVED", label: "Archiviert" },
+];
+
+export default async function PagesListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter && statusFilter !== "all"
+    ? { status: statusFilter as "DRAFT" | "PUBLISHED" | "ARCHIVED" }
+    : {};
+
   const [pages, sessionUser] = await Promise.all([
-    prisma.page.findMany({ orderBy: { title: "asc" } }),
+    prisma.page.findMany({ where, orderBy: { title: "asc" } }),
     getSessionUser(),
   ]);
   const userRole = sessionUser?.role ?? "VIEWER";
@@ -22,7 +39,7 @@ export default async function PagesListPage() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Seiten</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Seiten verwalten und bearbeiten.
+            {pages.length} Seiten verwalten und bearbeiten.
           </p>
         </div>
         <Link
@@ -32,6 +49,12 @@ export default async function PagesListPage() {
           Neue Seite
         </Link>
       </div>
+
+      <StatusFilter
+        basePath="/admin/pages"
+        current={statusFilter || "all"}
+        options={STATUS_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">

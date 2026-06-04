@@ -1,32 +1,62 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
-export default async function DownloadsListPage() {
-  const downloads = await prisma.download.findMany({
-    orderBy: { order: "asc" },
-  });
+const ACTIVE_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "active", label: "Aktiv" },
+  { value: "inactive", label: "Inaktiv" },
+];
+
+export default async function DownloadsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter === "active"
+    ? { isActive: true }
+    : statusFilter === "inactive"
+      ? { isActive: false }
+      : {};
+
+  const [downloads, sessionUser] = await Promise.all([
+    prisma.download.findMany({ where, orderBy: { order: "asc" } }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500">
-            <Link href="/admin" className="hover:text-orange-600 transition-colors">
+            <a href="/admin" className="hover:text-orange-600 transition-colors">
               Dashboard
-            </Link>
+            </a>
             {" > "}
             Kataloge &amp; Downloads
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Kataloge &amp; Downloads</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Kataloge, Flipbooks, Download- und Serviceverweise verwalten.
+            {downloads.length} Downloads verwalten und bearbeiten.
           </p>
         </div>
+        <Link
+          href="/admin/downloads/new"
+          className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+        >
+          Neuer Download
+        </Link>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
-        Der vollständige Download-Editor folgt in einer nächsten Phase.
-      </div>
+      <StatusFilter
+        basePath="/admin/downloads"
+        current={statusFilter || "all"}
+        options={ACTIVE_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -34,9 +64,6 @@ export default async function DownloadsListPage() {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Titel
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Beschreibung
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Typ
@@ -48,10 +75,13 @@ export default async function DownloadsListPage() {
                 URL
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Reihenfolge
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Nr.
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -67,12 +97,17 @@ export default async function DownloadsListPage() {
               </tr>
             )}
             {downloads.map((dl) => (
-              <tr key={dl.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {dl.title}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
-                  {dl.description || "–"}
+              <tr
+                key={dl.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <td className="px-6 py-4">
+                  <Link
+                    href={`/admin/downloads/${dl.id}`}
+                    className="text-sm font-medium text-gray-900 hover:text-orange-600 transition-colors"
+                  >
+                    {dl.title}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {dl.type || "–"}
@@ -82,6 +117,9 @@ export default async function DownloadsListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
                   {dl.externalUrl || dl.fileUrl || "–"}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {dl.order}
                 </td>
                 <td className="px-6 py-4">
                   <span
@@ -94,8 +132,15 @@ export default async function DownloadsListPage() {
                     {dl.isActive ? "Aktiv" : "Inaktiv"}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  {dl.order}
+                <td className="px-6 py-4">
+                  <ListActions
+                    entityId={dl.id}
+                    entityName={dl.title}
+                    apiEndpoint="/api/admin/downloads"
+                    editHref={`/admin/downloads/${dl.id}`}
+                    deactivateAction={{ isActive: dl.isActive }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}

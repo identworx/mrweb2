@@ -1,10 +1,35 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import { getSessionUser } from "@/lib/auth/session";
+import ListActions from "@/components/admin/ListActions";
+import StatusFilter from "@/components/admin/StatusFilter";
 
-export default async function MeasurementsListPage() {
-  const measurements = await prisma.measurement.findMany({
-    orderBy: { order: "asc" },
-  });
+const ACTIVE_OPTIONS = [
+  { value: "all", label: "Alle" },
+  { value: "active", label: "Aktiv" },
+  { value: "inactive", label: "Inaktiv" },
+];
+
+export default async function MeasurementsListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status: statusFilter } = await searchParams;
+  const where = statusFilter === "active"
+    ? { isActive: true }
+    : statusFilter === "inactive"
+      ? { isActive: false }
+      : {};
+
+  const [measurements, sessionUser] = await Promise.all([
+    prisma.measurement.findMany({
+      where,
+      orderBy: { order: "asc" },
+    }),
+    getSessionUser(),
+  ]);
+  const userRole = sessionUser?.role ?? "VIEWER";
 
   return (
     <div className="space-y-6">
@@ -19,14 +44,22 @@ export default async function MeasurementsListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Produktmaße</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Produktmaße und technische Maßdaten verwalten.
+            {measurements.length} Produktmaße verwalten und bearbeiten.
           </p>
         </div>
+        <Link
+          href="/admin/measurements/new"
+          className="inline-flex items-center px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
+        >
+          Neues Produktmaß
+        </Link>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
-        Der vollständige Produktmaß-Editor folgt in einer nächsten Phase.
-      </div>
+      <StatusFilter
+        basePath="/admin/measurements"
+        current={statusFilter || "all"}
+        options={ACTIVE_OPTIONS}
+      />
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
@@ -45,10 +78,13 @@ export default async function MeasurementsListPage() {
                 Zeichnungstyp
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Reihenfolge
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Nr.
+                Aktionen
               </th>
             </tr>
           </thead>
@@ -56,7 +92,7 @@ export default async function MeasurementsListPage() {
             {measurements.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Produktmaße vorhanden.
@@ -65,8 +101,13 @@ export default async function MeasurementsListPage() {
             )}
             {measurements.map((m) => (
               <tr key={m.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {m.title}
+                <td className="px-6 py-4">
+                  <Link
+                    href={`/admin/measurements/${m.id}`}
+                    className="text-sm font-medium text-gray-900 hover:text-orange-600 transition-colors"
+                  >
+                    {m.title}
+                  </Link>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {m.slug}
@@ -76,6 +117,9 @@ export default async function MeasurementsListPage() {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {m.drawingType || "–"}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {m.order}
                 </td>
                 <td className="px-6 py-4">
                   <span
@@ -88,8 +132,15 @@ export default async function MeasurementsListPage() {
                     {m.isActive ? "Aktiv" : "Inaktiv"}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
-                  {m.order}
+                <td className="px-6 py-4">
+                  <ListActions
+                    entityId={m.id}
+                    entityName={m.title}
+                    apiEndpoint="/api/admin/measurements"
+                    editHref={`/admin/measurements/${m.id}`}
+                    deactivateAction={{ isActive: m.isActive }}
+                    userRole={userRole}
+                  />
                 </td>
               </tr>
             ))}
