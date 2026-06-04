@@ -569,7 +569,7 @@ export const products: Product[] = [
     patternName: "Rocky Mountain",
   },
   {
-    slug: "boucl-nordic-fjord-dekokissen-401812",
+    slug: "boucle-nordic-fjord-dekokissen-401812",
     name: "Bouclé Nordic Fjord",
     categorySlug: "dekokissen",
     collectionSlug: "blue",
@@ -1317,7 +1317,7 @@ export const products: Product[] = [
     patternName: "Caravan",
   },
   {
-    slug: "tartan-tuscan-dekokissen-201208-2",
+    slug: "tartan-tuscan-dekokissen-golden-201208",
     name: "Tartan Tuscan",
     categorySlug: "dekokissen",
     collectionSlug: "golden",
@@ -1864,7 +1864,7 @@ export const products: Product[] = [
     patternName: "Birdeyes",
   },
   {
-    slug: "boucl-nordic-icebound-dekokissen-701812",
+    slug: "boucle-nordic-icebound-dekokissen-701812",
     name: "Bouclé Nordic Icebound",
     categorySlug: "dekokissen",
     collectionSlug: "earth-grey",
@@ -1881,7 +1881,7 @@ export const products: Product[] = [
     patternName: "Bouclé",
   },
   {
-    slug: "boucl-glacial-mosaic-dekokissen-601812",
+    slug: "boucle-glacial-mosaic-dekokissen-601812",
     name: "Bouclé Glacial Mosaic",
     categorySlug: "dekokissen",
     collectionSlug: "earth-grey",
