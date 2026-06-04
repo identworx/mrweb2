@@ -232,6 +232,7 @@ export default function CollectionEditForm({ collection, mediaAssets }: Props) {
                 </option>
               ))}
             </select>
+            <p className="text-xs text-gray-400 mt-1">Nur veröffentlichte Kollektionen erscheinen öffentlich. Entwürfe und archivierte Kollektionen werden auf Detailseiten nicht ausgespielt.</p>
           </div>
         </div>
       </div>

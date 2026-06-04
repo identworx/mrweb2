@@ -7,10 +7,14 @@ import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
 import {
-  getCollectionBySlug,
+  getCollectionBySlugWithStatus,
   getCollectionStaticParams,
+  type FrontendCollection,
 } from "@/lib/cms/collections";
-import { getCollectionBySlug as getStaticCollectionBySlug } from "@/lib/mosaroma/collections";
+import {
+  getCollectionBySlug as getStaticCollectionBySlug,
+  type Collection as StaticCollection,
+} from "@/lib/mosaroma/collections";
 import { categories } from "@/lib/mosaroma/categories";
 import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
@@ -26,9 +30,40 @@ export async function generateStaticParams() {
   return getCollectionStaticParams();
 }
 
+function staticToFrontend(sc: StaticCollection): FrontendCollection {
+  return {
+    slug: sc.slug,
+    name: sc.name,
+    number: sc.number,
+    eyebrow: `Kollektion ${sc.number}`,
+    subtitle: sc.subtitle,
+    shortDescription: sc.description,
+    longDescription: sc.extendedDescription,
+    fabric: sc.fabric,
+    cardImage: sc.image,
+    cardAlt: sc.alt,
+    heroImage: `/images/placeholders/collections/hero/${sc.slug}.svg`,
+    heroAlt: `${sc.name} Collection Hero`,
+    moodColors: [...sc.moodColors],
+    seoTitle: null,
+    seoDescription: null,
+  };
+}
+
+async function resolveCollection(slug: string): Promise<FrontendCollection | null> {
+  const result = await getCollectionBySlugWithStatus(slug);
+
+  if (result.state === "published") return result.collection;
+
+  if (result.state === "not-public") return null;
+
+  const staticCol = getStaticCollectionBySlug(slug);
+  return staticCol ? staticToFrontend(staticCol) : null;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const collection = await getCollectionBySlug(slug);
+  const collection = await resolveCollection(slug);
   if (!collection) {
     return { title: "Kollektion nicht gefunden | Mosaroma" };
   }
@@ -48,7 +83,7 @@ export default async function KollektionPage({ params }: PageProps) {
   const { slug } = await params;
   const [layout, collection] = await Promise.all([
     getPublicLayoutData(),
-    getCollectionBySlug(slug),
+    resolveCollection(slug),
   ]);
 
   if (!collection) {

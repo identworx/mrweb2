@@ -167,63 +167,30 @@ export async function getPublishedCollections(): Promise<FrontendCollection[]> {
   }
 }
 
-export async function getCollectionBySlug(
+export type CollectionLookupResult =
+  | { state: "published"; collection: FrontendCollection }
+  | { state: "not-public"; status: string }
+  | { state: "not-found" }
+  | { state: "error" };
+
+export async function getCollectionBySlugWithStatus(
   slug: string,
-): Promise<FrontendCollection | null> {
+): Promise<CollectionLookupResult> {
   try {
     const dbCol = await fetchCollectionBySlug(slug);
 
     if (dbCol && dbCol.status === "PUBLISHED") {
-      return mapCollectionForFrontend(dbCol);
+      return { state: "published", collection: mapCollectionForFrontend(dbCol) };
     }
 
-    if (!dbCol || dbCol.status !== "PUBLISHED") {
-      const staticCol = getStaticCollectionBySlug(slug);
-      if (staticCol) {
-        return {
-          slug: staticCol.slug,
-          name: staticCol.name,
-          number: staticCol.number,
-          eyebrow: `Kollektion ${staticCol.number}`,
-          subtitle: staticCol.subtitle,
-          shortDescription: staticCol.description,
-          longDescription: staticCol.extendedDescription,
-          fabric: staticCol.fabric,
-          cardImage: staticCol.image,
-          cardAlt: staticCol.alt,
-          heroImage: `/images/placeholders/collections/hero/${staticCol.slug}.svg`,
-          heroAlt: `${staticCol.name} Collection Hero`,
-          moodColors: [...staticCol.moodColors],
-          seoTitle: null,
-          seoDescription: null,
-        };
-      }
+    if (dbCol) {
+      return { state: "not-public", status: dbCol.status };
     }
 
-    return null;
+    return { state: "not-found" };
   } catch (error) {
-    console.error(`CMS: getCollectionBySlug("${slug}") failed`, error);
-    const staticCol = getStaticCollectionBySlug(slug);
-    if (staticCol) {
-      return {
-        slug: staticCol.slug,
-        name: staticCol.name,
-        number: staticCol.number,
-        eyebrow: `Kollektion ${staticCol.number}`,
-        subtitle: staticCol.subtitle,
-        shortDescription: staticCol.description,
-        longDescription: staticCol.extendedDescription,
-        fabric: staticCol.fabric,
-        cardImage: staticCol.image,
-        cardAlt: staticCol.alt,
-        heroImage: `/images/placeholders/collections/hero/${staticCol.slug}.svg`,
-        heroAlt: `${staticCol.name} Collection Hero`,
-        moodColors: [...staticCol.moodColors],
-        seoTitle: null,
-        seoDescription: null,
-      };
-    }
-    return null;
+    console.error(`CMS: getCollectionBySlugWithStatus("${slug}") failed`, error);
+    return { state: "error" };
   }
 }
 

@@ -318,6 +318,7 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - generateStaticParams aus DB + statischen Kollektionen kombiniert
 - Admin: Hero/Card-Bildauswahl mit Vorschau, Mood-Color-Editor mit Farbfeldern
 - Produkte auf Kollektions-Detailseiten noch aus statischen Daten (Phase 2C)
+- **DRAFT/ARCHIVED Kollektionen** werden auf Detailseiten nicht angezeigt (404), auch wenn ein statischer Fallback mit gleichem Slug existiert. Statischer Fallback greift nur, wenn die Kollektion in der DB nicht existiert oder die DB nicht erreichbar ist.
 - TypeScript-Build ohne Fehler (269 Routen)
 - ESLint ohne Fehler
 
