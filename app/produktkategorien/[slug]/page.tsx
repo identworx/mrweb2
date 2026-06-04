@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
 import { categories, getCategoryBySlug } from "@/lib/mosaroma/categories";
 import { collections } from "@/lib/mosaroma/collections";
@@ -17,14 +18,16 @@ export function generateStaticParams() {
   return categories.map((category) => ({ slug: category.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   if (!category) {
     return { title: "Kategorie nicht gefunden | Mosaroma" };
   }
   return {
-    title: `${category.title} | Mosaroma Outdoor-Textilien`,
+    title: `${category.title} | Mosaroma Produktkategorien`,
     description: category.description,
   };
 }
@@ -38,19 +41,57 @@ export default async function KategoriePage({ params }: PageProps) {
   }
 
   const relatedCollections = collections.filter((collection) =>
-    collection.productCategories.includes(slug)
+    collection.productCategories.includes(slug),
   );
 
   return (
     <>
       <Header />
       <main>
-        {/* Hero */}
-        <PageHero
-          accent={category.title}
-          title={category.title}
-          description={category.description}
-        />
+        {/* Breadcrumbs */}
+        <div className="bg-cream">
+          <Breadcrumbs
+            items={[
+              { label: "Produktkategorien", href: "/produktkategorien" },
+              { label: category.title },
+            ]}
+          />
+        </div>
+
+        {/* Hero with image */}
+        <section className="bg-cream pb-16 md:pb-24">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <div>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="accent-line" />
+                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                    Produktkategorie
+                  </p>
+                </div>
+
+                <h1 className="font-heading text-anthracite text-4xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-bold tracking-tight leading-[1.08]">
+                  {category.title}
+                </h1>
+
+                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6 max-w-2xl">
+                  {category.description}
+                </p>
+              </div>
+
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={category.image}
+                  alt={category.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Features */}
         <section className="section-padding bg-white">
@@ -168,28 +209,71 @@ export default async function KategoriePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Products per collection */}
+        {/* Available Collections overview */}
         {relatedCollections.length > 0 && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="flex items-center gap-4 mb-5">
                 <div className="accent-line" />
                 <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Kollektionen
+                  Verfügbare Kollektionen
+                </p>
+              </div>
+              <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+                {category.title} nach Kollektion
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4">
+                {relatedCollections.map((collection) => (
+                  <a
+                    key={collection.slug}
+                    href={`#kollektion-${collection.slug}`}
+                    className="group block bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                  >
+                    <div className="flex">
+                      {collection.moodColors.map((color, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 h-2 transition-all duration-500 group-hover:h-3"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <div className="p-4">
+                      <p className="font-heading text-anthracite text-sm font-bold group-hover:text-pumpkin transition-colors duration-300">
+                        {collection.name}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Products per collection */}
+        {relatedCollections.length > 0 && (
+          <section className="section-padding bg-white">
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+              <div className="flex items-center gap-4 mb-5">
+                <div className="accent-line" />
+                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                  Produkte
                 </p>
               </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
-                {category.title} nach Kollektion
+                Alle {category.title}
               </h2>
 
               <div className="space-y-14">
                 {relatedCollections.map((collection) => {
-                  const collectionProducts = getProductsByCollectionAndCategory(
-                    collection.slug,
-                    slug,
-                  );
+                  const collectionProducts =
+                    getProductsByCollectionAndCategory(collection.slug, slug);
+                  if (collectionProducts.length === 0) return null;
                   return (
-                    <div key={collection.slug}>
+                    <div
+                      key={collection.slug}
+                      id={`kollektion-${collection.slug}`}
+                    >
                       <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-4">
                           <div className="flex">
@@ -225,17 +309,14 @@ export default async function KategoriePage({ params }: PageProps) {
                           </svg>
                         </Link>
                       </div>
-                      {collectionProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                          {collectionProducts.map((product, i) => (
-                            <ProductCard key={`${product.code}-${i}`} product={product} />
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="font-body text-text-gray text-sm italic">
-                          Produkte folgen in Kürze.
-                        </p>
-                      )}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                        {collectionProducts.map((product) => (
+                          <ProductCard
+                            key={product.slug}
+                            product={product}
+                          />
+                        ))}
+                      </div>
                     </div>
                   );
                 })}
@@ -243,6 +324,18 @@ export default async function KategoriePage({ params }: PageProps) {
             </div>
           </section>
         )}
+
+        {/* Cross-link to collections */}
+        <section className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
+            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-6">
+              Sie suchen nach Farbe oder Kollektion?
+            </p>
+            <Link href="/kollektionen" className="btn-outline">
+              Zu den Kollektionen
+            </Link>
+          </div>
+        </section>
 
         {/* CTA */}
         <section className="section-padding bg-anthracite">

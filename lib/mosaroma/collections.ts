@@ -6,6 +6,7 @@ export interface Collection {
   description: string;
   extendedDescription: string;
   fabric: string;
+  materialSlugs: string[];
   image: string;
   alt: string;
   moodColors: [string, string, string, string];
@@ -22,7 +23,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Inspiriert von Olivenlaub, Schattenplätzen und gealtertem Stein. Eine Farbwelt für Gärten, die Ruhe ausstrahlen und lange schön bleiben.",
     fabric: "Mackintosh® & Lite",
-    image: "/images/collections/green.jpg",
+    materialSlugs: ["mackintosh", "mackintosh-lite"],
+    image: "/images/placeholders/collections/green.svg",
     alt: "MOSAROMA Collection Green — natürliche Grüntöne für den Außenbereich",
     moodColors: ["#4A7C59", "#6B8F71", "#8FB996", "#C5D5C5"],
     productCategories: [
@@ -46,7 +48,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Inspiriert von Wasser, Himmel und hellen Terrassen am Meer.",
     fabric: "Mackintosh® & Lite",
-    image: "/images/collections/blue.jpg",
+    materialSlugs: ["mackintosh", "mackintosh-lite"],
+    image: "/images/placeholders/collections/blue.svg",
     alt: "MOSAROMA Collection Blue — kühle Blautöne für den Außenbereich",
     moodColors: ["#2C5F7C", "#4A8BAD", "#7AB3CC", "#B5D5E2"],
     productCategories: [
@@ -70,7 +73,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Inspiriert von Abendsonne, gebranntem Ton und mediterranen Blüten.",
     fabric: "Mackintosh® & Lite",
-    image: "/images/collections/red.jpg",
+    materialSlugs: ["mackintosh", "mackintosh-lite"],
+    image: "/images/placeholders/collections/red.svg",
     alt: "MOSAROMA Collection Red — warme Rottöne für den Außenbereich",
     moodColors: ["#8B2500", "#C0392B", "#E67E73", "#F5C6C1"],
     productCategories: [
@@ -91,7 +95,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Inspiriert von Sommerlicht, Zitronenhainen und warmem Sandstein.",
     fabric: "Mackintosh® & Lite",
-    image: "/images/collections/golden.jpg",
+    materialSlugs: ["mackintosh", "mackintosh-lite"],
+    image: "/images/placeholders/collections/golden.svg",
     alt: "MOSAROMA Collection Golden — sonnige Gelbtöne für den Außenbereich",
     moodColors: ["#B8860B", "#DAA520", "#F0C75E", "#F5E1A4"],
     productCategories: [
@@ -115,7 +120,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Inspiriert von Sandstein, Leinen, Kies, Schatten und verwittertem Holz.",
     fabric: "Mackintosh® & Lite",
-    image: "/images/collections/earth-grey.jpg",
+    materialSlugs: ["mackintosh", "mackintosh-lite"],
+    image: "/images/placeholders/collections/earth-grey.svg",
     alt: "MOSAROMA Collection Earth & Grey — erdige Naturtöne für den Außenbereich",
     moodColors: ["#6B5B4B", "#8B7D6B", "#A69B8D", "#C4BEB5"],
     productCategories: [
@@ -140,7 +146,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Aus dem Ozean geboren. Für die Zukunft gemacht.",
     fabric: "Nerio",
-    image: "/images/collections/nerio-oceana.jpg",
+    materialSlugs: ["nerio"],
+    image: "/images/placeholders/collections/nerio-oceana.svg",
     alt: "MOSAROMA Collection NERIO Oceana — nachhaltige Performance-Outdoorstoffe",
     moodColors: ["#1B6B6D", "#2E8B8B", "#5CACAC", "#96D4D4"],
     productCategories: [
@@ -160,7 +167,8 @@ export const collections: Collection[] = [
     extendedDescription:
       "Leichte Polyesterqualitäten, vielseitig kombinierbar und angenehm pflegeleicht im Alltag.",
     fabric: "Basic (100 % Polyester, ca. 280 g/m², stückgefärbt)",
-    image: "/images/collections/basic.jpg",
+    materialSlugs: ["basic"],
+    image: "/images/placeholders/collections/basic.svg",
     alt: "MOSAROMA Collection Basic — unkomplizierte Outdoor-Textilien",
     moodColors: ["#555555", "#888888", "#AAAAAA", "#D5D5D5"],
     productCategories: [

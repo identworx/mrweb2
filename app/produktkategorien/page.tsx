@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
@@ -36,6 +37,18 @@ export default function ProduktkategorienPage() {
                 />
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
+            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-6">
+              Sie suchen nach Farbe oder Kollektion? Entdecken Sie unsere
+              Kollektionen.
+            </p>
+            <Link href="/kollektionen" className="btn-outline">
+              Zu den Kollektionen
+            </Link>
           </div>
         </section>
       </main>

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
 import { collections, getCollectionBySlug } from "@/lib/mosaroma/collections";
 import { categories } from "@/lib/mosaroma/categories";
@@ -23,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Kollektion nicht gefunden | Mosaroma" };
   }
   return {
-    title: `Kollektion ${collection.name} | Mosaroma`,
+    title: `${collection.name} Collection | Mosaroma Kollektionen 2027`,
     description: collection.description,
   };
 }
@@ -44,8 +46,18 @@ export default async function KollektionPage({ params }: PageProps) {
     <>
       <Header />
       <main>
+        {/* Breadcrumbs */}
+        <div className="bg-cream">
+          <Breadcrumbs
+            items={[
+              { label: "Kollektionen", href: "/kollektionen" },
+              { label: `${collection.name} Collection` },
+            ]}
+          />
+        </div>
+
         {/* Hero with color band */}
-        <section className="bg-cream pt-32 md:pt-40 lg:pt-44">
+        <section className="bg-cream pb-16 md:pb-24">
           {/* Wide mood color band */}
           <div className="flex w-full h-3 md:h-4">
             {collection.moodColors.map((color, i) => (
@@ -57,28 +69,41 @@ export default async function KollektionPage({ params }: PageProps) {
             ))}
           </div>
 
-          <div className="section-padding">
-            <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Kollektion {collection.number}
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-12 md:pt-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <div>
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="accent-line" />
+                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                    Kollektion {collection.number}
+                  </p>
+                </div>
+
+                <h1 className="font-heading text-anthracite text-4xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-bold tracking-tight leading-[1.08]">
+                  {collection.name}
+                </h1>
+
+                {collection.subtitle && (
+                  <p className="font-heading text-anthracite/60 text-xl md:text-2xl lg:text-[1.75rem] font-medium tracking-tight leading-snug mt-4">
+                    {collection.subtitle}
+                  </p>
+                )}
+
+                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6 max-w-2xl">
+                  {collection.description}
                 </p>
               </div>
 
-              <h1 className="font-heading text-anthracite text-4xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-bold tracking-tight leading-[1.08]">
-                {collection.name}
-              </h1>
-
-              {collection.subtitle && (
-                <p className="font-heading text-anthracite/60 text-xl md:text-2xl lg:text-[1.75rem] font-medium tracking-tight leading-snug mt-4">
-                  {collection.subtitle}
-                </p>
-              )}
-
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6 max-w-2xl">
-                {collection.description}
-              </p>
+              <div className="relative aspect-[4/3] overflow-hidden">
+                <Image
+                  src={collection.image}
+                  alt={collection.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -179,8 +204,8 @@ export default async function KollektionPage({ params }: PageProps) {
                         </Link>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-                        {categoryProducts.map((product, i) => (
-                          <ProductCard key={`${product.code}-${i}`} product={product} />
+                        {categoryProducts.map((product) => (
+                          <ProductCard key={product.slug} product={product} />
                         ))}
                       </div>
                     </div>
@@ -247,7 +272,10 @@ export default async function KollektionPage({ params }: PageProps) {
               -- wir beraten Sie gerne.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kataloge" className="btn-primary">
+              <Link href="/produktkategorien" className="btn-primary">
+                Produktkategorien ansehen
+              </Link>
+              <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen
               </Link>
               <Link href="/kontakt" className="btn-outline-white">

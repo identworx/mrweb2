@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+<defs>
+    <linearGradient id="bg-cmdoez" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4A4A4A"/><stop offset="100%" stop-color="#363636"/></linearGradient>
+    <pattern id="weave-b2b7zo" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
+      <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="weave-b2b7zo-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
+      <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.04)" stroke-width="0.4"/>
+    </pattern>
+  </defs>
+
+  <rect width="600" height="600" fill="url(#bg-cmdoez)"/>
+  <rect width="600" height="600" fill="url(#weave-b2b7zo)"/>
+  <rect width="600" height="600" fill="url(#weave-b2b7zo-h)" opacity="0.7"/>
+  <rect x="225" y="250" width="150" height="55" rx="5" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <line x1="90" y1="560" x2="510" y2="560" stroke="#E07B12" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+  <text x="300" y="294.3333333333333" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="28" font-weight="300" fill="rgba(255,255,255,0.85)" text-anchor="middle" letter-spacing="2">Sitzpolster</text>
+  <text x="300" y="582" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" letter-spacing="4" fill="rgba(255,255,255,0.45)" text-anchor="middle" font-variant="small-caps">MOSAROMA</text>
+</svg>
