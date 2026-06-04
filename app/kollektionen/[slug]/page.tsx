@@ -173,7 +173,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 Produkte in dieser Kollektion
               </h2>
 
-              <div className="space-y-16">
+              <div className="space-y-10 md:space-y-14">
                 {collectionCategories.map((cat) => {
                   const categoryProducts = getProductsByCollectionAndCategory(
                     collection.slug,
@@ -182,27 +182,19 @@ export default async function KollektionPage({ params }: PageProps) {
                   if (categoryProducts.length === 0) return null;
                   return (
                     <div key={cat.slug} id={`kategorie-${cat.slug}`}>
-                      {/* Subcategory hero image */}
-                      <div className="relative aspect-[3/1] overflow-hidden mb-6">
-                        <Image
-                          src={`/images/placeholders/subcategories/hero/${slug}-${cat.slug}.svg`}
-                          alt={`${collection.name} ${cat.title}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1400px) 100vw, 1400px"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                          <h3 className="font-heading text-white text-xl md:text-2xl lg:text-3xl font-bold tracking-tight">
-                            {cat.title}
-                          </h3>
-                          <p className="font-body text-white/70 text-sm mt-1">
+                      <div className="mb-6">
+                        <div className="flex items-center gap-4 mb-2">
+                          <div className="accent-line" />
+                          <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
                             {categoryProducts.length}{" "}
                             {categoryProducts.length === 1
                               ? "Produkt"
                               : "Produkte"}
                           </p>
                         </div>
+                        <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
+                          {cat.title}
+                        </h3>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                         {categoryProducts.map((product) => (
