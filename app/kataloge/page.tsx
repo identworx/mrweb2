@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
+import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import DownloadCard from "@/components/DownloadCard";
 import { downloads } from "@/lib/mosaroma/downloads";
 
@@ -17,11 +18,7 @@ export default function KatalogePage() {
       <Header />
       <main>
         {/* Hero */}
-        <PageHero
-          accent="Downloads"
-          title="Kataloge & Downloads"
-          description="Hier finden Sie alle Dokumente rund um unsere Produkte, Stoffe und Kollektionen — vom vollständigen Katalog bis zu technischen Datenblättern."
-        />
+        <PageHero {...pageHeroes.kataloge} />
 
         {/* Downloads Grid */}
         <section className="section-padding bg-white">

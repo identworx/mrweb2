@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -46,25 +47,42 @@ export default async function NeuigkeitDetailPage({
       <Header />
       <main>
         {/* Hero area */}
-        <section className="section-padding bg-cream pt-40 md:pt-48 lg:pt-52">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
-                {item.tag}
-              </span>
-              <span className="font-body text-text-gray/50 text-xs">
-                {item.date}
-              </span>
-              {item.isPlaceholder && (
-                <span className="font-body text-[10px] text-text-gray/40 italic">
-                  (Platzhalter)
+        <section className="relative min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-end overflow-hidden">
+          <Image
+            src="/images/placeholders/page-heroes/neuigkeiten-hero.svg"
+            alt="Mosaroma Neuigkeiten"
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 35%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.10) 80%, transparent 100%)",
+            }}
+          />
+          <div className="relative w-full pb-12 md:pb-16 lg:pb-20 pt-40 md:pt-48 lg:pt-52">
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
+                  {item.tag}
                 </span>
-              )}
-            </div>
+                <span className="font-body text-white/50 text-xs">
+                  {item.date}
+                </span>
+                {item.isPlaceholder && (
+                  <span className="font-body text-[10px] text-white/40 italic">
+                    (Platzhalter)
+                  </span>
+                )}
+              </div>
 
-            <h1 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
-              {item.title}
-            </h1>
+              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
+                {item.title}
+              </h1>
+            </div>
           </div>
         </section>
 

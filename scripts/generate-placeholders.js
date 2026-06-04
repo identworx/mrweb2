@@ -509,6 +509,163 @@ function subcategoryHeroPlaceholder(collectionKey, categoryName, label) {
   });
 }
 
+// ── Page Hero Placeholders (1920x720 wide format) ────────────
+
+function pageHeroPlaceholder({ bgColor1, bgColor2, extraShapes = '' }) {
+  const w = 1920, h = 720;
+  return premiumPlaceholder({
+    w, h,
+    bgColor1, bgColor2,
+    label: '',
+    labelColor: 'rgba(255,255,255,0)',
+    brandColor: 'rgba(255,255,255,0.2)',
+    accentThickness: 0,
+    patternStroke1: 'rgba(255,255,255,0.05)',
+    patternStroke2: 'rgba(0,0,0,0.03)',
+    extraShapes,
+  });
+}
+
+function pageHeroKollektionen() {
+  const w = 1920;
+  // Seven abstract color swatches representing collections
+  const allColors = [
+    ['#42523F', '#69785C'], // green
+    ['#2C5F7C', '#4A8BAD'], // blue
+    ['#8B2500', '#C0392B'], // red
+    ['#B8860B', '#DAA520'], // golden
+    ['#6B5B4B', '#8B7D6B'], // earth-grey
+    ['#1B6B6D', '#2E8B8B'], // nerio-oceana
+    ['#555555', '#888888'], // basic
+  ];
+  let swatches = '';
+  const swatchW = 160, gap = 24;
+  const totalW = allColors.length * swatchW + (allColors.length - 1) * gap;
+  const startX = (w - totalW) / 2;
+  allColors.forEach((colors, i) => {
+    const x = startX + i * (swatchW + gap);
+    swatches += `<rect x="${x}" y="220" width="${swatchW}" height="${swatchW}" rx="4" fill="${colors[0]}" opacity="0.35"/>`;
+    swatches += `<rect x="${x + 8}" y="228" width="${swatchW - 16}" height="${swatchW - 16}" rx="3" fill="${colors[1]}" opacity="0.2"/>`;
+  });
+  return pageHeroPlaceholder({
+    bgColor1: '#3D3D3D',
+    bgColor2: '#2D2D2D',
+    extraShapes: swatches,
+  });
+}
+
+function pageHeroMaterialien() {
+  const w = 1920, h = 720;
+  // Macro fabric texture with water droplets
+  let threads = '';
+  for (let y = 100; y < h - 100; y += 12) {
+    const opacity = (y % 24 === 0) ? 0.06 : 0.03;
+    threads += `<line x1="200" y1="${y}" x2="${w - 200}" y2="${y}" stroke="rgba(255,255,255,${opacity})" stroke-width="0.8"/>`;
+  }
+  for (let x = 200; x < w - 200; x += 14) {
+    const opacity = (x % 28 === 0) ? 0.05 : 0.025;
+    threads += `<line x1="${x}" y1="100" x2="${x}" y2="${h - 100}" stroke="rgba(255,255,255,${opacity})" stroke-width="0.6"/>`;
+  }
+  // Water drops
+  const drops = [
+    [w * 0.65, 240, 12], [w * 0.72, 320, 9], [w * 0.68, 400, 11],
+    [w * 0.75, 280, 7], [w * 0.80, 360, 10], [w * 0.62, 340, 8],
+  ];
+  let dropShapes = '';
+  for (const [x, y, r] of drops) {
+    dropShapes += `<circle cx="${x}" cy="${y}" r="${r}" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>`;
+    dropShapes += `<circle cx="${x - r * 0.25}" cy="${y - r * 0.25}" r="${r * 0.3}" fill="rgba(255,255,255,0.08)"/>`;
+  }
+  return pageHeroPlaceholder({
+    bgColor1: '#4A4038',
+    bgColor2: '#3A3228',
+    extraShapes: threads + dropShapes,
+  });
+}
+
+function pageHeroUeberUns() {
+  const w = 1920;
+  // Fabric rolls / material planes
+  let shapes = '';
+  shapes += `<rect x="${w * 0.1}" y="200" width="${w * 0.35}" height="300" rx="4" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+  shapes += `<rect x="${w * 0.5}" y="180" width="${w * 0.35}" height="320" rx="4" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+  shapes += `<line x1="${w * 0.1}" y1="350" x2="${w * 0.45}" y2="350" stroke="rgba(255,255,255,0.04)" stroke-width="0.8"/>`;
+  shapes += `<line x1="${w * 0.5}" y1="340" x2="${w * 0.85}" y2="340" stroke="rgba(255,255,255,0.04)" stroke-width="0.8"/>`;
+  return pageHeroPlaceholder({
+    bgColor1: '#3A3D3A',
+    bgColor2: '#2D302D',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroKataloge() {
+  const w = 1920;
+  // Abstract document / catalog pages
+  let shapes = '';
+  const docs = [
+    [w * 0.3, 180, 200, 280], [w * 0.45, 160, 200, 280],
+    [w * 0.6, 190, 200, 280],
+  ];
+  docs.forEach(([x, y, dw, dh], i) => {
+    const opacity = 0.03 + i * 0.01;
+    shapes += `<rect x="${x}" y="${y}" width="${dw}" height="${dh}" rx="3" fill="rgba(255,255,255,${opacity})" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+    // Text lines inside
+    for (let ly = y + 40; ly < y + dh - 30; ly += 18) {
+      const lw = 100 + Math.floor((ly * 7) % 60);
+      shapes += `<line x1="${x + 30}" y1="${ly}" x2="${x + 30 + lw}" y2="${ly}" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>`;
+    }
+  });
+  return pageHeroPlaceholder({
+    bgColor1: '#4A4540',
+    bgColor2: '#383430',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroNeuigkeiten() {
+  const w = 1920;
+  // Editorial grid / magazine tiles
+  let shapes = '';
+  const tiles = [
+    [w * 0.15, 180, 280, 180], [w * 0.38, 180, 280, 180],
+    [w * 0.61, 180, 280, 180], [w * 0.15, 380, 280, 180],
+    [w * 0.38, 380, 280, 180], [w * 0.61, 380, 280, 180],
+  ];
+  tiles.forEach(([x, y, tw, th], i) => {
+    const opacity = 0.025 + (i % 3) * 0.008;
+    shapes += `<rect x="${x}" y="${y}" width="${tw}" height="${th}" rx="2" fill="rgba(255,255,255,${opacity})" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>`;
+  });
+  return pageHeroPlaceholder({
+    bgColor1: '#42523F',
+    bgColor2: '#354535',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroKontakt() {
+  const w = 1920;
+  // Subtle location / address lines
+  let shapes = '';
+  shapes += `<rect x="${w * 0.35}" y="220" width="${w * 0.3}" height="250" rx="4" fill="rgba(255,255,255,0.025)" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+  for (let y = 280; y < 430; y += 28) {
+    const lw = 120 + (y * 3) % 80;
+    shapes += `<line x1="${w * 0.35 + 40}" y1="${y}" x2="${w * 0.35 + 40 + lw}" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="2"/>`;
+  }
+  return pageHeroPlaceholder({
+    bgColor1: '#3D3A38',
+    bgColor2: '#2D2A28',
+    extraShapes: shapes,
+  });
+}
+
+function pageHeroDefault() {
+  return pageHeroPlaceholder({
+    bgColor1: '#3D3D3D',
+    bgColor2: '#2D2D2D',
+    extraShapes: '',
+  });
+}
+
 // ── File Generation ───────────────────────────────────────────
 
 function writeFile(dir, filename, content) {
@@ -647,6 +804,16 @@ for (const [colKey, colCats] of Object.entries(COLLECTION_CATEGORIES)) {
     gen('subcategories/hero', `${colKey}-${catSlug}.svg`, subcategoryHeroPlaceholder(colKey, catSlug, label));
   }
 }
+
+// ── Page hero images (1920x720 wide format) ──
+console.log('\n  Page hero images:');
+gen('page-heroes', 'kollektionen-hero.svg', pageHeroKollektionen());
+gen('page-heroes', 'materialien-hero.svg', pageHeroMaterialien());
+gen('page-heroes', 'ueber-uns-hero.svg', pageHeroUeberUns());
+gen('page-heroes', 'kataloge-hero.svg', pageHeroKataloge());
+gen('page-heroes', 'neuigkeiten-hero.svg', pageHeroNeuigkeiten());
+gen('page-heroes', 'kontakt-hero.svg', pageHeroKontakt());
+gen('page-heroes', 'default-hero.svg', pageHeroDefault());
 
 // ── Summary ──
 console.log(`\n  Done! Generated ${count} SVG files.`);

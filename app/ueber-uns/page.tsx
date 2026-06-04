@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
+import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 
 export const metadata: Metadata = {
   title: "Über uns | Mosaroma",
@@ -45,7 +46,7 @@ export default function UeberUnsPage() {
       <Header />
       <main>
         {/* Hero */}
-        <PageHero accent="Über MOSAROMA" title="Das sind wir." />
+        <PageHero {...pageHeroes.ueberUns} />
 
         {/* About text */}
         <section className="section-padding bg-white">

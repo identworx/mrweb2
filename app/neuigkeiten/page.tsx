@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
+import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import NewsCard from "@/components/NewsCard";
 import { newsItems } from "@/lib/mosaroma/news";
 
@@ -17,7 +18,7 @@ export default function NeuigkeitenPage() {
       <Header />
       <main>
         {/* Hero */}
-        <PageHero accent="Aktuelles" title="Neuigkeiten" />
+        <PageHero {...pageHeroes.neuigkeiten} />
 
         {/* News Grid */}
         <section className="section-padding bg-cream">

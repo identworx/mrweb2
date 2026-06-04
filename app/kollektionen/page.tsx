@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
 import CollectionCard from "@/components/CollectionCard";
 import { collections } from "@/lib/mosaroma/collections";
+import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 
 export const metadata: Metadata = {
   title: "Kollektionen 2027 | Mosaroma",
@@ -16,11 +17,7 @@ export default function KollektionenPage() {
     <>
       <Header />
       <main>
-        <PageHero
-          accent="Saison 2027"
-          title="Unsere Kollektionen"
-          description="Sieben kuratierte Farbwelten für den Außenbereich -- jede Kollektion erzählt ihre eigene Geschichte aus Farbe, Material und Stimmung."
-        />
+        <PageHero {...pageHeroes.kollektionen} />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
+import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
 import {
   fabricQualities,
   propertiesComparison,
@@ -22,10 +23,7 @@ export default function MaterialienPage() {
       <Header />
       <main>
         {/* Hero */}
-        <PageHero
-          accent="Material & Technologie"
-          title="Materialien, die draußen bestehen."
-        />
+        <PageHero {...pageHeroes.materialien} />
 
         {/* Mackintosh® Technologie */}
         <section className="section-padding bg-white">

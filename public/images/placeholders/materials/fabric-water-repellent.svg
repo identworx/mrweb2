@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
 <defs>
-    <linearGradient id="bg-5due43" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
-    <pattern id="weave-wxuhav" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+    <linearGradient id="bg-t1590n" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2C5F7C"/><stop offset="100%" stop-color="#4A8BAD"/></linearGradient>
+    <pattern id="weave-uttkeo" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
       <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.07)" stroke-width="0.8"/>
       <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.04)" stroke-width="0.5"/>
     </pattern>
-    <pattern id="weave-wxuhav-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+    <pattern id="weave-uttkeo-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
       <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
       <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.04)" stroke-width="0.4"/>
     </pattern>
   </defs>
 
-  <rect width="800" height="600" fill="url(#bg-5due43)"/>
-  <rect width="800" height="600" fill="url(#weave-wxuhav)"/>
-  <rect width="800" height="600" fill="url(#weave-wxuhav-h)" opacity="0.7"/>
+  <rect width="800" height="600" fill="url(#bg-t1590n)"/>
+  <rect width="800" height="600" fill="url(#weave-uttkeo)"/>
+  <rect width="800" height="600" fill="url(#weave-uttkeo-h)" opacity="0.7"/>
   
   <!-- Water drop symbols -->
   <circle cx="350" cy="170" r="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.12)" stroke-width="0.5"/>

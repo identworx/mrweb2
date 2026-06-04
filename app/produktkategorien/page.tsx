@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/PageHero";
+import PageHero from "@/components/sections/PageHero";
 import CategoryCard from "@/components/CategoryCard";
 import { categories } from "@/lib/mosaroma/categories";
 
@@ -19,7 +19,7 @@ export default function ProduktkategorienPage() {
       <Header />
       <main>
         <PageHero
-          accent="Entdecken"
+          eyebrow="Entdecken"
           title="Produktkategorien"
           description="Entdecken Sie alle MOSAROMA Produktkategorien -- von Dekokissen und Auflagen bis hin zu Poufs, Tischsets und Decken. Jede Kategorie vereint Premium-Materialien mit durchdachtem Design fuer den Aussenbereich."
         />

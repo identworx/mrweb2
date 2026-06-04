@@ -56,20 +56,29 @@ export default async function KollektionPage({ params }: PageProps) {
           />
         </div>
 
-        {/* Hero with color band */}
-        <section className="bg-cream pb-16 md:pb-24">
-          {/* Wide mood color band */}
-          <div className="flex w-full h-3 md:h-4">
-            {collection.moodColors.map((color, i) => (
-              <div
-                key={i}
-                className="flex-1"
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
+        {/* Hero with color band and background image */}
+        <section className="relative bg-cream pb-16 md:pb-24 overflow-hidden">
+          <Image
+            src={`/images/placeholders/collections/hero/${slug}.svg`}
+            alt={`${collection.name} Collection Hero`}
+            fill
+            className="object-cover opacity-30"
+            sizes="100vw"
+            priority
+          />
+          <div className="relative">
+            {/* Wide mood color band */}
+            <div className="flex w-full h-3 md:h-4">
+              {collection.moodColors.map((color, i) => (
+                <div
+                  key={i}
+                  className="flex-1"
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
 
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-12 md:pt-16">
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-12 md:pt-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>
                 <div className="flex items-center gap-4 mb-5">
@@ -105,6 +114,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 />
               </div>
             </div>
+          </div>
           </div>
         </section>
 
