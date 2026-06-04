@@ -11,9 +11,9 @@ import "@fontsource/josefin-sans/400-italic.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MOSAROMA – Premium Outdoor-Textilien & Polster",
+  title: "Mosaroma | Design trifft Performance",
   description:
-    "Hochwertige Outdoor-Textilien und Polster aus wetterfestem Olefin mit Mackintosh® Technology – UV-beständig, PFAS-frei, spinnfarbgefärbt. Seit 2021 in Oyten bei Bremen.",
+    "Hochwertige Outdoor-Textilien, Sitzauflagen, Kissen, Poufs und Kollektionen für Garten, Terrasse, Hospitality und Fachhandel.",
 };
 
 export default function RootLayout({

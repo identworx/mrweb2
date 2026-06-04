@@ -1,0 +1,45 @@
+import type { Metadata } from "next";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import PageHero from "@/components/PageHero";
+import CategoryCard from "@/components/CategoryCard";
+import { categories } from "@/lib/mosaroma/categories";
+
+export const metadata: Metadata = {
+  title: "Produktkategorien | Mosaroma Outdoor-Textilien",
+  description:
+    "Entdecken Sie Dekokissen, Hochlehner, Niedriglehner, Sitzkissen, Sitzpolster, Bankauflagen, Poufs, Tischsets und Decken von Mosaroma.",
+};
+
+export default function ProduktkategorienPage() {
+  return (
+    <>
+      <Header />
+      <main>
+        <PageHero
+          accent="Entdecken"
+          title="Produktkategorien"
+          description="Entdecken Sie alle MOSAROMA Produktkategorien -- von Dekokissen und Auflagen bis hin zu Poufs, Tischsets und Decken. Jede Kategorie vereint Premium-Materialien mit durchdachtem Design fuer den Aussenbereich."
+        />
+
+        <section className="section-padding bg-white">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {categories.map((category) => (
+                <CategoryCard
+                  key={category.slug}
+                  title={category.title}
+                  image={category.image}
+                  alt={category.alt}
+                  description={category.shortDescription}
+                  href={`/produktkategorien/${category.slug}`}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

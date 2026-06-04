@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HeroSection() {
   return (
     <section className="relative w-full h-screen min-h-[700px] max-h-[1100px] overflow-hidden">
@@ -38,6 +40,11 @@ export default function HeroSection() {
         <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-20 md:pb-28 lg:pb-32">
           <div className="max-w-xl lg:max-w-[620px]">
 
+            {/* Subheadline */}
+            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase mb-6">
+              Hochwertige Outdoor-Textilien
+            </p>
+
             {/* Headline */}
             <h1 className="font-heading text-white text-[2.75rem] md:text-[4rem] lg:text-[5rem] xl:text-[5.5rem] font-extrabold leading-[1.02] tracking-[-0.02em] mb-6 md:mb-8">
               Design trifft
@@ -46,19 +53,32 @@ export default function HeroSection() {
             </h1>
 
             {/* Subline */}
-            <p className="font-body text-white/80 text-lg md:text-xl lg:text-[1.375rem] leading-[1.65] mb-10 md:mb-12 max-w-[26rem] md:max-w-[30rem]">
-              Outdoor-Textilien und Polster aus wetterfestem Olefin –
-              spinnfarbgefärbt, UV-beständig und PFAS-frei. Gefertigt mit
-              Mackintosh® Technology.
+            <p className="font-heading text-white/90 text-lg md:text-xl lg:text-2xl font-medium leading-snug mb-4 max-w-[28rem] md:max-w-[32rem]">
+              Hochwertige Outdoor-Textilien für Räume und Momente, die bleiben.
             </p>
 
-            {/* Single CTA */}
-            <a href="#produkte" className="btn-primary">
-              Produkte entdecken
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-              </svg>
-            </a>
+            {/* Text */}
+            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]">
+              Mosaroma verbindet anspruchsvolles Design, langlebige Materialien
+              und zuverlässige Outdoor-Performance für Garten, Terrasse,
+              Hospitality und Fachhandel.
+            </p>
+
+            {/* Two CTAs */}
+            <div className="flex flex-wrap items-center gap-4">
+              <Link href="/produktkategorien" className="btn-primary">
+                Produktkategorien entdecken
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                </svg>
+              </Link>
+              <Link href="/kataloge" className="btn-outline-white">
+                Katalog ansehen
+                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { footerLinks } from "@/lib/data";
+import Link from "next/link";
+import { footerData } from "@/lib/mosaroma/footer";
 
 export default function Footer() {
   return (
@@ -16,16 +17,8 @@ export default function Footer() {
               height={45}
               className="h-10 w-auto mb-6 brightness-0 invert"
             />
-            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-4">
-              Premium Outdoor-Textilien und Polster – gefertigt mit
-              Mackintosh® Technology in Oyten bei Bremen. Seit 2021.
-            </p>
-            <p className="font-body text-white/25 text-xs leading-[1.8] mb-6">
-              Rudolf-Diesel-Str. 11-13
-              <br />
-              28876 Oyten
-              <br />
-              info@mosaroma.de
+            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-6">
+              {footerData.brand.description}
             </p>
             {/* Social */}
             <div className="flex items-center gap-4">
@@ -44,47 +37,26 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.values(footerLinks).map((section) => (
-            <div key={section.title} className="lg:col-span-2">
+          {/* Link columns from footerData */}
+          {footerData.columns.map((column) => (
+            <div key={column.title} className="lg:col-span-3">
               <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
-                {section.title}
+                {column.title}
               </h4>
               <ul className="space-y-3.5">
-                {section.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
                       className="font-body text-white/35 text-sm hover:text-white/80 transition-colors duration-400"
                     >
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-
-          {/* Newsletter */}
-          <div className="col-span-2 lg:col-span-3">
-            <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
-              Newsletter
-            </h4>
-            <p className="font-body text-white/35 text-sm leading-[1.8] mb-5">
-              Neue Kollektionen, Pflegetipps und Inspirationen rund um
-              Outdoor Living.
-            </p>
-            <div className="flex">
-              <input
-                type="email"
-                placeholder="E-Mail-Adresse"
-                className="flex-1 min-w-0 px-4 py-3 bg-white/[0.06] border border-white/[0.08] font-body text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-pumpkin/40 transition-colors duration-300"
-              />
-              <button className="px-5 py-3 bg-pumpkin text-white font-heading text-[10px] font-semibold uppercase tracking-[0.15em] hover:bg-burnt-orange transition-colors duration-300 flex-shrink-0">
-                OK
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Bottom bar */}
@@ -95,17 +67,15 @@ export default function Footer() {
 
           {/* Legal links */}
           <div className="flex flex-wrap justify-center gap-6 text-xs">
-            {["Impressum", "Datenschutz", "AGB"].map(
-              (item) => (
-                <a
-                  key={item}
-                  href="#"
-                  className="font-body text-white/20 hover:text-white/50 transition-colors duration-400"
-                >
-                  {item}
-                </a>
-              )
-            )}
+            {footerData.legal.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="font-body text-white/20 hover:text-white/50 transition-colors duration-400"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
