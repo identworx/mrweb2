@@ -46,3 +46,6 @@ next-env.d.ts
 # database
 *.db
 *.db-journal
+
+# uploaded media (runtime-generated)
+/public/uploads/
