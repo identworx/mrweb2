@@ -87,8 +87,9 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 4 Navigations-Menues (Header, Footer, Service, Legal) mit Eintraegen
 - 7 Kollektionen (mit Eyebrow, Beschreibungen, MoodColors, SEO-Daten)
 - 4 Materialien
+- 6 Materialien (inkl. Bambusfaser und Acryl fuer Decken)
 - 9 Produktgruppen (mit Beschreibungen)
-- 12 Beispiel-Produkte (Green, Blue, Basic)
+- 209 Produkte (vollstaendiger Import aus statischen Daten)
 - 1 Footer-Settings
 - 1 Kontaktformular mit 5 Feldern
 
@@ -396,10 +397,41 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - [x] API: `GET/POST /api/admin/product-groups`
 - [x] Seed: Produktgruppen mit Beschreibungen
 - [x] Seed: Slug-Fix tischsets-tischlaufer → tischsets-tischlaeufer
-- [x] Seed: 12 Beispiel-Produkte (Green, Blue, Basic — mehrere Kategorien)
+- [x] Seed: Alle 209 statischen Produkte vollstaendig in DB importiert
+- [x] Seed: 2 zusaetzliche Materialien (Bambusfaser, Acryl) fuer Decken-Produkte
+- [x] Seed: Idempotent — bereits vorhandene Produkte werden aktualisiert, Admin-gepflegte Felder (SEO, Bilder) bleiben erhalten
 - [x] Statische Fallbacks erhalten (lib/mosaroma/ Dateien unveraendert)
 - [x] **DRAFT/ARCHIVED Produkte** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
 - [x] **Inaktive Produktgruppen** werden nicht oeffentlich angezeigt, auch wenn ein statischer Fallback existiert
+
+### Produktdaten-Migration (Phase 2C Erweiterung)
+
+Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statischen Daten in `lib/mosaroma/products.ts` dienen nur noch als Bild-Fallback, wenn ein DB-Produkt kein eigenes mainImage/heroImage hat.
+
+**Importierte Felder pro Produkt:**
+- `slug`, `name`, `code`, `size`, `description`, `features`, `colorName`, `patternName`
+- `collectionId` (via `collectionSlug` → `Collection.slug`)
+- `productGroupId` (via `categorySlug` → `ProductGroup.slug`)
+- `materialId` (via `materialSlug` → `Material.slug`)
+- `status` → PUBLISHED
+
+**Nicht importierte / noch fehlende Felder:**
+- `mainImageId`, `heroImageId` → null (statische Bilder als Fallback via `mapProductForFrontend`)
+- `shortDescription` → null (nicht in statischen Daten vorhanden)
+- `seoTitle`, `seoDescription` → null (im Admin pflegbar)
+- `ProductImage` Galerie-Eintraege → noch nicht migriert (statische Gallery-Pfade dienen als Fallback)
+
+**Bildfallback-Kette:**
+1. `Product.mainImage` (MediaAsset aus DB) → bestes Bild
+2. Statisches Produkt mit gleichem Slug → `staticProduct.image`
+3. Kollektion-Platzhalter → `/images/placeholders/products/product-{collectionSlug}.svg`
+
+**Neue Produkte im Admin pflegen:**
+1. Produkte → Neues Produkt
+2. Name, Slug, Code, Zuordnung (Kollektion, Produktgruppe, Material)
+3. Optional: Hauptbild und Hero-Bild aus Medien waehlen
+4. Status auf PUBLISHED setzen
+5. Produkt erscheint nach max. 60 Sekunden auf der Website
 
 ### Offen — Formulare, Delete, Weiteres
 1. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden

@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "../lib/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { hash } from "bcryptjs";
+import { products as staticProducts } from "../lib/mosaroma/products";
 
 const raw = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
 const adapter = new PrismaBetterSqlite3({ url: raw });
@@ -319,6 +320,20 @@ async function main() {
       dyeing: "stückgefärbt",
       order: 4,
     },
+    {
+      slug: "bambusfaser",
+      name: "Bambusfaser",
+      materialComp: "Bambusfaser",
+      weight: "",
+      order: 5,
+    },
+    {
+      slug: "acryl",
+      name: "Acryl",
+      materialComp: "100 % Acryl",
+      weight: "",
+      order: 6,
+    },
   ];
 
   for (const m of materials) {
@@ -382,7 +397,7 @@ async function main() {
   console.log(`✔ ProductGroups: ${productGroups.length} seeded`);
 
   // ---------------------------------------------------------------------------
-  // 8. Sample products (Green, Blue, Basic)
+  // 8. Products — full import from static data (lib/mosaroma/products.ts)
   // ---------------------------------------------------------------------------
   const collectionMap = new Map<string, string>();
   const allCollections = await prisma.collection.findMany({ select: { id: true, slug: true } });
@@ -396,70 +411,70 @@ async function main() {
   const allMaterials = await prisma.material.findMany({ select: { id: true, slug: true } });
   for (const m of allMaterials) materialMap.set(m.slug, m.id);
 
-  const sampleProducts = [
-    // Green — Dekokissen
-    { slug: "longitude-olive-dekokissen-401226", name: "Longitude Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh", size: "48 × 48 cm", code: "401.226", features: [], description: "Longitude Olive Dekokissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Longitude" },
-    { slug: "palmway-olive-dekokissen-401223", name: "Palmway Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh", size: "48 × 48 cm", code: "401.223", features: [], description: "Palmway Olive Dekokissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Palmway" },
-    { slug: "st-tropez-olive-dekokissen-403804", name: "St. Tropez Olive", categorySlug: "dekokissen", collectionSlug: "green", materialSlug: "mackintosh-lite", size: "48 × 48 cm", code: "403.804", features: ["mit Keder"], description: "St. Tropez Olive Dekokissen aus der Green Collection. Material: Mackintosh® Lite.", colorName: "Olive", patternName: "St. Tropez" },
-    // Green — Hochlehner
-    { slug: "rocky-mountain-olive-hochlehner-405813", name: "Rocky Mountain Olive", categorySlug: "hochlehner", collectionSlug: "green", materialSlug: "mackintosh", size: "120 × 48 × 6 cm", code: "405.813", features: ["mit Keder"], description: "Rocky Mountain Olive Hochlehner aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Rocky Mountain" },
-    { slug: "st-tropez-olive-hochlehner-403804", name: "St. Tropez Olive", categorySlug: "hochlehner", collectionSlug: "green", materialSlug: "mackintosh-lite", size: "120 × 48 × 6 cm", code: "403.804", features: ["mit Keder"], description: "St. Tropez Olive Hochlehner aus der Green Collection. Material: Mackintosh® Lite.", colorName: "Olive", patternName: "St. Tropez" },
-    // Green — Sitzkissen
-    { slug: "rocky-mountain-olive-sitzkissen-405813", name: "Rocky Mountain Olive", categorySlug: "sitzkissen", collectionSlug: "green", materialSlug: "mackintosh", size: "46 × 45 × 7 cm", code: "405.813", features: ["mit Keder"], description: "Rocky Mountain Olive Sitzkissen aus der Green Collection. Material: Mackintosh®.", colorName: "Olive", patternName: "Rocky Mountain" },
-    // Blue — Dekokissen
-    { slug: "caribbean-midnight-dekokissen-502209", name: "Caribbean Midnight", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "502.209", features: [], description: "Caribbean Midnight Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Midnight", patternName: "Caribbean" },
-    { slug: "bean-azure-dekokissen-504203", name: "Bean Azure", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "504.203", features: [], description: "Bean Azure Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Azure", patternName: "Bean" },
-    { slug: "longitude-dazzling-blue-dekokissen-501226", name: "Longitude Dazzling Blue", categorySlug: "dekokissen", collectionSlug: "blue", materialSlug: "mackintosh", size: "48 × 48 cm", code: "501.226", features: [], description: "Longitude Dazzling Blue Dekokissen aus der Blue Collection. Material: Mackintosh®.", colorName: "Dazzling Blue", patternName: "Longitude" },
-    // Basic — Dekokissen
-    { slug: "creme-au-lait-dekokissen-15815809", name: "Creme au Lait", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815809", features: [], description: "Creme au Lait Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Creme au Lait" },
-    { slug: "stone-blue-dekokissen-15815834", name: "Stone Blue", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815834", features: [], description: "Stone Blue Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Stone Blue" },
-    { slug: "boletus-brown-dekokissen-15815530", name: "Boletus Brown", categorySlug: "dekokissen", collectionSlug: "basic", materialSlug: "basic", size: "45 × 45 cm", code: "15815530", features: [], description: "Boletus Brown Dekokissen aus der Basic Collection. Material: Basic.", colorName: "Boletus Brown" },
-  ];
+  let productCreated = 0;
+  let productUpdated = 0;
+  let productSkipped = 0;
 
-  let productCount = 0;
-  for (const sp of sampleProducts) {
+  for (const sp of staticProducts) {
     const collectionId = collectionMap.get(sp.collectionSlug);
     const productGroupId = groupMap.get(sp.categorySlug);
     const materialId = materialMap.get(sp.materialSlug) ?? null;
 
     if (!collectionId || !productGroupId) {
       console.warn(`⚠ Skipping ${sp.slug}: missing collection (${sp.collectionSlug}) or group (${sp.categorySlug})`);
+      productSkipped++;
       continue;
     }
 
-    await prisma.product.upsert({
+    const existing = await prisma.product.findUnique({
       where: { slug: sp.slug },
-      update: {
-        name: sp.name,
-        collectionId,
-        productGroupId,
-        materialId,
-        description: sp.description,
-        code: sp.code,
-        size: sp.size,
-        colorName: sp.colorName ?? null,
-        patternName: sp.patternName ?? null,
-        features: sp.features,
-        status: "PUBLISHED",
-      },
-      create: {
-        slug: sp.slug,
-        name: sp.name,
-        collectionId,
-        productGroupId,
-        materialId,
-        description: sp.description,
-        code: sp.code,
-        size: sp.size,
-        colorName: sp.colorName ?? null,
-        patternName: sp.patternName ?? null,
-        features: sp.features,
-        status: "PUBLISHED",
-      },
+      select: { id: true, seoTitle: true, seoDescription: true, heroImageId: true, mainImageId: true },
     });
-    productCount++;
+
+    if (existing) {
+      await prisma.product.update({
+        where: { slug: sp.slug },
+        data: {
+          name: sp.name,
+          collectionId,
+          productGroupId,
+          materialId,
+          description: sp.description,
+          code: sp.code,
+          size: sp.size,
+          colorName: sp.colorName ?? null,
+          patternName: sp.patternName ?? null,
+          features: sp.features,
+          status: "PUBLISHED",
+          // Preserve admin-edited fields if already set
+          seoTitle: existing.seoTitle,
+          seoDescription: existing.seoDescription,
+          heroImageId: existing.heroImageId,
+          mainImageId: existing.mainImageId,
+        },
+      });
+      productUpdated++;
+    } else {
+      await prisma.product.create({
+        data: {
+          slug: sp.slug,
+          name: sp.name,
+          collectionId,
+          productGroupId,
+          materialId,
+          description: sp.description,
+          code: sp.code,
+          size: sp.size,
+          colorName: sp.colorName ?? null,
+          patternName: sp.patternName ?? null,
+          features: sp.features,
+          status: "PUBLISHED",
+        },
+      });
+      productCreated++;
+    }
   }
-  console.log(`✔ Products: ${productCount} sample products seeded`);
+  console.log(`✔ Products: ${productCreated} created, ${productUpdated} updated, ${productSkipped} skipped (${staticProducts.length} total static)`);
 
   // ---------------------------------------------------------------------------
   // 9. Footer settings
