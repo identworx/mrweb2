@@ -78,11 +78,8 @@ export const collections: Collection[] = [
       "hochlehner",
       "niedriglehner",
       "sitzkissen",
-      "sitzpolster",
-      "bankauflagen",
       "poufs",
       "tischsets-tischlaeufer",
-      "decken",
     ],
   },
   {

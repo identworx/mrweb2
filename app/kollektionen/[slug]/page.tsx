@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ProductCard from "@/components/ProductCard";
 import { collections, getCollectionBySlug } from "@/lib/mosaroma/collections";
 import { categories } from "@/lib/mosaroma/categories";
+import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -129,7 +131,7 @@ export default async function KollektionPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Product categories */}
+        {/* Products grouped by category */}
         {collectionCategories.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -139,41 +141,51 @@ export default async function KollektionPage({ params }: PageProps) {
                   Produkte
                 </p>
               </div>
-              <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-                Produktkategorien in dieser Kollektion
+              <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
+                Produkte in dieser Kollektion
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {collectionCategories.map((cat) => (
-                  <Link
-                    key={cat.slug}
-                    href={`/produktkategorien/${cat.slug}`}
-                    className="group flex items-center gap-5 p-6 bg-cream transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-pumpkin/10 rounded-full group-hover:bg-pumpkin/20 transition-colors duration-300">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-pumpkin"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+
+              <div className="space-y-14">
+                {collectionCategories.map((cat) => {
+                  const categoryProducts = getProductsByCollectionAndCategory(
+                    collection.slug,
+                    cat.slug,
+                  );
+                  if (categoryProducts.length === 0) return null;
+                  return (
+                    <div key={cat.slug}>
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="font-heading text-anthracite text-lg md:text-xl font-bold">
+                          {cat.title}
+                        </h3>
+                        <Link
+                          href={`/produktkategorien/${cat.slug}`}
+                          className="inline-flex items-center gap-2 text-pumpkin group"
+                        >
+                          <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
+                            Zur Kategorie
+                          </span>
+                          <svg
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            viewBox="0 0 24 24"
+                            className="group-hover:translate-x-1 transition-transform duration-300"
+                          >
+                            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                          </svg>
+                        </Link>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                        {categoryProducts.map((product, i) => (
+                          <ProductCard key={`${product.code}-${i}`} product={product} />
+                        ))}
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-heading text-anthracite text-base font-bold group-hover:text-pumpkin transition-colors duration-300">
-                        {cat.title}
-                      </p>
-                      <p className="font-body text-text-gray text-sm leading-relaxed mt-1">
-                        {cat.shortDescription}
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>

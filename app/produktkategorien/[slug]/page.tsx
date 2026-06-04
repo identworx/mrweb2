@@ -4,8 +4,10 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/PageHero";
+import ProductCard from "@/components/ProductCard";
 import { categories, getCategoryBySlug } from "@/lib/mosaroma/categories";
 import { collections } from "@/lib/mosaroma/collections";
+import { getProductsByCollectionAndCategory } from "@/lib/mosaroma/products";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -166,7 +168,7 @@ export default async function KategoriePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Related Collections */}
+        {/* Products per collection */}
         {relatedCollections.length > 0 && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -176,52 +178,67 @@ export default async function KategoriePage({ params }: PageProps) {
                   Kollektionen
                 </p>
               </div>
-              <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-                In diesen Kollektionen erhältlich
+              <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
+                {category.title} nach Kollektion
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {relatedCollections.map((collection) => (
-                  <Link
-                    key={collection.slug}
-                    href={`/kollektionen/${collection.slug}`}
-                    className="group block bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-                  >
-                    {/* Color band */}
-                    <div className="flex">
-                      {collection.moodColors.map((color, i) => (
-                        <div
-                          key={i}
-                          className="flex-1 h-2 transition-all duration-500 group-hover:h-3"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                    <div className="p-6">
-                      <p className="font-heading text-anthracite text-lg font-bold group-hover:text-pumpkin transition-colors duration-300">
-                        {collection.name}
-                      </p>
-                      <p className="font-body text-text-gray text-sm leading-[1.8] mt-2">
-                        {collection.description}
-                      </p>
-                      <span className="inline-flex items-center gap-2 text-pumpkin mt-4">
-                        <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
-                          Kollektion ansehen
-                        </span>
-                        <svg
-                          width="14"
-                          height="14"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          viewBox="0 0 24 24"
-                          className="group-hover:translate-x-1 transition-transform duration-300"
+
+              <div className="space-y-14">
+                {relatedCollections.map((collection) => {
+                  const collectionProducts = getProductsByCollectionAndCategory(
+                    collection.slug,
+                    slug,
+                  );
+                  return (
+                    <div key={collection.slug}>
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                          <div className="flex">
+                            {collection.moodColors.map((color, i) => (
+                              <div
+                                key={i}
+                                className="w-5 h-5 first:rounded-l last:rounded-r"
+                                style={{ backgroundColor: color }}
+                              />
+                            ))}
+                          </div>
+                          <h3 className="font-heading text-anthracite text-lg md:text-xl font-bold">
+                            {collection.name}
+                          </h3>
+                        </div>
+                        <Link
+                          href={`/kollektionen/${collection.slug}`}
+                          className="inline-flex items-center gap-2 text-pumpkin group"
                         >
-                          <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                        </svg>
-                      </span>
+                          <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
+                            Kollektion ansehen
+                          </span>
+                          <svg
+                            width="14"
+                            height="14"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.5"
+                            viewBox="0 0 24 24"
+                            className="group-hover:translate-x-1 transition-transform duration-300"
+                          >
+                            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                          </svg>
+                        </Link>
+                      </div>
+                      {collectionProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                          {collectionProducts.map((product, i) => (
+                            <ProductCard key={`${product.code}-${i}`} product={product} />
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="font-body text-text-gray text-sm italic">
+                          Produkte folgen in Kürze.
+                        </p>
+                      )}
                     </div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>
