@@ -19,13 +19,13 @@ export default async function DownloadsListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Kataloge &amp; Downloads</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Kataloge und Downloads verwalten.
+            Kataloge, Flipbooks, Download- und Serviceverweise verwalten.
           </p>
         </div>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
-        Download-Editor (Erstellen, Bearbeiten, Löschen) folgt in einer nächsten Phase. Aktuell können vorhandene Einträge hier eingesehen werden.
+        Der vollständige Download-Editor folgt in einer nächsten Phase.
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">

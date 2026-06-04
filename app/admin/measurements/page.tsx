@@ -19,13 +19,13 @@ export default async function MeasurementsListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Produktmaße</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Produktmaße und Maßtabellen verwalten.
+            Produktmaße und technische Maßdaten verwalten.
           </p>
         </div>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
-        Produktmaß-Editor (Erstellen, Bearbeiten, Löschen) folgt in einer nächsten Phase. Aktuell können vorhandene Einträge hier eingesehen werden.
+        Der vollständige Produktmaß-Editor folgt in einer nächsten Phase.
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
