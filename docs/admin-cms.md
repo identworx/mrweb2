@@ -134,6 +134,11 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | `/admin/settings`               | Website-Einstellungen           | Funktional |
 | `/admin/users`                  | Benutzer-Liste                  | Funktional |
 | `/admin/users/[id]`             | Benutzer bearbeiten/erstellen   | Funktional |
+| `/admin/downloads`              | Kataloge & Downloads (Liste)    | Funktional |
+| `/admin/measurements`           | Produktmaße (Liste)             | Funktional |
+| `/admin/service/pflege-garantie`| Service: Pflege & Garantie      | Funktional |
+| `/admin/service/stoff-technische-daten` | Service: Stoff- & techn. Daten | Funktional |
+| `/admin/news`                   | Neuigkeiten (Liste)             | Funktional |
 
 ## 7. API-Endpunkte
 
