@@ -46,8 +46,8 @@ export default async function KollektionPage({ params }: PageProps) {
     <>
       <Header />
       <main>
-        {/* Hero with background image, breadcrumbs inside */}
-        <section className="relative min-h-[560px] md:min-h-[620px] overflow-hidden">
+        {/* Compact hero with background image, breadcrumbs inside */}
+        <section className="relative overflow-hidden">
           <Image
             src={`/images/placeholders/collections/hero/${slug}.svg`}
             alt={`${collection.name} Collection Hero`}
@@ -60,11 +60,11 @@ export default async function KollektionPage({ params }: PageProps) {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 30%, rgba(0,0,0,0.30) 55%, rgba(0,0,0,0.15) 75%, rgba(0,0,0,0.10) 100%)",
+                "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.42) 35%, rgba(0,0,0,0.28) 60%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.10) 100%)",
             }}
           />
 
-          <div className="relative z-10 pt-28 md:pt-36 pb-14 md:pb-20">
+          <div className="relative z-10 pt-24 md:pt-28 pb-10 md:pb-12">
             <Breadcrumbs
               variant="light"
               items={[
@@ -73,52 +73,39 @@ export default async function KollektionPage({ params }: PageProps) {
               ]}
             />
 
-            <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-6 md:pt-8">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-                <div>
-                  {/* Mood color band */}
-                  <div className="flex w-fit mb-6">
-                    {collection.moodColors.map((color, i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-3 md:w-10 md:h-4 first:rounded-l last:rounded-r"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-4 md:pt-6">
+              <div className="max-w-2xl">
+                {/* Mood color swatches */}
+                <div className="flex w-fit mb-5">
+                  {collection.moodColors.map((color, i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-3 md:w-10 md:h-3.5 first:rounded-l last:rounded-r"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
 
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="w-12 h-px bg-pumpkin" />
-                    <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                      Kollektion {collection.number}
-                    </p>
-                  </div>
-
-                  <h1 className="font-heading text-white text-4xl md:text-5xl lg:text-[3.5rem] xl:text-[4rem] font-bold tracking-tight leading-[1.08]">
-                    {collection.name}
-                  </h1>
-
-                  {collection.subtitle && (
-                    <p className="font-heading text-white/60 text-xl md:text-2xl lg:text-[1.75rem] font-medium tracking-tight leading-snug mt-4">
-                      {collection.subtitle}
-                    </p>
-                  )}
-
-                  <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] mt-6 max-w-2xl">
-                    {collection.description}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-px bg-pumpkin" />
+                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                    Kollektion {collection.number}
                   </p>
                 </div>
 
-                <div className="relative aspect-[4/3] overflow-hidden rounded-sm">
-                  <Image
-                    src={collection.image}
-                    alt={collection.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority
-                  />
-                </div>
+                <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
+                  {collection.name}
+                </h1>
+
+                {collection.subtitle && (
+                  <p className="font-heading text-white/60 text-lg md:text-xl lg:text-2xl font-medium tracking-tight leading-snug mt-3">
+                    {collection.subtitle}
+                  </p>
+                )}
+
+                <p className="font-body text-white/70 text-sm md:text-base leading-[1.8] mt-4">
+                  {collection.description}
+                </p>
               </div>
             </div>
           </div>
