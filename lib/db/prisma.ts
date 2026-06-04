@@ -1,12 +1,11 @@
-import { PrismaClient } from "@/lib/generated/prisma/client";
+import { PrismaClient, Prisma } from "@/lib/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
+export { Prisma };
+
 function createPrismaClient() {
-  const dbPath = (process.env.DATABASE_URL ?? "file:./prisma/dev.db").replace(
-    /^file:/,
-    "",
-  );
-  const adapter = new PrismaBetterSqlite3({ url: `file:${dbPath}` });
+  const raw = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
+  const adapter = new PrismaBetterSqlite3({ url: raw });
   return new PrismaClient({ adapter });
 }
 
