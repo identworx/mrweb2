@@ -56,10 +56,10 @@ export const pageHeroes: Record<string, PageHeroData> = {
     alt: "Mosaroma Kontakt Hero Platzhalter",
   },
   produktmasse: {
-    eyebrow: "Service",
+    eyebrow: "Übersicht · Bemaßung am Produkt",
     title: "Produktmaße",
     description:
-      "Übersicht der wichtigsten Abmessungen für Mosaroma Produktformen.",
+      "Alle relevanten Maße und Abmessungen der Mosaroma Produktformen auf einen Blick.",
     image: "/images/placeholders/page-heroes/produktmasse-hero.svg",
     alt: "Mosaroma Produktmaße Hero Platzhalter mit technischen Linien und Maßangaben",
   },

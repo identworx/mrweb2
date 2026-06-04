@@ -1,71 +1,37 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
 import { pageHeroes } from "@/lib/mosaroma/pageHeroes";
+import {
+  measurements,
+  measurementGroups,
+} from "@/lib/mosaroma/measurements";
+import MeasurementCard from "@/components/measurements/MeasurementCard";
+import BenchMeasurement from "@/components/measurements/BenchMeasurement";
+import MeasurementNav from "@/components/measurements/MeasurementNav";
+import MaterialQualityBox from "@/components/measurements/MaterialQualityBox";
+import CustomSizeCta from "@/components/measurements/CustomSizeCta";
 
 export const metadata: Metadata = {
   title: "Produktmaße | Mosaroma",
   description:
-    "Übersicht der wichtigsten Mosaroma Produktmaße für Bankauflagen, Poufs, Tischsets und Tischläufer.",
+    "Übersicht der wichtigsten Mosaroma Produktmaße für Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets und Tischläufer.",
 };
 
-interface DimensionRow {
-  label: string;
-  value: string;
-}
-
-interface DimensionGroup {
-  title: string;
-  image: string;
-  alt: string;
-  note?: string;
-  rows: DimensionRow[];
-}
-
-const dimensionGroups: DimensionGroup[] = [
-  {
-    title: "Bankauflagen",
-    image: "/images/placeholders/service/produktmasse-bankauflagen.svg",
-    alt: "Mosaroma Bankauflagen Maße Platzhalter",
-    note: "Tiefe 49 cm und Dicke 6 cm bei allen Längen identisch.",
-    rows: [
-      { label: "S", value: "50 × 49 × 6 cm" },
-      { label: "M", value: "110 × 49 × 6 cm" },
-      { label: "L", value: "140 × 49 × 6 cm" },
-      { label: "XL", value: "170 × 49 × 6 cm" },
-    ],
-  },
-  {
-    title: "Poufs",
-    image: "/images/placeholders/service/produktmasse-poufs.svg",
-    alt: "Mosaroma Poufs Maße Platzhalter",
-    rows: [
-      { label: "Pouf klein", value: "45 × 45 cm" },
-      { label: "Pouf groß", value: "70 × 36 cm" },
-    ],
-  },
-  {
-    title: "Tischset",
-    image: "/images/placeholders/service/produktmasse-tischset.svg",
-    alt: "Mosaroma Tischset Maße Platzhalter",
-    rows: [{ label: "Tischset", value: "35 × 45 × 0,6 cm" }],
-  },
-  {
-    title: "Tischläufer",
-    image: "/images/placeholders/service/produktmasse-tischlaeufer.svg",
-    alt: "Mosaroma Tischläufer Maße Platzhalter",
-    rows: [
-      { label: "Variante A", value: "35 × 130 × 0,6 cm" },
-      { label: "Variante B", value: "47,5 × 120 × 0,6 cm" },
-    ],
-  },
-];
-
 export default function ProduktmassePage() {
+  const kissenItems = measurements.filter(
+    (m) => m.group === "kissen-auflagen",
+  );
+  const lehnerItems = measurements.filter((m) => m.group === "lehner");
+  const bankauflagenItem = measurements.find(
+    (m) => m.group === "bankauflagen",
+  );
+  const poufItems = measurements.filter((m) => m.group === "poufs");
+  const tischItems = measurements.filter((m) => m.group === "tischsets");
+
   return (
     <>
       <Header />
@@ -79,67 +45,136 @@ export default function ProduktmassePage() {
           ]}
         />
 
-        {/* Dimension Groups */}
+        {/* Notice + Quick Nav */}
+        <section className="bg-white pt-10 pb-6 md:pt-14 md:pb-8">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+              <div>
+                <p className="font-body text-text-gray text-sm leading-relaxed">
+                  Alle Maße sind ca.-Maße und sollten vorab auf Passgenauigkeit
+                  geprüft werden.
+                </p>
+                <p className="font-body text-text-gray/60 text-xs mt-1">
+                  Sondermaße auf Anfrage möglich.
+                </p>
+              </div>
+            </div>
+            <MeasurementNav />
+          </div>
+        </section>
+
+        {/* Kissen & Auflagen */}
+        <section id="kissen-auflagen" className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {measurementGroups[0].title}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+              Kissen & Auflagen
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {kissenItems.map((item) => (
+                <MeasurementCard key={item.slug} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Lehner */}
+        <section id="lehner" className="section-padding bg-white">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {measurementGroups[1].title}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+              Hochlehner & Niedriglehner
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {lehnerItems.map((item) => (
+                <MeasurementCard key={item.slug} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Bankauflagen */}
+        <section id="bankauflagen" className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {measurementGroups[2].title}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+              Bankauflagen
+            </h2>
+
+            {bankauflagenItem && (
+              <BenchMeasurement item={bankauflagenItem} />
+            )}
+          </div>
+        </section>
+
+        {/* Poufs */}
+        <section id="poufs" className="section-padding bg-white">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {measurementGroups[3].title}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+              Poufs
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {poufItems.map((item) => (
+                <MeasurementCard key={item.slug} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Tischsets & Tischläufer */}
+        <section id="tischsets" className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {measurementGroups[4].title}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
+              Tischsets & Tischläufer
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {tischItems.map((item) => (
+                <MeasurementCard key={item.slug} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Material Quality + Custom Size */}
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="space-y-16">
-              {dimensionGroups.map((group) => (
-                <div key={group.title}>
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="accent-line" />
-                    <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                      Abmessungen
-                    </p>
-                  </div>
-                  <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
-                    {group.title}
-                  </h2>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-                    <div className="relative aspect-[2/1] overflow-hidden bg-light-gray">
-                      <Image
-                        src={group.image}
-                        alt={group.alt}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="border border-light-gray">
-                        <div className="grid grid-cols-[140px_1fr] bg-cream">
-                          <div className="px-5 py-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/60">
-                            Variante
-                          </div>
-                          <div className="px-5 py-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/60">
-                            Maße
-                          </div>
-                        </div>
-                        {group.rows.map((row) => (
-                          <div
-                            key={row.label}
-                            className="grid grid-cols-[140px_1fr] border-t border-light-gray"
-                          >
-                            <div className="px-5 py-4 font-heading text-anthracite text-sm font-semibold">
-                              {row.label}
-                            </div>
-                            <div className="px-5 py-4 font-body text-text-gray text-sm">
-                              {row.value}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {group.note && (
-                        <p className="font-body text-text-gray/60 text-sm mt-4 italic">
-                          {group.note}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div
+              id="massanfertigung"
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+            >
+              <MaterialQualityBox />
+              <CustomSizeCta />
             </div>
           </div>
         </section>
