@@ -9,6 +9,9 @@ interface FormField {
   name: string;
   type: string;
   required: boolean;
+  placeholder: string;
+  helpText: string;
+  options: string;
   order: number;
 }
 
@@ -25,7 +28,7 @@ interface FormData {
   fields: FormField[];
 }
 
-const FIELD_TYPES = ["TEXT", "EMAIL", "PHONE", "TEXTAREA", "CONSENT", "SELECT"];
+const FIELD_TYPES = ["TEXT", "EMAIL", "PHONE", "TEXTAREA", "CONSENT", "SELECT", "CHECKBOX", "RADIO"];
 
 const defaultForm: FormData = {
   id: "",
@@ -68,6 +71,9 @@ export default function ContactFormEditor({ form }: { form: FormData | null }) {
           name: "",
           type: "TEXT",
           required: false,
+          placeholder: "",
+          helpText: "",
+          options: "",
           order: prev.fields.length,
         },
       ],
@@ -262,6 +268,40 @@ export default function ContactFormEditor({ form }: { form: FormData | null }) {
                 </select>
               </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Platzhalter</label>
+                <input
+                  type="text"
+                  value={field.placeholder}
+                  onChange={(e) => updateFormField(index, "placeholder", e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Hilfstext</label>
+                <input
+                  type="text"
+                  value={field.helpText}
+                  onChange={(e) => updateFormField(index, "helpText", e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            {(field.type === "SELECT" || field.type === "RADIO") && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Optionen (kommagetrennt)</label>
+                <input
+                  type="text"
+                  value={field.options}
+                  onChange={(e) => updateFormField(index, "options", e.target.value)}
+                  placeholder="Option 1, Option 2, Option 3"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            )}
 
             <div className="flex items-center gap-4">
               <label className="flex items-center gap-2 text-sm text-gray-700">

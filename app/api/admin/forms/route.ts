@@ -65,15 +65,23 @@ export async function POST(request: NextRequest) {
 
       if (fields && fields.length > 0) {
         await tx.formField.createMany({
-          data: fields.map((f: { label: string; name: string; type: string; required: boolean; options?: string; order: number }, i: number) => ({
-            label: f.label,
-            name: f.name,
-            type: f.type,
-            required: f.required ?? false,
-            options: f.options || null,
-            order: f.order ?? i,
-            formId: updated.id,
-          })),
+          data: fields.map((f: { label: string; name: string; type: string; required: boolean; placeholder?: string; helpText?: string; options?: string; order: number }, i: number) => {
+            let parsedOptions: string[] | null = null;
+            if (f.options && typeof f.options === "string" && f.options.trim()) {
+              parsedOptions = f.options.split(",").map((o: string) => o.trim()).filter(Boolean);
+            }
+            return {
+              label: f.label,
+              name: f.name,
+              type: f.type,
+              required: f.required ?? false,
+              placeholder: f.placeholder || null,
+              helpText: f.helpText || null,
+              options: parsedOptions,
+              order: f.order ?? i,
+              formId: updated.id,
+            };
+          }),
         });
       }
 

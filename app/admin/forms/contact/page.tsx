@@ -41,6 +41,9 @@ export default async function ContactFormPage() {
                   name: f.name,
                   type: f.type,
                   required: f.required,
+                  placeholder: f.placeholder ?? "",
+                  helpText: f.helpText ?? "",
+                  options: Array.isArray(f.options) ? (f.options as string[]).join(", ") : "",
                   order: f.order,
                 })),
               }

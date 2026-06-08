@@ -494,6 +494,16 @@ async function main() {
   // ---------------------------------------------------------------------------
   // 9. Contact form
   // ---------------------------------------------------------------------------
+  const contactFormFields = [
+    { label: "Name", name: "name", type: "TEXT", placeholder: "Ihr Name", required: true, order: 1 },
+    { label: "Unternehmen", name: "company", type: "TEXT", placeholder: "Ihr Unternehmen", required: false, order: 2 },
+    { label: "E-Mail", name: "email", type: "EMAIL", placeholder: "Ihre E-Mail-Adresse", required: true, order: 3 },
+    { label: "Telefon", name: "phone", type: "PHONE", placeholder: "Ihre Telefonnummer", required: false, order: 4 },
+    { label: "Betreff", name: "subject", type: "TEXT", placeholder: "Betreff Ihrer Nachricht", required: false, order: 5 },
+    { label: "Nachricht", name: "message", type: "TEXTAREA", placeholder: "Ihre Nachricht", required: true, order: 6 },
+    { label: "Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Angaben zu.", name: "privacy", type: "CONSENT", helpText: "datenschutz", required: true, order: 7 },
+  ] as const;
+
   const contactForm = await prisma.form.upsert({
     where: { slug: "contact" },
     update: {
@@ -504,9 +514,9 @@ async function main() {
         "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze.",
       errorMessage:
         "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-      recipientEmail: "info@mosaroma.de",
+      recipientEmail: "sales@mosaroma.de",
       privacyText:
-        "Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu.",
+        "Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Angaben zu.",
     },
     create: {
       slug: "contact",
@@ -517,49 +527,18 @@ async function main() {
         "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze.",
       errorMessage:
         "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
-      recipientEmail: "info@mosaroma.de",
+      recipientEmail: "sales@mosaroma.de",
       privacyText:
-        "Ich stimme der Verarbeitung meiner Daten gemäß der Datenschutzerklärung zu.",
+        "Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Angaben zu.",
       fields: {
-        create: [
-          {
-            label: "Name",
-            name: "name",
-            type: "TEXT",
-            required: true,
-            order: 1,
-          },
-          {
-            label: "E-Mail",
-            name: "email",
-            type: "EMAIL",
-            required: true,
-            order: 2,
-          },
-          {
-            label: "Telefon",
-            name: "phone",
-            type: "PHONE",
-            required: false,
-            order: 3,
-          },
-          {
-            label: "Nachricht",
-            name: "message",
-            type: "TEXTAREA",
-            required: true,
-            order: 4,
-          },
-          {
-            label: "Datenschutz",
-            name: "privacy",
-            type: "CONSENT",
-            required: true,
-            order: 5,
-          },
-        ],
+        create: contactFormFields.map((f) => ({ ...f })),
       },
     },
+  });
+
+  await prisma.formField.deleteMany({ where: { formId: contactForm.id } });
+  await prisma.formField.createMany({
+    data: contactFormFields.map((f) => ({ ...f, formId: contactForm.id })),
   });
   console.log(`✔ ContactForm: ${contactForm.slug}`);
 

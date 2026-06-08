@@ -3,10 +3,28 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import PublicContactForm from "@/components/public/PublicContactForm";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
 
 export const revalidate = 60;
+
+const FALLBACK_FORM: PublicForm = {
+  slug: "contact",
+  title: null,
+  description: null,
+  submitLabel: "Nachricht senden",
+  successMessage: "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze.",
+  errorMessage: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+  privacyText: null,
+  honeypotField: null,
+  fields: [
+    { name: "name", type: "TEXT", label: "Name", placeholder: "Ihr Name", helpText: null, required: true, options: null },
+    { name: "email", type: "EMAIL", label: "E-Mail", placeholder: "Ihre E-Mail-Adresse", helpText: null, required: true, options: null },
+    { name: "message", type: "TEXTAREA", label: "Nachricht", placeholder: "Ihre Nachricht", helpText: null, required: true, options: null },
+  ],
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const hero = await getPageHeroData("kontakt", "kontakt");
@@ -19,16 +37,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KontaktPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, { form, status }] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kontakt", "kontakt"),
+    getPublicFormBySlug("contact"),
   ]);
+
+  const isInactive = status === "inactive";
+  const displayForm = form || (isInactive ? null : FALLBACK_FORM);
 
   return (
     <>
       <Header {...layout.header} />
       <main>
-        {/* Hero */}
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}
@@ -37,7 +58,6 @@ export default async function KontaktPage() {
           alt={hero.alt}
         />
 
-        {/* Contact info + form */}
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -136,7 +156,7 @@ export default async function KontaktPage() {
                 </div>
               </div>
 
-              {/* Right: Contact form placeholder */}
+              {/* Right: Contact form */}
               <div>
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
@@ -149,57 +169,15 @@ export default async function KontaktPage() {
                   Schreiben Sie uns
                 </h2>
 
-                {/* TODO: contact form needs backend implementation */}
-                <form className="space-y-5">
-                  <div>
-                    <label
-                      htmlFor="name"
-                      className="block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/60 mb-2"
-                    >
-                      Name
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Ihr Name"
-                      className="w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300"
-                    />
+                {isInactive ? (
+                  <div className="bg-gray-50 border border-gray-200 p-6 text-center">
+                    <p className="font-body text-text-gray text-base">
+                      Das Kontaktformular ist derzeit nicht verfügbar. Bitte kontaktieren Sie uns per E-Mail.
+                    </p>
                   </div>
-
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/60 mb-2"
-                    >
-                      E-Mail
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      placeholder="Ihre E-Mail-Adresse"
-                      className="w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/60 mb-2"
-                    >
-                      Nachricht
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={6}
-                      placeholder="Ihre Nachricht"
-                      className="w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300 resize-vertical"
-                    />
-                  </div>
-
-                  <button type="submit" className="btn-primary">
-                    Nachricht senden
-                  </button>
-                </form>
+                ) : displayForm ? (
+                  <PublicContactForm form={displayForm} />
+                ) : null}
               </div>
             </div>
           </div>

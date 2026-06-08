@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-04 (CRUD/Delete-Abdeckung finalisiert) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-08 (Phase 2D-A: Kontaktformular Frontend-Anbindung) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -91,7 +91,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 9 Produktgruppen (mit Beschreibungen)
 - 209 Produkte (vollstaendiger Import aus statischen Daten)
 - 1 Footer-Settings
-- 1 Kontaktformular mit 5 Feldern
+- 1 Kontaktformular mit 7 Feldern (Name, Unternehmen, E-Mail, Telefon, Betreff, Nachricht, Datenschutz)
 
 ## 5. Admin-Authentifizierung
 
@@ -169,8 +169,9 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | GET     | `/api/admin/footer`      | Footer-Einstellungen laden                |
 | POST    | `/api/admin/footer`      | Footer-Einstellungen speichern            |
 | GET     | `/api/admin/forms`       | Kontaktformular laden                     |
-| POST    | `/api/admin/forms`       | Kontaktformular aktualisieren             |
+| POST    | `/api/admin/forms`       | Kontaktformular aktualisieren (inkl. placeholder, helpText, options) |
 | GET     | `/api/admin/submissions` | Formular-Einreichungen laden              |
+| POST    | `/api/forms/[slug]/submit` | Oeffentliche Formular-Einreichung (Spam-Schutz, Validierung, E-Mail) |
 | GET     | `/api/admin/settings`    | Website-Einstellungen laden               |
 | POST    | `/api/admin/settings`    | Website-Einstellungen speichern           |
 | GET     | `/api/admin/users`       | Alle Benutzer laden                       |
@@ -492,12 +493,27 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
   - Users: Admin / Redakteur / Betrachter (Rollenfilter)
   - Submissions: Ungelesen / Gelesen
 
-### Offen — Phase 2D (Formulare und Frontend-Anbindung)
-1. **Kontaktformular** — Frontend-Formular mit DB-Konfiguration und API verbinden
-2. **E-Mail-Benachrichtigung** — Bei neuen Formular-Einreichungen
-3. **Downloads Frontend** — Oeffentliche Download-Seite aus DB statt statisch
-4. **Measurements Frontend** — Oeffentliche Produktmass-Seite aus DB statt statisch
-5. **News Frontend** — Oeffentliche News-Seite aus DB statt statisch
+### Erledigt — Phase 2D-A (Kontaktformular Frontend-Anbindung)
+- [x] Oeffentliches Kontaktformular `/kontakt` aus DB rendern (dynamische Felder)
+- [x] PublicContactForm Client-Komponente mit Mosaroma-Design
+- [x] Submit-API `/api/forms/[slug]/submit` mit Validierung
+- [x] Spam-Schutz: Honeypot, Mindest-Absende-Zeit (3s), In-Memory Rate-Limiting (5/min)
+- [x] IP-Anonymisierung (SHA-256 Hash, 16 Zeichen)
+- [x] Nur konfigurierte Felder akzeptiert (keine beliebigen Felder)
+- [x] Strings getrimmt, Laenge begrenzt (1000/5000 Zeichen)
+- [x] CONSENT-Feld mit Pflicht-Validierung
+- [x] E-Mail-Benachrichtigung via SMTP (Nodemailer, graceful degradation)
+- [x] Submission zuerst gespeichert, E-Mail danach (Fire-and-forget)
+- [x] FormSubmission.meta Feld hinzugefuegt (IP-Hash, User-Agent, Timestamp)
+- [x] Fallback-Strategie: not-found/error → statisches Formular, inactive → Hinweis
+- [x] Admin-Editor erweitert: Platzhalter, Hilfstext, Optionen (kommagetrennt)
+- [x] Seed aktualisiert: 7 Felder (Name, Unternehmen, E-Mail, Telefon, Betreff, Nachricht, Datenschutz)
+- [x] SMTP-Konfiguration in .env.example dokumentiert
+
+### Offen — Phase 2D-B (Weitere Frontend-Anbindungen)
+1. **Downloads Frontend** — Oeffentliche Download-Seite aus DB statt statisch
+2. **Measurements Frontend** — Oeffentliche Produktmass-Seite aus DB statt statisch
+3. **News Frontend** — Oeffentliche News-Seite aus DB statt statisch
 
 ### Spaeter
 10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
@@ -630,7 +646,7 @@ Alle DELETE- und PATCH-Handler liegen unter `app/api/admin/`:
 
 FormFields werden **inline** ueber den Kontaktformular-Editor verwaltet (nicht als eigene Admin-Seite):
 - **Anlegen:** "Feld hinzufuegen"-Button im Editor
-- **Bearbeiten:** Label, Name, Typ, Pflichtfeld direkt im Formular
+- **Bearbeiten:** Label, Name, Typ, Platzhalter, Hilfstext, Optionen (kommagetrennt fuer SELECT/RADIO), Pflichtfeld direkt im Formular
 - **Entfernen:** "Entfernen"-Button pro Feld
 - **Speicherverhalten:** Beim Speichern des Formulars werden alle Felder geloescht und neu erstellt (deleteMany + createMany). Dies ist bewusst so implementiert, da FormFields keine eigene Identitaet ausserhalb ihres Formulars haben.
 - **Kein isActive-Toggle:** Da Felder nur im Kontext des Formulars existieren, gibt es kein separates Deaktivieren. Nicht benoetigte Felder werden entfernt.

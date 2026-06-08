@@ -423,6 +423,7 @@ model FormSubmission {
   id        String   @id @default(cuid())
   formId    String
   data      Json?
+  meta      Json?
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
