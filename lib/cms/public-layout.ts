@@ -40,7 +40,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
         }))
     : [];
 
-  const logoUrl = settings?.logoDarkUrl || null;
+  const logoUrl = settings?.logoMedia?.url || settings?.logoDarkUrl || null;
 
   const footerColumns: FooterNavColumn[] = [];
   const legalLinks: { label: string; href: string; target?: string }[] = [];
@@ -87,7 +87,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
     footer: {
       description: footerSettings?.description ?? null,
       copyrightText: footerSettings?.copyrightText ?? null,
-      logoUrl: footerSettings?.logoUrl || "/mosaroma_logo.png",
+      logoUrl: footerSettings?.logoMedia?.url || footerSettings?.logoUrl || "/mosaroma_logo.png",
       siteName: settings?.siteName ?? null,
       columns: footerColumns,
       legalLinks,

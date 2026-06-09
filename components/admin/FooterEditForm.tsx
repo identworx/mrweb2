@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import MediaPickerField from "./MediaPickerField";
 
 interface SocialLink {
   platform: string;
@@ -9,6 +10,9 @@ interface SocialLink {
 }
 
 interface FooterData {
+  logoMediaId: string;
+  logoMediaUrl: string | null;
+  logoMediaAlt: string | null;
   description: string;
   copyrightText: string;
   socialLinks: SocialLink[];
@@ -20,7 +24,7 @@ export default function FooterEditForm({ settings }: { settings: FooterData }) {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  function updateField(field: "description" | "copyrightText", value: string) {
+  function updateField(field: "description" | "copyrightText" | "logoMediaId", value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -90,6 +94,14 @@ export default function FooterEditForm({ settings }: { settings: FooterData }) {
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Allgemein</h2>
+
+        <MediaPickerField
+          label="Footer-Logo"
+          value={form.logoMediaId}
+          onChange={(id) => updateField("logoMediaId", id)}
+          previewUrl={form.logoMediaUrl}
+          previewAlt={form.logoMediaAlt}
+        />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>

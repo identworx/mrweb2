@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Phase 2H: ISR Revalidation) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Phase 2H: Media-Logos & Produktgalerie) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -276,9 +276,43 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 ### TODOs (nicht in Phase 2F)
 
 - **Tags:** MediaAsset-Schema hat kein `tags`-Feld. Benoetigt Schema-Migration.
-- **SiteSettings/Footer Logos:** Verwenden URL-Strings, nicht MediaAsset-Relationen. Umstellung benoetigt Schema-Aenderung.
-- **Produkt-Galerie-Editor:** Kein Admin-Editor fuer ProductImage-Reihenfolge/Upload vorhanden.
+- ~~**SiteSettings/Footer Logos:** Verwenden URL-Strings, nicht MediaAsset-Relationen.~~ → Erledigt in Phase 2H.
+- ~~**Produkt-Galerie-Editor:** Kein Admin-Editor fuer ProductImage-Reihenfolge/Upload vorhanden.~~ → Erledigt in Phase 2H.
 - **Bildbearbeitung/KI-Analyse:** Bewusst nicht implementiert.
+
+## 8c. Media-Logos & Produktgalerie (Phase 2H)
+
+### SiteSettings Logo via MediaAsset
+
+- `SiteSettings.logoMediaId` → optional MediaAsset-Relation (`logoMedia`)
+- Admin-Formular: MediaPickerField unter "Allgemein"
+- Public-Rendering Fallback: `logoMedia.url` → `logoDarkUrl` → `null`
+- Bestehende `logoDarkUrl`/`logoLightUrl` Felder bleiben als Fallback erhalten
+
+### FooterSettings Logo via MediaAsset
+
+- `FooterSettings.logoMediaId` → optional MediaAsset-Relation (`logoMedia`)
+- Admin-Formular: MediaPickerField unter "Allgemein"
+- Public-Rendering Fallback: `logoMedia.url` → `logoUrl` → `/mosaroma_logo.png`
+- Bestehende `logoUrl` Feld bleibt als Fallback erhalten
+
+### Produktgalerie-Editor
+
+- Neues Component: `components/admin/ProductGalleryEditor.tsx`
+- Funktionen: Bilder hinzufuegen (via MediaPickerModal), entfernen, Reihenfolge aendern (Hoch/Runter)
+- Integriert in `ProductEditForm` als "Produktgalerie"-Sektion
+- Galerie wird als `galleryImages[]` Array mit dem Produkt gespeichert
+- API: `/api/admin/products` POST loescht bestehende ProductImage-Eintraege und erstellt neue
+- Public: `buildGallery()` in `lib/cms/products.ts` liest ProductImage mit mediaAsset (unveraendert)
+
+### Delete-Guards erweitert
+
+- `getMediaAssetUsage()` prueft jetzt 17 Relationen (vorher 13):
+  - Neu: `Messung`, `Site-Logo`, `Site-Favicon`, `Footer-Logo`
+
+### Migration
+
+- `20260609130201_add_media_logos`: Fuegt `logoMediaId`, `faviconMediaId` zu SiteSettings und `logoMediaId` zu FooterSettings hinzu
 
 ## 8b. Rich Text Editing (Phase 2G)
 
@@ -858,7 +892,7 @@ Alle DELETE- und PATCH-Handler liegen unter `app/api/admin/`:
 
 ### Guard-Utilities (`lib/admin/delete-guards.ts`)
 
-- `getMediaAssetUsage(id)` — Prüft 13 Reverse-Relationen, gibt `{ model, count }[]` zurück
+- `getMediaAssetUsage(id)` — Prüft 17 Reverse-Relationen, gibt `{ model, count }[]` zurück
 - `canDeleteUser(targetId, currentUserId)` — Letzter-Admin und Selbstlösch-Schutz
 - `canDeleteCollection(id)` — Blockiert wenn Produkte vorhanden (Cascade-Schutz)
 - `canDeleteProductGroup(id)` — Blockiert wenn Produkte vorhanden (Cascade-Schutz)

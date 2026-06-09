@@ -4,6 +4,7 @@ import FooterEditForm from "@/components/admin/FooterEditForm";
 export default async function FooterPage() {
   const settings = await prisma.footerSettings.findUnique({
     where: { id: "footer-settings" },
+    include: { logoMedia: { select: { id: true, url: true, alt: true } } },
   });
 
   const socialLinks: { platform: string; url: string }[] = settings?.socialLinks
@@ -28,6 +29,9 @@ export default async function FooterPage() {
 
       <FooterEditForm
         settings={{
+          logoMediaId: settings?.logoMediaId ?? "",
+          logoMediaUrl: settings?.logoMedia?.url ?? null,
+          logoMediaAlt: settings?.logoMedia?.alt ?? null,
           description: settings?.description ?? "",
           copyrightText: settings?.copyrightText ?? "",
           socialLinks,

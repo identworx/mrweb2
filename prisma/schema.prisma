@@ -87,11 +87,15 @@ model User {
 }
 
 model SiteSettings {
-  id                    String   @id @default(cuid())
+  id                    String      @id @default(cuid())
   siteName              String?
   logoDarkUrl           String?
   logoLightUrl          String?
   faviconUrl            String?
+  logoMediaId           String?
+  logoMedia             MediaAsset? @relation("SiteLogoImage", fields: [logoMediaId], references: [id], onDelete: SetNull)
+  faviconMediaId        String?
+  faviconMedia          MediaAsset? @relation("SiteFaviconImage", fields: [faviconMediaId], references: [id], onDelete: SetNull)
   primaryColor          String?
   secondaryColor        String?
   contactEmail          String?
@@ -100,8 +104,8 @@ model SiteSettings {
   socialLinks           Json?
   defaultSeoTitle       String?
   defaultSeoDescription String?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 }
 
 model MediaAsset {
@@ -121,7 +125,10 @@ model MediaAsset {
   updatedAt    DateTime @updatedAt
 
   // Reverse relations
-  pageHeroImages        Page[]         @relation("PageHeroImage")
+  siteLogos             SiteSettings[]   @relation("SiteLogoImage")
+  siteFavicons          SiteSettings[]   @relation("SiteFaviconImage")
+  footerLogos           FooterSettings[] @relation("FooterLogoImage")
+  pageHeroImages        Page[]           @relation("PageHeroImage")
   pageSectionImages     PageSection[]  @relation("SectionImage")
   collectionHeroImages  Collection[]   @relation("CollectionHeroImage")
   collectionCardImages  Collection[]   @relation("CollectionCardImage")
@@ -377,13 +384,15 @@ model NewsArticle {
 }
 
 model FooterSettings {
-  id            String   @id @default(cuid())
+  id            String      @id @default(cuid())
   logoUrl       String?
+  logoMediaId   String?
+  logoMedia     MediaAsset? @relation("FooterLogoImage", fields: [logoMediaId], references: [id], onDelete: SetNull)
   description   String?
   copyrightText String?
   socialLinks   Json?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 }
 
 model Form {

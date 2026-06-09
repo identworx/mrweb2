@@ -4,6 +4,7 @@ import SettingsForm from "@/components/admin/SettingsForm";
 export default async function SettingsPage() {
   const settings = await prisma.siteSettings.findUnique({
     where: { id: "site-settings" },
+    include: { logoMedia: { select: { id: true, url: true, alt: true } } },
   });
 
   return (
@@ -22,6 +23,9 @@ export default async function SettingsPage() {
       <SettingsForm
         settings={{
           siteName: settings?.siteName ?? "",
+          logoMediaId: settings?.logoMediaId ?? "",
+          logoMediaUrl: settings?.logoMedia?.url ?? null,
+          logoMediaAlt: settings?.logoMedia?.alt ?? null,
           primaryColor: settings?.primaryColor ?? "#ea580c",
           secondaryColor: settings?.secondaryColor ?? "#1f2937",
           contactEmail: settings?.contactEmail ?? "",

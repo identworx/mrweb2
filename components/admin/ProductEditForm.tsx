@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
 import MediaPickerField from "./MediaPickerField";
+import ProductGalleryEditor, { type GalleryImage } from "./ProductGalleryEditor";
 
 interface ProductData {
   id: string;
@@ -47,6 +48,7 @@ export default function ProductEditForm({
   productGroups,
   materials,
   mediaAssets,
+  galleryImages: initialGallery = [],
   userRole = "VIEWER",
 }: {
   product: ProductData;
@@ -54,10 +56,12 @@ export default function ProductEditForm({
   productGroups: SelectOption[];
   materials: SelectOption[];
   mediaAssets: MediaOption[];
+  galleryImages?: GalleryImage[];
   userRole?: string;
 }) {
   const router = useRouter();
   const [form, setForm] = useState<ProductData>(product);
+  const [gallery, setGallery] = useState<GalleryImage[]>(initialGallery);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -73,7 +77,7 @@ export default function ProductEditForm({
       const res = await fetch("/api/admin/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, galleryImages: gallery }),
       });
 
       if (!res.ok) {
@@ -252,6 +256,11 @@ export default function ProductEditForm({
             previewAlt={heroPreview?.alt}
           />
         </div>
+      </div>
+
+      <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
+        <h2 className="text-lg font-semibold text-gray-900">Produktgalerie</h2>
+        <ProductGalleryEditor images={gallery} onChange={setGallery} />
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">

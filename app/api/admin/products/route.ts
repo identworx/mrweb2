@@ -64,6 +64,23 @@ export async function POST(request: NextRequest) {
       ? await prisma.product.update({ where: { id }, data: fields })
       : await prisma.product.create({ data: fields });
 
+    if (Array.isArray(data.galleryImages)) {
+      await prisma.productImage.deleteMany({ where: { productId: product.id } });
+      if (data.galleryImages.length > 0) {
+        await prisma.productImage.createMany({
+          data: data.galleryImages.map(
+            (img: { mediaAssetId: string; alt?: string | null; order: number }, i: number) => ({
+              productId: product.id,
+              mediaAssetId: img.mediaAssetId,
+              alt: img.alt || null,
+              order: img.order ?? i,
+              isMain: false,
+            }),
+          ),
+        });
+      }
+    }
+
     const related = await prisma.product.findUnique({
       where: { id: product.id },
       select: {

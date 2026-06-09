@@ -18,6 +18,10 @@ export async function getMediaAssetUsage(id: string): Promise<UsageEntry[]> {
     { model: "Download", query: prisma.download.count({ where: { imageId: id } }) },
     { model: "News (Hero)", query: prisma.newsArticle.count({ where: { heroImageId: id } }) },
     { model: "News (Card)", query: prisma.newsArticle.count({ where: { cardImageId: id } }) },
+    { model: "Messung", query: prisma.measurement.count({ where: { imageId: id } }) },
+    { model: "Site-Logo", query: prisma.siteSettings.count({ where: { logoMediaId: id } }) },
+    { model: "Site-Favicon", query: prisma.siteSettings.count({ where: { faviconMediaId: id } }) },
+    { model: "Footer-Logo", query: prisma.footerSettings.count({ where: { logoMediaId: id } }) },
   ];
 
   const results = await Promise.all(checks.map((c) => c.query));

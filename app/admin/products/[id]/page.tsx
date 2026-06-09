@@ -13,17 +13,32 @@ export default async function ProductEditPage({
   const sessionUser = await getSessionUser();
 
   const isNew = id === "new";
-  const [product, collections, productGroups, materials, mediaAssets] = await Promise.all([
+  const [product, collections, productGroups, materials, mediaAssets, galleryRaw] = await Promise.all([
     isNew ? Promise.resolve(null) : prisma.product.findUnique({ where: { id } }),
     prisma.collection.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.productGroup.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.material.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true, url: true, alt: true } }),
+    isNew ? Promise.resolve([]) : prisma.productImage.findMany({
+      where: { productId: id },
+      orderBy: { order: "asc" },
+      include: { mediaAsset: { select: { id: true, url: true, alt: true } } },
+    }),
   ]);
 
   if (!isNew && !product) {
     redirect("/admin/products");
   }
+
+  const galleryImages = galleryRaw
+    .filter((img) => img.mediaAsset)
+    .map((img) => ({
+      id: img.id,
+      mediaAssetId: img.mediaAsset!.id,
+      url: img.mediaAsset!.url,
+      alt: img.mediaAsset!.alt ?? null,
+      order: img.order,
+    }));
 
   const features = product && Array.isArray(product.features)
     ? (product.features as string[]).join("\n")
@@ -92,6 +107,7 @@ export default async function ProductEditPage({
         productGroups={productGroups}
         materials={materials}
         mediaAssets={mediaAssets}
+        galleryImages={galleryImages}
         userRole={sessionUser?.role ?? "VIEWER"}
       />
     </div>

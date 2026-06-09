@@ -28,27 +28,22 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { siteName, primaryColor, secondaryColor, contactEmail, defaultSeoTitle, defaultSeoDescription } = body;
+    const { siteName, logoMediaId, primaryColor, secondaryColor, contactEmail, defaultSeoTitle, defaultSeoDescription } = body;
+
+    const data = {
+      siteName: siteName || null,
+      logoMediaId: logoMediaId || null,
+      primaryColor: primaryColor || null,
+      secondaryColor: secondaryColor || null,
+      contactEmail: contactEmail || null,
+      defaultSeoTitle: defaultSeoTitle || null,
+      defaultSeoDescription: defaultSeoDescription || null,
+    };
 
     const settings = await prisma.siteSettings.upsert({
       where: { id: "site-settings" },
-      update: {
-        siteName: siteName || null,
-        primaryColor: primaryColor || null,
-        secondaryColor: secondaryColor || null,
-        contactEmail: contactEmail || null,
-        defaultSeoTitle: defaultSeoTitle || null,
-        defaultSeoDescription: defaultSeoDescription || null,
-      },
-      create: {
-        id: "site-settings",
-        siteName: siteName || null,
-        primaryColor: primaryColor || null,
-        secondaryColor: secondaryColor || null,
-        contactEmail: contactEmail || null,
-        defaultSeoTitle: defaultSeoTitle || null,
-        defaultSeoDescription: defaultSeoDescription || null,
-      },
+      update: data,
+      create: { id: "site-settings", ...data },
     });
 
     revalidateSettings();

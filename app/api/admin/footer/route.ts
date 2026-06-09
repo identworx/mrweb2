@@ -28,21 +28,19 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { description, copyrightText, socialLinks } = body;
+    const { logoMediaId, description, copyrightText, socialLinks } = body;
+
+    const data = {
+      logoMediaId: logoMediaId || null,
+      description: description || null,
+      copyrightText: copyrightText || null,
+      socialLinks: socialLinks ? socialLinks : Prisma.JsonNull,
+    };
 
     const settings = await prisma.footerSettings.upsert({
       where: { id: "footer-settings" },
-      update: {
-        description: description || null,
-        copyrightText: copyrightText || null,
-        socialLinks: socialLinks ? socialLinks : Prisma.JsonNull,
-      },
-      create: {
-        id: "footer-settings",
-        description: description || null,
-        copyrightText: copyrightText || null,
-        socialLinks: socialLinks ? socialLinks : Prisma.JsonNull,
-      },
+      update: data,
+      create: { id: "footer-settings", ...data },
     });
 
     revalidateFooter();
