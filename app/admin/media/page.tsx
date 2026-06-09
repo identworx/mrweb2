@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
+import MediaSearchInput from "@/components/admin/MediaSearchInput";
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -7,8 +8,25 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default async function MediaListPage() {
+export default async function MediaListPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string }>;
+}) {
+  const { q } = await searchParams;
+
+  const where = q
+    ? {
+        OR: [
+          { filename: { contains: q } },
+          { originalName: { contains: q } },
+          { alt: { contains: q } },
+        ],
+      }
+    : {};
+
   const assets = await prisma.mediaAsset.findMany({
+    where,
     orderBy: { createdAt: "desc" },
   });
 
@@ -25,7 +43,7 @@ export default async function MediaListPage() {
           </p>
           <h1 className="text-2xl font-bold text-gray-900 mt-1">Medien</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Alle Medien verwalten und hochladen.
+            {assets.length} Medien verwalten und hochladen.
           </p>
         </div>
         <Link
@@ -36,9 +54,11 @@ export default async function MediaListPage() {
         </Link>
       </div>
 
+      <MediaSearchInput initialQuery={q || ""} />
+
       {assets.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 px-6 py-12 text-center text-sm text-gray-400">
-          Keine Medien vorhanden.
+          {q ? "Keine Ergebnisse gefunden." : "Keine Medien vorhanden."}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

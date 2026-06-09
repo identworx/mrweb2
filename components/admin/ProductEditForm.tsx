@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
 
 interface ProductData {
   id: string;
@@ -34,6 +35,8 @@ interface SelectOption {
 interface MediaOption {
   id: string;
   filename: string;
+  url: string;
+  alt: string | null;
 }
 
 const STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"];
@@ -94,6 +97,9 @@ export default function ProductEditForm({
       setSaving(false);
     }
   }
+
+  const mainPreview = mediaAssets.find((m) => m.id === form.mainImageId);
+  const heroPreview = mediaAssets.find((m) => m.id === form.heroImageId);
 
   return (
     <div className="space-y-6">
@@ -230,37 +236,21 @@ export default function ProductEditForm({
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Bilder</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hauptbild</label>
-            <select
-              value={form.mainImageId}
-              onChange={(e) => update("mainImageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.filename}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hero-Bild</label>
-            <select
-              value={form.heroImageId}
-              onChange={(e) => update("heroImageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.filename}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <MediaPickerField
+            label="Hauptbild"
+            value={form.mainImageId}
+            onChange={(id) => update("mainImageId", id)}
+            previewUrl={mainPreview?.url}
+            previewAlt={mainPreview?.alt}
+          />
+          <MediaPickerField
+            label="Hero-Bild"
+            value={form.heroImageId}
+            onChange={(id) => update("heroImageId", id)}
+            previewUrl={heroPreview?.url}
+            previewAlt={heroPreview?.alt}
+          />
         </div>
       </div>
 

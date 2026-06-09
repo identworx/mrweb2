@@ -14,6 +14,17 @@ const ALLOWED_MIME_TYPES = [
   "image/avif",
 ];
 
+function validateImageMagicBytes(buffer: Buffer): boolean {
+  if (buffer.length < 4) return false;
+  if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) return true;
+  if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) return true;
+  if (buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46) return true;
+  if (buffer.length >= 12 && buffer[0] === 0x52 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x46
+    && buffer[8] === 0x57 && buffer[9] === 0x45 && buffer[10] === 0x42 && buffer[11] === 0x50) return true;
+  if (buffer.length >= 8 && buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70) return true;
+  return false;
+}
+
 function sanitizeFilename(filename: string): string {
   const ext = path.extname(filename).toLowerCase();
   const name = path.basename(filename, path.extname(filename));
@@ -24,12 +35,26 @@ function sanitizeFilename(filename: string): string {
   return `${sanitized || "datei"}-${Date.now()}${ext}`;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
 
   try {
+    const { searchParams } = new URL(request.url);
+    const q = searchParams.get("q");
+
+    const where = q
+      ? {
+          OR: [
+            { filename: { contains: q } },
+            { originalName: { contains: q } },
+            { alt: { contains: q } },
+          ],
+        }
+      : {};
+
     const assets = await prisma.mediaAsset.findMany({
+      where,
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(assets);
@@ -104,6 +129,14 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadDir, { recursive: true });
 
     const buffer = Buffer.from(await file.arrayBuffer());
+
+    if (!validateImageMagicBytes(buffer)) {
+      return NextResponse.json(
+        { error: "Datei ist kein gültiges Bild." },
+        { status: 400 },
+      );
+    }
+
     const filePath = path.join(uploadDir, filename);
     await writeFile(filePath, buffer);
 
@@ -128,6 +161,29 @@ export async function POST(request: NextRequest) {
       { error: "Fehler beim Hochladen des Mediums" },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const user = await getSessionUser();
+  if (!user) return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
+  if (user.role === "VIEWER") return NextResponse.json({ error: "Keine Berechtigung" }, { status: 403 });
+
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
+
+    const body = await request.json();
+    const data: Record<string, string | null> = {};
+    if ("alt" in body) data.alt = body.alt || null;
+    if ("caption" in body) data.caption = body.caption || null;
+    if ("title" in body) data.title = body.title || null;
+
+    const asset = await prisma.mediaAsset.update({ where: { id }, data });
+    return NextResponse.json(asset);
+  } catch {
+    return NextResponse.json({ error: "Fehler beim Aktualisieren des Mediums" }, { status: 500 });
   }
 }
 

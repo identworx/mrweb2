@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (PageSections Editor) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (MediaPicker & Upload UX) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -167,8 +167,9 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | POST    | `/api/admin/product-groups` | Produktgruppe erstellen / aktualisieren |
 | GET     | `/api/admin/materials`   | Alle Materialien laden                    |
 | POST    | `/api/admin/materials`   | Material erstellen / aktualisieren        |
-| GET     | `/api/admin/media`       | Alle Medien laden                         |
+| GET     | `/api/admin/media`       | Medien laden (optional `?q=` Suche)       |
 | POST    | `/api/admin/media`       | Medium hochladen / Metadaten aktualisieren|
+| PATCH   | `/api/admin/media?id=`   | Medien-Metadaten aktualisieren (alt, caption, title) |
 | GET     | `/api/admin/navigation`  | Alle Navigations-Menues laden             |
 | POST    | `/api/admin/navigation`  | Navigation aktualisieren                  |
 | GET     | `/api/admin/footer`      | Footer-Einstellungen laden                |
@@ -214,13 +215,38 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | PATCH   | `/api/admin/submissions` | isRead-Status aendern                     |
 | GET     | `/api/health`            | Health Check (DB + Env)                   |
 
-## 8. Medien-Upload
+## 8. Medien-Upload & Medien-Browser
 
 - **Erlaubte Typen:** JPEG, PNG, GIF, WebP, AVIF
 - **Maximale Groesse:** 5 MB
 - **Speicherort:** `public/uploads/general/`
 - **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.jpg`)
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
+- **Sicherheit:** Magic-Byte-Validierung (prueft Datei-Header, nicht nur MIME-Type)
+
+### MediaPicker (Phase 2F)
+
+Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-Dropdowns:
+
+| Komponente           | Datei                                        | Funktion                              |
+| -------------------- | -------------------------------------------- | ------------------------------------- |
+| `MediaPickerField`   | `components/admin/MediaPickerField.tsx`       | Formularfeld mit Vorschau + Auswahl   |
+| `MediaPickerModal`   | `components/admin/MediaPickerModal.tsx`       | Modale Bildauswahl mit Suche + Upload |
+| `MediaSearchInput`   | `components/admin/MediaSearchInput.tsx`       | Suchfeld fuer `/admin/media`          |
+
+**Formulare mit MediaPicker:**
+- CollectionEditForm (Hero-Bild, Card-Bild)
+- ProductEditForm (Hauptbild, Hero-Bild)
+- ProductGroupEditForm (Icon, Bild)
+- MeasurementEditForm (Bemaßtes Bild)
+- NewsEditForm (Hero-Bild, Card-Bild)
+- DownloadEditForm (Bild)
+
+**Medien-API (`/api/admin/media`):**
+- GET: Optional `?q=Suchbegriff` — durchsucht filename, originalName, alt
+- POST: FormData-Upload oder JSON-Metadaten-Update
+- PATCH: Metadaten aktualisieren (alt, caption, title) per `?id=`
+- DELETE: ADMIN only, Usage Guard, loescht Datei + DB-Eintrag
 
 ## 9. Frontend-Anbindung (Phase 2A + 2B — aktiv)
 
@@ -592,7 +618,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 ### Spaeter
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
 15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
-16. **Medien-Browser** — Modale Bildauswahl statt manueller ID-Eingabe
+16. ~~**Medien-Browser**~~ — ✅ Erledigt (Phase 2F: MediaPickerModal + MediaPickerField)
 17. **Audit-Log** — Aenderungen nachverfolgen
 
 ## 12. Sicherheits-Status
@@ -603,6 +629,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 - SVG-Upload blockiert (XSS-Risiko)
 - Dateigroessen-Limit serverseitig validiert (5 MB)
 - MIME-Type serverseitig validiert
+- Magic-Byte-Validierung (prueft tatsaechlichen Datei-Header)
 - Dateinamen sanitiert (keine Sonderzeichen, Zeitstempel)
 - Passwoerter mit bcrypt (12 Runden) gehasht
 - JWT in HTTP-only Cookie (nicht per JS lesbar)

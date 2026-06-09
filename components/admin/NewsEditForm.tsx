@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
 
 interface MediaItem {
   id: string;
@@ -197,62 +198,22 @@ export default function NewsEditForm({ article, mediaAssets, userRole = "VIEWER"
       {/* Bilder */}
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Bilder</h2>
-        <p className="text-sm text-gray-500">
-          Bilder können unter <Link href="/admin/media" className="text-orange-600 hover:underline">Medien</Link> hochgeladen werden.
-        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Hero Image */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Hero-Bild</label>
-            <select
-              value={form.heroImageId}
-              onChange={(e) => update("heroImageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild (Platzhalter) --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.originalName}{m.alt ? ` (${m.alt})` : ""}
-                </option>
-              ))}
-            </select>
-            {heroPreview && (
-              <div className="mt-2 border border-gray-200 rounded overflow-hidden">
-                <img
-                  src={heroPreview.url}
-                  alt={heroPreview.alt || "Hero-Vorschau"}
-                  className="w-full h-32 object-cover"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Card Image */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Card-Bild</label>
-            <select
-              value={form.cardImageId}
-              onChange={(e) => update("cardImageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild (Platzhalter) --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.originalName}{m.alt ? ` (${m.alt})` : ""}
-                </option>
-              ))}
-            </select>
-            {cardPreview && (
-              <div className="mt-2 border border-gray-200 rounded overflow-hidden">
-                <img
-                  src={cardPreview.url}
-                  alt={cardPreview.alt || "Card-Vorschau"}
-                  className="w-full h-32 object-cover"
-                />
-              </div>
-            )}
-          </div>
+          <MediaPickerField
+            label="Hero-Bild"
+            value={form.heroImageId}
+            onChange={(id) => update("heroImageId", id)}
+            previewUrl={heroPreview?.url}
+            previewAlt={heroPreview?.alt}
+          />
+          <MediaPickerField
+            label="Card-Bild"
+            value={form.cardImageId}
+            onChange={(id) => update("cardImageId", id)}
+            previewUrl={cardPreview?.url}
+            previewAlt={cardPreview?.alt}
+          />
         </div>
       </div>
 

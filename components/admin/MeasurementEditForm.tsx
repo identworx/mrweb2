@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
 
 interface MediaItem {
   id: string;
@@ -242,36 +243,18 @@ export default function MeasurementEditForm({
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Bemaßtes Bild</h2>
         <p className="text-sm text-gray-500">
-          Bilder unter{" "}
-          <Link href="/admin/media" className="text-orange-600 hover:underline">Medien</Link>{" "}
-          hochladen und hier zuweisen. Ohne Bild wird die Legacy-Zeichnung angezeigt.
+          Ohne Bild wird die Legacy-Zeichnung angezeigt.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Bild</label>
-            <select
-              value={form.imageId}
-              onChange={(e) => update("imageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild (Legacy-Zeichnung) --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.originalName}{m.alt ? ` (${m.alt})` : ""}
-                </option>
-              ))}
-            </select>
-            {imagePreview && (
-              <div className="mt-2 border border-gray-200 rounded overflow-hidden">
-                <img
-                  src={imagePreview.url}
-                  alt={imagePreview.alt || "Vorschau"}
-                  className="w-full h-40 object-contain bg-gray-50"
-                />
-              </div>
-            )}
-          </div>
+          <MediaPickerField
+            label="Bild"
+            value={form.imageId}
+            onChange={(id) => update("imageId", id)}
+            previewUrl={imagePreview?.url}
+            previewAlt={imagePreview?.alt}
+            placeholder="Kein Bild (Legacy-Zeichnung)"
+          />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Alt-Text</label>
             <input

@@ -15,7 +15,7 @@ export default async function ProductGroupEditPage({
   const isNew = id === "new";
   const [productGroup, mediaAssets] = await Promise.all([
     isNew ? Promise.resolve(null) : prisma.productGroup.findUnique({ where: { id } }),
-    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true } }),
+    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true, url: true, alt: true } }),
   ]);
 
   if (!isNew && !productGroup) {

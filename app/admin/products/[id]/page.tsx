@@ -18,7 +18,7 @@ export default async function ProductEditPage({
     prisma.collection.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.productGroup.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
     prisma.material.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
-    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true } }),
+    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true, url: true, alt: true } }),
   ]);
 
   if (!isNew && !product) {

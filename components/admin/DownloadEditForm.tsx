@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
 
 interface DownloadData {
   id: string;
@@ -22,6 +23,8 @@ interface DownloadData {
 interface MediaOption {
   id: string;
   filename: string;
+  url: string;
+  alt: string | null;
 }
 
 export default function DownloadEditForm({
@@ -85,6 +88,8 @@ export default function DownloadEditForm({
       setSaving(false);
     }
   }
+
+  const imagePreview = mediaAssets.find((m) => m.id === form.imageId);
 
   return (
     <div className="space-y-6">
@@ -178,21 +183,13 @@ export default function DownloadEditForm({
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Bild</label>
-            <select
-              value={form.imageId}
-              onChange={(e) => updateString("imageId", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            >
-              <option value="">-- Kein Bild --</option>
-              {mediaAssets.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.filename}
-                </option>
-              ))}
-            </select>
-          </div>
+          <MediaPickerField
+            label="Bild"
+            value={form.imageId}
+            onChange={(id) => updateString("imageId", id)}
+            previewUrl={imagePreview?.url}
+            previewAlt={imagePreview?.alt}
+          />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button-Label</label>
             <input

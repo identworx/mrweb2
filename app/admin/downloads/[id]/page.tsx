@@ -15,7 +15,7 @@ export default async function DownloadEditPage({
   const isNew = id === "new";
   const [download, mediaAssets] = await Promise.all([
     isNew ? Promise.resolve(null) : prisma.download.findUnique({ where: { id } }),
-    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true } }),
+    prisma.mediaAsset.findMany({ orderBy: { filename: "asc" }, select: { id: true, filename: true, url: true, alt: true } }),
   ]);
 
   if (!isNew && !download) {
