@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
       weight: data.weight,
       dyeing: data.dyeing || null,
       comfort: data.comfort || null,
+      imageId: data.imageId || null,
       order: typeof data.order === "number" ? data.order : 0,
     };
 

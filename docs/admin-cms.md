@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (MediaPicker & Upload UX) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Phase 2F-B: Media Browser) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -224,7 +224,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
 - **Sicherheit:** Magic-Byte-Validierung (prueft Datei-Header, nicht nur MIME-Type)
 
-### MediaPicker (Phase 2F)
+### MediaPicker (Phase 2F-A)
 
 Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-Dropdowns:
 
@@ -232,7 +232,6 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 | -------------------- | -------------------------------------------- | ------------------------------------- |
 | `MediaPickerField`   | `components/admin/MediaPickerField.tsx`       | Formularfeld mit Vorschau + Auswahl   |
 | `MediaPickerModal`   | `components/admin/MediaPickerModal.tsx`       | Modale Bildauswahl mit Suche + Upload |
-| `MediaSearchInput`   | `components/admin/MediaSearchInput.tsx`       | Suchfeld fuer `/admin/media`          |
 
 **Formulare mit MediaPicker:**
 - CollectionEditForm (Hero-Bild, Card-Bild)
@@ -241,12 +240,45 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 - MeasurementEditForm (Bemaßtes Bild)
 - NewsEditForm (Hero-Bild, Card-Bild)
 - DownloadEditForm (Bild)
+- PageEditForm (Hero-Bild)
+- MaterialEditForm (Bild)
+
+### Media Browser (Phase 2F-B)
+
+`/admin/media` ist ein vollstaendiger Medien-Browser mit Grid, Suche, Filtern, Pagination und Details-Panel:
+
+| Komponente           | Datei                                              | Funktion                                    |
+| -------------------- | -------------------------------------------------- | ------------------------------------------- |
+| `MediaBrowser`       | `components/admin/media/MediaBrowser.tsx`           | Haupt-Browser mit Grid, Filter, Pagination  |
+| `MediaDetailsPanel`  | `components/admin/media/MediaDetailsPanel.tsx`      | Seitenpanel: Vorschau, Metadaten, Verwendung, Loeschen |
+| `MediaUsageList`     | `components/admin/media/MediaUsageList.tsx`         | Anzeige wo ein Medium verwendet wird        |
+
+**Features:**
+- Paginated Grid (24 pro Seite)
+- Suche (filename, originalName, alt, title, caption)
+- Filter: Typ (Bilder), Ordner
+- Drag-and-Drop + Button Upload
+- Details-Panel rechts mit Inline-Metadaten-Bearbeitung (alt, title, caption, folder)
+- URL-Kopierfunktion
+- Verwendungs-Anzeige (13 Relationen)
+- Delete mit Usage-Guard (nur ADMIN, nur wenn nicht verwendet)
+- Rollenpruefung: VIEWER sieht nur, EDITOR kann editieren, ADMIN kann loeschen
 
 **Medien-API (`/api/admin/media`):**
-- GET: Optional `?q=Suchbegriff` — durchsucht filename, originalName, alt
-- POST: FormData-Upload oder JSON-Metadaten-Update
-- PATCH: Metadaten aktualisieren (alt, caption, title) per `?id=`
+- GET ohne `page`: Flaches Array (Rueckwaertskompatibilitaet fuer MediaPickerModal)
+- GET mit `page`: Paginiert `{items, total, page, limit, totalPages, folders, mimeTypes}`
+- GET mit `id`: Einzelnes Asset + Usage-Array
+- GET Filter: `?q=`, `?type=image`, `?folder=`
+- POST: FormData-Upload oder JSON-Metadaten-Update (VIEWER blockiert)
+- PATCH: Metadaten aktualisieren (alt, caption, title, folder) per `?id=`
 - DELETE: ADMIN only, Usage Guard, loescht Datei + DB-Eintrag
+
+### TODOs (nicht in Phase 2F)
+
+- **Tags:** MediaAsset-Schema hat kein `tags`-Feld. Benoetigt Schema-Migration.
+- **SiteSettings/Footer Logos:** Verwenden URL-Strings, nicht MediaAsset-Relationen. Umstellung benoetigt Schema-Aenderung.
+- **Produkt-Galerie-Editor:** Kein Admin-Editor fuer ProductImage-Reihenfolge/Upload vorhanden.
+- **Bildbearbeitung/KI-Analyse:** Bewusst nicht implementiert.
 
 ## 9. Frontend-Anbindung (Phase 2A + 2B — aktiv)
 
@@ -618,7 +650,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 ### Spaeter
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
 15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
-16. ~~**Medien-Browser**~~ — ✅ Erledigt (Phase 2F: MediaPickerModal + MediaPickerField)
+16. ~~**Medien-Browser**~~ — ✅ Erledigt (Phase 2F-A: MediaPicker, Phase 2F-B: MediaBrowser + DetailsPanel + Pagination + Filter + Ordner)
 17. **Audit-Log** — Aenderungen nachverfolgen
 
 ## 12. Sicherheits-Status

@@ -33,6 +33,7 @@ export async function POST(request: NextRequest) {
       eyebrow: data.eyebrow || null,
       headline: data.headline || null,
       introText: data.introText || null,
+      heroImageId: data.heroImageId || null,
       status: data.status || "DRAFT",
       type: data.type || "STANDARD",
       seoTitle: data.seoTitle || null,

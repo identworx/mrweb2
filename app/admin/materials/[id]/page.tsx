@@ -12,6 +12,12 @@ export default async function MaterialEditPage({
   const { id } = await params;
   const sessionUser = await getSessionUser();
 
+  const mediaAssets = await prisma.mediaAsset.findMany({
+    where: { mimeType: { startsWith: "image/" } },
+    select: { id: true, filename: true, url: true, alt: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   if (id === "new") {
     return (
       <div className="space-y-6">
@@ -40,8 +46,10 @@ export default async function MaterialEditPage({
             weight: "",
             dyeing: "",
             comfort: "",
+            imageId: "",
             order: 0,
           }}
+          mediaAssets={mediaAssets}
           userRole={sessionUser?.role ?? "VIEWER"}
           productCount={0}
           isActive={true}
@@ -83,8 +91,10 @@ export default async function MaterialEditPage({
           weight: material.weight ?? "",
           dyeing: material.dyeing ?? "",
           comfort: material.comfort ?? "",
+          imageId: material.imageId ?? "",
           order: material.order,
         }}
+        mediaAssets={mediaAssets}
         userRole={sessionUser?.role ?? "VIEWER"}
         productCount={await prisma.product.count({ where: { materialId: material.id } })}
         isActive={material.isActive}

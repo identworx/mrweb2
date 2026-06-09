@@ -4,6 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
+
+interface MediaOption {
+  id: string;
+  filename: string;
+  url: string;
+  alt: string | null;
+}
 
 interface MaterialData {
   id: string;
@@ -14,16 +22,19 @@ interface MaterialData {
   weight: string;
   dyeing: string;
   comfort: string;
+  imageId: string;
   order: number;
 }
 
 export default function MaterialEditForm({
   material,
+  mediaAssets = [],
   userRole = "VIEWER",
   productCount = 0,
   isActive = true,
 }: {
   material: MaterialData;
+  mediaAssets?: MediaOption[];
   userRole?: string;
   productCount?: number;
   isActive?: boolean;
@@ -45,7 +56,10 @@ export default function MaterialEditForm({
       const res = await fetch("/api/admin/materials", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          imageId: form.imageId || null,
+        }),
       });
 
       if (!res.ok) {
@@ -125,6 +139,13 @@ export default function MaterialEditForm({
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
+          <MediaPickerField
+            label="Bild"
+            value={form.imageId}
+            onChange={(id) => update("imageId", id)}
+            previewUrl={mediaAssets.find((m) => m.id === form.imageId)?.url}
+            previewAlt={mediaAssets.find((m) => m.id === form.imageId)?.alt}
+          />
         </div>
       </div>
 

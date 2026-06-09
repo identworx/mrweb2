@@ -4,6 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
+import MediaPickerField from "./MediaPickerField";
+
+interface MediaOption {
+  id: string;
+  filename: string;
+  url: string;
+  alt: string | null;
+}
 
 interface PageData {
   id: string;
@@ -12,6 +20,7 @@ interface PageData {
   eyebrow: string;
   headline: string;
   introText: string;
+  heroImageId: string;
   status: string;
   type: string;
   seoTitle: string;
@@ -32,7 +41,7 @@ const PAGE_TYPES = [
   "LEGAL",
 ];
 
-export default function PageEditForm({ page, userRole = "VIEWER" }: { page: PageData; userRole?: string }) {
+export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWER" }: { page: PageData; mediaAssets?: MediaOption[]; userRole?: string }) {
   const router = useRouter();
   const [form, setForm] = useState<PageData>(page);
   const [saving, setSaving] = useState(false);
@@ -50,7 +59,10 @@ export default function PageEditForm({ page, userRole = "VIEWER" }: { page: Page
       const res = await fetch("/api/admin/pages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          heroImageId: form.heroImageId || null,
+        }),
       });
 
       if (!res.ok) {
@@ -146,6 +158,13 @@ export default function PageEditForm({ page, userRole = "VIEWER" }: { page: Page
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <MediaPickerField
+            label="Hero-Bild"
+            value={form.heroImageId}
+            onChange={(id) => update("heroImageId", id)}
+            previewUrl={mediaAssets.find((m) => m.id === form.heroImageId)?.url}
+            previewAlt={mediaAssets.find((m) => m.id === form.heroImageId)?.alt}
+          />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
             <select

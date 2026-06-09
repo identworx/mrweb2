@@ -27,6 +27,12 @@ export default async function PageEditPage({
     redirect("/admin/pages");
   }
 
+  const mediaAssets = await prisma.mediaAsset.findMany({
+    where: { mimeType: { startsWith: "image/" } },
+    select: { id: true, filename: true, url: true, alt: true },
+    orderBy: { createdAt: "desc" },
+  });
+
   const pageData = page
     ? {
         id: page.id,
@@ -35,6 +41,7 @@ export default async function PageEditPage({
         eyebrow: page.eyebrow ?? "",
         headline: page.headline ?? "",
         introText: page.introText ?? "",
+        heroImageId: page.heroImageId ?? "",
         status: page.status,
         type: page.type,
         seoTitle: page.seoTitle ?? "",
@@ -47,6 +54,7 @@ export default async function PageEditPage({
         eyebrow: "",
         headline: "",
         introText: "",
+        heroImageId: "",
         status: "DRAFT",
         type: "STANDARD",
         seoTitle: "",
@@ -86,7 +94,7 @@ export default async function PageEditPage({
         </h1>
       </div>
 
-      <PageEditForm page={pageData} userRole={userRole} />
+      <PageEditForm page={pageData} mediaAssets={mediaAssets} userRole={userRole} />
 
       {page ? (
         <PageSectionsEditor

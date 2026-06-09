@@ -14,6 +14,11 @@ const ALLOWED_MIME_TYPES = [
   "image/avif",
 ];
 
+const MAX_ALT_LENGTH = 500;
+const MAX_TITLE_LENGTH = 200;
+const MAX_CAPTION_LENGTH = 1000;
+const MAX_FOLDER_LENGTH = 100;
+
 function validateImageMagicBytes(buffer: Buffer): boolean {
   if (buffer.length < 4) return false;
   if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) return true;
@@ -35,28 +40,90 @@ function sanitizeFilename(filename: string): string {
   return `${sanitized || "datei"}-${Date.now()}${ext}`;
 }
 
+function stripHtml(str: string): string {
+  return str.replace(/<[^>]*>/g, "").trim();
+}
+
+function sanitizeString(str: unknown, maxLength: number): string | null {
+  if (typeof str !== "string") return null;
+  const cleaned = stripHtml(str).slice(0, maxLength);
+  return cleaned || null;
+}
+
 export async function GET(request: NextRequest) {
   const user = await getSessionUser();
   if (!user) return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
 
   try {
     const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
     const q = searchParams.get("q");
+    const type = searchParams.get("type");
+    const folder = searchParams.get("folder");
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
 
-    const where = q
-      ? {
-          OR: [
-            { filename: { contains: q } },
-            { originalName: { contains: q } },
-            { alt: { contains: q } },
-          ],
-        }
-      : {};
+    if (id) {
+      const asset = await prisma.mediaAsset.findUnique({ where: { id } });
+      if (!asset) return NextResponse.json({ error: "Medium nicht gefunden" }, { status: 404 });
+      const usage = await getMediaAssetUsage(id);
+      return NextResponse.json({ ...asset, usage });
+    }
 
-    const assets = await prisma.mediaAsset.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
+    const conditions: Record<string, unknown>[] = [];
+    if (q) {
+      conditions.push({
+        OR: [
+          { filename: { contains: q } },
+          { originalName: { contains: q } },
+          { alt: { contains: q } },
+          { title: { contains: q } },
+          { caption: { contains: q } },
+        ],
+      });
+    }
+    if (type === "image") {
+      conditions.push({ mimeType: { startsWith: "image/" } });
+    }
+    if (folder) {
+      conditions.push({ folder });
+    }
+
+    const where = conditions.length > 0 ? { AND: conditions } : {};
+
+    if (pageParam) {
+      const page = Math.max(1, parseInt(pageParam) || 1);
+      const limit = Math.min(100, Math.max(1, parseInt(limitParam || "24") || 24));
+      const skip = (page - 1) * limit;
+
+      const [items, total, folderResults, mimeResults] = await Promise.all([
+        prisma.mediaAsset.findMany({ where, orderBy: { createdAt: "desc" }, skip, take: limit }),
+        prisma.mediaAsset.count({ where }),
+        prisma.mediaAsset.findMany({
+          where: { folder: { not: null } },
+          select: { folder: true },
+          distinct: ["folder"],
+          orderBy: { folder: "asc" },
+        }),
+        prisma.mediaAsset.findMany({
+          select: { mimeType: true },
+          distinct: ["mimeType"],
+          orderBy: { mimeType: "asc" },
+        }),
+      ]);
+
+      return NextResponse.json({
+        items,
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+        folders: folderResults.map((f) => f.folder).filter(Boolean),
+        mimeTypes: mimeResults.map((m) => m.mimeType),
+      });
+    }
+
+    const assets = await prisma.mediaAsset.findMany({ where, orderBy: { createdAt: "desc" } });
     return NextResponse.json(assets);
   } catch {
     return NextResponse.json(
@@ -71,6 +138,9 @@ export async function POST(request: NextRequest) {
     const user = await getSessionUser();
     if (!user) {
       return NextResponse.json({ error: "Nicht autorisiert" }, { status: 401 });
+    }
+    if (user.role === "VIEWER") {
+      return NextResponse.json({ error: "Keine Berechtigung" }, { status: 403 });
     }
 
     const contentType = request.headers.get("content-type") ?? "";
@@ -89,8 +159,8 @@ export async function POST(request: NextRequest) {
       const asset = await prisma.mediaAsset.update({
         where: { id },
         data: {
-          alt: alt || null,
-          caption: caption || null,
+          alt: sanitizeString(alt, MAX_ALT_LENGTH),
+          caption: sanitizeString(caption, MAX_CAPTION_LENGTH),
         },
       });
 
@@ -119,7 +189,7 @@ export async function POST(request: NextRequest) {
     const mimeType = file.type;
     if (!ALLOWED_MIME_TYPES.includes(mimeType) && !mimeType.startsWith("image/")) {
       return NextResponse.json(
-        { error: "Dateityp nicht erlaubt. Nur Bilder, PDF und SVG sind zulässig." },
+        { error: "Dateityp nicht erlaubt. Nur Bilder sind zulässig." },
         { status: 400 },
       );
     }
@@ -147,8 +217,8 @@ export async function POST(request: NextRequest) {
         filename,
         originalName: file.name,
         url,
-        alt,
-        caption,
+        alt: sanitizeString(alt, MAX_ALT_LENGTH),
+        caption: sanitizeString(caption, MAX_CAPTION_LENGTH),
         mimeType,
         size: file.size,
       },
@@ -176,9 +246,10 @@ export async function PATCH(request: NextRequest) {
 
     const body = await request.json();
     const data: Record<string, string | null> = {};
-    if ("alt" in body) data.alt = body.alt || null;
-    if ("caption" in body) data.caption = body.caption || null;
-    if ("title" in body) data.title = body.title || null;
+    if ("alt" in body) data.alt = sanitizeString(body.alt, MAX_ALT_LENGTH);
+    if ("caption" in body) data.caption = sanitizeString(body.caption, MAX_CAPTION_LENGTH);
+    if ("title" in body) data.title = sanitizeString(body.title, MAX_TITLE_LENGTH);
+    if ("folder" in body) data.folder = sanitizeString(body.folder, MAX_FOLDER_LENGTH);
 
     const asset = await prisma.mediaAsset.update({ where: { id }, data });
     return NextResponse.json(asset);
