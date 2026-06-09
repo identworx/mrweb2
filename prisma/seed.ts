@@ -873,6 +873,59 @@ async function main() {
   }
   console.log(`✔ NewsArticles: ${staticNews.length} seeded`);
 
+  // ---------------------------------------------------------------------------
+  // 13. Branding media — ensure logo exists as MediaAsset
+  // ---------------------------------------------------------------------------
+  const logoUrl = "/mosaroma_logo.png";
+  let logoAsset = await prisma.mediaAsset.findFirst({ where: { url: logoUrl } });
+  if (!logoAsset) {
+    logoAsset = await prisma.mediaAsset.create({
+      data: {
+        filename: "mosaroma_logo.png",
+        originalName: "Mosaroma Logo",
+        url: logoUrl,
+        mimeType: "image/png",
+        size: 19945,
+        width: 754,
+        height: 190,
+        alt: "Mosaroma Logo",
+        title: "Mosaroma Logo",
+        folder: "branding",
+      },
+    });
+    console.log(`✔ Branding: logo MediaAsset created`);
+  } else {
+    console.log(`✔ Branding: logo MediaAsset already exists`);
+  }
+
+  const currentSettings = await prisma.siteSettings.findUnique({
+    where: { id: "site-settings" },
+    select: { logoMediaId: true },
+  });
+  if (currentSettings && !currentSettings.logoMediaId) {
+    await prisma.siteSettings.update({
+      where: { id: "site-settings" },
+      data: { logoMediaId: logoAsset.id },
+    });
+    console.log(`✔ Branding: SiteSettings.logoMediaId set`);
+  } else {
+    console.log(`✔ Branding: SiteSettings.logoMediaId already set or settings missing`);
+  }
+
+  const currentFooter = await prisma.footerSettings.findUnique({
+    where: { id: "footer-settings" },
+    select: { logoMediaId: true },
+  });
+  if (currentFooter && !currentFooter.logoMediaId) {
+    await prisma.footerSettings.update({
+      where: { id: "footer-settings" },
+      data: { logoMediaId: logoAsset.id },
+    });
+    console.log(`✔ Branding: FooterSettings.logoMediaId set`);
+  } else {
+    console.log(`✔ Branding: FooterSettings.logoMediaId already set or footer missing`);
+  }
+
   console.log("\n🌱 Seed completed successfully.");
 }
 

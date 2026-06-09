@@ -22,6 +22,7 @@ export interface FrontendProduct {
   shortDescription: string;
   image: string;
   gallery: string[];
+  galleryItems: { id: string; url: string; alt: string }[];
   alt: string;
   colorName?: string;
   patternName?: string;
@@ -64,6 +65,23 @@ function buildGallery(db: DbProductFull, mainImageUrl: string): string[] {
   return [];
 }
 
+function buildGalleryItems(
+  db: DbProductFull,
+  productName: string,
+): { id: string; url: string; alt: string }[] {
+  return db.images
+    .map((img) => {
+      const url = getMediaUrl(img.mediaAsset, img.url || "");
+      if (!url) return null;
+      return {
+        id: img.id,
+        url,
+        alt: img.alt || img.mediaAsset?.alt || productName,
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+}
+
 export function mapProductForFrontend(db: DbProductFull): FrontendProduct {
   const staticFallback = getStaticProductBySlug(db.slug);
   const collectionSlug = db.collection.slug;
@@ -98,6 +116,7 @@ export function mapProductForFrontend(db: DbProductFull): FrontendProduct {
     shortDescription: db.shortDescription || "",
     image: mainImage,
     gallery: buildGallery(db, mainImage),
+    galleryItems: buildGalleryItems(db, db.name),
     alt: db.mainImage?.alt || staticFallback?.alt || `Mosaroma ${db.name}`,
     colorName: db.colorName || undefined,
     patternName: db.patternName || undefined,
@@ -113,6 +132,7 @@ function staticToFrontend(sp: (typeof staticProducts)[0]): FrontendProduct {
   return {
     ...sp,
     shortDescription: "",
+    galleryItems: [],
     heroImage: sp.image,
     seoTitle: null,
     seoDescription: null,

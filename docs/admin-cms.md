@@ -296,14 +296,34 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 - Public-Rendering Fallback: `logoMedia.url` → `logoUrl` → `/mosaroma_logo.png`
 - Bestehende `logoUrl` Feld bleibt als Fallback erhalten
 
-### Produktgalerie-Editor
+### Produktgalerie-Editor (Admin)
 
 - Neues Component: `components/admin/ProductGalleryEditor.tsx`
 - Funktionen: Bilder hinzufuegen (via MediaPickerModal), entfernen, Reihenfolge aendern (Hoch/Runter)
 - Integriert in `ProductEditForm` als "Produktgalerie"-Sektion
 - Galerie wird als `galleryImages[]` Array mit dem Produkt gespeichert
 - API: `/api/admin/products` POST loescht bestehende ProductImage-Eintraege und erstellt neue
-- Public: `buildGallery()` in `lib/cms/products.ts` liest ProductImage mit mediaAsset (unveraendert)
+
+### Produktgalerie (Public)
+
+- Neues Component: `components/products/ProductImageGallery.tsx` (Client Component)
+- Klickbare Thumbnails ersetzen das Hauptbild ohne Page Reload
+- Aktiver Thumbnail wird visuell markiert (ring-2, pumpkin)
+- Tastaturbedienbar (Buttons mit aria-label, aria-current)
+- Responsive: Mobile horizontal scrollend, Desktop Thumbnail-Leiste
+- Wenn nur 1 Bild: keine Thumbnail-Leiste
+- Wenn keine Galerie: mainImage als einziges Bild
+- Datenfluss: `FrontendProduct.galleryItems` (strukturiert mit id/url/alt) + `buildGalleryItems()` in `lib/cms/products.ts`
+- Deduplizierung: mainImage wird nicht doppelt angezeigt, falls auch in gallery vorhanden
+
+### Branding Media Backfill (Seed)
+
+- Seed erstellt automatisch einen MediaAsset-Datensatz fuer `/mosaroma_logo.png` (Folder: `branding`)
+- `SiteSettings.logoMediaId` wird initial auf diesen MediaAsset gesetzt, nur wenn vorher null
+- `FooterSettings.logoMediaId` wird initial auf diesen MediaAsset gesetzt, nur wenn vorher null
+- Bestehende Logo-Auswahl wird nicht ueberschrieben
+- Seed ist idempotent (kein Duplikat bei erneutem Ausfuehren)
+- Media Usage Guard blockiert Loeschen des Branding-Logos, solange es referenziert ist
 
 ### Delete-Guards erweitert
 

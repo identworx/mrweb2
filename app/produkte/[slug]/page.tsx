@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
+import ProductImageGallery from "@/components/products/ProductImageGallery";
 import {
   getProductBySlugWithStatus,
   getProductStaticParams,
@@ -43,6 +43,7 @@ async function resolveProduct(slug: string): Promise<FrontendProduct | null> {
   return {
     ...staticProduct,
     shortDescription: "",
+    galleryItems: [],
     heroImage: staticProduct.image,
     seoTitle: null,
     seoDescription: null,
@@ -102,6 +103,7 @@ export default async function ProduktPage({ params }: PageProps) {
       .map((sp) => ({
         ...sp,
         shortDescription: "",
+        galleryItems: [],
         heroImage: sp.image,
         seoTitle: null,
         seoDescription: null,
@@ -110,7 +112,15 @@ export default async function ProduktPage({ params }: PageProps) {
       }));
   }
 
-  const galleryImages = product.gallery.length > 0 ? product.gallery : [product.image];
+  const mainItem = { id: "main", url: product.image, alt: product.alt };
+  const seen = new Set<string>([product.image]);
+  const extraItems = product.galleryItems.filter((item) => {
+    if (seen.has(item.url)) return false;
+    seen.add(item.url);
+    return true;
+  });
+  const galleryItems = [mainItem, ...extraItems];
+
   const moodColors = staticCollection?.moodColors || [];
 
   return (
@@ -132,36 +142,10 @@ export default async function ProduktPage({ params }: PageProps) {
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
               {/* Gallery */}
-              <div className="space-y-4">
-                <div className="relative aspect-square bg-light-gray overflow-hidden">
-                  <Image
-                    src={product.image}
-                    alt={product.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority
-                  />
-                </div>
-                {galleryImages.length > 1 && (
-                  <div className="grid grid-cols-3 gap-3">
-                    {galleryImages.slice(0, 3).map((img, i) => (
-                      <div
-                        key={i}
-                        className="relative aspect-square bg-light-gray overflow-hidden"
-                      >
-                        <Image
-                          src={img}
-                          alt={`${product.name} – Ansicht ${i + 1}`}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 1024px) 33vw, 16vw"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ProductImageGallery
+                items={galleryItems}
+                productName={product.name}
+              />
 
               {/* Product Info */}
               <div className="lg:pt-4">
