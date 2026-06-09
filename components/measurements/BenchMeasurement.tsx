@@ -1,8 +1,6 @@
 import type { MeasurementItem } from "@/lib/mosaroma/measurements";
 import MeasurementDrawing from "./MeasurementDrawing";
 
-// TODO: Dicke anhand finaler PDF-/Designquelle prüfen. Screenshot zeigt vermutlich 7 cm.
-
 export default function BenchMeasurement({ item }: { item: MeasurementItem }) {
   return (
     <div className="bg-white border border-light-gray p-6 md:p-10">

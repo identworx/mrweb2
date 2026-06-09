@@ -133,7 +133,7 @@ export default function MeasurementEditForm({
               type="text"
               value={form.groupSlug}
               onChange={(e) => update("groupSlug", e.target.value)}
-              placeholder='z.B. "stuhlauflagen", "tischdecken"'
+              placeholder='z.B. "kissen-auflagen", "lehner", "decken"'
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>

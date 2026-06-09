@@ -586,6 +586,14 @@ async function main() {
   // ---------------------------------------------------------------------------
   // 11. Measurements
   // ---------------------------------------------------------------------------
+  const deprecatedMeasurementSlugs = ["deko-kissen-mackintosh", "deko-kissen-basic"];
+  for (const slug of deprecatedMeasurementSlugs) {
+    const existing = await prisma.measurement.findUnique({ where: { slug } });
+    if (existing) {
+      await prisma.measurement.update({ where: { slug }, data: { isActive: false } });
+    }
+  }
+
   for (let i = 0; i < staticMeasurements.length; i++) {
     const m = staticMeasurements[i];
     const variants = JSON.parse(JSON.stringify(m.variants));
@@ -599,6 +607,7 @@ async function main() {
         variants,
         notes,
         sourceNote: m.sourceNote || null,
+        isActive: true,
       },
       create: {
         slug: m.slug,
@@ -609,10 +618,11 @@ async function main() {
         notes,
         sourceNote: m.sourceNote || null,
         order: i,
+        isActive: true,
       },
     });
   }
-  console.log(`✔ Measurements: ${staticMeasurements.length} seeded`);
+  console.log(`✔ Measurements: ${staticMeasurements.length} active, ${deprecatedMeasurementSlugs.length} deprecated`);
 
   // ---------------------------------------------------------------------------
   // 12. News Articles

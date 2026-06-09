@@ -1,14 +1,10 @@
-// TODO: Dicke der Bankauflagen anhand finaler PDF-/Designquelle prüfen.
-// Screenshot zeigt vermutlich 7 cm, im bisherigen Code stand 6 cm.
-// Hier vorläufig als "7 cm" übernommen (visueller Katalogabgleich), aber
-// final bestätigen lassen.
-
 export type MeasurementGroup =
   | "kissen-auflagen"
   | "lehner"
   | "bankauflagen"
   | "poufs"
-  | "tischsets";
+  | "tischsets"
+  | "decken";
 
 export type DrawingType =
   | "square-cushion"
@@ -22,7 +18,8 @@ export type DrawingType =
   | "pouf-small"
   | "pouf-large"
   | "placemat"
-  | "table-runner";
+  | "table-runner"
+  | "blanket";
 
 export interface MeasurementVariant {
   label: string;
@@ -42,21 +39,14 @@ export interface MeasurementItem {
 export const measurements: MeasurementItem[] = [
   // ── Kissen & Auflagen ──────────────────────────────────
   {
-    slug: "deko-kissen-mackintosh",
+    slug: "deko-kissen",
     title: "Deko-Kissen",
     group: "kissen-auflagen",
     drawingType: "square-cushion",
     variants: [
-      { label: "Mack. & Lite", value: "48 × 48 cm" },
-      { label: "Nerio", value: "48 × 48 cm" },
+      { label: "Mack. & Lite / Nerio", value: "48 × 48 cm" },
+      { label: "Basic", value: "45 × 45 cm" },
     ],
-  },
-  {
-    slug: "deko-kissen-basic",
-    title: "Deko-Kissen",
-    group: "kissen-auflagen",
-    drawingType: "square-cushion-small",
-    variants: [{ label: "Basic", value: "45 × 45 cm" }],
   },
   {
     slug: "sitzkissen",
@@ -122,8 +112,6 @@ export const measurements: MeasurementItem[] = [
       { label: "XL", value: "170 cm" },
     ],
     notes: ["Tiefe 49 cm", "Dicke 7 cm bei allen Längen identisch"],
-    sourceNote:
-      "TODO: Dicke anhand finaler PDF-/Designquelle prüfen. Screenshot zeigt vermutlich 7 cm.",
   },
 
   // ── Poufs ───────────────────────────────────────────────
@@ -160,6 +148,15 @@ export const measurements: MeasurementItem[] = [
       { label: "Mack. · Variante B", value: "47,5 × 120 × 0,6 cm" },
     ],
   },
+
+  // ── Decken ──────────────────────────────────────────────
+  {
+    slug: "decken",
+    title: "Decken",
+    group: "decken",
+    drawingType: "blanket",
+    variants: [{ label: "Alle Größen", value: "Maße auf Anfrage" }],
+  },
 ];
 
 export interface MeasurementGroupDef {
@@ -174,4 +171,5 @@ export const measurementGroups: MeasurementGroupDef[] = [
   { slug: "bankauflagen", title: "Bankauflagen", id: "bankauflagen" },
   { slug: "poufs", title: "Poufs", id: "poufs" },
   { slug: "tischsets", title: "Tischsets & Tischläufer", id: "tischsets" },
+  { slug: "decken", title: "Decken", id: "decken" },
 ];
