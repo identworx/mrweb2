@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { sanitizeRichText } from "@/lib/server/sanitize-rich-text";
 
 export async function GET(request: NextRequest) {
   const user = await getSessionUser();
@@ -64,16 +65,18 @@ export async function POST(request: NextRequest) {
         );
     }
 
+    const sanitizedSettings = settings ? sanitizeSettings(settings) : {};
+
     const section = await prisma.pageSection.create({
       data: {
         pageId,
         type: type || "CUSTOM",
         title: title || null,
         eyebrow: eyebrow || null,
-        content: content || null,
+        content: content ? sanitizeRichText(content) : null,
         buttonLabel: buttonLabel || null,
         buttonHref: buttonHref || null,
-        settings: settings ?? {},
+        settings: sanitizedSettings as Record<string, string | string[]>,
         order,
         imageId: imageId || null,
         isActive: true,
@@ -111,7 +114,7 @@ export async function PATCH(request: NextRequest) {
 
     if ("title" in body) data.title = body.title || null;
     if ("eyebrow" in body) data.eyebrow = body.eyebrow || null;
-    if ("content" in body) data.content = body.content || null;
+    if ("content" in body) data.content = body.content ? sanitizeRichText(body.content) : null;
     if ("type" in body) data.type = body.type;
     if ("buttonLabel" in body) data.buttonLabel = body.buttonLabel || null;
     if ("buttonHref" in body) data.buttonHref = body.buttonHref || null;
@@ -144,7 +147,7 @@ export async function PATCH(request: NextRequest) {
           { error: "settings muss ein JSON-Objekt sein" },
           { status: 400 },
         );
-      data.settings = body.settings ?? {};
+      data.settings = body.settings ? sanitizeSettings(body.settings) : {};
     }
 
     const section = await prisma.pageSection.update({
@@ -183,4 +186,14 @@ export async function DELETE(request: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+function sanitizeSettings(settings: Record<string, unknown>): Record<string, unknown> {
+  const result = { ...settings };
+  if (Array.isArray(result.items)) {
+    result.items = (result.items as string[]).map((item) =>
+      typeof item === "string" ? sanitizeRichText(item) : item,
+    );
+  }
+  return result;
 }

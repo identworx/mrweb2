@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SECTION_STYLES, getStyleDef } from "@/lib/admin/page-section-schemas";
+import RichTextEditor from "./RichTextEditor";
 
 interface SectionData {
   id?: string;
@@ -119,11 +120,10 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {(style === "cross-link" || style === "cta" || style === "text" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
-          <textarea
-            rows={3}
+          <RichTextEditor
             value={form.content}
-            onChange={(e) => updateField("content", e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            onChange={(html) => updateField("content", html)}
+            placeholder="Inhalt eingeben..."
           />
         </div>
       )}
@@ -305,12 +305,13 @@ function CareListFields({
       </div>
       {items.map((item, i) => (
         <div key={i} className="flex items-start gap-2">
-          <textarea
-            rows={2}
-            value={item}
-            onChange={(e) => updateItem(i, e.target.value)}
-            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
+          <div className="flex-1">
+            <RichTextEditor
+              value={item}
+              onChange={(html) => updateItem(i, html)}
+              placeholder="Eintrag..."
+            />
+          </div>
           <button
             type="button"
             onClick={() => removeItem(i)}

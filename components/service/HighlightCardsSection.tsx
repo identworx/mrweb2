@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 export default function HighlightCardsSection({
   section,
@@ -50,9 +51,10 @@ export default function HighlightCardsSection({
               >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
-              <span className="font-body text-anthracite text-sm leading-relaxed">
-                {item}
-              </span>
+              <RichTextRenderer
+                html={item}
+                className="font-body text-anthracite text-sm leading-relaxed prose prose-sm prose-neutral max-w-none"
+              />
             </div>
           ))}
         </div>

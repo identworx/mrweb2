@@ -280,6 +280,70 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 - **Produkt-Galerie-Editor:** Kein Admin-Editor fuer ProductImage-Reihenfolge/Upload vorhanden.
 - **Bildbearbeitung/KI-Analyse:** Bewusst nicht implementiert.
 
+## 8b. Rich Text Editing (Phase 2G)
+
+### Technologie
+
+- **Editor:** TipTap (basiert auf ProseMirror)
+- **Sanitizing:** sanitize-html (serverseitig)
+- **Datenformat:** HTML-String, serverseitig sanitiert
+
+### Komponenten
+
+| Komponente         | Datei                                          | Funktion                              |
+| ------------------ | ---------------------------------------------- | ------------------------------------- |
+| `RichTextEditor`   | `components/admin/RichTextEditor.tsx`           | Kontrollierter WYSIWYG-Editor (Client)|
+| `RichTextRenderer` | `components/rich-text/RichTextRenderer.tsx`     | Sichere HTML-Ausgabe + Plain-Text-Fallback |
+| `sanitizeRichText` | `lib/server/sanitize-rich-text.ts`              | Server-seitiges HTML-Sanitizing       |
+| `isRichTextEmpty`  | `lib/server/sanitize-rich-text.ts`              | Prueft ob HTML-Inhalt leer ist        |
+
+### Erlaubte Formatierungen
+
+| Element      | Tag            | Erlaubt |
+| ------------ | -------------- | ------- |
+| Absatz       | `p`            | Ja      |
+| Fett         | `strong`       | Ja      |
+| Kursiv       | `em`           | Ja      |
+| Aufzaehlung  | `ul`, `li`     | Ja      |
+| Nummerierung | `ol`, `li`     | Ja      |
+| Zeilenumbruch| `br`           | Ja      |
+| Link         | `a`            | Ja (href, target, rel) |
+| Ueberschrift | `h3`, `h4`     | Ja      |
+
+### Bewusst NICHT erlaubt
+
+- Inline-Farben, Font-Auswahl, Schriftgroessen
+- Bilder im Rich Text (nur ueber MediaPicker/Sections)
+- script, iframe, style-Attribute, Event-Handler
+- Beliebige HTML-Tags
+
+### Felder mit Rich Text
+
+- **PageSection content** (text, cross-link, cta Styles)
+- **PageSection settings.items** (care-list Eintraege)
+- **NewsArticle content**
+
+### Felder bleiben Plain Text
+
+- Titel, Slugs, Eyebrow, Headlines
+- Button Labels, URLs, Hrefs
+- SEO Title, SEO Description
+- Fabric Card Felder, Comparison Table Werte
+- Highlight Card Items (kurze Texte)
+- Measurement Rows, Labels, technische Werte
+
+### Sanitizing
+
+Alle Rich-Text-Felder werden serverseitig sanitiert bevor sie in die DB geschrieben werden:
+- `page-sections` API: content + settings.items
+- `news` API: content
+
+Unerlaubte Tags werden entfernt. Links erhalten automatisch `rel="noopener noreferrer"`.
+
+### Plain-Text-Fallback
+
+`RichTextRenderer` erkennt automatisch ob der Inhalt HTML oder Plain Text ist. Bestehende Plain-Text-Inhalte werden weiterhin korrekt gerendert. Keine Migration noetig.
+
 ## 9. Frontend-Anbindung (Phase 2A + 2B — aktiv)
 
 ### Status

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 export default function ServiceCtaSection({
   section,
@@ -18,9 +19,10 @@ export default function ServiceCtaSection({
           </h2>
         )}
         {section.content && (
-          <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-            {section.content}
-          </p>
+          <RichTextRenderer
+            html={section.content}
+            className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10 prose prose-sm prose-invert max-w-none"
+          />
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {section.buttonHref && section.buttonLabel && (

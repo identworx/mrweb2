@@ -1,4 +1,5 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import CareListSection from "./CareListSection";
 import FabricCardsSection from "./FabricCardsSection";
 import ComparisonTableSection from "./ComparisonTableSection";
@@ -49,9 +50,9 @@ export default function ServiceSectionRenderer({ section, background = "white" }
                     </h2>
                   </>
                 )}
-                <div
+                <RichTextRenderer
+                  html={section.content}
                   className="font-body text-text-gray text-base leading-[1.8] prose prose-neutral max-w-none"
-                  dangerouslySetInnerHTML={{ __html: section.content }}
                 />
               </div>
             </div>

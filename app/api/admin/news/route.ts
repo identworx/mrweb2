@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { sanitizeRichText } from "@/lib/server/sanitize-rich-text";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
       title: data.title,
       eyebrow: data.eyebrow || null,
       excerpt: data.excerpt || null,
-      content: data.content || null,
+      content: data.content ? sanitizeRichText(data.content) : null,
       heroImageId: data.heroImageId || null,
       cardImageId: data.cardImageId || null,
       category: data.category || null,

@@ -10,6 +10,7 @@ import {
   getNewsArticleBySlugWithStatus,
   getNewsStaticParams,
 } from "@/lib/cms/news";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 export async function generateStaticParams() {
   return getNewsStaticParams();
@@ -98,9 +99,9 @@ export default async function NeuigkeitDetailPage({
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="max-w-3xl">
                 {article.content ? (
-                  <div
+                  <RichTextRenderer
+                    html={article.content}
                     className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-10 prose prose-neutral max-w-none"
-                    dangerouslySetInnerHTML={{ __html: article.content }}
                   />
                 ) : (
                   <>

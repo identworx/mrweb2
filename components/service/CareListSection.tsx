@@ -1,4 +1,5 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 function CheckIcon() {
   return (
@@ -56,9 +57,10 @@ export default function CareListSection({
                 className="flex items-start gap-4 p-5 bg-cream rounded"
               >
                 <CheckIcon />
-                <span className="font-body text-anthracite text-sm md:text-base leading-relaxed">
-                  {item}
-                </span>
+                <RichTextRenderer
+                  html={item}
+                  className="font-body text-anthracite text-sm md:text-base leading-relaxed prose prose-sm prose-neutral max-w-none"
+                />
               </div>
             ))}
           </div>

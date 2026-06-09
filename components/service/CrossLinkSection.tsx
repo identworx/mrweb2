@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 export default function CrossLinkSection({
   section,
@@ -18,9 +19,10 @@ export default function CrossLinkSection({
             </h3>
           )}
           {section.content && (
-            <p className="font-body text-text-gray text-sm leading-[1.8] mb-6">
-              {section.content}
-            </p>
+            <RichTextRenderer
+              html={section.content}
+              className="font-body text-text-gray text-sm leading-[1.8] mb-6 prose prose-sm prose-neutral max-w-none"
+            />
           )}
           {section.buttonHref && section.buttonLabel && (
             <Link
