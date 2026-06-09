@@ -319,17 +319,41 @@ async function main() {
   // 4. Navigation menus
   // ---------------------------------------------------------------------------
 
+  const slugToPageId: Record<string, string> = {};
+  const allPages = await prisma.page.findMany({ select: { id: true, slug: true } });
+  for (const p of allPages) slugToPageId[p.slug] = p.id;
+
+  function pageItem(label: string, slug: string, href: string, order: number) {
+    const linkedPageId = slugToPageId[slug] || null;
+    return { label, href, linkType: linkedPageId ? "PAGE" : "CUSTOM_URL", linkedPageId, order };
+  }
+
+  const legalSlugs = [
+    { slug: "impressum", title: "Impressum" },
+    { slug: "datenschutz", title: "Datenschutzerklärung" },
+    { slug: "agb", title: "Allgemeine Geschäftsbedingungen" },
+  ];
+  for (const ls of legalSlugs) {
+    await prisma.page.upsert({
+      where: { slug: ls.slug },
+      update: {},
+      create: { slug: ls.slug, title: ls.title, status: "DRAFT", type: "STANDARD" },
+    });
+  }
+  const refreshedPages = await prisma.page.findMany({ select: { id: true, slug: true } });
+  for (const p of refreshedPages) slugToPageId[p.slug] = p.id;
+
   const navMenus = [
     {
       name: "Header",
       location: "HEADER" as const,
       items: [
-        { label: "Kollektionen", href: "/kollektionen", linkType: "SYSTEM_ROUTE", order: 1 },
-        { label: "Materialien", href: "/materialien", linkType: "SYSTEM_ROUTE", order: 2 },
-        { label: "Über uns", href: "/ueber-uns", linkType: "SYSTEM_ROUTE", order: 3 },
-        { label: "Kataloge", href: "/kataloge", linkType: "SYSTEM_ROUTE", order: 4 },
-        { label: "Neuigkeiten", href: "/neuigkeiten", linkType: "SYSTEM_ROUTE", order: 5 },
-        { label: "Kontakt", href: "/kontakt", linkType: "SYSTEM_ROUTE", order: 6 },
+        pageItem("Kollektionen", "kollektionen", "/kollektionen", 1),
+        pageItem("Materialien", "materialien", "/materialien", 2),
+        pageItem("Über uns", "ueber-uns", "/ueber-uns", 3),
+        pageItem("Kataloge", "kataloge", "/kataloge", 4),
+        pageItem("Neuigkeiten", "neuigkeiten", "/neuigkeiten", 5),
+        pageItem("Kontakt", "kontakt", "/kontakt", 6),
       ],
     },
     {
@@ -349,20 +373,20 @@ async function main() {
       name: "Service",
       location: "SERVICE" as const,
       items: [
-        { label: "Kataloge", href: "/kataloge", linkType: "SYSTEM_ROUTE", order: 1 },
-        { label: "Produktmaße", href: "/kataloge/produktmasse", linkType: "SYSTEM_ROUTE", order: 2 },
-        { label: "Pflege & Garantie", href: "/kataloge/pflege-garantie", linkType: "SYSTEM_ROUTE", order: 3 },
-        { label: "Stoff- & technische Daten", href: "/kataloge/stoff-technische-daten", linkType: "SYSTEM_ROUTE", order: 4 },
-        { label: "Kontakt", href: "/kontakt", linkType: "SYSTEM_ROUTE", order: 5 },
+        pageItem("Kataloge", "kataloge", "/kataloge", 1),
+        pageItem("Produktmaße", "produktmasse", "/kataloge/produktmasse", 2),
+        pageItem("Pflege & Garantie", "pflege-garantie", "/kataloge/pflege-garantie", 3),
+        pageItem("Stoff- & technische Daten", "stoff-technische-daten", "/kataloge/stoff-technische-daten", 4),
+        pageItem("Kontakt", "kontakt", "/kontakt", 5),
       ],
     },
     {
       name: "Rechtliches",
       location: "LEGAL" as const,
       items: [
-        { label: "Impressum", href: "/impressum", linkType: "CUSTOM_URL", order: 1 },
-        { label: "Datenschutz", href: "/datenschutz", linkType: "CUSTOM_URL", order: 2 },
-        { label: "AGB", href: "/agb", linkType: "CUSTOM_URL", order: 3 },
+        pageItem("Impressum", "impressum", "/impressum", 1),
+        pageItem("Datenschutz", "datenschutz", "/datenschutz", 2),
+        pageItem("AGB", "agb", "/agb", 3),
       ],
     },
   ];

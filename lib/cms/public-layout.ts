@@ -34,7 +34,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
   const headerItems: HeaderNavItem[] = headerNav?.items
     ? headerNav.items
         .map((item) => resolveNavigationLink(item))
-        .filter((link) => link.href && link.status !== "missing_page")
+        .filter((link) => link.href && link.status === "ok")
         .map((link) => ({
           label: link.label,
           href: link.href!,
@@ -51,7 +51,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
     for (const menu of footerMenus) {
       const resolved = menu.items
         .map((item) => resolveNavigationLink(item))
-        .filter((link) => link.href && link.status !== "missing_page");
+        .filter((link) => link.href && link.status === "ok");
 
       if (menu.location === "LEGAL") {
         for (const link of resolved) {

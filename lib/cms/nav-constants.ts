@@ -1,5 +1,6 @@
 export const LINK_TYPES = [
   { value: "PAGE", label: "CMS-Seite" },
+  { value: "PAGE_SLUG", label: "Geplante Seite (Slug)" },
   { value: "SYSTEM_ROUTE", label: "Systemroute" },
   { value: "CUSTOM_URL", label: "Freie URL" },
 ] as const;
@@ -18,4 +19,4 @@ export const SYSTEM_ROUTES = [
   { path: "/produktkategorien", label: "Produktkategorien" },
 ] as const;
 
-export type LinkType = "PAGE" | "SYSTEM_ROUTE" | "CUSTOM_URL";
+export type LinkType = "PAGE" | "PAGE_SLUG" | "SYSTEM_ROUTE" | "CUSTOM_URL";

@@ -53,7 +53,7 @@ export function resolveNavigationLink(item: NavigationItemInput): ResolvedLink {
       if (!slug) {
         return { ...base, href: null, status: "invalid_url", source: "planned_page", ...targetProps };
       }
-      return { ...base, href: pageSlugToPublicPath(slug), status: "ok", source: "planned_page", ...targetProps };
+      return { ...base, href: pageSlugToPublicPath(slug), status: "missing_page", source: "planned_page", ...targetProps };
     }
 
     case "SYSTEM_ROUTE": {

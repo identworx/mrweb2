@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Phase 2H: Media-Logos & Produktgalerie) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Phase 2H: Media-Logos, Produktgalerie & Navigation Link Types) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -333,6 +333,91 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 ### Migration
 
 - `20260609130201_add_media_logos`: Fuegt `logoMediaId`, `faviconMediaId` zu SiteSettings und `logoMediaId` zu FooterSettings hinzu
+
+## 8d. Navigation Link Types (Phase 2H)
+
+### Uebersicht
+
+NavigationItems unterstuetzen vier Linktypen, die bestimmen, wie die URL aufgeloest wird:
+
+| Linktyp | Beschreibung | Admin-UI | Public Rendering |
+|---|---|---|---|
+| PAGE | Verknuepfung mit CMS-Seite | Seiten-Dropdown | URL aus Page.slug, hidden wenn DRAFT/ARCHIVED |
+| PAGE_SLUG | Geplante Seite (existiert noch nicht) | Slug-Eingabefeld | Immer hidden (status=missing_page) |
+| SYSTEM_ROUTE | Feste Systemroute | Routen-Dropdown | Validiert gegen SYSTEM_ROUTES Liste |
+| CUSTOM_URL | Freie interne/externe URL | URL-Eingabefeld | Extern: target=_blank rel=noopener |
+
+### Page-Dropdown im Navigation Editor
+
+- Bei Linktyp PAGE zeigt der Editor ein Dropdown mit allen CMS-Seiten
+- Anzeige: `Titel — /slug — STATUS`
+- Warnung bei DRAFT/ARCHIVED: "Diese Seite ist nicht veroeffentlicht. Der Link wird oeffentlich nicht angezeigt."
+- Beim Speichern wird `linkedPageId` gesetzt
+- Beim Wechsel von PAGE auf SYSTEM_ROUTE/CUSTOM_URL wird `linkedPageId` geleert
+
+### Status-Badges im Admin
+
+- **OK** (gruen): Link ist gueltig und oeffentlich sichtbar
+- **Entwurf** (gelb): Verknuepfte Seite ist DRAFT
+- **Archiviert** (grau): Verknuepfte Seite ist ARCHIVED
+- **Seite fehlt** (rot): linkedPageId gesetzt, aber Page existiert nicht
+- **Keine Seite** (rot): Linktyp PAGE, aber keine Seite ausgewaehlt
+- **Geplant** (blau): Linktyp PAGE_SLUG, Seite existiert noch nicht
+- **Ungueltig** (rot): Systemroute nicht in SYSTEM_ROUTES Liste
+- **Kein Link** (rot): CUSTOM_URL ohne href
+
+### LinkResolver (`lib/cms/link-resolver.ts`)
+
+Zentrale Utility fuer die Aufloesung von NavigationItem-Links:
+
+```
+resolveNavigationLink(item) → {
+  href: string | null,
+  label: string,
+  target?: string,
+  rel?: string,
+  status: "ok" | "missing_page" | "draft_page" | "archived_page" | "invalid_url",
+  source: "page" | "planned_page" | "system_route" | "custom_url" | "legacy_url"
+}
+```
+
+### Public Rendering
+
+- Nur Links mit `status === "ok"` werden oeffentlich gerendert
+- DRAFT/ARCHIVED Page-Links werden oeffentlich NICHT angezeigt
+- PAGE_SLUG Links werden oeffentlich NICHT angezeigt (immer missing_page)
+- Externe URLs erhalten automatisch `target="_blank" rel="noopener noreferrer"`
+- `isActive=false` Items werden bereits in der DB-Query gefiltert
+
+### Revalidation
+
+- Navigation-Aenderungen: `revalidateNavigation()` → revalidiert alle Public Pages
+- Page Status/Slug Aenderungen: Wenn die Page mit NavigationItems verknuepft ist, wird `revalidateNavigation()` zusaetzlich aufgerufen
+- Footer-Aenderungen: `revalidateFooter()` → revalidiert alle Public Pages
+
+### Footer/Legal Links
+
+- Footer-Links (Kollektionen, Service, Legal) nutzen dasselbe NavigationMenu/NavigationItem System
+- FooterSettings speichert nur Logo, Description, Copyright, Social Links — NICHT Navigation
+- Legal-Links (Impressum, Datenschutz, AGB) sind als PAGE verknuepft mit DRAFT-Seiten
+- Legal-Links werden oeffentlich erst angezeigt, wenn die Seiten PUBLISHED sind
+
+### Dateien
+
+| Datei | Beschreibung |
+|---|---|
+| `lib/cms/nav-constants.ts` | LINK_TYPES, SYSTEM_ROUTES, LinkType (shared client+server) |
+| `lib/cms/page-paths.ts` | PAGE_SLUG_TO_PATH Mapping, pageSlugToPublicPath() (server-only) |
+| `lib/cms/link-resolver.ts` | resolveNavigationLink(), Status-Utilities (server-only) |
+| `lib/cms/navigation.ts` | DB-Queries mit linkedPage Relation (server-only) |
+| `lib/cms/public-layout.ts` | Baut Header/Footer Daten mit Resolver |
+| `components/admin/NavigationEditForm.tsx` | Admin-Formular mit Linktyp-UI |
+| `app/admin/navigation/[id]/page.tsx` | Laedt Pages-Liste und linkedPage-Daten |
+| `app/api/admin/navigation/route.ts` | Speichert linkType, linkedPageId, isActive |
+
+### Migration
+
+- `20260609141011_add_nav_link_type`: Fuegt `linkType` Spalte zu NavigationItem hinzu (Default: CUSTOM_URL)
 
 ## 8b. Rich Text Editing (Phase 2G)
 

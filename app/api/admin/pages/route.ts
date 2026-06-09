@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
-import { revalidatePage } from "@/lib/server/revalidate-cms";
+import { revalidatePage, revalidateNavigation } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -46,6 +46,12 @@ export async function POST(request: NextRequest) {
       : await prisma.page.create({ data: fields });
 
     revalidatePage(page.slug);
+
+    const linkedNavItems = await prisma.navigationItem.count({ where: { linkedPageId: page.id } });
+    if (linkedNavItems > 0) {
+      revalidateNavigation();
+    }
+
     return NextResponse.json(page);
   } catch (error) {
     console.error("Page upsert error:", error);
@@ -79,6 +85,12 @@ export async function PATCH(request: NextRequest) {
     });
 
     revalidatePage(page.slug);
+
+    const linkedNavItems = await prisma.navigationItem.count({ where: { linkedPageId: page.id } });
+    if (linkedNavItems > 0) {
+      revalidateNavigation();
+    }
+
     return NextResponse.json(page);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });

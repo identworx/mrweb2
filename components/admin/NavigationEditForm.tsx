@@ -63,6 +63,12 @@ function getStatusBadge(item: NavigationItemData, pages: PageOption[]) {
       ? <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">OK</span>
       : <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Ungültig</span>;
   }
+  if (item.linkType === "PAGE_SLUG") {
+    if (!item.href) {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Kein Slug</span>;
+    }
+    return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">Geplant</span>;
+  }
   if (item.linkType === "CUSTOM_URL") {
     if (!item.href) {
       return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Kein Link</span>;
@@ -304,10 +310,29 @@ export default function NavigationEditForm({
                         <option value="">-- Seite wählen --</option>
                         {pages.map((p) => (
                           <option key={p.id} value={p.id}>
-                            {p.title} ({p.slug}) {p.status !== "PUBLISHED" ? `[${p.status}]` : ""}
+                            {p.title} — /{p.slug} — {p.status}
                           </option>
                         ))}
                       </select>
+                      {item.linkedPageId && item.pageStatus && item.pageStatus !== "PUBLISHED" && (
+                        <p className="mt-1 text-xs text-yellow-700">
+                          Diese Seite ist nicht veröffentlicht. Der Link wird öffentlich nicht angezeigt.
+                        </p>
+                      )}
+                    </div>
+                  ) : item.linkType === "PAGE_SLUG" ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Seiten-Slug</label>
+                      <input
+                        type="text"
+                        value={item.href}
+                        onChange={(e) => updateItem(index, "href", e.target.value)}
+                        placeholder="z.B. impressum"
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                      <p className="mt-1 text-xs text-blue-700">
+                        Geplante Seite — wird öffentlich erst angezeigt, wenn eine CMS-Seite mit diesem Slug erstellt und verknüpft wird.
+                      </p>
                     </div>
                   ) : item.linkType === "SYSTEM_ROUTE" ? (
                     <div>
