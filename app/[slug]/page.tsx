@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
@@ -74,14 +73,12 @@ export default async function CmsPage({
       <Header {...layout.header} />
       <main>
         <PageHero
-          eyebrow={page.heroImageUrl ? undefined : undefined}
           title={page.headline || page.title}
           description={page.introText || undefined}
           image={page.heroImageUrl || undefined}
           height="compact"
+          breadcrumbs={[{ label: page.title }]}
         />
-
-        <Breadcrumbs items={[{ label: page.title }]} />
 
         {page.sections.length > 0 ? (
           page.sections.map((section, i) => (

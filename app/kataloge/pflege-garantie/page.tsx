@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
@@ -110,10 +109,7 @@ export default async function PflegeGarantiePage() {
           image={hero.image}
           alt={hero.alt}
           height="compact"
-        />
-
-        <Breadcrumbs
-          items={[
+          breadcrumbs={[
             { label: "Kataloge", href: "/kataloge" },
             { label: "Pflege & Garantie" },
           ]}

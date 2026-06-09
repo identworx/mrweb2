@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { newsItems } from "@/lib/mosaroma/news";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import {
@@ -61,7 +62,7 @@ export default async function NeuigkeitDetailPage({
       <>
         <Header {...layout.header} />
         <main>
-          <section className="relative min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-end overflow-hidden">
+          <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
             <Image
               src={article.heroImageUrl || "/images/placeholders/page-heroes/neuigkeiten-hero.svg"}
               alt={article.title}
@@ -74,12 +75,22 @@ export default async function NeuigkeitDetailPage({
               className="absolute inset-0"
               style={{
                 background:
-                  "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 35%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.10) 80%, transparent 100%)",
+                  "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.30) 60%, rgba(0,0,0,0.12) 80%, transparent 100%)",
               }}
             />
-            <div className="relative w-full pb-12 md:pb-16 lg:pb-20 pt-40 md:pt-48 lg:pt-52">
+            <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-3 mb-6">
+                <div className="mb-4">
+                  <Breadcrumbs
+                    variant="light"
+                    items={[
+                      { label: "Neuigkeiten", href: "/neuigkeiten" },
+                      { label: article.title },
+                    ]}
+                  />
+                </div>
+
+                <div className="flex items-center gap-3 mb-3">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                     {article.category}
                   </span>
@@ -88,7 +99,7 @@ export default async function NeuigkeitDetailPage({
                   </span>
                 </div>
 
-                <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
+                <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.08] max-w-3xl">
                   {article.title}
                 </h1>
               </div>
@@ -148,7 +159,7 @@ export default async function NeuigkeitDetailPage({
     <>
       <Header {...layout.header} />
       <main>
-        <section className="relative min-h-[360px] md:min-h-[420px] lg:min-h-[480px] flex items-end overflow-hidden">
+        <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
           <Image
             src="/images/placeholders/page-heroes/neuigkeiten-hero.svg"
             alt="Mosaroma Neuigkeiten"
@@ -161,12 +172,22 @@ export default async function NeuigkeitDetailPage({
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.50) 35%, rgba(0,0,0,0.25) 60%, rgba(0,0,0,0.10) 80%, transparent 100%)",
+                "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.30) 60%, rgba(0,0,0,0.12) 80%, transparent 100%)",
             }}
           />
-          <div className="relative w-full pb-12 md:pb-16 lg:pb-20 pt-40 md:pt-48 lg:pt-52">
+          <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="mb-4">
+                <Breadcrumbs
+                  variant="light"
+                  items={[
+                    { label: "Neuigkeiten", href: "/neuigkeiten" },
+                    { label: staticItem.title },
+                  ]}
+                />
+              </div>
+
+              <div className="flex items-center gap-3 mb-3">
                 <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                   {staticItem.tag}
                 </span>
@@ -175,7 +196,7 @@ export default async function NeuigkeitDetailPage({
                 </span>
               </div>
 
-              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
+              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.08] max-w-3xl">
                 {staticItem.title}
               </h1>
             </div>

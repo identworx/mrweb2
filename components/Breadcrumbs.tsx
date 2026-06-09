@@ -10,6 +10,25 @@ interface BreadcrumbsProps {
   variant?: "dark" | "light";
 }
 
+function ChevronIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M9 18l6-6-6-6" />
+    </svg>
+  );
+}
+
 export default function Breadcrumbs({
   items,
   variant = "dark",
@@ -17,41 +36,32 @@ export default function Breadcrumbs({
   const isLight = variant === "light";
 
   return (
-    <nav
-      aria-label="Breadcrumb"
-      className={`mx-auto max-w-[1400px] px-5 md:px-10 pb-4 ${
-        isLight ? "pt-4" : "pt-28 md:pt-36"
-      }`}
-    >
+    <nav aria-label="Breadcrumb">
       <ol
-        className={`flex flex-wrap items-center gap-1.5 font-body text-xs ${
+        className={`flex flex-wrap items-center gap-1 font-body text-[11px] tracking-wide ${
           isLight ? "text-white/50" : "text-text-gray/50"
         }`}
       >
         <li>
           <Link
             href="/"
-            className={`transition-colors duration-300 ${
-              isLight
-                ? "hover:text-white"
-                : "hover:text-pumpkin"
+            className={`transition-colors duration-200 ${
+              isLight ? "hover:text-white" : "hover:text-pumpkin"
             }`}
           >
             Startseite
           </Link>
         </li>
         {items.map((item, i) => (
-          <li key={i} className="flex items-center gap-1.5">
-            <span className={isLight ? "text-white/30" : "text-text-gray/30"}>
-              /
-            </span>
+          <li key={i} className="flex items-center gap-1">
+            <ChevronIcon
+              className={isLight ? "text-white/25" : "text-text-gray/25"}
+            />
             {item.href ? (
               <Link
                 href={item.href}
-                className={`transition-colors duration-300 ${
-                  isLight
-                    ? "hover:text-white"
-                    : "hover:text-pumpkin"
+                className={`transition-colors duration-200 ${
+                  isLight ? "hover:text-white" : "hover:text-pumpkin"
                 }`}
               >
                 {item.label}

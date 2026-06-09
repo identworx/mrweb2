@@ -64,6 +64,7 @@ export default async function UeberUnsPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Über uns" }]}
         />
 
         {/* About text */}

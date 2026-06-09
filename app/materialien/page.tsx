@@ -41,6 +41,7 @@ export default async function MaterialienPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Materialien" }]}
         />
 
         {/* Mackintosh® Technologie */}

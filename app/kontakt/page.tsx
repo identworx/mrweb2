@@ -56,6 +56,7 @@ export default async function KontaktPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Kontakt" }]}
         />
 
         <section className="section-padding bg-white">

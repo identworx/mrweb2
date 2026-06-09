@@ -108,15 +108,17 @@ export default async function KategoriePage({ params }: PageProps) {
     <>
       <Header {...layout.header} />
       <main>
-        {/* Hero with image */}
-        <section className="bg-cream pb-16 md:pb-24">
-          <Breadcrumbs
-            items={[
-              { label: "Produktkategorien", href: "/produktkategorien" },
-              { label: group.name },
-            ]}
-          />
+        {/* Category detail with breadcrumbs */}
+        <section className="bg-cream pt-28 md:pt-32 pb-16 md:pb-24">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="mb-6 md:mb-8">
+              <Breadcrumbs
+                items={[
+                  { label: "Produktkategorien", href: "/produktkategorien" },
+                  { label: group.name },
+                ]}
+              />
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>
                 <div className="flex items-center gap-4 mb-5">

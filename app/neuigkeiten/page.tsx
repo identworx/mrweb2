@@ -36,6 +36,7 @@ export default async function NeuigkeitenPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Neuigkeiten" }]}
         />
 
         <section className="section-padding bg-cream">

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
 import MeasurementNav from "@/components/measurements/MeasurementNav";
 import MeasurementImageCard from "@/components/measurements/MeasurementImageCard";
@@ -49,10 +48,7 @@ export default async function ProduktmassePage() {
           image={hero.image}
           alt={hero.alt}
           height="compact"
-        />
-
-        <Breadcrumbs
-          items={[
+          breadcrumbs={[
             { label: "Kataloge", href: "/kataloge" },
             { label: "Produktmaße" },
           ]}

@@ -29,6 +29,7 @@ export default async function ProduktkategorienPage() {
           eyebrow="Entdecken"
           title="Produktkategorien"
           description="Entdecken Sie alle MOSAROMA Produktkategorien -- von Dekokissen und Auflagen bis hin zu Poufs, Tischsets und Decken. Jede Kategorie vereint Premium-Materialien mit durchdachtem Design fuer den Aussenbereich."
+          breadcrumbs={[{ label: "Produktkategorien" }]}
         />
 
         <section className="section-padding bg-white">

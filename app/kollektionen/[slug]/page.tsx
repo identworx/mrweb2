@@ -118,7 +118,7 @@ export default async function KollektionPage({ params }: PageProps) {
       <Header {...layout.header} />
       <main>
         {/* Compact hero with background image, breadcrumbs inside */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
           <Image
             src={collection.heroImage}
             alt={collection.heroAlt}
@@ -131,53 +131,39 @@ export default async function KollektionPage({ params }: PageProps) {
             className="absolute inset-0"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.42) 35%, rgba(0,0,0,0.28) 60%, rgba(0,0,0,0.15) 80%, rgba(0,0,0,0.10) 100%)",
+                "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 35%, rgba(0,0,0,0.30) 60%, rgba(0,0,0,0.12) 80%, transparent 100%)",
             }}
           />
 
-          <div className="relative z-10 pt-24 md:pt-28 pb-10 md:pb-12">
-            <Breadcrumbs
-              variant="light"
-              items={[
-                { label: "Kollektionen", href: "/kollektionen" },
-                { label: `${collection.name} Collection` },
-              ]}
-            />
+          <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+              <div className="mb-4">
+                <Breadcrumbs
+                  variant="light"
+                  items={[
+                    { label: "Kollektionen", href: "/kollektionen" },
+                    { label: `${collection.name} Collection` },
+                  ]}
+                />
+              </div>
 
-            <div className="mx-auto max-w-[1400px] px-5 md:px-10 pt-4 md:pt-6">
               <div className="max-w-2xl">
-                {collection.moodColors.length > 0 && (
-                  <div className="flex w-fit mb-5">
-                    {collection.moodColors.map((color, i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-3 md:w-10 md:h-3.5 first:rounded-l last:rounded-r"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-px bg-pumpkin" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-px bg-pumpkin" />
+                  <p className="font-accent text-pumpkin text-[11px] tracking-[0.3em] uppercase">
                     {collection.eyebrow}
                   </p>
                 </div>
 
-                <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.08]">
+                <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.08]">
                   {collection.name}
                 </h1>
 
                 {collection.subtitle && (
-                  <p className="font-heading text-white/60 text-lg md:text-xl lg:text-2xl font-medium tracking-tight leading-snug mt-3">
+                  <p className="font-heading text-white/60 text-base md:text-lg font-medium tracking-tight leading-snug mt-2 line-clamp-1">
                     {collection.subtitle}
                   </p>
                 )}
-
-                <p className="font-body text-white/70 text-sm md:text-base leading-[1.8] mt-4">
-                  {collection.shortDescription}
-                </p>
               </div>
             </div>
           </div>

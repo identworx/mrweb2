@@ -91,6 +91,7 @@ export default async function KatalogePage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Kataloge" }]}
         />
 
         {/* Katalog 2027 Feature Card */}

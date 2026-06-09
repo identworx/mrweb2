@@ -36,6 +36,7 @@ export default async function KollektionenPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
+          breadcrumbs={[{ label: "Kollektionen" }]}
         />
 
         <section className="section-padding bg-white">
