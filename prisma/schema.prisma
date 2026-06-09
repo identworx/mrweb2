@@ -134,6 +134,7 @@ model MediaAsset {
   downloadImages        Download[]     @relation("DownloadImage")
   newsHeroImages        NewsArticle[]  @relation("NewsHeroImage")
   newsCardImages        NewsArticle[]  @relation("NewsCardImage")
+  measurementImages     Measurement[]  @relation("MeasurementImage")
 }
 
 model NavigationMenu {
@@ -322,6 +323,8 @@ model Measurement {
   title       String
   groupSlug   String?
   drawingType String?
+  imageId     String?
+  imageAlt    String?
   variants    Json?
   notes       Json?
   sourceNote  String?
@@ -329,6 +332,8 @@ model Measurement {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  image MediaAsset? @relation("MeasurementImage", fields: [imageId], references: [id], onDelete: SetNull)
 }
 
 model Download {

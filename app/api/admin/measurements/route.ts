@@ -9,6 +9,7 @@ export async function GET() {
   try {
     const measurements = await prisma.measurement.findMany({
       orderBy: { order: "asc" },
+      include: { image: { select: { id: true, url: true, alt: true } } },
     });
     return NextResponse.json(measurements);
   } catch {
@@ -29,14 +30,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { id, ...data } = body;
 
-    // Parse variants and notes from JSON strings if needed
     let variants = data.variants;
     if (typeof variants === "string") {
       try {
         variants = JSON.parse(variants);
       } catch {
         return NextResponse.json(
-          { error: "Ungültiges JSON im Feld Varianten" },
+          { error: "Ungültiges JSON im Feld Maßzeilen" },
           { status: 400 },
         );
       }
@@ -59,6 +59,8 @@ export async function POST(request: NextRequest) {
       slug: data.slug,
       groupSlug: data.groupSlug || null,
       drawingType: data.drawingType || null,
+      imageId: data.imageId || null,
+      imageAlt: data.imageAlt || null,
       sourceNote: data.sourceNote || null,
       order: typeof data.order === "number" ? data.order : 0,
       variants: variants ?? undefined,

@@ -31,12 +31,6 @@ export default function BenchMeasurement({ item }: { item: MeasurementItem }) {
           {item.notes.join(" · ")}
         </p>
       )}
-
-      {item.sourceNote && (
-        <p className="font-body text-pumpkin/60 text-xs text-center mt-2 italic">
-          {item.sourceNote}
-        </p>
-      )}
     </div>
   );
 }

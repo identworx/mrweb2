@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Phase 2D-B: Downloads/Measurements/News Frontend) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Measurements Image Cards Umbau) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -679,3 +679,18 @@ Alle CMS-Helpers filtern automatisch:
 - `isActive: true` für strukturelle Modelle
 
 Archivierte und deaktivierte Einträge erscheinen niemals auf der öffentlichen Website.
+
+### Produktmasse: Bemasste Bilder pflegen
+
+Empfohlener Workflow fuer Measurement-Kacheln auf `/kataloge/produktmasse`:
+
+1. Bemasstes Produktbild aus Katalog exportieren oder separat gestalten
+2. In `/admin/media` hochladen
+3. In `/admin/measurements` die passende Kachel oeffnen
+4. Unter "Bemasstes Bild" das hochgeladene Bild auswaehlen
+5. Alt-Text setzen (z.B. "Bemassungszeichnung Hochlehner 120 x 48 x 6 cm")
+6. Masszeilen darunter pruefen/pflegen (Label + Wert pro Zeile)
+7. Kachel aktivieren und Reihenfolge setzen
+
+Ohne zugewiesenes Bild wird eine SVG-Fallback-Zeichnung angezeigt.
+Die oeffentliche Seite zeigt nur aktive Measurements (isActive=true).

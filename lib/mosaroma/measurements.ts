@@ -3,8 +3,7 @@ export type MeasurementGroup =
   | "lehner"
   | "bankauflagen"
   | "poufs"
-  | "tischsets"
-  | "decken";
+  | "tischsets";
 
 export type DrawingType =
   | "square-cushion"
@@ -18,8 +17,7 @@ export type DrawingType =
   | "pouf-small"
   | "pouf-large"
   | "placemat"
-  | "table-runner"
-  | "blanket";
+  | "table-runner";
 
 export interface MeasurementVariant {
   label: string;
@@ -33,20 +31,26 @@ export interface MeasurementItem {
   drawingType: DrawingType;
   variants: MeasurementVariant[];
   notes?: string[];
-  sourceNote?: string;
 }
 
 export const measurements: MeasurementItem[] = [
   // ── Kissen & Auflagen ──────────────────────────────────
   {
-    slug: "deko-kissen",
-    title: "Deko-Kissen",
+    slug: "deko-kissen-mackintosh-lite-nerio",
+    title: "Deko-Kissen Mackintosh & Lite / Nerio",
     group: "kissen-auflagen",
     drawingType: "square-cushion",
     variants: [
-      { label: "Mack. & Lite / Nerio", value: "48 × 48 cm" },
-      { label: "Basic", value: "45 × 45 cm" },
+      { label: "MACK. & LITE", value: "48 × 48 cm" },
+      { label: "NERIO", value: "48 × 48 cm" },
     ],
+  },
+  {
+    slug: "deko-kissen-basic",
+    title: "Deko-Kissen Basic",
+    group: "kissen-auflagen",
+    drawingType: "square-cushion-small",
+    variants: [{ label: "BASIC", value: "45 × 45 cm" }],
   },
   {
     slug: "sitzkissen",
@@ -54,9 +58,9 @@ export const measurements: MeasurementItem[] = [
     group: "kissen-auflagen",
     drawingType: "seat-cushion",
     variants: [
-      { label: "Mack. & Lite", value: "H = 7 cm" },
-      { label: "Nerio", value: "H = 7 cm" },
-      { label: "Basic", value: "H = 5 cm" },
+      { label: "MACK. & LITE", value: "H = 6 cm" },
+      { label: "NERIO", value: "H = 6 cm" },
+      { label: "BASIC", value: "H = 5 cm" },
     ],
     notes: ["Grundmaß: 46 × 45 cm"],
   },
@@ -65,14 +69,14 @@ export const measurements: MeasurementItem[] = [
     title: "Sitzpolster eckig",
     group: "kissen-auflagen",
     drawingType: "square-pad",
-    variants: [{ label: "Mack. Lite", value: "40 × 40 × 2 cm" }],
+    variants: [{ label: "MACK. LITE", value: "40 × 40 × 2 cm" }],
   },
   {
     slug: "sitzpolster-halbrund",
     title: "Sitzpolster halbrund",
     group: "kissen-auflagen",
     drawingType: "rounded-pad",
-    variants: [{ label: "Mack. Lite", value: "38 × 40 × 2 cm" }],
+    variants: [{ label: "MACK. LITE", value: "38 × 40 × 2 cm" }],
   },
 
   // ── Lehner ──────────────────────────────────────────────
@@ -82,9 +86,9 @@ export const measurements: MeasurementItem[] = [
     group: "lehner",
     drawingType: "high-back",
     variants: [
-      { label: "Mackintosh®", value: "120 × 48 × 6 cm" },
-      { label: "Nerio", value: "120 × 48 × 6 cm" },
-      { label: "Lite & Basic", value: "120 × 48 × 6 cm" },
+      { label: "MACK.", value: "120 × 48 × 6 cm" },
+      { label: "NERIO", value: "120 × 48 × 6 cm" },
+      { label: "LITE & BASIC", value: "120 × 48 × 6 cm" },
     ],
   },
   {
@@ -93,9 +97,9 @@ export const measurements: MeasurementItem[] = [
     group: "lehner",
     drawingType: "low-back",
     variants: [
-      { label: "Mackintosh®", value: "105 × 48 × 6 cm" },
-      { label: "Nerio", value: "105 × 48 × 6 cm" },
-      { label: "Lite & Basic", value: "105 × 48 × 6 cm" },
+      { label: "MACK.", value: "105 × 48 × 6 cm" },
+      { label: "NERIO", value: "105 × 48 × 6 cm" },
+      { label: "LITE & BASIC", value: "105 × 48 × 6 cm" },
     ],
   },
 
@@ -111,7 +115,7 @@ export const measurements: MeasurementItem[] = [
       { label: "L", value: "140 cm" },
       { label: "XL", value: "170 cm" },
     ],
-    notes: ["Tiefe 49 cm", "Dicke 7 cm bei allen Längen identisch"],
+    notes: ["Tiefe 49 cm", "Dicke 6 cm bei allen Längen identisch"],
   },
 
   // ── Poufs ───────────────────────────────────────────────
@@ -120,14 +124,14 @@ export const measurements: MeasurementItem[] = [
     title: "Pouf klein",
     group: "poufs",
     drawingType: "pouf-small",
-    variants: [{ label: "Mack.", value: "45 × 45 cm" }],
+    variants: [{ label: "MACK.", value: "45 × 45 cm" }],
   },
   {
     slug: "pouf-gross",
     title: "Pouf groß",
     group: "poufs",
     drawingType: "pouf-large",
-    variants: [{ label: "Mack.", value: "70 × 36 cm" }],
+    variants: [{ label: "MACK.", value: "70 × 36 cm" }],
   },
 
   // ── Tischsets & Tischläufer ─────────────────────────────
@@ -136,7 +140,7 @@ export const measurements: MeasurementItem[] = [
     title: "Tischset",
     group: "tischsets",
     drawingType: "placemat",
-    variants: [{ label: "Mack.", value: "35 × 45 × 0,6 cm" }],
+    variants: [{ label: "MACK.", value: "35 × 45 × 0,6 cm" }],
   },
   {
     slug: "tischlaeufer",
@@ -144,18 +148,9 @@ export const measurements: MeasurementItem[] = [
     group: "tischsets",
     drawingType: "table-runner",
     variants: [
-      { label: "Mack. · Variante A", value: "35 × 130 × 0,6 cm" },
-      { label: "Mack. · Variante B", value: "47,5 × 120 × 0,6 cm" },
+      { label: "MACK. Variante A", value: "35 × 130 × 0,6 cm" },
+      { label: "MACK. Variante B", value: "47,5 × 120 × 0,6 cm" },
     ],
-  },
-
-  // ── Decken ──────────────────────────────────────────────
-  {
-    slug: "decken",
-    title: "Decken",
-    group: "decken",
-    drawingType: "blanket",
-    variants: [{ label: "Alle Größen", value: "Maße auf Anfrage" }],
   },
 ];
 
@@ -171,5 +166,4 @@ export const measurementGroups: MeasurementGroupDef[] = [
   { slug: "bankauflagen", title: "Bankauflagen", id: "bankauflagen" },
   { slug: "poufs", title: "Poufs", id: "poufs" },
   { slug: "tischsets", title: "Tischsets & Tischläufer", id: "tischsets" },
-  { slug: "decken", title: "Decken", id: "decken" },
 ];

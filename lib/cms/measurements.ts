@@ -1,5 +1,6 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
+import { getMediaUrl } from "./media-url";
 import {
   measurements as staticMeasurements,
   measurementGroups as staticGroups,
@@ -11,14 +12,22 @@ import {
 
 export type { MeasurementItem, MeasurementGroup, DrawingType, MeasurementVariant };
 
+export interface MeasurementRow {
+  label: string;
+  value: string;
+}
+
 export interface FrontendMeasurement {
+  id: string;
   slug: string;
   title: string;
   group: MeasurementGroup;
   drawingType: DrawingType;
-  variants: MeasurementVariant[];
-  notes?: string[];
-  sourceNote?: string;
+  imageUrl: string | null;
+  imageAlt: string | null;
+  rows: MeasurementRow[];
+  notes: string[];
+  order: number;
 }
 
 export async function getPublicMeasurements(): Promise<FrontendMeasurement[]> {
@@ -26,14 +35,15 @@ export async function getPublicMeasurements(): Promise<FrontendMeasurement[]> {
     const items = await prisma.measurement.findMany({
       where: { isActive: true },
       orderBy: [{ order: "asc" }],
+      include: { image: true },
     });
 
-    if (items.length === 0) return staticMeasurements;
+    if (items.length === 0) return staticMeasurements.map(mapStaticToFrontend);
 
-    return items.map(mapMeasurementForFrontend);
+    return items.map(mapDbToFrontend);
   } catch (error) {
     console.error("CMS: getPublicMeasurements failed", error);
-    return staticMeasurements;
+    return staticMeasurements.map(mapStaticToFrontend);
   }
 }
 
@@ -42,20 +52,37 @@ export async function getPublicMeasurementsByGroup(group: string): Promise<Front
     const items = await prisma.measurement.findMany({
       where: { isActive: true, groupSlug: group },
       orderBy: { order: "asc" },
+      include: { image: true },
     });
 
     if (items.length === 0) {
-      return staticMeasurements.filter((m) => m.group === group);
+      return staticMeasurements.filter((m) => m.group === group).map(mapStaticToFrontend);
     }
 
-    return items.map(mapMeasurementForFrontend);
+    return items.map(mapDbToFrontend);
   } catch (error) {
     console.error(`CMS: getPublicMeasurementsByGroup("${group}") failed`, error);
-    return staticMeasurements.filter((m) => m.group === group);
+    return staticMeasurements.filter((m) => m.group === group).map(mapStaticToFrontend);
   }
 }
 
-function parseJsonArray(raw: unknown): string[] {
+function parseRows(raw: unknown): MeasurementRow[] {
+  if (Array.isArray(raw)) {
+    return raw.filter(
+      (v): v is MeasurementRow =>
+        typeof v === "object" && v !== null && typeof v.label === "string" && typeof v.value === "string",
+    );
+  }
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parseRows(parsed);
+    } catch { /* ignore */ }
+  }
+  return [];
+}
+
+function parseNotes(raw: unknown): string[] {
   if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string");
   if (typeof raw === "string") {
     try {
@@ -66,42 +93,46 @@ function parseJsonArray(raw: unknown): string[] {
   return [];
 }
 
-function parseVariants(raw: unknown): MeasurementVariant[] {
-  if (Array.isArray(raw)) {
-    return raw.filter(
-      (v): v is MeasurementVariant =>
-        typeof v === "object" && v !== null && typeof v.label === "string" && typeof v.value === "string",
-    );
-  }
-  if (typeof raw === "string") {
-    try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parseVariants(parsed);
-    } catch { /* ignore */ }
-  }
-  return [];
-}
-
-type DbMeasurement = {
+interface DbMeasurement {
+  id: string;
   slug: string;
   title: string;
   groupSlug: string | null;
   drawingType: string | null;
+  imageAlt: string | null;
   variants: unknown;
   notes: unknown;
-  sourceNote: string | null;
-};
+  order: number;
+  image: { url?: string | null } | null;
+}
 
-function mapMeasurementForFrontend(m: DbMeasurement): FrontendMeasurement {
-  const notes = parseJsonArray(m.notes);
+function mapDbToFrontend(m: DbMeasurement): FrontendMeasurement {
   return {
+    id: m.id,
     slug: m.slug,
     title: m.title,
     group: (m.groupSlug || "kissen-auflagen") as MeasurementGroup,
     drawingType: (m.drawingType || "square-cushion") as DrawingType,
-    variants: parseVariants(m.variants),
-    notes: notes.length > 0 ? notes : undefined,
-    sourceNote: m.sourceNote || undefined,
+    imageUrl: getMediaUrl(m.image, "") || null,
+    imageAlt: m.imageAlt,
+    rows: parseRows(m.variants),
+    notes: parseNotes(m.notes),
+    order: m.order,
+  };
+}
+
+function mapStaticToFrontend(m: MeasurementItem, index: number): FrontendMeasurement {
+  return {
+    id: m.slug,
+    slug: m.slug,
+    title: m.title,
+    group: m.group,
+    drawingType: m.drawingType,
+    imageUrl: null,
+    imageAlt: null,
+    rows: m.variants,
+    notes: m.notes || [],
+    order: index,
   };
 }
 

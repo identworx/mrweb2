@@ -170,7 +170,7 @@ function BenchPad() {
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
       <rect x={ox} y={oy} width={pw} height={ph} rx="3" fill="none" stroke={STROKE} strokeWidth="1.2" />
       <DimLine x1={ox} y1={oy - 14} x2={ox + pw} y2={oy - 14} label="50 cm – 170 cm" side="top" />
-      <DimLine x1={ox + pw + 16} y1={oy} x2={ox + pw + 16} y2={oy + ph} label="7 cm" side="right" />
+      <DimLine x1={ox + pw + 16} y1={oy} x2={ox + pw + 16} y2={oy + ph} label="6 cm" side="right" />
       <text x={ox - 6} y={oy + ph / 2 + 4} textAnchor="end" fill={DIM_COLOR} fontSize="10" fontFamily="sans-serif" fontWeight="600">
         49 cm
       </text>
@@ -248,26 +248,6 @@ function TableRunner() {
   );
 }
 
-function Blanket() {
-  const w = 200, h = 160;
-  const ox = 40, oy = 30;
-  const bw = 120, bh = 80;
-  const fold = 25;
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
-      <rect x={ox} y={oy + fold} width={bw} height={bh} rx="3" fill="none" stroke={STROKE} strokeWidth="1.2" />
-      <path
-        d={`M${ox},${oy + fold} L${ox},${oy + 4} Q${ox},${oy} ${ox + 4},${oy} L${ox + bw - 4},${oy} Q${ox + bw},${oy} ${ox + bw},${oy + 4} L${ox + bw},${oy + fold}`}
-        fill="none" stroke={STROKE} strokeWidth="1.2"
-      />
-      <line x1={ox} y1={oy + fold} x2={ox + bw} y2={oy + fold} stroke={STROKE_LIGHT} strokeWidth="0.8" strokeDasharray="3,3" />
-      <text x={w / 2} y={oy + fold + bh / 2 + 4} textAnchor="middle" fill={DIM_COLOR} fontSize="11" fontFamily="sans-serif" fontWeight="600">
-        Maße auf Anfrage
-      </text>
-    </svg>
-  );
-}
-
 const drawings: Record<DrawingType, React.ReactNode> = {
   "square-cushion": <SquareCushion size={48} />,
   "square-cushion-small": <SquareCushion size={45} />,
@@ -281,7 +261,6 @@ const drawings: Record<DrawingType, React.ReactNode> = {
   "pouf-large": <PoufLarge />,
   "placemat": <Placemat />,
   "table-runner": <TableRunner />,
-  "blanket": <Blanket />,
 };
 
 export default function MeasurementDrawing({ type }: { type: DrawingType }) {

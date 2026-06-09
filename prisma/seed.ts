@@ -586,7 +586,9 @@ async function main() {
   // ---------------------------------------------------------------------------
   // 11. Measurements
   // ---------------------------------------------------------------------------
-  const deprecatedMeasurementSlugs = ["deko-kissen-mackintosh", "deko-kissen-basic"];
+  const deprecatedMeasurementSlugs = [
+    "deko-kissen-mackintosh", "deko-kissen-basic", "deko-kissen", "decken",
+  ];
   for (const slug of deprecatedMeasurementSlugs) {
     const existing = await prisma.measurement.findUnique({ where: { slug } });
     if (existing) {
@@ -606,7 +608,7 @@ async function main() {
         drawingType: m.drawingType,
         variants,
         notes,
-        sourceNote: m.sourceNote || null,
+        sourceNote: null,
         isActive: true,
       },
       create: {
@@ -616,7 +618,7 @@ async function main() {
         drawingType: m.drawingType,
         variants,
         notes,
-        sourceNote: m.sourceNote || null,
+        sourceNote: null,
         order: i,
         isActive: true,
       },

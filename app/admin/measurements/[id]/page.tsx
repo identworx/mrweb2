@@ -4,13 +4,41 @@ import Link from "next/link";
 import MeasurementEditForm from "@/components/admin/MeasurementEditForm";
 import { getSessionUser } from "@/lib/auth/session";
 
+function parseVariants(raw: unknown): { label: string; value: string }[] {
+  if (Array.isArray(raw)) {
+    return raw.filter(
+      (v): v is { label: string; value: string } =>
+        typeof v === "object" && v !== null && typeof v.label === "string" && typeof v.value === "string",
+    );
+  }
+  return [];
+}
+
+function parseNotes(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw.filter((v): v is string => typeof v === "string");
+  return [];
+}
+
 export default async function MeasurementEditPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const sessionUser = await getSessionUser();
+  const [sessionUser, mediaAssets] = await Promise.all([
+    getSessionUser(),
+    prisma.mediaAsset.findMany({
+      select: { id: true, url: true, alt: true, originalName: true },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
+
+  const media = mediaAssets.map((m) => ({
+    id: m.id,
+    url: m.url,
+    alt: m.alt,
+    originalName: m.originalName,
+  }));
 
   if (id === "new") {
     return (
@@ -37,11 +65,14 @@ export default async function MeasurementEditPage({
             slug: "",
             groupSlug: "",
             drawingType: "",
+            imageId: "",
+            imageAlt: "",
             sourceNote: "",
             order: 0,
-            variants: "[]",
-            notes: "[]",
+            rows: [],
+            notes: [],
           }}
+          mediaAssets={media}
           userRole={sessionUser?.role ?? "VIEWER"}
           isActive={true}
         />
@@ -79,11 +110,14 @@ export default async function MeasurementEditPage({
           slug: measurement.slug,
           groupSlug: measurement.groupSlug ?? "",
           drawingType: measurement.drawingType ?? "",
+          imageId: measurement.imageId ?? "",
+          imageAlt: measurement.imageAlt ?? "",
           sourceNote: measurement.sourceNote ?? "",
           order: measurement.order,
-          variants: measurement.variants ? JSON.stringify(measurement.variants, null, 2) : "[]",
-          notes: measurement.notes ? JSON.stringify(measurement.notes, null, 2) : "[]",
+          rows: parseVariants(measurement.variants),
+          notes: parseNotes(measurement.notes),
         }}
+        mediaAssets={media}
         userRole={sessionUser?.role ?? "VIEWER"}
         isActive={measurement.isActive}
       />
