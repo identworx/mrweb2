@@ -28,7 +28,14 @@ export default async function PagesListPage({
     : {};
 
   const [pages, sessionUser] = await Promise.all([
-    prisma.page.findMany({ where, orderBy: { title: "asc" } }),
+    prisma.page.findMany({
+      where,
+      orderBy: { title: "asc" },
+      include: {
+        _count: { select: { sections: true } },
+        sections: { where: { isActive: true }, select: { id: true } },
+      },
+    }),
     getSessionUser(),
   ]);
   const userRole = sessionUser?.role ?? "VIEWER";
@@ -70,6 +77,9 @@ export default async function PagesListPage({
                 Typ
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                Sektionen
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -84,7 +94,7 @@ export default async function PagesListPage({
             {pages.length === 0 && (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-6 py-12 text-center text-sm text-gray-400"
                 >
                   Keine Seiten vorhanden.
@@ -109,6 +119,15 @@ export default async function PagesListPage({
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {page.type}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-500">
+                  {page._count.sections > 0 ? (
+                    <span>
+                      {page.sections.length} / {page._count.sections}
+                    </span>
+                  ) : (
+                    <span className="text-gray-300">—</span>
+                  )}
                 </td>
                 <td className="px-6 py-4">
                   <span

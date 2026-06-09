@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import PageEditForm from "@/components/admin/PageEditForm";
+import PageSectionsEditor from "@/components/admin/PageSectionsEditor";
 import { getSessionUser } from "@/lib/auth/session";
 
 export default async function PageEditPage({
@@ -13,7 +14,14 @@ export default async function PageEditPage({
   const sessionUser = await getSessionUser();
 
   const isNew = id === "new";
-  const page = isNew ? null : await prisma.page.findUnique({ where: { id } });
+  const page = isNew
+    ? null
+    : await prisma.page.findUnique({
+        where: { id },
+        include: {
+          sections: { orderBy: { order: "asc" } },
+        },
+      });
 
   if (!isNew && !page) {
     redirect("/admin/pages");
@@ -45,6 +53,24 @@ export default async function PageEditPage({
         seoDescription: "",
       };
 
+  const userRole = sessionUser?.role ?? "VIEWER";
+
+  const sections = page
+    ? page.sections.map((s) => ({
+        id: s.id,
+        type: s.type,
+        title: s.title,
+        eyebrow: s.eyebrow,
+        content: s.content,
+        buttonLabel: s.buttonLabel,
+        buttonHref: s.buttonHref,
+        imageId: s.imageId,
+        settings: parseSettings(s.settings),
+        order: s.order,
+        isActive: s.isActive,
+      }))
+    : [];
+
   return (
     <div className="space-y-6">
       <div>
@@ -60,7 +86,32 @@ export default async function PageEditPage({
         </h1>
       </div>
 
-      <PageEditForm page={pageData} userRole={sessionUser?.role ?? "VIEWER"} />
+      <PageEditForm page={pageData} userRole={userRole} />
+
+      {page ? (
+        <PageSectionsEditor
+          pageId={page.id}
+          initialSections={sections}
+          userRole={userRole}
+        />
+      ) : (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-500">
+          Sections können nach dem ersten Speichern der Seite angelegt werden.
+        </div>
+      )}
     </div>
   );
+}
+
+function parseSettings(raw: unknown): Record<string, unknown> {
+  if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
+    return raw as Record<string, unknown>;
+  }
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "object" && parsed !== null) return parsed;
+    } catch { /* ignore */ }
+  }
+  return {};
 }

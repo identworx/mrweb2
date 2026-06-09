@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Service Pages CMS-Anbindung) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (PageSections Editor) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -194,6 +194,10 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | POST    | `/api/admin/news`        | News-Artikel erstellen / aktualisieren    |
 | PATCH   | `/api/admin/news`        | News-Status aendern                       |
 | DELETE  | `/api/admin/news`        | News-Artikel loeschen (ADMIN)             |
+| GET     | `/api/admin/page-sections?pageId=` | PageSections einer Seite laden       |
+| POST    | `/api/admin/page-sections` | PageSection erstellen                   |
+| PATCH   | `/api/admin/page-sections?id=` | PageSection aktualisieren              |
+| DELETE  | `/api/admin/page-sections?id=` | PageSection loeschen (ADMIN)           |
 | PATCH   | `/api/admin/pages`       | Seiten-Status aendern                     |
 | DELETE  | `/api/admin/pages`       | Seite loeschen (ADMIN)                    |
 | PATCH   | `/api/admin/collections` | Kollektion-Status aendern                 |
@@ -545,8 +549,47 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 - [x] Seed: 6 PageSections fuer pflege-garantie, 4 PageSections fuer stoff-technische-daten
 - [x] Admin: Seitenstatus (PUBLISHED/DRAFT/ARCHIVED) steuert Sichtbarkeit beider Service-Seiten
 
+### Phase 2E — erledigt
+- [x] PageSections CRUD API (`/api/admin/page-sections`) mit Auth, Validierung, Rollenlogik
+- [x] PageSectionsEditor Komponente — Sektionen anzeigen, anlegen, bearbeiten, sortieren, aktivieren/deaktivieren, loeschen, duplizieren
+- [x] PageSectionEditForm — Style-spezifische Formulare fuer alle 7 Section-Styles
+- [x] Section-Style-Schemas (`lib/admin/page-section-schemas.ts`) — Labels, Defaults, Beschreibungen
+- [x] Integration in `/admin/pages/[id]` — Sektionen unterhalb der Seitengrundaten
+- [x] Pages-Liste zeigt Anzahl aktiver/gesamter Sektionen
+- [x] Hinweis bei neuen Seiten: "Sections koennen nach dem ersten Speichern angelegt werden"
+- [x] Up/Down-Sortierung via Order-Swap
+- [x] Rollenlogik: VIEWER nur lesen, EDITOR erstellen/bearbeiten/sortieren, ADMIN zusaetzlich loeschen
+- [x] JSON-Fallback-Editor fuer unbekannte Styles
+- [x] Oeffentliche Renderer bleiben robust (null-Guards, leere Arrays → null)
+- [x] Seed ueberschreibt bestehende Admin-gepflegte Sections nicht
+
+#### Unterstuetzte Section-Styles
+
+| Style | Label | Beschreibung | Verwendung |
+|-------|-------|-------------|------------|
+| care-list | Checkliste | Haekchen-Liste (Pflege, Garantie) | Pflege & Garantie |
+| fabric-cards | Stoff-Karten | Materialkarten mit Datenzeilen | Stoff- & techn. Daten |
+| comparison-table | Vergleichstabelle | Eigenschaftsvergleich | Stoff- & techn. Daten |
+| highlight-cards | Highlight-Karten | Kompakte Karten im 2-Spalten-Grid | Stoff- & techn. Daten |
+| cross-link | Querverweis | Verweis-Karte mit Button | Pflege & Garantie |
+| cta | Call to Action | Dunkler CTA mit 2 Buttons | Beide Service-Seiten |
+| text | Text | Einfacher Textbereich | Generisch |
+
+#### Seiten mit Sections
+
+| Seite | Slug | Sections |
+|-------|------|----------|
+| Pflege & Garantie | pflege-garantie | 6 (4× care-list, 1× cross-link, 1× cta) |
+| Stoff- & techn. Daten | stoff-technische-daten | 4 (1× fabric-cards, 1× comparison-table, 1× highlight-cards, 1× cta) |
+
+#### Seed vs. Admin
+
+- **Seed** (`prisma/seed.ts`) ist Initialbefuellung — erstellt Basis-Sections nur wenn noch keine vorhanden
+- **Admin** (`/admin/pages/[id]`) ist danach die fuehrende Pflegeoberflaeche
+- Seed ueberschreibt nie manuell bearbeitete Sections
+- Kein freier PageBuilder — nur kontrollierter feldbasierter Editor fuer feste Section-Styles
+
 ### Spaeter
-10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
 15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)
 16. **Medien-Browser** — Modale Bildauswahl statt manueller ID-Eingabe
@@ -595,7 +638,7 @@ app/
     users/                  # Benutzer-Verwaltung
   api/admin/                # Alle Admin-API-Routen
 components/service/         # 7 Service-Section-Renderer (Phase 2D-C)
-components/admin/           # 13 Client-Formular-Komponenten
+components/admin/           # 15 Client-Formular-Komponenten (inkl. PageSectionsEditor, PageSectionEditForm)
 lib/
   auth/session.ts           # JWT + bcrypt Auth-Logik
   cms/                      # CMS-Helper (server-only, aktiv in Phase 2A)
