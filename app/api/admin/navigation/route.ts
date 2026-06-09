@@ -48,11 +48,22 @@ export async function POST(request: NextRequest) {
           location,
           items: {
             create: (items ?? []).map(
-              (item: { label: string; href: string; order: number; openInNewTab: boolean }) => ({
+              (item: {
+                label: string;
+                linkType?: string;
+                href: string;
+                linkedPageId?: string;
+                order: number;
+                openInNewTab: boolean;
+                isActive?: boolean;
+              }) => ({
                 label: item.label,
-                href: item.href,
+                linkType: item.linkType || "CUSTOM_URL",
+                href: item.href || null,
+                linkedPageId: item.linkedPageId || null,
                 order: item.order,
                 target: item.openInNewTab ? "_blank" : "_self",
+                isActive: item.isActive ?? true,
               }),
             ),
           },

@@ -2,6 +2,7 @@ import "server-only";
 import { getSiteSettings } from "./settings";
 import { getHeaderNavigation, getFooterNavigation } from "./navigation";
 import { getFooterSettings } from "./footer";
+import { resolveNavigationLink } from "./link-resolver";
 import type { HeaderNavItem } from "@/components/Header";
 import type { FooterNavColumn, FooterProps } from "@/components/Footer";
 
@@ -32,11 +33,12 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
 
   const headerItems: HeaderNavItem[] = headerNav?.items
     ? headerNav.items
-        .filter((item) => item.href)
-        .map((item) => ({
-          label: item.label,
-          href: item.href!,
-          target: item.target,
+        .map((item) => resolveNavigationLink(item))
+        .filter((link) => link.href && link.status !== "missing_page")
+        .map((link) => ({
+          label: link.label,
+          href: link.href!,
+          target: link.target,
         }))
     : [];
 
@@ -47,26 +49,26 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
 
   if (footerMenus && footerMenus.length > 0) {
     for (const menu of footerMenus) {
+      const resolved = menu.items
+        .map((item) => resolveNavigationLink(item))
+        .filter((link) => link.href && link.status !== "missing_page");
+
       if (menu.location === "LEGAL") {
-        for (const item of menu.items) {
-          if (item.href) {
-            legalLinks.push({
-              label: item.label,
-              href: item.href,
-              target: item.target !== "_self" ? item.target : undefined,
-            });
-          }
+        for (const link of resolved) {
+          legalLinks.push({
+            label: link.label,
+            href: link.href!,
+            target: link.target,
+          });
         }
       } else {
         footerColumns.push({
           title: menu.name,
-          links: menu.items
-            .filter((item) => item.href)
-            .map((item) => ({
-              label: item.label,
-              href: item.href!,
-              target: item.target !== "_self" ? item.target : undefined,
-            })),
+          links: resolved.map((link) => ({
+            label: link.label,
+            href: link.href!,
+            target: link.target,
+          })),
         });
       }
     }

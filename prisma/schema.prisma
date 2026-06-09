@@ -158,6 +158,7 @@ model NavigationItem {
   id           String   @id @default(cuid())
   menuId       String
   label        String
+  linkType     String   @default("CUSTOM_URL")
   href         String?
   target       String   @default("_self")
   order        Int

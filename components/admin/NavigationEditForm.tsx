@@ -3,13 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { LINK_TYPES, SYSTEM_ROUTES, type LinkType } from "@/lib/cms/nav-constants";
+
+interface PageOption {
+  id: string;
+  slug: string;
+  title: string;
+  status: string;
+}
 
 interface NavigationItemData {
   id?: string;
   label: string;
+  linkType: LinkType;
   href: string;
+  linkedPageId: string;
   order: number;
   openInNewTab: boolean;
+  isActive: boolean;
+  pageStatus?: string | null;
 }
 
 interface MenuData {
@@ -28,7 +40,45 @@ const locationLabels: Record<string, string> = {
   LEGAL: "Rechtliches",
 };
 
-export default function NavigationEditForm({ menu }: { menu: MenuData }) {
+function getStatusBadge(item: NavigationItemData, pages: PageOption[]) {
+  if (item.linkType === "PAGE") {
+    if (!item.linkedPageId) {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Keine Seite</span>;
+    }
+    const page = pages.find((p) => p.id === item.linkedPageId);
+    if (!page) {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Seite fehlt</span>;
+    }
+    if (page.status === "DRAFT") {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-yellow-100 text-yellow-800">Entwurf</span>;
+    }
+    if (page.status === "ARCHIVED") {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600">Archiviert</span>;
+    }
+    return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">OK</span>;
+  }
+  if (item.linkType === "SYSTEM_ROUTE") {
+    const valid = SYSTEM_ROUTES.some((r) => r.path === item.href);
+    return valid
+      ? <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">OK</span>
+      : <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Ungültig</span>;
+  }
+  if (item.linkType === "CUSTOM_URL") {
+    if (!item.href) {
+      return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-800">Kein Link</span>;
+    }
+    return <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-800">OK</span>;
+  }
+  return null;
+}
+
+export default function NavigationEditForm({
+  menu,
+  pages = [],
+}: {
+  menu: MenuData;
+  pages?: PageOption[];
+}) {
   const router = useRouter();
   const [form, setForm] = useState<MenuData>(menu);
   const [saving, setSaving] = useState(false);
@@ -42,6 +92,16 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
     setForm((prev) => {
       const items = [...prev.items];
       items[index] = { ...items[index], [field]: value };
+      if (field === "linkType") {
+        items[index].href = "";
+        items[index].linkedPageId = "";
+      }
+      if (field === "linkedPageId" && value) {
+        const page = pages.find((p) => p.id === value);
+        if (page) {
+          items[index].pageStatus = page.status;
+        }
+      }
       return { ...prev, items };
     });
   }
@@ -53,9 +113,12 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
         ...prev.items,
         {
           label: "",
+          linkType: "CUSTOM_URL" as LinkType,
           href: "",
+          linkedPageId: "",
           order: prev.items.length > 0 ? Math.max(...prev.items.map((i) => i.order)) + 1 : 0,
           openInNewTab: false,
+          isActive: true,
         },
       ],
     }));
@@ -153,19 +216,19 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Eintr&auml;ge</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Einträge</h2>
           <button
             type="button"
             onClick={addItem}
             className="inline-flex items-center px-3 py-1.5 bg-orange-600 text-white text-sm font-medium rounded-lg hover:bg-orange-700 transition-colors"
           >
-            Element hinzuf&uuml;gen
+            Element hinzufügen
           </button>
         </div>
 
         {form.items.length === 0 && (
           <p className="text-sm text-gray-400 text-center py-6">
-            Keine Eintr&auml;ge vorhanden. Klicken Sie auf &quot;Element hinzuf&uuml;gen&quot; um einen neuen Eintrag zu erstellen.
+            Keine Einträge vorhanden. Klicken Sie auf &quot;Element hinzufügen&quot; um einen neuen Eintrag zu erstellen.
           </p>
         )}
 
@@ -173,10 +236,38 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
           {form.items.map((item, index) => (
             <div
               key={index}
-              className="border border-gray-200 rounded-lg p-4 space-y-3"
+              className={`border rounded-lg p-4 space-y-3 ${item.isActive ? "border-gray-200" : "border-gray-200 bg-gray-50 opacity-60"}`}
             >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400 font-mono">#{item.order}</span>
+                  {getStatusBadge(item, pages)}
+                  {!item.isActive && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-500">Inaktiv</span>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-1.5 text-xs text-gray-500">
+                    <input
+                      type="checkbox"
+                      checked={item.isActive}
+                      onChange={(e) => updateItem(index, "isActive", e.target.checked)}
+                      className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    />
+                    Aktiv
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(index)}
+                    className="text-xs text-red-600 hover:text-red-800 transition-colors"
+                  >
+                    Entfernen
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-                <div className="md:col-span-4">
+                <div className="md:col-span-3">
                   <label className="block text-sm font-medium text-gray-700 mb-1">Label</label>
                   <input
                     type="text"
@@ -185,17 +276,71 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
-                <div className="md:col-span-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Link (href)</label>
-                  <input
-                    type="text"
-                    value={item.href}
-                    onChange={(e) => updateItem(index, "href", e.target.value)}
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  />
-                </div>
+
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Reihenfolge</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Linktyp</label>
+                  <select
+                    value={item.linkType}
+                    onChange={(e) => updateItem(index, "linkType", e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  >
+                    {LINK_TYPES.map((t) => (
+                      <option key={t.value} value={t.value}>
+                        {t.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="md:col-span-4">
+                  {item.linkType === "PAGE" ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">CMS-Seite</label>
+                      <select
+                        value={item.linkedPageId}
+                        onChange={(e) => updateItem(index, "linkedPageId", e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      >
+                        <option value="">-- Seite wählen --</option>
+                        {pages.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.title} ({p.slug}) {p.status !== "PUBLISHED" ? `[${p.status}]` : ""}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : item.linkType === "SYSTEM_ROUTE" ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Route</label>
+                      <select
+                        value={item.href}
+                        onChange={(e) => updateItem(index, "href", e.target.value)}
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      >
+                        <option value="">-- Route wählen --</option>
+                        {SYSTEM_ROUTES.map((r) => (
+                          <option key={r.path} value={r.path}>
+                            {r.label} ({r.path})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">URL</label>
+                      <input
+                        type="text"
+                        value={item.href}
+                        onChange={(e) => updateItem(index, "href", e.target.value)}
+                        placeholder="/seite oder https://..."
+                        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Nr.</label>
                   <input
                     type="number"
                     value={item.order}
@@ -203,8 +348,9 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
                 </div>
-                <div className="md:col-span-2 flex items-end gap-3">
-                  <label className="flex items-center gap-2 text-sm text-gray-700 pb-2">
+
+                <div className="md:col-span-2 flex items-end pb-1">
+                  <label className="flex items-center gap-2 text-sm text-gray-700">
                     <input
                       type="checkbox"
                       checked={item.openInNewTab}
@@ -214,15 +360,6 @@ export default function NavigationEditForm({ menu }: { menu: MenuData }) {
                     Neues Tab
                   </label>
                 </div>
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => removeItem(index)}
-                  className="text-sm text-red-600 hover:text-red-800 transition-colors"
-                >
-                  Entfernen
-                </button>
               </div>
             </div>
           ))}
