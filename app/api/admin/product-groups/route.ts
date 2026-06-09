@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { canDeleteProductGroup } from "@/lib/admin/delete-guards";
+import { revalidateProductGroup } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.productGroup.update({ where: { id }, data: fields })
       : await prisma.productGroup.create({ data: fields });
 
+    revalidateProductGroup(productGroup.slug);
     return NextResponse.json(productGroup);
   } catch (error) {
     console.error("ProductGroup upsert error:", error);
@@ -75,6 +77,7 @@ export async function PATCH(request: NextRequest) {
       data: { isActive: Boolean(isActive) },
     });
 
+    revalidateProductGroup(productGroup.slug);
     return NextResponse.json(productGroup);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -96,7 +99,12 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: guard.reason }, { status: 409 });
     }
 
+    const pg = await prisma.productGroup.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
     await prisma.productGroup.delete({ where: { id } });
+    revalidateProductGroup(pg?.slug);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen der Produktgruppe" }, { status: 500 });

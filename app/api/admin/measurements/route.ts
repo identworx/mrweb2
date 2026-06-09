@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateMeasurements } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -81,6 +82,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    revalidateMeasurements();
     return NextResponse.json(measurement);
   } catch (error) {
     console.error("Measurement upsert error:", error);
@@ -109,6 +111,7 @@ export async function PATCH(request: NextRequest) {
       data: { isActive: Boolean(isActive) },
     });
 
+    revalidateMeasurements();
     return NextResponse.json(measurement);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -126,6 +129,7 @@ export async function DELETE(request: NextRequest) {
     if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
 
     await prisma.measurement.delete({ where: { id } });
+    revalidateMeasurements();
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen des Produktmaßes" }, { status: 500 });

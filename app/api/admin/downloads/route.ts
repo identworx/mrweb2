@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateDownloads } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    revalidateDownloads();
     return NextResponse.json(download);
   } catch (error) {
     console.error("Download upsert error:", error);
@@ -84,6 +86,7 @@ export async function PATCH(request: NextRequest) {
       data: { isActive: Boolean(isActive) },
     });
 
+    revalidateDownloads();
     return NextResponse.json(download);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -101,6 +104,7 @@ export async function DELETE(request: NextRequest) {
     if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
 
     await prisma.download.delete({ where: { id } });
+    revalidateDownloads();
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen des Downloads" }, { status: 500 });

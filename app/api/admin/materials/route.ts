@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { canDeleteMaterial } from "@/lib/admin/delete-guards";
+import { revalidateMaterials } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    revalidateMaterials();
     return NextResponse.json(material);
   } catch (error) {
     console.error("Material upsert error:", error);
@@ -84,6 +86,7 @@ export async function PATCH(request: NextRequest) {
       data: { isActive: Boolean(isActive) },
     });
 
+    revalidateMaterials();
     return NextResponse.json(material);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -106,6 +109,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     await prisma.material.delete({ where: { id } });
+    revalidateMaterials();
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen des Materials" }, { status: 500 });

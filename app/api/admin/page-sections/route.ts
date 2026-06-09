@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { sanitizeRichText } from "@/lib/server/sanitize-rich-text";
+import { revalidatePageSection } from "@/lib/server/revalidate-cms";
 
 export async function GET(request: NextRequest) {
   const user = await getSessionUser();
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidatePageSection(page.slug);
     return NextResponse.json(section);
   } catch (error) {
     console.error("PageSection create error:", error);
@@ -153,8 +155,10 @@ export async function PATCH(request: NextRequest) {
     const section = await prisma.pageSection.update({
       where: { id },
       data,
+      include: { page: { select: { slug: true } } },
     });
 
+    revalidatePageSection(section.page.slug);
     return NextResponse.json(section);
   } catch {
     return NextResponse.json(
@@ -178,7 +182,12 @@ export async function DELETE(request: NextRequest) {
     if (!id)
       return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
 
+    const section = await prisma.pageSection.findUnique({
+      where: { id },
+      select: { page: { select: { slug: true } } },
+    });
     await prisma.pageSection.delete({ where: { id } });
+    if (section) revalidatePageSection(section.page.slug);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidatePage } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.page.update({ where: { id }, data: fields })
       : await prisma.page.create({ data: fields });
 
+    revalidatePage(page.slug);
     return NextResponse.json(page);
   } catch (error) {
     console.error("Page upsert error:", error);
@@ -76,6 +78,7 @@ export async function PATCH(request: NextRequest) {
       data: { status },
     });
 
+    revalidatePage(page.slug);
     return NextResponse.json(page);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -92,7 +95,12 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
 
+    const page = await prisma.page.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
     await prisma.page.delete({ where: { id } });
+    if (page) revalidatePage(page.slug);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen der Seite" }, { status: 500 });

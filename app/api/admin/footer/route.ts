@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, Prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateFooter } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -44,6 +45,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateFooter();
     return NextResponse.json(settings);
   } catch (error) {
     console.error("Footer settings update error:", error);

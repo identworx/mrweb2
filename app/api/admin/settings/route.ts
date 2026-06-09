@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateSettings } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    revalidateSettings();
     return NextResponse.json(settings);
   } catch (error) {
     console.error("Settings upsert error:", error);

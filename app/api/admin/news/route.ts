@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { sanitizeRichText } from "@/lib/server/sanitize-rich-text";
+import { revalidateNews } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.newsArticle.update({ where: { id }, data: fields })
       : await prisma.newsArticle.create({ data: fields });
 
+    revalidateNews(article.slug);
     return NextResponse.json(article);
   } catch (error) {
     console.error("NewsArticle upsert error:", error);
@@ -82,6 +84,7 @@ export async function PATCH(request: NextRequest) {
       data: { status },
     });
 
+    revalidateNews(article.slug);
     return NextResponse.json(article);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -98,7 +101,12 @@ export async function DELETE(request: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID fehlt" }, { status: 400 });
 
+    const article = await prisma.newsArticle.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
     await prisma.newsArticle.delete({ where: { id } });
+    revalidateNews(article?.slug);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen des Artikels" }, { status: 500 });

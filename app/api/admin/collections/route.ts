@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { canDeleteCollection } from "@/lib/admin/delete-guards";
+import { revalidateCollection } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
       ? await prisma.collection.update({ where: { id }, data: fields })
       : await prisma.collection.create({ data: fields });
 
+    revalidateCollection(collection.slug);
     return NextResponse.json(collection);
   } catch (error) {
     console.error("Collection upsert error:", error);
@@ -86,6 +88,7 @@ export async function PATCH(request: NextRequest) {
       data: { status },
     });
 
+    revalidateCollection(collection.slug);
     return NextResponse.json(collection);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
@@ -107,7 +110,12 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: guard.reason }, { status: 409 });
     }
 
+    const collection = await prisma.collection.findUnique({
+      where: { id },
+      select: { slug: true },
+    });
     await prisma.collection.delete({ where: { id } });
+    revalidateCollection(collection?.slug);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen der Kollektion" }, { status: 500 });

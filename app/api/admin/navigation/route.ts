@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateNavigation } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
       });
     });
 
+    revalidateNavigation();
     return NextResponse.json(menu);
   } catch (error) {
     console.error("Navigation update error:", error);
@@ -88,6 +90,7 @@ export async function DELETE(request: NextRequest) {
       await tx.navigationItem.delete({ where: { id } });
     });
 
+    revalidateNavigation();
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Fehler beim Löschen des Navigationspunkts" }, { status: 500 });

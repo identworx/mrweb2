@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Phase 2F-B: Media Browser) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Phase 2H: ISR Revalidation) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -350,9 +350,39 @@ Unerlaubte Tags werden entfernt. Links erhalten automatisch `rel="noopener noref
 
 Das oeffentliche Frontend liest Daten aus der CMS-Datenbank. Alle 15 oeffentlichen Seiten sind angebunden (Phase 2A), Kollektionen sind vollstaendig datenbankfaehig (Phase 2B). Wenn die DB leer ist oder CMS-Felder fehlen, greifen automatisch die statischen Fallback-Daten.
 
-### Revalidierung (ISR)
+### Revalidierung (ISR + On-Demand)
 
-Alle oeffentlichen Seiten nutzen `export const revalidate = 60` (Incremental Static Regeneration). Aenderungen im Admin sind nach maximal 60 Sekunden auf der oeffentlichen Website sichtbar.
+Alle oeffentlichen Seiten nutzen `export const revalidate = 60` als Fallback (Incremental Static Regeneration). Zusaetzlich loesen alle Admin-API-Routen nach erfolgreichen Aenderungen `revalidatePath()` aus, um die betroffenen oeffentlichen Seiten sofort zu invalidieren.
+
+**Vor Phase 2H:** Aenderungen im Admin waren erst nach bis zu 60 Sekunden sichtbar, weil Next.js ISR die Seiten fuer 60 Sekunden cached und keine On-Demand-Invalidierung stattfand.
+
+**Ab Phase 2H:** Aenderungen im Admin sind sofort sichtbar, da jede Admin-API-Route nach dem Speichern gezielt die betroffenen Public-Pfade invalidiert. Die 60-Sekunden-Revalidierung bleibt als Sicherheitsnetz erhalten.
+
+#### Revalidation-Zuordnung
+
+| Admin-Aktion | Invalidierte Public-Pfade |
+|---|---|
+| Seite speichern/Status | Zugehoerige oeffentliche Seite (z.B. `/kontakt`, `/kataloge`) |
+| PageSection speichern | Seite der Section (z.B. `/kataloge/pflege-garantie`) |
+| Kollektion speichern/Status | `/`, `/kollektionen`, `/kollektionen/[slug]` |
+| Produkt speichern/Status | `/produkte/[slug]`, `/kollektionen/[slug]`, `/produktkategorien/[slug]` |
+| Produktgruppe speichern | `/produktkategorien`, `/produktkategorien/[slug]` |
+| Material speichern | `/materialien` |
+| Download speichern | `/kataloge` |
+| Measurement speichern | `/kataloge/produktmasse` |
+| News speichern/Status | `/neuigkeiten`, `/neuigkeiten/[slug]` |
+| Kontaktformular speichern | `/kontakt` |
+| Navigation speichern | Alle Seiten (Layout-Revalidierung) |
+| Footer speichern | Alle Seiten (Layout-Revalidierung) |
+| Einstellungen speichern | Alle Seiten (Layout-Revalidierung) |
+
+#### Technische Details
+
+- Utility: `lib/server/revalidate-cms.ts` (server-only)
+- Verwendet `revalidatePath()` aus `next/cache`
+- Navigation/Footer/Settings invalidieren das Root-Layout (`revalidatePath("/", "layout")`) — alle Seiten werden neu gerendert
+- Robuste Fehlerbehandlung: Revalidation-Fehler werden geloggt, crashen aber nicht die API-Response
+- `revalidate = 60` bleibt als Sicherheitsnetz bestehen
 
 ### CMS-Helper (`lib/cms/`)
 
@@ -606,7 +636,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 2. Name, Slug, Code, Zuordnung (Kollektion, Produktgruppe, Material)
 3. Optional: Hauptbild und Hero-Bild aus Medien waehlen
 4. Status auf PUBLISHED setzen
-5. Produkt erscheint nach max. 60 Sekunden auf der Website
+5. Produkt erscheint sofort auf der Website (On-Demand Revalidierung)
 
 ### Delete/Archive — erledigt
 - [x] Delete-Funktion fuer alle Entitaeten (Seiten, Kollektionen, Produkte, Medien, etc.)

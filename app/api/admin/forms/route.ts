@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
+import { revalidateContactForm } from "@/lib/server/revalidate-cms";
 
 export async function GET() {
   const user = await getSessionUser();
@@ -91,6 +92,7 @@ export async function POST(request: NextRequest) {
       });
     });
 
+    revalidateContactForm();
     return NextResponse.json(form);
   } catch (error) {
     console.error("Form upsert error:", error);
