@@ -1,3 +1,4 @@
+import Link from "next/link";
 import MediaBrowser from "@/components/admin/media/MediaBrowser";
 import { getSessionUser } from "@/lib/auth/session";
 
@@ -9,9 +10,9 @@ export default async function MediaListPage() {
     <div className="space-y-4">
       <div>
         <p className="text-sm text-gray-500">
-          <a href="/admin" className="hover:text-orange-600 transition-colors">
+          <Link href="/admin" className="hover:text-orange-600 transition-colors">
             Dashboard
-          </a>
+          </Link>
           {" > "}
           Medien
         </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MediaPickerField from "./MediaPickerField";
 
@@ -173,12 +174,12 @@ export default function SettingsForm({ settings }: { settings: SettingsData }) {
         >
           {saving ? "Speichert..." : "Speichern"}
         </button>
-        <a
+        <Link
           href="/admin"
           className="inline-flex items-center px-5 py-2.5 bg-white text-gray-700 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
         >
           Abbrechen
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import SettingsForm from "@/components/admin/SettingsForm";
 
@@ -11,9 +12,9 @@ export default async function SettingsPage() {
     <div className="space-y-6">
       <div>
         <p className="text-sm text-gray-500">
-          <a href="/admin" className="hover:text-orange-600 transition-colors">
+          <Link href="/admin" className="hover:text-orange-600 transition-colors">
             Dashboard
-          </a>
+          </Link>
           {" > "}
           Einstellungen
         </p>

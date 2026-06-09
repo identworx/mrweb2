@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import ContactFormEditor from "@/components/admin/ContactFormEditor";
 
@@ -11,9 +12,9 @@ export default async function ContactFormPage() {
     <div className="space-y-6">
       <div>
         <p className="text-sm text-gray-500">
-          <a href="/admin" className="hover:text-orange-600 transition-colors">
+          <Link href="/admin" className="hover:text-orange-600 transition-colors">
             Dashboard
-          </a>
+          </Link>
           {" > "}
           <span className="text-gray-400">Formulare</span>
           {" > "}
