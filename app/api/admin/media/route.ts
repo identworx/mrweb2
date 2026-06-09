@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { getMediaAssetUsage } from "@/lib/admin/delete-guards";
+import { revalidateAllPublicPages } from "@/lib/server/revalidate-cms";
 import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 
@@ -252,6 +253,7 @@ export async function PATCH(request: NextRequest) {
     if ("folder" in body) data.folder = sanitizeString(body.folder, MAX_FOLDER_LENGTH);
 
     const asset = await prisma.mediaAsset.update({ where: { id }, data });
+    revalidateAllPublicPages();
     return NextResponse.json(asset);
   } catch {
     return NextResponse.json({ error: "Fehler beim Aktualisieren des Mediums" }, { status: 500 });
