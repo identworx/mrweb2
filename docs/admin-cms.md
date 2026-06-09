@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-08 (Phase 2D-A: Kontaktformular Frontend-Anbindung) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Phase 2D-B: Downloads/Measurements/News Frontend) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -92,6 +92,9 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 209 Produkte (vollstaendiger Import aus statischen Daten)
 - 1 Footer-Settings
 - 1 Kontaktformular mit 7 Feldern (Name, Unternehmen, E-Mail, Telefon, Betreff, Nachricht, Datenschutz)
+- 2 Downloads (Katalog 2027 Deutsch + English)
+- 12 Measurements (Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets)
+- 4 News-Artikel (Kollektionen 2027, Mackintosh, NERIO Oceana, Pflegehinweise)
 
 ## 5. Admin-Authentifizierung
 
@@ -510,10 +513,19 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 - [x] Seed aktualisiert: 7 Felder (Name, Unternehmen, E-Mail, Telefon, Betreff, Nachricht, Datenschutz)
 - [x] SMTP-Konfiguration in .env.example dokumentiert
 
-### Offen — Phase 2D-B (Weitere Frontend-Anbindungen)
-1. **Downloads Frontend** — Oeffentliche Download-Seite aus DB statt statisch
-2. **Measurements Frontend** — Oeffentliche Produktmass-Seite aus DB statt statisch
-3. **News Frontend** — Oeffentliche News-Seite aus DB statt statisch
+### Erledigt — Phase 2D-B (Downloads, Measurements, News Frontend)
+- [x] `/kataloge` laedt Katalog-Downloads aus DB (type=catalog, language=de/en)
+- [x] `/kataloge/produktmasse` laedt Produktmasse aus DB (Measurement Modell)
+- [x] `/neuigkeiten` laedt News-Artikel aus DB (nur PUBLISHED)
+- [x] `/neuigkeiten/[slug]` laedt News-Detail aus DB mit SEO-Metadaten
+- [x] CMS-Helper: `lib/cms/downloads.ts`, `lib/cms/measurements.ts`, `lib/cms/news.ts`
+- [x] Fallback-Strategie: DB leer oder Fehler → statische Daten als Fallback
+- [x] Statuslogik: isActive=false (Downloads/Measurements) bzw. DRAFT/ARCHIVED (News) → nicht oeffentlich
+- [x] DRAFT/ARCHIVED News-Detailseiten liefern 404
+- [x] Seed: 2 Katalog-Downloads, 12 Measurements, 4 News-Artikel
+- [x] Service-Karten (Produktmasse, Pflege, Stoff-Daten) bleiben als statische Links erhalten
+- [x] generateStaticParams fuer News aus DB
+- [x] ISR mit revalidate=60 auf allen oeffentlichen Seiten
 
 ### Spaeter
 10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten

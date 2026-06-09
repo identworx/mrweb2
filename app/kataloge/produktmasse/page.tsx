@@ -4,10 +4,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PageHero from "@/components/sections/PageHero";
-import {
-  measurements,
-  measurementGroups,
-} from "@/lib/mosaroma/measurements";
 import MeasurementCard from "@/components/measurements/MeasurementCard";
 import BenchMeasurement from "@/components/measurements/BenchMeasurement";
 import MeasurementNav from "@/components/measurements/MeasurementNav";
@@ -15,6 +11,7 @@ import MaterialQualityBox from "@/components/measurements/MaterialQualityBox";
 import CustomSizeCta from "@/components/measurements/CustomSizeCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getPublicMeasurements, measurementGroups } from "@/lib/cms/measurements";
 
 export const revalidate = 60;
 
@@ -29,20 +26,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProduktmassePage() {
-  const kissenItems = measurements.filter(
-    (m) => m.group === "kissen-auflagen",
-  );
-  const lehnerItems = measurements.filter((m) => m.group === "lehner");
-  const bankauflagenItem = measurements.find(
-    (m) => m.group === "bankauflagen",
-  );
-  const poufItems = measurements.filter((m) => m.group === "poufs");
-  const tischItems = measurements.filter((m) => m.group === "tischsets");
-
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, allMeasurements] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("produktmasse", "produktmasse"),
+    getPublicMeasurements(),
   ]);
+
+  const kissenItems = allMeasurements.filter((m) => m.group === "kissen-auflagen");
+  const lehnerItems = allMeasurements.filter((m) => m.group === "lehner");
+  const bankauflagenItem = allMeasurements.find((m) => m.group === "bankauflagen");
+  const poufItems = allMeasurements.filter((m) => m.group === "poufs");
+  const tischItems = allMeasurements.filter((m) => m.group === "tischsets");
 
   return (
     <>

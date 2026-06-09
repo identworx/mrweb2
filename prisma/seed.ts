@@ -3,6 +3,8 @@ import { PrismaClient } from "../lib/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { hash } from "bcryptjs";
 import { products as staticProducts } from "../lib/mosaroma/products";
+import { measurements as staticMeasurements } from "../lib/mosaroma/measurements";
+import { newsItems as staticNews } from "../lib/mosaroma/news";
 
 const raw = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
 const adapter = new PrismaBetterSqlite3({ url: raw });
@@ -541,6 +543,101 @@ async function main() {
     data: contactFormFields.map((f) => ({ ...f, formId: contactForm.id })),
   });
   console.log(`✔ ContactForm: ${contactForm.slug}`);
+
+  // ---------------------------------------------------------------------------
+  // 10. Downloads
+  // ---------------------------------------------------------------------------
+  const downloadSeeds = [
+    {
+      title: "Mosaroma Katalog 2027 Deutsch",
+      description: "Vollständiger Produktkatalog mit allen Kollektionen, Maßen und Stoffqualitäten der Saison 2027.",
+      type: "catalog",
+      language: "de",
+      externalUrl: "https://katalog.mosaroma.de/",
+      buttonLabel: "Deutsch ansehen",
+      opensInNewTab: true,
+      order: 1,
+    },
+    {
+      title: "Mosaroma Catalog 2027 English",
+      description: "Complete product catalog with all collections, dimensions and fabric qualities for the 2027 season.",
+      type: "catalog",
+      language: "en",
+      externalUrl: "https://catalog.mosaroma.de/",
+      buttonLabel: "English ansehen",
+      opensInNewTab: true,
+      order: 2,
+    },
+  ];
+
+  for (const dl of downloadSeeds) {
+    const existing = await prisma.download.findFirst({ where: { type: dl.type, language: dl.language } });
+    if (!existing) {
+      await prisma.download.create({ data: dl });
+    } else {
+      await prisma.download.update({
+        where: { id: existing.id },
+        data: { title: dl.title, description: dl.description, externalUrl: dl.externalUrl, buttonLabel: dl.buttonLabel, opensInNewTab: dl.opensInNewTab, order: dl.order },
+      });
+    }
+  }
+  console.log(`✔ Downloads: ${downloadSeeds.length} seeded`);
+
+  // ---------------------------------------------------------------------------
+  // 11. Measurements
+  // ---------------------------------------------------------------------------
+  for (let i = 0; i < staticMeasurements.length; i++) {
+    const m = staticMeasurements[i];
+    const variants = JSON.parse(JSON.stringify(m.variants));
+    const notes = m.notes ? JSON.parse(JSON.stringify(m.notes)) : [];
+    await prisma.measurement.upsert({
+      where: { slug: m.slug },
+      update: {
+        title: m.title,
+        groupSlug: m.group,
+        drawingType: m.drawingType,
+        variants,
+        notes,
+        sourceNote: m.sourceNote || null,
+      },
+      create: {
+        slug: m.slug,
+        title: m.title,
+        groupSlug: m.group,
+        drawingType: m.drawingType,
+        variants,
+        notes,
+        sourceNote: m.sourceNote || null,
+        order: i,
+      },
+    });
+  }
+  console.log(`✔ Measurements: ${staticMeasurements.length} seeded`);
+
+  // ---------------------------------------------------------------------------
+  // 12. News Articles
+  // ---------------------------------------------------------------------------
+  for (const n of staticNews) {
+    await prisma.newsArticle.upsert({
+      where: { slug: n.slug },
+      update: {
+        title: n.title,
+        category: n.tag,
+        excerpt: n.description,
+      },
+      create: {
+        slug: n.slug,
+        title: n.title,
+        eyebrow: n.tag,
+        excerpt: n.description,
+        content: "",
+        category: n.tag,
+        status: "PUBLISHED",
+        publishedAt: new Date("2027-01-01"),
+      },
+    });
+  }
+  console.log(`✔ NewsArticles: ${staticNews.length} seeded`);
 
   console.log("\n🌱 Seed completed successfully.");
 }

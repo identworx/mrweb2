@@ -3,9 +3,11 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
-import { catalogLinks, servicePages } from "@/lib/mosaroma/servicePages";
+import { servicePages, catalogLinks } from "@/lib/mosaroma/servicePages";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getPublicDownloadsByType } from "@/lib/cms/downloads";
+import type { FrontendDownload } from "@/lib/cms/downloads";
 
 export const revalidate = 60;
 
@@ -44,11 +46,40 @@ function ServiceIcon({ icon }: { icon: string }) {
   );
 }
 
+function ExternalLinkIcon() {
+  return (
+    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+      <path d="M7 17L17 7M17 7H7M17 7v10" />
+    </svg>
+  );
+}
+
+function CatalogCard({ download, variant }: { download: FrontendDownload; variant: "primary" | "secondary" }) {
+  const href = download.externalUrl || download.fileUrl || "#";
+  const isExternal = download.opensInNewTab || href.startsWith("http");
+
+  return (
+    <a
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className={variant === "primary" ? "btn-primary" : "btn-outline-white"}
+    >
+      {download.buttonLabel}
+      {isExternal && <ExternalLinkIcon />}
+    </a>
+  );
+}
+
 export default async function KatalogePage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, catalogs] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kataloge", "kataloge"),
+    getPublicDownloadsByType("catalog"),
   ]);
+
+  const catalogDe = catalogs.find((d) => d.language === "de");
+  const catalogEn = catalogs.find((d) => d.language === "en");
 
   return (
     <>
@@ -97,45 +128,21 @@ export default async function KatalogePage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
-                  <a
-                    href={catalogLinks.de}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-primary"
-                  >
-                    Deutsch ansehen
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M7 17L17 7M17 7H7M17 7v10" />
-                    </svg>
-                  </a>
-                  <a
-                    href={catalogLinks.en}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-outline-white"
-                  >
-                    English ansehen
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M7 17L17 7M17 7H7M17 7v10" />
-                    </svg>
-                  </a>
+                  {catalogDe ? (
+                    <CatalogCard download={catalogDe} variant="primary" />
+                  ) : (
+                    <a href={catalogLinks.de} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                      Deutsch ansehen <ExternalLinkIcon />
+                    </a>
+                  )}
+                  {catalogEn ? (
+                    <CatalogCard download={catalogEn} variant="secondary" />
+                  ) : (
+                    <a href={catalogLinks.en} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
+                      English ansehen <ExternalLinkIcon />
+                    </a>
+                  )}
                 </div>
-
-                {/* TODO: PDF-Download-Button ergänzen, sobald Download-Link verfügbar */}
 
                 <p className="font-body text-white/30 text-xs mt-6">
                   Öffnet in neuem Tab.

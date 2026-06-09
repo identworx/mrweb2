@@ -3,9 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import NewsCard from "@/components/NewsCard";
-import { newsItems } from "@/lib/mosaroma/news";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getPublishedNewsArticles } from "@/lib/cms/news";
 
 export const revalidate = 60;
 
@@ -20,16 +20,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NeuigkeitenPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, articles] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("neuigkeiten", "neuigkeiten"),
+    getPublishedNewsArticles(),
   ]);
 
   return (
     <>
       <Header {...layout.header} />
       <main>
-        {/* Hero */}
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}
@@ -38,11 +38,10 @@ export default async function NeuigkeitenPage() {
           alt={hero.alt}
         />
 
-        {/* News Grid */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {newsItems.map((item) => (
+              {articles.map((item) => (
                 <NewsCard
                   key={item.slug}
                   title={item.title}
@@ -50,7 +49,6 @@ export default async function NeuigkeitenPage() {
                   date={item.date}
                   description={item.description}
                   slug={item.slug}
-                  isPlaceholder={item.isPlaceholder}
                 />
               ))}
             </div>
