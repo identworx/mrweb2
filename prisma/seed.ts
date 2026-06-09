@@ -94,6 +94,228 @@ async function main() {
   console.log(`✔ Pages: ${pages.length} seeded`);
 
   // ---------------------------------------------------------------------------
+  // 3b. PageSections for service pages
+  // ---------------------------------------------------------------------------
+  const pflegePage = await prisma.page.findUnique({ where: { slug: "pflege-garantie" } });
+  const stoffPage = await prisma.page.findUnique({ where: { slug: "stoff-technische-daten" } });
+
+  if (pflegePage) {
+    const existingSections = await prisma.pageSection.count({ where: { pageId: pflegePage.id } });
+    if (existingSections === 0) {
+      await prisma.pageSection.createMany({
+        data: [
+          {
+            pageId: pflegePage.id,
+            type: "CUSTOM",
+            eyebrow: "Reinigung",
+            title: "Reinigung",
+            order: 0,
+            settings: {
+              style: "care-list",
+              items: [
+                "Regelmäßig abbürsten oder absaugen, um Staub und Schmutz zu entfernen.",
+                "Bei Bedarf mit lauwarmem Wasser und milder Seifenlösung reinigen.",
+                "Mackintosh®-Stoffe sind bleichfest — bei Bedarf mit verdünnter Chlorbleiche behandelbar.",
+                "Nicht in der Waschmaschine waschen, sofern nicht ausdrücklich angegeben.",
+                "Nach der Reinigung an der Luft trocknen lassen.",
+              ],
+            },
+          },
+          {
+            pageId: pflegePage.id,
+            type: "CUSTOM",
+            eyebrow: "Lagerung",
+            title: "Lagerung",
+            order: 1,
+            settings: {
+              style: "care-list",
+              items: [
+                "Bei längerer Nichtnutzung trocken und geschützt lagern.",
+                "Auflagen und Kissen vor der Lagerung vollständig trocknen lassen.",
+                "Direkte Sonneneinstrahlung bei der Lagerung vermeiden.",
+                "Belüftete Aufbewahrung bevorzugen, um Schimmelbildung vorzubeugen.",
+              ],
+            },
+          },
+          {
+            pageId: pflegePage.id,
+            type: "CUSTOM",
+            eyebrow: "Garantie",
+            title: "Garantie",
+            order: 2,
+            settings: {
+              style: "care-list",
+              items: [
+                "3 Jahre begrenzte Garantie auf Bezugsstoffe.",
+                "Schutz vor Verlust von Festigkeit oder Farbe.",
+                "Schutz vor Pilling.",
+                "Schutz vor Abrieb durch normale Nutzung und Witterungseinflüsse.",
+              ],
+            },
+          },
+          {
+            pageId: pflegePage.id,
+            type: "CUSTOM",
+            eyebrow: "Hinweise",
+            title: "Hinweise für langlebige Nutzung",
+            order: 3,
+            settings: {
+              style: "care-list",
+              items: [
+                "Verschüttete Flüssigkeiten zeitnah entfernen.",
+                "Bei starkem Regen Polster nach Möglichkeit geschützt aufbewahren.",
+                "Olefin-Stoffe trocknen schnell und nehmen kaum Wasser auf.",
+                "Regelmäßige Pflege verlängert die Lebensdauer der Produkte.",
+              ],
+            },
+          },
+          {
+            pageId: pflegePage.id,
+            type: "CUSTOM",
+            title: "Mehr über unsere Materialien",
+            content: "Detaillierte Informationen zu den Stoffqualitäten und deren Pflegeeigenschaften finden Sie auf unserer Materialseite.",
+            buttonLabel: "Materialien entdecken",
+            buttonHref: "/materialien",
+            order: 4,
+            settings: { style: "cross-link" },
+          },
+          {
+            pageId: pflegePage.id,
+            type: "CTA",
+            title: "Fragen zu Pflege oder Garantie?",
+            content: "Wir beraten Sie gerne zu Reinigung, Lagerung und Garantiebedingungen.",
+            buttonLabel: "Kontakt aufnehmen",
+            buttonHref: "/kontakt",
+            order: 5,
+            settings: {
+              style: "cta",
+              secondaryHref: "/kataloge",
+              secondaryLabel: "Zurück zu Kataloge",
+            },
+          },
+        ],
+      });
+      console.log("✔ PageSections: pflege-garantie (6 sections)");
+    } else {
+      console.log(`✔ PageSections: pflege-garantie already has ${existingSections} sections, skipping`);
+    }
+  }
+
+  if (stoffPage) {
+    const existingSections = await prisma.pageSection.count({ where: { pageId: stoffPage.id } });
+    if (existingSections === 0) {
+      await prisma.pageSection.createMany({
+        data: [
+          {
+            pageId: stoffPage.id,
+            type: "CUSTOM",
+            eyebrow: "Stoffqualitäten",
+            title: "Material & Gewicht",
+            order: 0,
+            settings: {
+              style: "fabric-cards",
+              cards: [
+                {
+                  name: "Mackintosh®",
+                  material: "100 % Olefin",
+                  weight: "ab 260 g/m²",
+                  dyeing: "spinndüsengefärbt",
+                  comfort: "hoher Sitzkomfort",
+                  cushionThickness: "5–6 cm starke Auflagen",
+                },
+                {
+                  name: "Mackintosh® Lite",
+                  material: "100 % Olefin",
+                  weight: "ca. 170–300 g/m²",
+                  dyeing: "spinndüsengefärbt",
+                  comfort: "hoher Sitzkomfort",
+                  cushionThickness: "3,5–6 cm Auflagen",
+                  description: "etwas leichterer Stoff",
+                },
+                {
+                  name: "Nerio",
+                  subtitle: "OceanCycle rPP",
+                  material: "100 % Olefin (50 % recycelt)",
+                  weight: "ca. 250 g/m²",
+                  dyeing: "spinndüsengefärbt",
+                  comfort: "hoher Sitzkomfort",
+                  cushionThickness: "5–6 cm Auflagen",
+                },
+                {
+                  name: "Basic",
+                  material: "100 % Polyester",
+                  weight: "ca. 280 g/m²",
+                  dyeing: "stückgefärbt",
+                  comfort: "bequemer Sitzkomfort",
+                  description: "weiche Haptik",
+                },
+              ],
+            },
+          },
+          {
+            pageId: stoffPage.id,
+            type: "TECHNICAL_TABLE",
+            eyebrow: "Vergleich",
+            title: "Eigenschaften im Vergleich",
+            order: 1,
+            settings: {
+              style: "comparison-table",
+              columns: ["Olefin", "Acryl", "Polyester"],
+              rows: [
+                { property: "Lichtechtheit", olefin: "7–8", acryl: "6–7", polyester: "4–6" },
+                { property: "UV-Beständigkeit", olefin: "★★★★★", acryl: "★★★★", polyester: "★★★" },
+                { property: "Wasseraufnahme", olefin: "< 0,1 %", acryl: "1–2 %", polyester: "0,4 %" },
+                { property: "Bleichfest", olefin: "Ja", acryl: "Ja", polyester: "Nein" },
+                { property: "Schimmelfest", olefin: "Ja", acryl: "Ja", polyester: "Bedingt" },
+                { property: "Gewicht/m²", olefin: "Leicht", acryl: "Mittel", polyester: "Mittel" },
+                { property: "CO₂-Bilanz", olefin: "Niedrig", acryl: "Mittel", polyester: "Mittel" },
+              ],
+            },
+          },
+          {
+            pageId: stoffPage.id,
+            type: "CUSTOM",
+            eyebrow: "Highlights",
+            title: "Mackintosh® im Detail",
+            buttonLabel: "Alle Materialien entdecken",
+            buttonHref: "/materialien",
+            order: 2,
+            settings: {
+              style: "highlight-cards",
+              items: [
+                "Höchste Lichtechtheit (7–8)",
+                "UV-Beständigkeit 5/5",
+                "Wasseraufnahme < 0,1 %",
+                "Bleichfest",
+                "Schimmelfest",
+                "PFAS-frei",
+                "5 Jahre Garantie auf Stoff",
+              ],
+            },
+          },
+          {
+            pageId: stoffPage.id,
+            type: "CTA",
+            title: "Fragen zu Stoffen oder technischen Daten?",
+            content: "Wir beraten Sie gerne zu Materialien, Prüfwerten und Stoffqualitäten.",
+            buttonLabel: "Kontakt aufnehmen",
+            buttonHref: "/kontakt",
+            order: 3,
+            settings: {
+              style: "cta",
+              secondaryHref: "/kataloge",
+              secondaryLabel: "Zurück zu Kataloge",
+            },
+          },
+        ],
+      });
+      console.log("✔ PageSections: stoff-technische-daten (4 sections)");
+    } else {
+      console.log(`✔ PageSections: stoff-technische-daten already has ${existingSections} sections, skipping`);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // 4. Navigation menus
   // ---------------------------------------------------------------------------
 

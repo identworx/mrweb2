@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Measurements Image Cards Umbau) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-09 (Service Pages CMS-Anbindung) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -95,6 +95,8 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 2 Downloads (Katalog 2027 Deutsch + English)
 - 12 Measurements (Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets)
 - 4 News-Artikel (Kollektionen 2027, Mackintosh, NERIO Oceana, Pflegehinweise)
+- 6 PageSections fuer Pflege & Garantie (4 care-list, 1 cross-link, 1 cta)
+- 4 PageSections fuer Stoff- & technische Daten (1 fabric-cards, 1 comparison-table, 1 highlight-cards, 1 cta)
 
 ## 5. Admin-Authentifizierung
 
@@ -243,6 +245,7 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | `collections.ts`   | `getPublishedCollections()`, `getCollectionBySlug()`, `getCollectionStaticParams()`, `mapCollectionForFrontend()` | Aktiv (Phase 2B) |
 | `products.ts`      | `getPublishedProducts()`, `getProductBySlugWithStatus()`, `getProductsByCollectionSlug()`, `getProductsByProductGroupSlug()`, `getProductStaticParams()`, `mapProductForFrontend()` | Aktiv (Phase 2C) |
 | `product-groups.ts`| `getActiveProductGroups()`, `getProductGroupBySlugWithStatus()`, `getProductGroupStaticParams()`, `mapProductGroupForFrontend()` | Aktiv (Phase 2C) |
+| `service-pages.ts` | `getServicePageBySlug()`                                  | Aktiv (Phase 2D-C) |
 | `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht |
 
 ### Was aus der DB gelesen wird
@@ -284,6 +287,8 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | Produkt-SEO            | `Product.seoTitle/Description`   | Name-basierter Fallback               |
 | Produktgruppen-Liste   | `ProductGroup` (isActive, order) | `lib/mosaroma/categories.ts`          |
 | Produktgruppe-Detail   | `ProductGroup` (isActive, slug)  | `lib/mosaroma/categories.ts`          |
+| Pflege & Garantie      | `PageSection` (via Page pflege-garantie) | Statische Fallback-Inhalte im Page-File |
+| Stoff- & techn. Daten  | `PageSection` (via Page stoff-technische-daten) | `lib/mosaroma/materials.ts`       |
 
 ### Architektur-Muster
 
@@ -324,6 +329,8 @@ Server Page (async) → getPublicLayoutData() + getPageHeroData()
 | Produkt-SEO                   | Produkte → Produkt waehlen → SEO Titel / Beschreibung |
 | Produktgruppe bearbeiten      | Produktgruppen → Gruppe waehlen → Name, Beschreibung, Bild |
 | Produktgruppe (de)aktivieren  | Produktgruppen → Gruppe waehlen → Aktiv-Checkbox |
+| Pflege & Garantie Sichtbarkeit | Seiten → pflege-garantie → Status (PUBLISHED/DRAFT/ARCHIVED) |
+| Stoff- & techn. Daten Sichtbarkeit | Seiten → stoff-technische-daten → Status (PUBLISHED/DRAFT/ARCHIVED) |
 
 ### Persistenz in Produktion (TODO)
 
@@ -527,6 +534,17 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 - [x] generateStaticParams fuer News aus DB
 - [x] ISR mit revalidate=60 auf allen oeffentlichen Seiten
 
+### Phase 2D-C — erledigt
+- [x] CMS-Helper `service-pages.ts` — `getServicePageBySlug()` mit Discriminated-Union-Ergebnis (published/not-public/not-found/error)
+- [x] `/kataloge/pflege-garantie` laedt Sektionen aus DB via ServiceSectionRenderer
+- [x] `/kataloge/stoff-technische-daten` laedt Sektionen aus DB via ServiceSectionRenderer
+- [x] 6 Section-Renderer-Komponenten: CareListSection, FabricCardsSection, ComparisonTableSection, HighlightCardsSection, CrossLinkSection, ServiceCtaSection
+- [x] ServiceSectionRenderer dispatcht nach `settings.style` (care-list, fabric-cards, comparison-table, highlight-cards, cross-link, cta)
+- [x] Statische Fallbacks: DB leer oder Fehler → bestehende statische Inhalte angezeigt
+- [x] Statuslogik: DRAFT/ARCHIVED → notFound(), kein Fallback
+- [x] Seed: 6 PageSections fuer pflege-garantie, 4 PageSections fuer stoff-technische-daten
+- [x] Admin: Seitenstatus (PUBLISHED/DRAFT/ARCHIVED) steuert Sichtbarkeit beider Service-Seiten
+
 ### Spaeter
 10. **PageSections-Editor** — Sektionen innerhalb von Seiten erstellen und bearbeiten
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
@@ -576,6 +594,7 @@ app/
     settings/page.tsx       # Website-Einstellungen
     users/                  # Benutzer-Verwaltung
   api/admin/                # Alle Admin-API-Routen
+components/service/         # 7 Service-Section-Renderer (Phase 2D-C)
 components/admin/           # 13 Client-Formular-Komponenten
 lib/
   auth/session.ts           # JWT + bcrypt Auth-Logik
@@ -591,6 +610,7 @@ lib/
     collections.ts          # Kollektionen-Helper (Phase 2B)
     products.ts             # Produkte-Helper (Phase 2C)
     product-groups.ts       # Produktgruppen-Helper (Phase 2C)
+    service-pages.ts        # getServicePageBySlug() (Phase 2D-C)
     forms.ts                # getFormBySlug() (noch nicht im Frontend)
   db/prisma.ts              # Prisma Client Singleton
   generated/prisma/         # Generierter Prisma Client (gitignored)
