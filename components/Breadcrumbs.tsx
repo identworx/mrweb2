@@ -38,7 +38,7 @@ export default function Breadcrumbs({
   return (
     <nav aria-label="Breadcrumb">
       <ol
-        className={`flex flex-wrap items-center gap-1 font-body text-[11px] tracking-wide ${
+        className={`flex flex-wrap items-center gap-1 font-body text-xs tracking-wide ${
           isLight ? "text-white/50" : "text-text-gray/50"
         }`}
       >

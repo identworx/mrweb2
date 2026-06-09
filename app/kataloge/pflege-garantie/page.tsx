@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -109,11 +110,11 @@ export default async function PflegeGarantiePage() {
           image={hero.image}
           alt={hero.alt}
           height="compact"
-          breadcrumbs={[
-            { label: "Kataloge", href: "/kataloge" },
-            { label: "Pflege & Garantie" },
-          ]}
         />
+        <BreadcrumbBar items={[
+          { label: "Kataloge", href: "/kataloge" },
+          { label: "Pflege & Garantie" },
+        ]} />
 
         {hasCmsSections ? (
           result.page.sections.map((section, i) => (

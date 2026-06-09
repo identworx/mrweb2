@@ -1052,11 +1052,9 @@ Die oeffentliche Seite zeigt nur aktive Measurements (isActive=true).
 
 ## 9. Breadcrumbs & Hero-Layout
 
-### 9a. Breadcrumb-Komponente
+### 9a. Breadcrumb-Komponenten
 
-Zentrale Komponente: `components/Breadcrumbs.tsx`
-
-Datenstruktur:
+**Breadcrumbs** (`components/Breadcrumbs.tsx`) — Low-level nav-Komponente:
 ```ts
 type BreadcrumbItem = { label: string; href?: string }
 ```
@@ -1065,30 +1063,36 @@ Merkmale:
 - Semantisch korrekt: `<nav aria-label="Breadcrumb"><ol><li>...</li></ol></nav>`
 - Automatisch "Startseite" als erstes Element
 - Chevron-Separator (SVG)
-- Zwei Varianten: `dark` (dunkle Texte, helle Hintergruende) und `light` (helle Texte, dunkle Hintergruende/Heroes)
-- Text: 11px, dezent, Premium-Look
+- Variante `dark` (Standard, fuer helle Hintergruende)
+- Text: 12px (`text-xs`), dezent, Premium-Look
 - Kein eigenes Padding — Layout wird vom Eltern-Container gesteuert
+
+**BreadcrumbBar** (`components/BreadcrumbBar.tsx`) — Slim-Bar-Wrapper:
+- Weisser Hintergrund, Border-Bottom `border-black/[0.06]`
+- Standard-Container: `max-w-[1400px] px-5 md:px-10`
+- Vertikales Padding: `py-3.5` (~44-56px Gesamthoehe)
+- Wird direkt unterhalb des Hero platziert (nicht innerhalb)
 
 ### 9b. Breadcrumb-Strategie pro Seitentyp
 
 | Route | Breadcrumb-Trail | Platzierung |
 |---|---|---|
 | `/` (Startseite) | Keine | — |
-| `/kollektionen` | Startseite > Kollektionen | Im Hero |
-| `/kollektionen/[slug]` | Startseite > Kollektionen > Name | Im Hero |
-| `/produkte/[slug]` | Startseite > Kollektionen > Collection > Name | Oberhalb Produktlayout |
-| `/produktkategorien` | Startseite > Produktkategorien | Im Hero |
-| `/produktkategorien/[slug]` | Startseite > Produktkategorien > Name | Oberhalb Kategorielayout |
-| `/materialien` | Startseite > Materialien | Im Hero |
-| `/ueber-uns` | Startseite > Ueber uns | Im Hero |
-| `/kataloge` | Startseite > Kataloge | Im Hero |
-| `/kataloge/produktmasse` | Startseite > Kataloge > Produktmasse | Im Hero |
-| `/kataloge/pflege-garantie` | Startseite > Kataloge > Pflege & Garantie | Im Hero |
-| `/kataloge/stoff-technische-daten` | Startseite > Kataloge > Stoff- & technische Daten | Im Hero |
-| `/neuigkeiten` | Startseite > Neuigkeiten | Im Hero |
-| `/neuigkeiten/[slug]` | Startseite > Neuigkeiten > Titel | Im Hero |
-| `/kontakt` | Startseite > Kontakt | Im Hero |
-| `/[slug]` (CMS-Seiten) | Startseite > Seitentitel | Im Hero |
+| `/kollektionen` | Startseite > Kollektionen | BreadcrumbBar unter Hero |
+| `/kollektionen/[slug]` | Startseite > Kollektionen > Name | BreadcrumbBar unter Hero |
+| `/produkte/[slug]` | Startseite > Kollektionen > Collection > Name | Inline oberhalb Produktlayout |
+| `/produktkategorien` | Startseite > Produktkategorien | BreadcrumbBar unter Hero |
+| `/produktkategorien/[slug]` | Startseite > Produktkategorien > Name | Inline oberhalb Kategorielayout |
+| `/materialien` | Startseite > Materialien | BreadcrumbBar unter Hero |
+| `/ueber-uns` | Startseite > Ueber uns | BreadcrumbBar unter Hero |
+| `/kataloge` | Startseite > Kataloge | BreadcrumbBar unter Hero |
+| `/kataloge/produktmasse` | Startseite > Kataloge > Produktmasse | BreadcrumbBar unter Hero |
+| `/kataloge/pflege-garantie` | Startseite > Kataloge > Pflege & Garantie | BreadcrumbBar unter Hero |
+| `/kataloge/stoff-technische-daten` | Startseite > Kataloge > Stoff- & technische Daten | BreadcrumbBar unter Hero |
+| `/neuigkeiten` | Startseite > Neuigkeiten | BreadcrumbBar unter Hero |
+| `/neuigkeiten/[slug]` | Startseite > Neuigkeiten > Titel | BreadcrumbBar unter Hero |
+| `/kontakt` | Startseite > Kontakt | BreadcrumbBar unter Hero |
+| `/[slug]` (CMS-Seiten) | Startseite > Seitentitel | BreadcrumbBar unter Hero |
 
 ### 9c. Hero Max Height 210px fuer Unterseiten
 
@@ -1100,20 +1104,23 @@ Alle Unterseiten-Heroes haben eine feste Hoehe:
 Compact Hero-Layout:
 - Padding: `pt-24 md:pt-28 pb-6 md:pb-8`
 - Content am unteren Rand (`flex items-end`)
-- Breadcrumbs oben im Content-Bereich
-- Darunter Eyebrow (optional), Titel, Beschreibung (line-clamp-2)
+- Eyebrow (optional), Titel, Beschreibung (line-clamp-2)
 - Background-Image mit Overlay
+- Breadcrumbs NICHT im Hero, sondern via BreadcrumbBar direkt darunter
+
+Abstand BreadcrumbBar → Content:
+- Seiten mit kontrollierter erster Section: `pt-12 md:pt-16` (48-64px)
+- Seiten mit ServiceSectionRenderer: Standard `section-padding`
 
 Typografie im Hero:
 - Eyebrow: 11px, uppercase, tracking 0.3em, Pumpkin
 - Titel: text-3xl / md:text-4xl / lg:text-[2.75rem], bold
 - Beschreibung: text-sm / md:text-[0.9375rem], line-clamp-2, max-w-2xl
-- Breadcrumbs: 11px, dezent
 
 ### 9d. Seiten ohne Hero-Banner
 
 Produktdetailseiten (`/produkte/[slug]`) und Kategoriedetailseiten (`/produktkategorien/[slug]`) haben keinen Hero-Banner. Stattdessen:
-- Breadcrumbs mit Header-Clearance-Padding (`pt-28 md:pt-32`)
+- Breadcrumbs (Inline) mit Header-Clearance-Padding (`pt-28 md:pt-32`)
 - Direkt im Content-Bereich (Cream-Hintergrund)
 - Produktbilder / Kategorie-Inhalte direkt darunter
 
@@ -1131,4 +1138,3 @@ Props:
 | alt | string? | "MOSAROMA Hero" | Bild Alt-Text |
 | variant | "light" / "dark" | "dark" | Overlay-Variante |
 | height | "compact" / "default" / "large" | — | Legacy-Prop (alle Varianten identisch) |
-| breadcrumbs | BreadcrumbItem[]? | — | Breadcrumb-Trail im Hero |

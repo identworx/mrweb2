@@ -4,7 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import { newsItems } from "@/lib/mosaroma/news";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import {
@@ -80,16 +80,6 @@ export default async function NeuigkeitDetailPage({
             />
             <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="mb-4">
-                  <Breadcrumbs
-                    variant="light"
-                    items={[
-                      { label: "Neuigkeiten", href: "/neuigkeiten" },
-                      { label: article.title },
-                    ]}
-                  />
-                </div>
-
                 <div className="flex items-center gap-3 mb-3">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                     {article.category}
@@ -105,6 +95,10 @@ export default async function NeuigkeitDetailPage({
               </div>
             </div>
           </section>
+          <BreadcrumbBar items={[
+            { label: "Neuigkeiten", href: "/neuigkeiten" },
+            { label: article.title },
+          ]} />
 
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -177,16 +171,6 @@ export default async function NeuigkeitDetailPage({
           />
           <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="mb-4">
-                <Breadcrumbs
-                  variant="light"
-                  items={[
-                    { label: "Neuigkeiten", href: "/neuigkeiten" },
-                    { label: staticItem.title },
-                  ]}
-                />
-              </div>
-
               <div className="flex items-center gap-3 mb-3">
                 <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                   {staticItem.tag}
@@ -202,6 +186,10 @@ export default async function NeuigkeitDetailPage({
             </div>
           </div>
         </section>
+        <BreadcrumbBar items={[
+          { label: "Neuigkeiten", href: "/neuigkeiten" },
+          { label: staticItem.title },
+        ]} />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

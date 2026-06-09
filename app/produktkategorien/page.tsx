@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import CategoryCard from "@/components/CategoryCard";
 import { getActiveProductGroups } from "@/lib/cms/product-groups";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
@@ -29,10 +30,10 @@ export default async function ProduktkategorienPage() {
           eyebrow="Entdecken"
           title="Produktkategorien"
           description="Entdecken Sie alle MOSAROMA Produktkategorien -- von Dekokissen und Auflagen bis hin zu Poufs, Tischsets und Decken. Jede Kategorie vereint Premium-Materialien mit durchdachtem Design fuer den Aussenbereich."
-          breadcrumbs={[{ label: "Produktkategorien" }]}
         />
+        <BreadcrumbBar items={[{ label: "Produktkategorien" }]} />
 
-        <section className="section-padding bg-white">
+        <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {groups.map((group) => (

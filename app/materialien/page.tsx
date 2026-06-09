@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import {
   fabricQualities,
   propertiesComparison,
@@ -41,11 +42,11 @@ export default async function MaterialienPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
-          breadcrumbs={[{ label: "Materialien" }]}
         />
+        <BreadcrumbBar items={[{ label: "Materialien" }]} />
 
         {/* Mackintosh® Technologie */}
-        <section className="section-padding bg-white">
+        <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />

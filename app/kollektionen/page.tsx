@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import CollectionCard from "@/components/CollectionCard";
 import { getPublishedCollections } from "@/lib/cms/collections";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
@@ -36,10 +37,10 @@ export default async function KollektionenPage() {
           description={hero.description}
           image={hero.image}
           alt={hero.alt}
-          breadcrumbs={[{ label: "Kollektionen" }]}
         />
+        <BreadcrumbBar items={[{ label: "Kollektionen" }]} />
 
-        <section className="section-padding bg-white">
+        <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {collections.map((collection) => (

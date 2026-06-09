@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
   fabricQualities,
@@ -79,11 +80,11 @@ export default async function StoffTechnischeDatenPage() {
           image={hero.image}
           alt={hero.alt}
           height="compact"
-          breadcrumbs={[
-            { label: "Kataloge", href: "/kataloge" },
-            { label: "Stoff- & technische Daten" },
-          ]}
         />
+        <BreadcrumbBar items={[
+          { label: "Kataloge", href: "/kataloge" },
+          { label: "Stoff- & technische Daten" },
+        ]} />
 
         {hasCmsSections ? (
           result.page.sections.map((section, i) => (

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
@@ -77,8 +78,8 @@ export default async function CmsPage({
           description={page.introText || undefined}
           image={page.heroImageUrl || undefined}
           height="compact"
-          breadcrumbs={[{ label: page.title }]}
         />
+        <BreadcrumbBar items={[{ label: page.title }]} />
 
         {page.sections.length > 0 ? (
           page.sections.map((section, i) => (

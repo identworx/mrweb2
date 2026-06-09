@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Breadcrumbs, { type BreadcrumbItem } from "@/components/Breadcrumbs";
 
 type PageHeroProps = {
   eyebrow?: string;
@@ -9,7 +8,6 @@ type PageHeroProps = {
   alt?: string;
   variant?: "light" | "dark";
   height?: "compact" | "default" | "large";
-  breadcrumbs?: BreadcrumbItem[];
 };
 
 const FALLBACK_IMAGE = "/images/placeholders/page-heroes/default-hero.svg";
@@ -21,7 +19,6 @@ export default function PageHero({
   image,
   alt = "MOSAROMA Hero",
   variant = "dark",
-  breadcrumbs,
 }: PageHeroProps) {
   const heroImage = image || FALLBACK_IMAGE;
   const isDark = variant === "dark";
@@ -59,15 +56,6 @@ export default function PageHero({
 
       <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
         <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-          {breadcrumbs && (
-            <div className="mb-4">
-              <Breadcrumbs
-                items={breadcrumbs}
-                variant={isDark ? "light" : "dark"}
-              />
-            </div>
-          )}
-
           {eyebrow && (
             <div className="flex items-center gap-3 mb-3">
               <div className="w-10 h-px bg-pumpkin" />

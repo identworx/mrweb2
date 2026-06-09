@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import {
   getCollectionBySlugWithStatus,
   getCollectionStaticParams,
@@ -137,16 +137,6 @@ export default async function KollektionPage({ params }: PageProps) {
 
           <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="mb-4">
-                <Breadcrumbs
-                  variant="light"
-                  items={[
-                    { label: "Kollektionen", href: "/kollektionen" },
-                    { label: `${collection.name} Collection` },
-                  ]}
-                />
-              </div>
-
               <div className="max-w-2xl">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-px bg-pumpkin" />
@@ -168,6 +158,10 @@ export default async function KollektionPage({ params }: PageProps) {
             </div>
           </div>
         </section>
+        <BreadcrumbBar items={[
+          { label: "Kollektionen", href: "/kollektionen" },
+          { label: `${collection.name} Collection` },
+        ]} />
 
         {/* Extended description / mood text */}
         {collection.longDescription && (

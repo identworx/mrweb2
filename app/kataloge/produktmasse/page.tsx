@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
+import BreadcrumbBar from "@/components/BreadcrumbBar";
 import MeasurementNav from "@/components/measurements/MeasurementNav";
 import MeasurementImageCard from "@/components/measurements/MeasurementImageCard";
 import BenchMeasurementCard from "@/components/measurements/BenchMeasurementCard";
@@ -48,11 +49,11 @@ export default async function ProduktmassePage() {
           image={hero.image}
           alt={hero.alt}
           height="compact"
-          breadcrumbs={[
-            { label: "Kataloge", href: "/kataloge" },
-            { label: "Produktmaße" },
-          ]}
         />
+        <BreadcrumbBar items={[
+          { label: "Kataloge", href: "/kataloge" },
+          { label: "Produktmaße" },
+        ]} />
 
         {/* Notice + Quick Nav */}
         <section className="bg-white pt-10 pb-6 md:pt-14 md:pb-8">
