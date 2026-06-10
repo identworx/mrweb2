@@ -117,7 +117,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -128,7 +128,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -164,6 +164,18 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "highlight-cards" && <HighlightCardsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "fabric-cards" && <FabricCardsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "comparison-table" && <ComparisonTableFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "home-hero" && (
+        <HomeHeroFields
+          settings={form.settings}
+          buttonLabel={form.buttonLabel}
+          buttonHref={form.buttonHref}
+          updateSettings={updateSettings}
+          updateField={updateField}
+        />
+      )}
+      {style === "value-props" && <ValuePropsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "image-text-feature" && <BulletsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "sustainability-stats" && <SustainabilityStatsFields settings={form.settings} updateSettings={updateSettings} />}
 
       {!styleDef && style !== "" && (
         <JsonFallbackField
@@ -638,6 +650,272 @@ function ComparisonTableFields({
           </table>
         </div>
       </div>
+    </div>
+  );
+}
+
+function HomeHeroFields({
+  settings,
+  buttonLabel,
+  buttonHref,
+  updateSettings,
+  updateField,
+}: {
+  settings: Record<string, unknown>;
+  buttonLabel: string;
+  buttonHref: string;
+  updateSettings: (key: string, value: unknown) => void;
+  updateField: (field: "buttonLabel" | "buttonHref", value: string) => void;
+}) {
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Hero Einstellungen</p>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Subheadline</label>
+        <input
+          type="text"
+          value={(settings.subheadline as string) || ""}
+          onChange={(e) => updateSettings("subheadline", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 1 Label</label>
+          <input
+            type="text"
+            value={buttonLabel}
+            onChange={(e) => updateField("buttonLabel", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 1 Href</label>
+          <input
+            type="text"
+            value={buttonHref}
+            onChange={(e) => updateField("buttonHref", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 2 Label</label>
+          <input
+            type="text"
+            value={(settings.secondaryLabel as string) || ""}
+            onChange={(e) => updateSettings("secondaryLabel", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 2 Href</label>
+          <input
+            type="text"
+            value={(settings.secondaryHref as string) || ""}
+            onChange={(e) => updateSettings("secondaryHref", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface ValuePropCard {
+  iconKey: string;
+  title: string;
+  text: string;
+}
+
+function ValuePropsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const cards = Array.isArray(settings.cards) ? (settings.cards as ValuePropCard[]) : [];
+
+  function updateCard(index: number, field: keyof ValuePropCard, value: string) {
+    const next = cards.map((c, i) => (i === index ? { ...c, [field]: value } : c));
+    updateSettings("cards", next);
+  }
+
+  function addCard() {
+    updateSettings("cards", [...cards, { iconKey: "comfort", title: "", text: "" }]);
+  }
+
+  function removeCard(index: number) {
+    updateSettings("cards", cards.filter((_, i) => i !== index));
+  }
+
+  const iconOptions = ["comfort", "quality", "sustainability", "design"];
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Feature Cards ({cards.length})</p>
+        <button type="button" onClick={addCard} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Karte</button>
+      </div>
+      {cards.map((card, ci) => (
+        <div key={ci} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{card.title || `Karte ${ci + 1}`}</span>
+            <button type="button" onClick={() => removeCard(ci)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Icon</label>
+              <select
+                value={card.iconKey}
+                onChange={(e) => updateCard(ci, "iconKey", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                {iconOptions.map((opt) => (<option key={opt} value={opt}>{opt}</option>))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+              <input
+                type="text"
+                value={card.title}
+                onChange={(e) => updateCard(ci, "title", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div className="md:col-span-1">
+              <label className="block text-xs text-gray-500 mb-0.5">Text</label>
+              <textarea
+                rows={2}
+                value={card.text}
+                onChange={(e) => updateCard(ci, "text", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BulletsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const bullets = Array.isArray(settings.bullets) ? (settings.bullets as string[]) : [];
+
+  function updateItem(index: number, value: string) {
+    const next = [...bullets];
+    next[index] = value;
+    updateSettings("bullets", next);
+  }
+
+  function addItem() {
+    updateSettings("bullets", [...bullets, ""]);
+  }
+
+  function removeItem(index: number) {
+    updateSettings("bullets", bullets.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Bulletpoints ({bullets.length})</p>
+        <button type="button" onClick={addItem} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Punkt</button>
+      </div>
+      {bullets.map((item, i) => (
+        <div key={i} className="flex items-start gap-2">
+          <input
+            type="text"
+            value={item}
+            onChange={(e) => updateItem(i, e.target.value)}
+            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+          <button type="button" onClick={() => removeItem(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface StatItem {
+  value: string;
+  label: string;
+  detail: string;
+}
+
+function SustainabilityStatsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const stats = Array.isArray(settings.stats) ? (settings.stats as StatItem[]) : [];
+
+  function updateStat(index: number, field: keyof StatItem, value: string) {
+    const next = stats.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("stats", next);
+  }
+
+  function addStat() {
+    updateSettings("stats", [...stats, { value: "", label: "", detail: "" }]);
+  }
+
+  function removeStat(index: number) {
+    updateSettings("stats", stats.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Statistiken ({stats.length})</p>
+        <button type="button" onClick={addStat} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Statistik</button>
+      </div>
+      {stats.map((stat, si) => (
+        <div key={si} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{stat.value || `Statistik ${si + 1}`}</span>
+            <button type="button" onClick={() => removeStat(si)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Wert</label>
+              <input
+                type="text"
+                value={stat.value}
+                onChange={(e) => updateStat(si, "value", e.target.value)}
+                placeholder="z.B. 42 %"
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Label</label>
+              <input
+                type="text"
+                value={stat.label}
+                onChange={(e) => updateStat(si, "label", e.target.value)}
+                placeholder="z.B. weniger Wasser"
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Detail</label>
+              <input
+                type="text"
+                value={stat.detail}
+                onChange={(e) => updateStat(si, "detail", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

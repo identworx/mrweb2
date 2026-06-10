@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-09 (Phase 2I: Breadcrumbs & Compact Subpage Heroes) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-10 (Homepage CMS-Managed Sections) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -95,6 +95,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 2 Downloads (Katalog 2027 Deutsch + English)
 - 12 Measurements (Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets)
 - 4 News-Artikel (Kollektionen 2027, Mackintosh, NERIO Oceana, Pflegehinweise)
+- 7 PageSections fuer Startseite (1 home-hero, 1 value-props, 1 image-text-feature, 1 collection-showcase, 1 sustainability-stats, 1 downloads-teaser, 1 news-teaser)
 - 6 PageSections fuer Pflege & Garantie (4 care-list, 1 cross-link, 1 cta)
 - 4 PageSections fuer Stoff- & technische Daten (1 fabric-cards, 1 comparison-table, 1 highlight-cards, 1 cta)
 
@@ -502,7 +503,7 @@ Alle oeffentlichen Seiten nutzen `export const revalidate = 60` als Fallback (In
 | Admin-Aktion | Invalidierte Public-Pfade |
 |---|---|
 | Seite speichern/Status | Zugehoerige oeffentliche Seite (z.B. `/kontakt`, `/kataloge`) |
-| PageSection speichern | Seite der Section (z.B. `/kataloge/pflege-garantie`) |
+| PageSection speichern | Seite der Section (z.B. `/` fuer home, `/kataloge/pflege-garantie`) |
 | Kollektion speichern/Status | `/`, `/kollektionen`, `/kollektionen/[slug]` |
 | Produkt speichern/Status | `/produkte/[slug]`, `/kollektionen/[slug]`, `/produktkategorien/[slug]` |
 | Produktgruppe speichern | `/produktkategorien`, `/produktkategorien/[slug]` |
@@ -540,6 +541,7 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | `collections.ts`   | `getPublishedCollections()`, `getCollectionBySlug()`, `getCollectionStaticParams()`, `mapCollectionForFrontend()` | Aktiv (Phase 2B) |
 | `products.ts`      | `getPublishedProducts()`, `getProductBySlugWithStatus()`, `getProductsByCollectionSlug()`, `getProductsByProductGroupSlug()`, `getProductStaticParams()`, `mapProductForFrontend()` | Aktiv (Phase 2C) |
 | `product-groups.ts`| `getActiveProductGroups()`, `getProductGroupBySlugWithStatus()`, `getProductGroupStaticParams()`, `mapProductGroupForFrontend()` | Aktiv (Phase 2C) |
+| `homepage.ts`      | `getHomepageData()`                                       | Aktiv (Startseite) |
 | `service-pages.ts` | `getServicePageBySlug()`                                  | Aktiv (Phase 2D-C) |
 | `forms.ts`         | `getFormBySlug()`, `createSubmission()`                   | Noch nicht |
 
@@ -582,6 +584,7 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | Produkt-SEO            | `Product.seoTitle/Description`   | Name-basierter Fallback               |
 | Produktgruppen-Liste   | `ProductGroup` (isActive, order) | `lib/mosaroma/categories.ts`          |
 | Produktgruppe-Detail   | `ProductGroup` (isActive, slug)  | `lib/mosaroma/categories.ts`          |
+| Startseite Sektionen   | `PageSection` (via Page home, 7 Styles) | FALLBACK_SECTIONS in `app/page.tsx` |
 | Pflege & Garantie      | `PageSection` (via Page pflege-garantie) | Statische Fallback-Inhalte im Page-File |
 | Stoff- & techn. Daten  | `PageSection` (via Page stoff-technische-daten) | `lib/mosaroma/materials.ts`       |
 
@@ -624,6 +627,13 @@ Server Page (async) → getPublicLayoutData() + getPageHeroData()
 | Produkt-SEO                   | Produkte → Produkt waehlen → SEO Titel / Beschreibung |
 | Produktgruppe bearbeiten      | Produktgruppen → Gruppe waehlen → Name, Beschreibung, Bild |
 | Produktgruppe (de)aktivieren  | Produktgruppen → Gruppe waehlen → Aktiv-Checkbox |
+| Startseite Hero                | Seiten → home → Sektionen → home-hero bearbeiten (Eyebrow, Titel, Subheadline, CTAs, Bild) |
+| Startseite Werte-Karten        | Seiten → home → Sektionen → value-props bearbeiten (Karten mit Icon, Titel, Text) |
+| Startseite Mackintosh-Feature  | Seiten → home → Sektionen → image-text-feature bearbeiten (Titel, Text, Bulletpoints, Bild) |
+| Startseite Kollektions-Teaser  | Seiten → home → Sektionen → collection-showcase bearbeiten (Eyebrow, Titel, Text) |
+| Startseite Nachhaltigkeit      | Seiten → home → Sektionen → sustainability-stats bearbeiten (Stats: Wert, Label, Detail) |
+| Startseite Downloads-Teaser    | Seiten → home → Sektionen → downloads-teaser bearbeiten (Eyebrow, Titel, Text) |
+| Startseite News-Teaser         | Seiten → home → Sektionen → news-teaser bearbeiten (Eyebrow, Titel, Text) |
 | Pflege & Garantie Sichtbarkeit | Seiten → pflege-garantie → Status (PUBLISHED/DRAFT/ARCHIVED) |
 | Stoff- & techn. Daten Sichtbarkeit | Seiten → stoff-technische-daten → Status (PUBLISHED/DRAFT/ARCHIVED) |
 
@@ -865,11 +875,19 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 | cross-link | Querverweis | Verweis-Karte mit Button | Pflege & Garantie |
 | cta | Call to Action | Dunkler CTA mit 2 Buttons | Beide Service-Seiten |
 | text | Text | Einfacher Textbereich | Generisch |
+| home-hero | Startseite Hero | Fullscreen Hero mit 2 CTAs und Subheadline | Startseite |
+| value-props | Werte-Karten | Feature-Karten mit Icon, Titel, Text | Startseite |
+| image-text-feature | Bild-Text Feature | Bild links + Bulletpoints rechts | Startseite |
+| collection-showcase | Kollektions-Teaser | Zeigt publizierte Kollektionen als Grid | Startseite |
+| sustainability-stats | Nachhaltigkeit | Dunkle Sektion mit Statistik-Karten | Startseite |
+| downloads-teaser | Downloads-Teaser | Zeigt aktive Downloads als Karten | Startseite |
+| news-teaser | News-Teaser | Zeigt 3 neueste News-Artikel | Startseite |
 
 #### Seiten mit Sections
 
 | Seite | Slug | Sections |
 |-------|------|----------|
+| Startseite | home | 7 (1× home-hero, 1× value-props, 1× image-text-feature, 1× collection-showcase, 1× sustainability-stats, 1× downloads-teaser, 1× news-teaser) |
 | Pflege & Garantie | pflege-garantie | 6 (4× care-list, 1× cross-link, 1× cta) |
 | Stoff- & techn. Daten | stoff-technische-daten | 4 (1× fabric-cards, 1× comparison-table, 1× highlight-cards, 1× cta) |
 
@@ -929,6 +947,7 @@ app/
     settings/page.tsx       # Website-Einstellungen
     users/                  # Benutzer-Verwaltung
   api/admin/                # Alle Admin-API-Routen
+components/homepage/        # 7 Homepage-Section-Komponenten (CMS-gesteuert)
 components/service/         # 7 Service-Section-Renderer (Phase 2D-C)
 components/admin/           # 15 Client-Formular-Komponenten (inkl. PageSectionsEditor, PageSectionEditForm)
 lib/
@@ -945,6 +964,7 @@ lib/
     collections.ts          # Kollektionen-Helper (Phase 2B)
     products.ts             # Produkte-Helper (Phase 2C)
     product-groups.ts       # Produktgruppen-Helper (Phase 2C)
+    homepage.ts             # getHomepageData() (Startseite CMS-Sektionen)
     service-pages.ts        # getServicePageBySlug() (Phase 2D-C)
     forms.ts                # getFormBySlug() (noch nicht im Frontend)
   db/prisma.ts              # Prisma Client Singleton

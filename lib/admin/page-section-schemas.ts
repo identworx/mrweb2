@@ -81,6 +81,69 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     sectionType: "TEXT",
     defaultSettings: { style: "text" },
   },
+  {
+    style: "home-hero",
+    label: "Hero (Startseite)",
+    description: "Großer Hero-Bereich mit Headline, Subheadline, Beschreibung, zwei CTAs und Hintergrundbild",
+    sectionType: "HERO",
+    defaultSettings: {
+      style: "home-hero",
+      subheadline: "",
+      secondaryLabel: "",
+      secondaryHref: "",
+    },
+  },
+  {
+    style: "value-props",
+    label: "Werte / Features",
+    description: "Feature-Karten mit Icon-Key, Titel und Text (z.B. 'Was uns ausmacht')",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "value-props",
+      cards: [{ iconKey: "comfort", title: "Komfort", text: "Beschreibung" }],
+    },
+  },
+  {
+    style: "image-text-feature",
+    label: "Bild + Text Feature",
+    description: "Zweispaltig mit Bild und Text/Bulletpoints (z.B. Mackintosh® Technology)",
+    sectionType: "IMAGE_TEXT",
+    defaultSettings: {
+      style: "image-text-feature",
+      bullets: [],
+    },
+  },
+  {
+    style: "collection-showcase",
+    label: "Kollektionen-Showcase",
+    description: "Collection Cards aus der Datenbank mit Einleitungstext",
+    sectionType: "COLLECTION_GRID",
+    defaultSettings: { style: "collection-showcase" },
+  },
+  {
+    style: "sustainability-stats",
+    label: "Nachhaltigkeits-Statistiken",
+    description: "Statistiken mit großen Zahlen, Labels und Details",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "sustainability-stats",
+      stats: [{ value: "42 %", label: "weniger Wasser", detail: "" }],
+    },
+  },
+  {
+    style: "downloads-teaser",
+    label: "Downloads-Teaser",
+    description: "Download-Karten aus der Datenbank mit Einleitungstext",
+    sectionType: "DOWNLOAD_GRID",
+    defaultSettings: { style: "downloads-teaser" },
+  },
+  {
+    style: "news-teaser",
+    label: "News-Teaser",
+    description: "Neuigkeiten-Karten aus der Datenbank",
+    sectionType: "CUSTOM",
+    defaultSettings: { style: "news-teaser" },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {
