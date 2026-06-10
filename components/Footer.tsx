@@ -75,18 +75,7 @@ export default function Footer({
                       <SocialIcon name={s.platform} />
                     </a>
                   ))
-                : ["facebook", "instagram", "pinterest", "youtube", "linkedin"].map(
-                    (social) => (
-                      <a
-                        key={social}
-                        href="#"
-                        aria-label={social}
-                        className="text-white/25 hover:text-pumpkin transition-colors duration-400"
-                      >
-                        <SocialIcon name={social} />
-                      </a>
-                    )
-                  )}
+                : null}
             </div>
           </div>
 

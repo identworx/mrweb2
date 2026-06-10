@@ -94,15 +94,9 @@ export default function HomepageHero({ section }: Props) {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
-      </div>
-
-      <div className="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 flex-col items-center gap-4">
-        <div className="w-px h-12 bg-white/[0.08]" />
-        <span className="font-accent text-white/[0.12] text-[9px] tracking-[0.35em] uppercase" style={{ writingMode: "vertical-rl" }}>
-          MOSAROMA
-        </span>
-        <div className="w-px h-12 bg-white/[0.08]" />
+        <svg width="16" height="24" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 16 24" className="opacity-40 animate-bounce">
+          <path d="M8 3v14m0 0l-5-5m5 5l5-5" />
+        </svg>
       </div>
     </section>
   );

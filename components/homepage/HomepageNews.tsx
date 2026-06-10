@@ -53,6 +53,7 @@ export default function HomepageNews({ section, articles }: Props) {
               date={item.date}
               description={item.description}
               slug={item.slug}
+              imageUrl={item.imageUrl}
             />
           ))}
         </div>

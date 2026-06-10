@@ -115,7 +115,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
 
           <button
             aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
-            className={`lg:hidden p-3 -mr-1 rounded-full transition-all duration-300 ${
+            className={`lg:hidden p-3 -mr-1 transition-all duration-300 ${
               scrolled || mobileOpen
                 ? "text-anthracite hover:bg-light-gray"
                 : "text-white hover:bg-white/10"
@@ -144,7 +144,9 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
       </div>
 
       <div
-        className={`lg:hidden fixed inset-0 top-[68px] bg-white z-40 transition-all duration-400 ${
+        className={`lg:hidden fixed inset-0 bg-white z-40 transition-all duration-400 ${
+          scrolled ? "top-[68px] md:top-[76px]" : "top-[88px] md:top-[108px]"
+        } ${
           mobileOpen
             ? "opacity-100 pointer-events-auto translate-y-0"
             : "opacity-0 pointer-events-none -translate-y-2"

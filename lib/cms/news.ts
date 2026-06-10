@@ -24,6 +24,7 @@ export interface FrontendNewsCard {
   tag: string;
   date: string;
   description: string;
+  imageUrl: string | null;
 }
 
 export type NewsArticleLookupResult =
@@ -52,6 +53,7 @@ export async function getPublishedNewsArticles(): Promise<FrontendNewsCard[]> {
         ? a.publishedAt.toLocaleDateString("de-DE", { year: "numeric", month: "long" })
         : "2027",
       description: a.excerpt || (a.content ? a.content.slice(0, 200) : ""),
+      imageUrl: getMediaUrl(a.cardImage, "") || null,
     }));
   } catch (error) {
     console.error("CMS: getPublishedNewsArticles failed", error);
@@ -144,5 +146,6 @@ function getStaticFallbackCards(): FrontendNewsCard[] {
     tag: n.tag,
     date: n.date,
     description: n.description,
+    imageUrl: n.image || null,
   }));
 }
