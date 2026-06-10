@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-10T16:30:00Z",
+  "title": "Design System: Mosaroma Industries",
+  "extensions": {
+    "colorMeta": {
+      "pumpkin": {
+        "role": "primary",
+        "displayName": "Pumpkin",
+        "canonical": "oklch(66% 0.16 55)",
+        "tonalRamp": ["#3D2000", "#5E3200", "#804500", "#A35900", "#C66D00", "#E07B12", "#F0A050", "#F8C890", "#FDE8D0", "#FFF5EB"]
+      },
+      "burnt-sienna": {
+        "role": "primary",
+        "displayName": "Burnt Sienna",
+        "canonical": "oklch(58% 0.16 45)",
+        "tonalRamp": ["#351200", "#4D1C00", "#6B2800", "#8A3500", "#AA4300", "#D35400", "#E07840", "#EDA070", "#F5C8A0", "#FBE8D8"]
+      },
+      "anthracite": {
+        "role": "neutral",
+        "displayName": "Anthracite",
+        "canonical": "oklch(28% 0 0)",
+        "tonalRamp": ["#0A0A0A", "#141414", "#1E1E1E", "#2D2D2D", "#444444", "#5C5C5C", "#787878", "#9A9A9A", "#C0C0C0", "#E0E0E0"]
+      },
+      "warm-linen": {
+        "role": "neutral",
+        "displayName": "Warm Linen",
+        "canonical": "oklch(97.5% 0.008 80)",
+        "tonalRamp": ["#2D2D2D", "#555555", "#888888", "#AAAAAA", "#C8C8C8", "#E0DDD8", "#EBE8E3", "#F0EDE8", "#F5F2ED", "#FAF8F5"]
+      },
+      "dusk-gray": {
+        "role": "neutral",
+        "displayName": "Dusk Gray",
+        "canonical": "oklch(44% 0 0)",
+        "tonalRamp": ["#1A1A1A", "#2D2D2D", "#3D3D3D", "#474747", "#555555", "#6B6B6B", "#808080", "#999999", "#B8B8B8", "#D8D8D8"]
+      },
+      "forest-deep": {
+        "role": "neutral",
+        "displayName": "Forest Deep",
+        "canonical": "oklch(24% 0.04 145)",
+        "tonalRamp": ["#0A140A", "#101E10", "#152815", "#1A2E1A", "#254025", "#305530", "#407040", "#558855", "#70A870", "#90C890"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only. One per view." },
+      "headline": { "displayName": "Headline", "purpose": "Section headings across all pages." },
+      "body": { "displayName": "Body", "purpose": "Long-form text, descriptions, rich text content." },
+      "label": { "displayName": "Label", "purpose": "Navigation, eyebrows, metadata. Always uppercase." }
+    },
+    "shadows": [
+      { "name": "card-hover-bloom", "value": "0 8px 30px rgba(0,0,0,0.06)", "purpose": "Interactive cards on hover. Diffuse and atmospheric." },
+      { "name": "button-hover-glow", "value": "0 4px 20px rgba(224,123,18,0.25)", "purpose": "Primary button hover. Pumpkin-tinted warmth." },
+      { "name": "header-settle", "value": "0 1px 0 rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.03)", "purpose": "Header on scroll. Two-layer grounding." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)", "purpose": "Default easing for all interactive transitions." },
+      { "name": "duration-fast", "value": "300ms", "purpose": "Color changes, opacity, link underlines." },
+      { "name": "duration-medium", "value": "400ms-500ms", "purpose": "Shadows, transforms, card interactions." },
+      { "name": "duration-slow", "value": "700ms", "purpose": "Header scroll transitions." },
+      { "name": "duration-image", "value": "1200ms", "purpose": "Image zoom on hover. Slow and deliberate." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main CTA. Pumpkin background, uppercase label with trailing arrow icon.",
+      "html": "<button class=\"ds-btn-primary\">ALLE KOLLEKTIONEN <svg width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2.5rem; background-color: #E07B12; color: #fff; font-family: Montserrat, system-ui, sans-serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; border: none; border-radius: 0; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); } .ds-btn-primary:hover { background-color: #D35400; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(224, 123, 18, 0.25); } .ds-btn-primary:focus-visible { outline: 2px solid #E07B12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary CTA on light backgrounds. Anthracite border, fills on hover.",
+      "html": "<button class=\"ds-btn-outline\">MEHR ERFAHREN <svg width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5\"/></svg></button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2.5rem; background-color: transparent; color: #2D2D2D; border: 1px solid #2D2D2D; font-family: Montserrat, system-ui, sans-serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); } .ds-btn-outline:hover { background-color: #2D2D2D; color: #fff; transform: translateY(-1px); } .ds-btn-outline:focus-visible { outline: 2px solid #E07B12; outline-offset: 2px; }"
+    },
+    {
+      "name": "Outline Button (White)",
+      "kind": "button",
+      "refersTo": "button-outline-white",
+      "description": "CTA on dark backgrounds (hero, sustainability). White border at 30% opacity.",
+      "html": "<button class=\"ds-btn-outline-white\">MEHR ERFAHREN <svg width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5\"/></svg></button>",
+      "css": ".ds-btn-outline-white { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2.5rem; background-color: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); font-family: Montserrat, system-ui, sans-serif; font-weight: 600; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; border-radius: 0; cursor: pointer; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); } .ds-btn-outline-white:hover { background-color: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); } .ds-btn-outline-white:focus-visible { outline: 2px solid #E07B12; outline-offset: 2px; }"
+    },
+    {
+      "name": "News Card",
+      "kind": "card",
+      "refersTo": "news-card",
+      "description": "Content card with tag, date, title, description. Sharp edges, hover lift with shadow bloom.",
+      "html": "<article class=\"ds-news-card\"><div class=\"ds-news-card-meta\"><span class=\"ds-news-tag\">Technologie</span><time class=\"ds-news-date\">15. Mai 2027</time></div><h3 class=\"ds-news-title\">Mackintosh-Technologie</h3><p class=\"ds-news-desc\">Wie unsere patentierte Webstruktur Wasser abweist und dabei atmungsaktiv bleibt.</p><span class=\"ds-news-cta\">Weiterlesen <svg width=\"14\" height=\"14\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" viewBox=\"0 0 24 24\"><path d=\"M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5\"/></svg></span></article>",
+      "css": ".ds-news-card { background: #fff; padding: 1.5rem; border: 1px solid transparent; transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); cursor: pointer; } .ds-news-card:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); border-color: rgba(224,123,18,0.1); } .ds-news-card-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; } .ds-news-tag { font-family: Montserrat, system-ui, sans-serif; font-size: 0.625rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #E07B12; background: rgba(224,123,18,0.08); padding: 0.25rem 0.625rem; } .ds-news-date { font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 0.8125rem; color: #B8B8B8; } .ds-news-title { font-family: Montserrat, system-ui, sans-serif; font-size: 1rem; font-weight: 700; color: #2D2D2D; margin-bottom: 0.5rem; transition: color 0.3s; } .ds-news-card:hover .ds-news-title { color: #E07B12; } .ds-news-desc { font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 0.875rem; color: #555555; line-height: 1.6; margin-bottom: 1rem; } .ds-news-cta { font-family: Montserrat, system-ui, sans-serif; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #E07B12; display: inline-flex; align-items: center; gap: 0.5rem; } .ds-news-cta svg { transition: transform 0.3s; } .ds-news-card:hover .ds-news-cta svg { transform: translateX(4px); }"
+    },
+    {
+      "name": "Accent Line",
+      "kind": "custom",
+      "refersTo": "accent-line",
+      "description": "Signature micro-element. 3rem pumpkin line preceding section eyebrows.",
+      "html": "<div class=\"ds-accent-group\"><div class=\"ds-accent-line\"></div><span class=\"ds-accent-label\">KOLLEKTIONEN</span></div>",
+      "css": ".ds-accent-group { display: flex; align-items: center; gap: 1rem; } .ds-accent-line { width: 3rem; height: 1px; background-color: #E07B12; } .ds-accent-label { font-family: 'Josefin Sans', system-ui, sans-serif; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.3em; text-transform: uppercase; color: #E07B12; }"
+    },
+    {
+      "name": "Admin Input",
+      "kind": "input",
+      "refersTo": "admin-input",
+      "description": "Form input for the admin CMS. Rounded corners, orange focus ring.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\">Titel</label><input class=\"ds-input\" type=\"text\" placeholder=\"Seitentitel eingeben\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 0.375rem; } .ds-field-label { font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; color: #2D2D2D; } .ds-input { font-family: 'Source Sans 3', system-ui, sans-serif; font-size: 0.875rem; padding: 0.5rem 0.75rem; border: 1px solid #D1D5DB; border-radius: 8px; background: #fff; color: #2D2D2D; transition: border-color 0.2s, box-shadow 0.2s; } .ds-input:focus { outline: none; border-color: transparent; box-shadow: 0 0 0 2px #F97316; } .ds-input::placeholder { color: #9CA3AF; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Der Garten-Salon",
+    "overview": "The Mosaroma design system evokes the atmosphere of a perfectly curated outdoor living space — warm, inviting, and quietly confident. Every surface feels like stepping into a sun-dappled terrace where premium textiles meet natural materials. The system is generous with whitespace and deliberate with detail: sharp edges on public surfaces convey precision; warm transitions and subtle hover states invite exploration without demanding attention.\n\nThis is not a clinical product catalog. It is not a discount e-commerce shop with pop-ups and banners. It is not a SaaS landing page with hero metrics and gradient buttons. Mosaroma speaks with the calm authority of a brand that knows its craft — German engineering precision married to Italian aesthetic sensibility. The textiles are the hero; the interface serves them.",
+    "keyCharacteristics": [
+      "Sharp-edged cards and containers on public pages (zero border radius) — precision as identity",
+      "Warm pumpkin accent used sparingly — its rarity is the point",
+      "Generous vertical rhythm between sections (5–8rem) — breathing room, not density",
+      "Hover states that feel physical: gentle lift (-1px translate), soft shadow bloom, image zoom at 1.2s",
+      "Three-font system with clear roles: Montserrat commands, Source Sans 3 narrates, Josefin Sans whispers"
+    ],
+    "rules": [
+      { "name": "The One-Voice Rule", "body": "Pumpkin is the only saturated color on public pages. No secondary accent, no tertiary. The palette's restraint forces every pumpkin element to carry weight.", "section": "colors" },
+      { "name": "The Three-Voice Rule", "body": "Each font has one job. Montserrat commands attention (headings). Source Sans 3 carries the narrative (body, descriptions). Josefin Sans marks territory (labels, navigation, accents). Never cross them.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "No surface has a shadow at rest. Shadows are motion artifacts — they appear during hover, scroll transitions, and modal overlays. A shadow at rest is a shadow without purpose.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use pumpkin (#E07B12) as the sole saturated accent on public pages. Its scarcity is its power.",
+      "Do keep public cards and containers at 0 border radius. The sharp edges are the brand's signature precision.",
+      "Do use the three-font system with discipline: Montserrat for headings, Source Sans 3 for body, Josefin Sans for labels.",
+      "Do apply hover lift (-1px translateY) with the standard easing on interactive cards.",
+      "Do alternate section backgrounds between warm linen and white for visual rhythm.",
+      "Do show textiles in context (terrace, garden, hotel) rather than isolated on white backgrounds.",
+      "Do respect prefers-reduced-motion — disable translateY lifts and image zooms, keep color transitions."
+    ],
+    "donts": [
+      "Don't introduce a second saturated accent color. The one-voice rule: pumpkin only.",
+      "Don't add border-radius to public-facing cards or buttons. Sharp edges = Mosaroma.",
+      "Don't use shadows at rest on any public element. Shadows are hover-only.",
+      "Don't use bounce or elastic easing. The brand's motion is smooth and confident, never playful.",
+      "Don't build generic B2B catalog pages with stock photos and data tables.",
+      "Don't add rabatt banners, pop-ups, or promotional overlays.",
+      "Don't use SaaS-style hero metrics (big number + small label + gradient).",
+      "Don't use gradient text (background-clip: text with gradient).",
+      "Don't nest cards inside cards.",
+      "Don't cross the font roles: no Josefin Sans in body text, no Source Sans 3 in headings, no Montserrat in labels."
+    ]
+  }
+}
