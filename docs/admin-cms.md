@@ -898,6 +898,15 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 - Seed ueberschreibt nie manuell bearbeitete Sections
 - Kein freier PageBuilder — nur kontrollierter feldbasierter Editor fuer feste Section-Styles
 
+#### Produktions-Hinweis: Seed vs. Backfill
+
+- **Homepage Sections** werden beim Seed nur initial angelegt, wenn fuer die Page `home` noch keine Sections existieren
+- Der vollstaendige Seed (`npx prisma db seed`) erstellt Contact Form Fields neu (`deleteMany` + `createMany`). Auf Produktion mit bereits gepflegten Formulardaten sollte er daher **nicht** als einziges Mittel zum Backfill genutzt werden.
+- Fuer Produktion gibt es ein gezieltes Backfill-Script: `npx tsx scripts/backfill-homepage-sections.ts`
+  - Legt nur die Page `home` an (falls sie fehlt) und erstellt 7 Homepage-Sections (falls keine vorhanden)
+  - Fasst keine anderen Daten an (keine Products, Collections, News, Downloads, Contact Form Fields, Users)
+  - Idempotent: kann mehrfach ausgefuehrt werden
+
 ### Spaeter
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
 15. **Drag & Drop Sortierung** — Fuer Listen (Navigationsitems, Sektionen)

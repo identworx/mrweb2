@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SECTION_STYLES, getStyleDef } from "@/lib/admin/page-section-schemas";
 import RichTextEditor from "./RichTextEditor";
+import MediaPickerField from "./MediaPickerField";
 
 interface SectionData {
   id?: string;
@@ -12,6 +13,7 @@ interface SectionData {
   content: string;
   buttonLabel: string;
   buttonHref: string;
+  imageId?: string;
   settings: Record<string, unknown>;
   order: number;
   isActive: boolean;
@@ -128,7 +130,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -149,6 +151,14 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
             />
           </div>
         </div>
+      )}
+
+      {(style === "home-hero" || style === "image-text-feature") && (
+        <MediaPickerField
+          label="Bild"
+          value={form.imageId || ""}
+          onChange={(id) => updateField("imageId", id || undefined)}
+        />
       )}
 
       {style === "cta" && (

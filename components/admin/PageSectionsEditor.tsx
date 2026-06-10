@@ -327,6 +327,7 @@ export default function PageSectionsEditor({ pageId, initialSections, userRole }
                     content: section.content || "",
                     buttonLabel: section.buttonLabel || "",
                     buttonHref: section.buttonHref || "",
+                    imageId: section.imageId || undefined,
                     settings: section.settings || {},
                     order: section.order,
                     isActive: section.isActive,
