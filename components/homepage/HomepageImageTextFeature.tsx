@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
@@ -46,9 +47,10 @@ export default function HomepageImageTextFeature({ section }: Props) {
 
           <div>
             {content && (
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-8">
-                {content}
-              </p>
+              <RichTextRenderer
+                html={content}
+                className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-8"
+              />
             )}
 
             {bullets.length > 0 && (

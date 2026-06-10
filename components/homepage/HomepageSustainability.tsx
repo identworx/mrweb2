@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Stat {
   value: string;
@@ -41,9 +42,10 @@ export default function HomepageSustainability({ section }: Props) {
             {title}
           </h2>
           {content && (
-            <p className="font-body text-white/50 text-base md:text-[1.0625rem] leading-[1.8] mt-5 mx-auto max-w-2xl">
-              {content}
-            </p>
+            <RichTextRenderer
+              html={content}
+              className="font-body text-white/50 text-base md:text-[1.0625rem] leading-[1.8] mt-5 mx-auto max-w-2xl"
+            />
           )}
         </div>
 

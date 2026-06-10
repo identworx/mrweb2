@@ -459,7 +459,7 @@ resolveNavigationLink(item) → {
 
 ### Felder mit Rich Text
 
-- **PageSection content** (text, cross-link, cta Styles)
+- **PageSection content** (alle Styles inkl. Homepage-Sections)
 - **PageSection settings.items** (care-list Eintraege)
 - **NewsArticle content**
 
@@ -471,6 +471,28 @@ resolveNavigationLink(item) → {
 - Fabric Card Felder, Comparison Table Werte
 - Highlight Card Items (kurze Texte)
 - Measurement Rows, Labels, technische Werte
+- Value-Props Card Text (kurz, kein Rich Text noetig)
+- Sustainability Stat Value/Label/Detail (kurz)
+- Bulletpoints (image-text-feature, kurze Texte)
+
+### Absatzverhalten im Editor
+
+- **Enter** erzeugt einen neuen Absatz (`<p>`) — sichtbar als Abstand
+- **Shift+Enter** erzeugt einen Zeilenumbruch (`<br>`) innerhalb desselben Absatzes
+- Der Editor zeigt Absatzabstaende sofort im Backend
+- Gespeichertes Format: HTML mit `<p>`, `<br>`, `<ul>`, `<ol>`, `<a>` etc.
+- Sanitizer entfernt unsichere Tags (script, style, onclick) und behaelt erlaubte Tags
+
+### Absatzdarstellung auf der Website
+
+- `RichTextRenderer` rendert HTML-Inhalte mit Absatzabstaenden (CSS-Klasse `.rich-text`)
+- Zwischen zwei Absaetzen (`<p>`) entsteht automatisch sichtbarer Abstand (0.75em)
+- Listen (`<ul>`, `<ol>`) haben passende Einrueckung und Abstaende
+- Links erscheinen in Mosaroma-Orange mit Unterstreichung
+- **Plain-Text-Fallback:** Aeltere Inhalte ohne HTML-Tags werden automatisch korrekt dargestellt:
+  - Doppelte Zeilenumbrueche (`\n\n`) werden als separate Absaetze gerendert
+  - Einfache Zeilenumbrueche (`\n`) werden als `<br>` innerhalb eines Absatzes gerendert
+  - Plain Text wird HTML-escaped (kein XSS-Risiko)
 
 ### Sanitizing
 

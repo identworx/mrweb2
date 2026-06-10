@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
@@ -66,9 +67,10 @@ export default function HomepageHero({ section }: Props) {
             )}
 
             {description && (
-              <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]">
-                {description}
-              </p>
+              <RichTextRenderer
+                html={description}
+                className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]"
+              />
             )}
 
             <div className="flex flex-wrap items-center gap-4">

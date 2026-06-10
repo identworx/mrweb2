@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
 import type { FrontendDownload } from "@/lib/cms/downloads";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
@@ -36,9 +37,10 @@ export default function HomepageDownloads({ section, downloads }: Props) {
             {title}
           </h2>
           {description && (
-            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-5 max-w-2xl">
-              {description}
-            </p>
+            <RichTextRenderer
+              html={description}
+              className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-5 max-w-2xl"
+            />
           )}
         </div>
 

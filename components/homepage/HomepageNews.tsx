@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
 import type { FrontendNewsCard } from "@/lib/cms/news";
 import NewsCard from "@/components/NewsCard";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
@@ -29,9 +30,10 @@ export default function HomepageNews({ section, articles }: Props) {
             {title}
           </h2>
           {description && (
-            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-5 max-w-2xl">
-              {description}
-            </p>
+            <RichTextRenderer
+              html={description}
+              className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-5 max-w-2xl"
+            />
           )}
         </div>
 
