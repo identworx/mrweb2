@@ -94,7 +94,10 @@ export default function HomepageCollections({ section, collections }: Props) {
 
         {ctaLabel && ctaHref && (
           <div className="mt-12 md:mt-16">
-            <Link href={ctaHref} className="btn-primary">
+            <Link
+              href={ctaHref}
+              className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
+            >
               {ctaLabel}
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />

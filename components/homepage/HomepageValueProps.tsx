@@ -51,42 +51,32 @@ export default function HomepageValueProps({ section }: Props) {
   const ctaHref = section.buttonHref;
 
   return (
-    <section className="py-20 md:py-28 lg:py-32 bg-cream">
+    <section className="py-16 md:py-24 lg:py-28 bg-cream">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="text-center mb-12 md:mb-16">
-          <div className="flex items-center gap-4 mb-5 justify-center">
-            <div className="accent-line" />
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-              {eyebrow}
-            </p>
-          </div>
-          <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
-            {title}
-          </h2>
-        </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-5">
-          {cards.map((card) => (
+          {cards.map((card, i) => (
             <div
               key={card.title}
-              className="bg-white p-7 md:p-8 text-center transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+              className="flex items-start gap-5 p-6 md:p-7 transition-all duration-500 hover:-translate-y-0.5"
             >
-              <div className="inline-flex items-center justify-center w-14 h-14 bg-pumpkin/10 text-pumpkin mb-5">
+              <div className="shrink-0 w-12 h-12 flex items-center justify-center bg-pumpkin/10 text-pumpkin">
                 {ICON_MAP[card.iconKey] || getFallbackIcon()}
               </div>
-              <h3 className="font-heading text-anthracite text-lg font-bold mb-3">
-                {card.title}
-              </h3>
-              <p className="font-body text-text-gray text-sm leading-[1.8]">
-                {card.text}
-              </p>
+              <div>
+                <h3 className="font-heading text-anthracite text-base font-bold mb-1.5">
+                  {card.title}
+                </h3>
+                <p className="font-body text-text-gray text-sm leading-[1.7]">
+                  {card.text}
+                </p>
+              </div>
             </div>
           ))}
         </div>
 
         {ctaLabel && ctaHref && (
-          <div className="mt-12 md:mt-16 text-center">
-            <Link href={ctaHref} className="btn-primary">
+          <div className="mt-10 md:mt-12 text-center">
+            <Link href={ctaHref} className="btn-outline">
               {ctaLabel}
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />

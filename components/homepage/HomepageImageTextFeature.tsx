@@ -22,30 +22,22 @@ export default function HomepageImageTextFeature({ section }: Props) {
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-white">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="mb-10 md:mb-14">
-          <div className="flex items-center gap-4 mb-5">
-            <div className="accent-line" />
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-              {eyebrow}
-            </p>
-          </div>
-          <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
-            {title}
-          </h2>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <div className="relative aspect-[4/3] overflow-hidden bg-cream">
+          <div className="relative aspect-[4/3] overflow-hidden bg-cream group">
             <Image
               src={imageUrl}
               alt={imageAlt}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
 
           <div>
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-tight mb-6">
+              {title}
+            </h2>
+
             {content && (
               <RichTextRenderer
                 html={content}
@@ -68,7 +60,7 @@ export default function HomepageImageTextFeature({ section }: Props) {
 
             {ctaLabel && ctaHref && (
               <div className="mt-10">
-                <Link href={ctaHref} className="btn-primary">
+                <Link href={ctaHref} className="btn-outline">
                   {ctaLabel}
                   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />

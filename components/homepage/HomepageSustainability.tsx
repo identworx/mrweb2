@@ -32,13 +32,7 @@ export default function HomepageSustainability({ section }: Props) {
       />
       <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="text-center mb-14 md:mb-18">
-          <div className="flex items-center gap-4 mb-5 justify-center">
-            <div className="w-12 h-px bg-pumpkin" />
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-              {eyebrow}
-            </p>
-          </div>
-          <h2 className="font-heading text-white text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
+          <h2 className="font-heading text-white text-3xl md:text-[2.75rem] lg:text-[3.25rem] font-extrabold tracking-tight leading-[1.1]">
             {title}
           </h2>
           {content && (
