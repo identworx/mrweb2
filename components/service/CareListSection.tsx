@@ -35,7 +35,7 @@ export default function CareListSection({
   return (
     <div className={className}>
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="max-w-3xl py-14 first:pt-0">
+        <div className="max-w-5xl py-14 first:pt-0">
           {section.eyebrow && (
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />

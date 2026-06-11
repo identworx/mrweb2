@@ -32,7 +32,7 @@ export default function HighlightCardsSection({
           </h2>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-5xl">
           {items.map((item, i) => (
             <div
               key={i}

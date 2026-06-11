@@ -12,7 +12,7 @@ export default function CrossLinkSection({
   return (
     <section className={`section-padding ${className}`}>
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-        <div className="bg-white p-8 md:p-10 border border-light-gray max-w-2xl">
+        <div className="bg-white p-8 md:p-10 border border-light-gray max-w-4xl">
           {section.title && (
             <h3 className="font-heading text-anthracite text-xl font-bold mb-3">
               {section.title}

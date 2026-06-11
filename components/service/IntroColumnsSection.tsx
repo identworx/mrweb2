@@ -42,7 +42,7 @@ export default function IntroColumnsSection({
         )}
 
         {columns.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
             {columns.map((col) => (
               <div key={col.title}>
                 <h3 className="font-heading text-anthracite text-lg font-bold mb-4">

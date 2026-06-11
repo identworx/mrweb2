@@ -116,7 +116,7 @@ export default async function PflegeGarantiePage() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
                   <div>
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-4">
                       Lagerung
@@ -156,7 +156,7 @@ export default async function PflegeGarantiePage() {
                   In drei Schritten sauber.
                 </h2>
 
-                <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8 max-w-5xl">
+                <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
                   {staticWashSteps.map((step) => (
                     <div key={step.step}>
                       <span className="font-heading text-pumpkin text-4xl md:text-5xl font-extrabold tracking-tight">

@@ -38,7 +38,7 @@ export default function NumberedStepsSection({
           </h2>
         )}
 
-        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8 max-w-5xl">
+        <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
           {steps.map((step) => (
             <div key={step.step}>
               <span className="font-heading text-pumpkin text-4xl md:text-5xl font-extrabold tracking-tight">
