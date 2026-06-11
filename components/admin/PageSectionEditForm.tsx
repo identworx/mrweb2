@@ -1039,7 +1039,9 @@ interface PatternColor {
 
 interface PatternEntry {
   name: string;
+  thumbnailUrl?: string;
   colors: PatternColor[];
+  availableCategories?: string[];
 }
 
 interface PatternGroupEntry {
@@ -1047,6 +1049,12 @@ interface PatternGroupEntry {
   quality: string;
   description: string;
   patterns: PatternEntry[];
+}
+
+interface CategoryIconEntry {
+  categorySlug: string;
+  categoryName: string;
+  iconUrl?: string;
 }
 
 function FabricPatternOverviewFields({
@@ -1057,7 +1065,23 @@ function FabricPatternOverviewFields({
   updateSettings: (key: string, value: unknown) => void;
 }) {
   const groups = Array.isArray(settings.groups) ? (settings.groups as PatternGroupEntry[]) : [];
+  const categoryIcons = Array.isArray(settings.categoryIcons) ? (settings.categoryIcons as CategoryIconEntry[]) : [];
 
+  /* ---- Category Icons ---- */
+  function updateCategoryIcon(ci: number, field: keyof CategoryIconEntry, value: string) {
+    const next = categoryIcons.map((c, i) => (i === ci ? { ...c, [field]: value } : c));
+    updateSettings("categoryIcons", next);
+  }
+
+  function addCategoryIcon() {
+    updateSettings("categoryIcons", [...categoryIcons, { categorySlug: "", categoryName: "", iconUrl: "" }]);
+  }
+
+  function removeCategoryIcon(ci: number) {
+    updateSettings("categoryIcons", categoryIcons.filter((_, i) => i !== ci));
+  }
+
+  /* ---- Groups ---- */
   function updateGroup(gi: number, field: keyof Omit<PatternGroupEntry, "patterns">, value: string) {
     const next = groups.map((g, i) => (i === gi ? { ...g, [field]: value } : g));
     updateSettings("groups", next);
@@ -1074,6 +1098,7 @@ function FabricPatternOverviewFields({
     updateSettings("groups", groups.filter((_, i) => i !== gi));
   }
 
+  /* ---- Patterns ---- */
   function updatePattern(gi: number, pi: number, field: string, value: unknown) {
     const next = groups.map((g, i) => {
       if (i !== gi) return g;
@@ -1086,7 +1111,7 @@ function FabricPatternOverviewFields({
   function addPattern(gi: number) {
     const next = groups.map((g, i) => {
       if (i !== gi) return g;
-      return { ...g, patterns: [...g.patterns, { name: "", colors: [{ name: "", hex: "#000000" }] }] };
+      return { ...g, patterns: [...g.patterns, { name: "", thumbnailUrl: "", colors: [{ name: "", hex: "#000000" }], availableCategories: [] }] };
     });
     updateSettings("groups", next);
   }
@@ -1099,6 +1124,21 @@ function FabricPatternOverviewFields({
     updateSettings("groups", next);
   }
 
+  function toggleCategory(gi: number, pi: number, slug: string) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      const patterns = g.patterns.map((p, j) => {
+        if (j !== pi) return p;
+        const cats = p.availableCategories || [];
+        const updated = cats.includes(slug) ? cats.filter((c) => c !== slug) : [...cats, slug];
+        return { ...p, availableCategories: updated };
+      });
+      return { ...g, patterns };
+    });
+    updateSettings("groups", next);
+  }
+
+  /* ---- Colors ---- */
   function updateColor(gi: number, pi: number, ci: number, field: keyof PatternColor, value: string) {
     const next = groups.map((g, i) => {
       if (i !== gi) return g;
@@ -1136,61 +1176,117 @@ function FabricPatternOverviewFields({
     updateSettings("groups", next);
   }
 
+  const inputCn = "w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent";
+
   return (
-    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stoffgruppen ({groups.length})</p>
-        <button type="button" onClick={addGroup} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Gruppe</button>
+    <div className="space-y-6">
+      {/* Category Icons */}
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Produkt-Zeichnungen ({categoryIcons.length})</p>
+          <button type="button" onClick={addCategoryIcon} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Kategorie</button>
+        </div>
+        <p className="text-[11px] text-gray-400">Strichzeichnungen der Produktkategorien. Bilder in der Mediathek hochladen und URL hier einfügen.</p>
+        {categoryIcons.map((cat, ci) => (
+          <div key={ci} className="flex items-center gap-2 p-2 bg-white rounded border border-gray-200">
+            {cat.iconUrl && (
+              <img src={cat.iconUrl} alt="" className="w-8 h-8 object-contain border border-gray-200 bg-gray-50 p-0.5" />
+            )}
+            <input type="text" value={cat.categoryName} onChange={(e) => updateCategoryIcon(ci, "categoryName", e.target.value)} placeholder="Name" className="w-28 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <input type="text" value={cat.categorySlug} onChange={(e) => updateCategoryIcon(ci, "categorySlug", e.target.value)} placeholder="slug" className="w-28 rounded border border-gray-300 px-2 py-1 text-xs font-mono focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <input type="text" value={cat.iconUrl || ""} onChange={(e) => updateCategoryIcon(ci, "iconUrl", e.target.value)} placeholder="Bild-URL" className="flex-1 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <button type="button" onClick={() => removeCategoryIcon(ci)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
+          </div>
+        ))}
       </div>
 
-      {groups.map((group, gi) => (
-        <div key={gi} className="p-4 bg-white rounded border border-gray-200 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">{group.name || `Gruppe ${gi + 1}`}</span>
-            <button type="button" onClick={() => removeGroup(gi)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-xs text-gray-500 mb-0.5">Name</label>
-              <input type="text" value={group.name} onChange={(e) => updateGroup(gi, "name", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-0.5">Qualität</label>
-              <input type="text" value={group.quality} onChange={(e) => updateGroup(gi, "quality", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
-              <input type="text" value={group.description} onChange={(e) => updateGroup(gi, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-            </div>
-          </div>
-
-          <div className="space-y-3 pl-4 border-l-2 border-gray-200">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-gray-500">Muster ({group.patterns.length})</span>
-              <button type="button" onClick={() => addPattern(gi)} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Muster</button>
-            </div>
-            {group.patterns.map((pattern, pi) => (
-              <div key={pi} className="p-3 bg-gray-50 rounded border border-gray-200 space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <input type="text" value={pattern.name} onChange={(e) => updatePattern(gi, pi, "name", e.target.value)} placeholder="Mustername" className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-                  <button type="button" onClick={() => removePattern(gi, pi)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {pattern.colors.map((color, ci) => (
-                    <div key={ci} className="flex items-center gap-1">
-                      <input type="color" value={color.hex} onChange={(e) => updateColor(gi, pi, ci, "hex", e.target.value)} className="w-6 h-6 rounded border border-gray-300 cursor-pointer" />
-                      <input type="text" value={color.name} onChange={(e) => updateColor(gi, pi, ci, "name", e.target.value)} placeholder="Farbe" className="w-24 rounded border border-gray-300 px-1.5 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-                      <button type="button" onClick={() => removeColor(gi, pi, ci)} className="text-gray-400 hover:text-red-500 text-[10px]">✕</button>
-                    </div>
-                  ))}
-                  <button type="button" onClick={() => addColor(gi, pi)} className="text-[10px] text-orange-600 hover:text-orange-700 font-medium px-1">+ Farbe</button>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* Groups */}
+      <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stoffgruppen ({groups.length})</p>
+          <button type="button" onClick={addGroup} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Gruppe</button>
         </div>
-      ))}
+
+        {groups.map((group, gi) => (
+          <div key={gi} className="p-4 bg-white rounded border border-gray-200 space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">{group.name || `Gruppe ${gi + 1}`}</span>
+              <button type="button" onClick={() => removeGroup(gi)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Name</label>
+                <input type="text" value={group.name} onChange={(e) => updateGroup(gi, "name", e.target.value)} className={inputCn} />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Qualität</label>
+                <input type="text" value={group.quality} onChange={(e) => updateGroup(gi, "quality", e.target.value)} className={inputCn} />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+                <input type="text" value={group.description} onChange={(e) => updateGroup(gi, "description", e.target.value)} className={inputCn} />
+              </div>
+            </div>
+
+            <div className="space-y-3 pl-4 border-l-2 border-gray-200">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-500">Muster ({group.patterns.length})</span>
+                <button type="button" onClick={() => addPattern(gi)} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Muster</button>
+              </div>
+              {group.patterns.map((pattern, pi) => (
+                <div key={pi} className="p-3 bg-gray-50 rounded border border-gray-200 space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <input type="text" value={pattern.name} onChange={(e) => updatePattern(gi, pi, "name", e.target.value)} placeholder="Mustername" className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                    <button type="button" onClick={() => removePattern(gi, pi)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
+                  </div>
+
+                  {/* Thumbnail */}
+                  <div>
+                    <label className="block text-[11px] text-gray-500 mb-0.5">Stoff-Thumbnail URL</label>
+                    <div className="flex items-center gap-2">
+                      <input type="text" value={pattern.thumbnailUrl || ""} onChange={(e) => updatePattern(gi, pi, "thumbnailUrl", e.target.value)} placeholder="/api/media/..." className="flex-1 rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                      {pattern.thumbnailUrl && (
+                        <img src={pattern.thumbnailUrl} alt="" className="w-10 h-8 object-cover border border-gray-200" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Available Categories */}
+                  {categoryIcons.length > 0 && (
+                    <div>
+                      <label className="block text-[11px] text-gray-500 mb-1">Verfügbar als</label>
+                      <div className="flex flex-wrap gap-1.5">
+                        {categoryIcons.map((cat) => {
+                          const checked = (pattern.availableCategories || []).includes(cat.categorySlug);
+                          return (
+                            <label key={cat.categorySlug} className={`flex items-center gap-1 px-2 py-1 text-[11px] border cursor-pointer transition-colors ${checked ? "bg-orange-50 border-orange-300 text-orange-700" : "bg-white border-gray-200 text-gray-500 hover:border-gray-300"}`}>
+                              <input type="checkbox" checked={checked} onChange={() => toggleCategory(gi, pi, cat.categorySlug)} className="sr-only" />
+                              {cat.categoryName}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Colors */}
+                  <div className="flex flex-wrap gap-2">
+                    {pattern.colors.map((color, ci) => (
+                      <div key={ci} className="flex items-center gap-1">
+                        <input type="color" value={color.hex} onChange={(e) => updateColor(gi, pi, ci, "hex", e.target.value)} className="w-6 h-6 rounded border border-gray-300 cursor-pointer" />
+                        <input type="text" value={color.name} onChange={(e) => updateColor(gi, pi, ci, "name", e.target.value)} placeholder="Farbe" className="w-24 rounded border border-gray-300 px-1.5 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                        <button type="button" onClick={() => removeColor(gi, pi, ci)} className="text-gray-400 hover:text-red-500 text-[10px]">✕</button>
+                      </div>
+                    ))}
+                    <button type="button" onClick={() => addColor(gi, pi)} className="text-[10px] text-orange-600 hover:text-orange-700 font-medium px-1">+ Farbe</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

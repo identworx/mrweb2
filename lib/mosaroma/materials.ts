@@ -268,7 +268,9 @@ export interface FabricPatternColor {
 
 export interface FabricPattern {
   name: string;
+  thumbnailUrl?: string;
   colors: FabricPatternColor[];
+  availableCategories?: string[];
 }
 
 export interface FabricPatternGroup {
@@ -277,6 +279,24 @@ export interface FabricPatternGroup {
   description: string;
   patterns: FabricPattern[];
 }
+
+export interface ProductCategoryIcon {
+  categorySlug: string;
+  categoryName: string;
+  iconUrl?: string;
+}
+
+export const defaultCategoryIcons: ProductCategoryIcon[] = [
+  { categorySlug: "dekokissen", categoryName: "Dekokissen" },
+  { categorySlug: "hochlehner", categoryName: "Hochlehner" },
+  { categorySlug: "niedriglehner", categoryName: "Niedriglehner" },
+  { categorySlug: "sitzkissen", categoryName: "Sitzkissen" },
+  { categorySlug: "sitzpolster", categoryName: "Sitzpolster" },
+  { categorySlug: "bankauflagen", categoryName: "Bankauflagen" },
+  { categorySlug: "poufs", categoryName: "Poufs" },
+  { categorySlug: "tischsets-tischlaeufer", categoryName: "Tischsets & Läufer" },
+  { categorySlug: "decken", categoryName: "Decken" },
+];
 
 export const fabricPatternGroups: FabricPatternGroup[] = [
   {
@@ -297,6 +317,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Yellow Jasmine", hex: "#E8C547" },
           { name: "Navajo White", hex: "#D4C5A9" },
         ],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen", "bankauflagen", "poufs", "tischsets-tischlaeufer"],
       },
       {
         name: "St. Tropez",
@@ -304,10 +325,12 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Citron", hex: "#D4C040" },
           { name: "Mushroom", hex: "#8B7D6B" },
         ],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen", "sitzpolster", "bankauflagen"],
       },
       {
         name: "Canvas",
         colors: [{ name: "Wheat", hex: "#D4B896" }],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen", "sitzpolster", "bankauflagen"],
       },
       {
         name: "Birdeyes",
@@ -315,6 +338,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Garnet", hex: "#722F37" },
           { name: "Oatmeal", hex: "#C9B99A" },
         ],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Alpine",
@@ -322,10 +346,12 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Forest Green", hex: "#2D5A27" },
           { name: "Midnight", hex: "#1C2841" },
         ],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner"],
       },
       {
         name: "Midnight Marcie",
         colors: [{ name: "Blue", hex: "#1C2841" }],
+        availableCategories: ["bankauflagen"],
       },
     ],
   },
@@ -343,6 +369,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Tuscan", hex: "#A0522D" },
           { name: "Charcoal", hex: "#4A4A4A" },
         ],
+        availableCategories: ["dekokissen", "tischsets-tischlaeufer"],
       },
       {
         name: "Palmway",
@@ -351,6 +378,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Neutrals", hex: "#B5A896" },
           { name: "Peat", hex: "#5C4B35" },
         ],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Tartan",
@@ -358,6 +386,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Tuscan", hex: "#A0522D" },
           { name: "Hemp", hex: "#8B7D6B" },
         ],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Caravan",
@@ -365,26 +394,32 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Warm Pigments", hex: "#C4956B" },
           { name: "Retro Warmth", hex: "#D49B4E" },
         ],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Vanity",
         colors: [{ name: "Charcoal", hex: "#4A4A4A" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Monaco",
         colors: [{ name: "Peat", hex: "#5C4B35" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Parker Stripe",
         colors: [{ name: "Tuscan", hex: "#A0522D" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Longitude",
         colors: [{ name: "Warm Pigments", hex: "#C4956B" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Rain Stripe",
         colors: [{ name: "Brick & Ivory", hex: "#9B4A3C" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Bouclé",
@@ -392,6 +427,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Nordic Icebound", hex: "#B5C8D6" },
           { name: "Glacial Mosaic", hex: "#94A8B0" },
         ],
+        availableCategories: ["dekokissen"],
       },
     ],
   },
@@ -408,6 +444,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Hemp", hex: "#8B7D6B" },
           { name: "Stone", hex: "#A69B8D" },
         ],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen", "bankauflagen"],
       },
       {
         name: "Birdeye",
@@ -415,6 +452,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Terracotta", hex: "#CC6633" },
           { name: "Moss", hex: "#6B8F5E" },
         ],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen", "bankauflagen"],
       },
       {
         name: "Stripe",
@@ -422,6 +460,7 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
           { name: "Sailor Blue", hex: "#2C5F7C" },
           { name: "Rockstone", hex: "#7D7C7A" },
         ],
+        availableCategories: ["dekokissen"],
       },
     ],
   },
@@ -433,50 +472,62 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
       {
         name: "Earthy Chevron",
         colors: [{ name: "Brown", hex: "#6B4226" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Striato Ink",
         colors: [{ name: "Ink", hex: "#2D2D3D" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Midnight Ogee",
         colors: [{ name: "Navy", hex: "#1C2841" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Jungle Canopy",
         colors: [{ name: "Green", hex: "#3D5A3D" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Meadow Bloom",
         colors: [{ name: "Blue", hex: "#4A6FA5" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Red Bloom",
         colors: [{ name: "Red", hex: "#A0522D" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Timeless Stripe",
         colors: [{ name: "Pink", hex: "#C4737B" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Field Stripe",
         colors: [{ name: "Yellow", hex: "#E8C547" }],
+        availableCategories: ["dekokissen"],
       },
       {
         name: "Boletus Brown",
         colors: [{ name: "Brown", hex: "#6B4226" }],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen"],
       },
       {
         name: "Creme au Lait",
         colors: [{ name: "Creme", hex: "#D4C5A9" }],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen"],
       },
       {
         name: "Stone Blue",
         colors: [{ name: "Blue", hex: "#5B7C8A" }],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen"],
       },
       {
         name: "Elder Purple",
         colors: [{ name: "Purple", hex: "#6B4C7C" }],
+        availableCategories: ["dekokissen", "hochlehner", "niedriglehner", "sitzkissen"],
       },
     ],
   },

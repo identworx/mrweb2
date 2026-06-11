@@ -158,16 +158,27 @@ export const SECTION_STYLES: SectionStyleDef[] = [
   {
     style: "fabric-pattern-overview",
     label: "Stoff- & Musterübersicht",
-    description: "Gruppierte Übersicht aller Stoffe und Muster mit Farbfeldern",
+    description: "Gruppierte Übersicht mit Flip-Karten, Stoff-Thumbnails und Produktverfügbarkeit",
     sectionType: "CUSTOM",
     defaultSettings: {
       style: "fabric-pattern-overview",
+      categoryIcons: [
+        { categorySlug: "dekokissen", categoryName: "Dekokissen", iconUrl: "" },
+        { categorySlug: "hochlehner", categoryName: "Hochlehner", iconUrl: "" },
+        { categorySlug: "niedriglehner", categoryName: "Niedriglehner", iconUrl: "" },
+        { categorySlug: "sitzkissen", categoryName: "Sitzkissen", iconUrl: "" },
+        { categorySlug: "sitzpolster", categoryName: "Sitzpolster", iconUrl: "" },
+        { categorySlug: "bankauflagen", categoryName: "Bankauflagen", iconUrl: "" },
+        { categorySlug: "poufs", categoryName: "Poufs", iconUrl: "" },
+        { categorySlug: "tischsets-tischlaeufer", categoryName: "Tischsets & Läufer", iconUrl: "" },
+        { categorySlug: "decken", categoryName: "Decken", iconUrl: "" },
+      ],
       groups: [
         {
           name: "Gruppe",
           quality: "Qualität",
           description: "",
-          patterns: [{ name: "Muster", colors: [{ name: "Farbe", hex: "#000000" }] }],
+          patterns: [{ name: "Muster", thumbnailUrl: "", colors: [{ name: "Farbe", hex: "#000000" }], availableCategories: ["dekokissen"] }],
         },
       ],
     },

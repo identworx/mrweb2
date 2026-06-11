@@ -13,7 +13,9 @@ import {
   olefinBenefits,
   oceanCycleProcess,
   fabricPatternGroups,
+  defaultCategoryIcons,
 } from "@/lib/mosaroma/materials";
+import FabricPatternCard from "@/components/service/FabricPatternCard";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
@@ -470,37 +472,16 @@ export default async function MaterialienPage() {
                       {group.description}
                     </p>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                       {group.patterns.map((pattern) => (
-                        <div
+                        <FabricPatternCard
                           key={pattern.name}
-                          className="bg-cream p-4 transition-all duration-300 motion-safe:hover:-translate-y-0.5"
-                        >
-                          <p className="font-heading text-anthracite text-sm font-semibold mb-3 leading-tight">
-                            {pattern.name}
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {pattern.colors.map((color) => (
-                              <div
-                                key={color.name}
-                                className="group/swatch relative"
-                              >
-                                <div
-                                  className="w-5 h-5 border border-black/10"
-                                  style={{ backgroundColor: color.hex }}
-                                  title={color.name}
-                                />
-                                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-anthracite text-white text-[10px] font-body whitespace-nowrap opacity-0 group-hover/swatch:opacity-100 transition-opacity duration-200 pointer-events-none">
-                                  {color.name}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                          <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.1em] uppercase mt-2">
-                            {pattern.colors.length}{" "}
-                            {pattern.colors.length === 1 ? "Farbe" : "Farben"}
-                          </p>
-                        </div>
+                          name={pattern.name}
+                          thumbnailUrl={pattern.thumbnailUrl}
+                          colors={pattern.colors}
+                          availableCategories={pattern.availableCategories}
+                          categoryIcons={defaultCategoryIcons}
+                        />
                       ))}
                     </div>
                   </div>
