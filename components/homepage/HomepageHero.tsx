@@ -69,7 +69,7 @@ export default function HomepageHero({ section }: Props) {
             {description && (
               <RichTextRenderer
                 html={description}
-                className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]"
+                className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]"
               />
             )}
 

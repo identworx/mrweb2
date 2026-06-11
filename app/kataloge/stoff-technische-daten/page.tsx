@@ -157,16 +157,16 @@ export default async function StoffTechnischeDatenPage() {
                   <table className="w-full min-w-[600px] border border-light-gray bg-white">
                     <thead>
                       <tr className="bg-anthracite">
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Eigenschaft
                         </th>
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Prüfnorm
                         </th>
                         <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-pumpkin">
                           Solution Dyed Olefin
                         </th>
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Piece Dyed Polyester
                         </th>
                       </tr>
@@ -250,7 +250,7 @@ export default async function StoffTechnischeDatenPage() {
                 <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   Fragen zu Stoffen oder technischen Daten?
                 </h2>
-                <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
                   Wir beraten Sie gerne zu Materialien, Prüfwerten und
                   Stoffqualitäten.
                 </p>

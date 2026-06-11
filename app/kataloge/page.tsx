@@ -111,20 +111,20 @@ export default async function KatalogePage() {
                   Katalog 2027
                 </h2>
 
-                <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] mb-6">
+                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] mb-6">
                   Der vollständige Mosaroma Produktkatalog mit Kollektionen,
                   Materialien, Produktmaßen und Serviceinformationen der Saison
                   2027.
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/70">
                     Flipbook
                   </span>
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/70">
                     Deutsch
                   </span>
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/70">
                     English
                   </span>
                 </div>
@@ -146,7 +146,7 @@ export default async function KatalogePage() {
                   )}
                 </div>
 
-                <p className="font-body text-white/50 text-xs mt-6">
+                <p className="font-body text-white/60 text-xs mt-6">
                   Öffnet in neuem Tab.
                 </p>
               </div>

@@ -38,7 +38,7 @@ export default function HomepageSustainability({ section }: Props) {
           {content && (
             <RichTextRenderer
               html={content}
-              className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] mt-5 mx-auto max-w-2xl"
+              className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] mt-5 mx-auto max-w-2xl"
             />
           )}
         </div>
@@ -53,7 +53,7 @@ export default function HomepageSustainability({ section }: Props) {
                 {item.label}
               </p>
               {item.detail && (
-                <p className="font-body text-white/60 text-sm leading-relaxed max-w-xs mx-auto">
+                <p className="font-body text-white/70 text-sm leading-relaxed max-w-xs mx-auto">
                   {item.detail}
                 </p>
               )}

@@ -63,7 +63,7 @@ export default function SectionTeaser({
               className={`font-body text-base md:text-[1.0625rem] leading-[1.8] mt-5 ${
                 centered ? "mx-auto" : ""
               } max-w-2xl ${
-                isDark ? "text-white/60" : "text-text-gray"
+                isDark ? "text-white/70" : "text-text-gray"
               }`}
             >
               {description}

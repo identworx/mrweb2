@@ -150,7 +150,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 </h1>
 
                 {collection.subtitle && (
-                  <p className="font-heading text-white/60 text-base md:text-lg font-medium tracking-tight leading-snug mt-2 line-clamp-1">
+                  <p className="font-heading text-white/70 text-base md:text-lg font-medium tracking-tight leading-snug mt-2 line-clamp-1">
                     {collection.subtitle}
                   </p>
                 )}
@@ -284,7 +284,7 @@ export default async function KollektionPage({ params }: PageProps) {
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
               Kollektion {collection.name} entdecken
             </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
               Blättern Sie durch unseren Katalog oder sprechen Sie uns direkt an
               -- wir beraten Sie gerne.
             </p>

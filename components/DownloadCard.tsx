@@ -36,19 +36,19 @@ export default function DownloadCard({
         <h3 className="font-heading text-anthracite text-base font-bold group-hover:text-white transition-colors duration-500 mb-1">
           {title}
         </h3>
-        <p className="font-body text-text-gray text-sm leading-relaxed group-hover:text-white/60 transition-colors duration-500 mb-3">
+        <p className="font-body text-text-gray text-sm leading-relaxed group-hover:text-white/70 transition-colors duration-500 mb-3">
           {description}
         </p>
 
         {/* Badges */}
         <div className="flex items-center gap-3 mb-4">
-          <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-2 py-1 border border-anthracite/15 text-anthracite/50 group-hover:border-white/20 group-hover:text-white/50 transition-colors duration-500">
+          <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-2 py-1 border border-anthracite/15 text-anthracite/50 group-hover:border-white/20 group-hover:text-white/60 transition-colors duration-500">
             {type}
           </span>
           {languages.map((lang) => (
             <span
               key={lang}
-              className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-2 py-1 border border-anthracite/15 text-anthracite/50 group-hover:border-white/20 group-hover:text-white/50 transition-colors duration-500"
+              className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-2 py-1 border border-anthracite/15 text-anthracite/50 group-hover:border-white/20 group-hover:text-white/60 transition-colors duration-500"
             >
               {lang}
             </span>
@@ -68,7 +68,7 @@ export default function DownloadCard({
           <a
             href={href}
             download
-            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 border border-anthracite/15 text-anthracite/60 hover:bg-pumpkin hover:border-pumpkin hover:text-white group-hover:border-white/20 group-hover:text-white/60 group-hover:hover:bg-pumpkin group-hover:hover:border-pumpkin group-hover:hover:text-white transition-all duration-300"
+            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 border border-anthracite/15 text-anthracite/60 hover:bg-pumpkin hover:border-pumpkin hover:text-white group-hover:border-white/20 group-hover:text-white/70 group-hover:hover:bg-pumpkin group-hover:hover:border-pumpkin group-hover:hover:text-white transition-all duration-300"
           >
             Download
           </a>

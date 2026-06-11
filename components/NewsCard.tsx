@@ -26,7 +26,7 @@ export default function NewsCard({
       className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
     >
       {isPlaceholder && (
-        <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-gray/40 italic">
+        <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-gray/60 italic">
           (Platzhalter)
         </span>
       )}

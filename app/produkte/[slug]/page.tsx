@@ -351,7 +351,7 @@ export default async function ProduktPage({ params }: PageProps) {
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
               Interesse an diesem Produkt?
             </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
               Sprechen Sie uns direkt an — wir beraten Sie gerne zu Materialien,
               Maßen und Verfügbarkeit.
             </p>

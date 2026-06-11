@@ -76,14 +76,14 @@ export default function HomepageCollections({ section, collections }: Props) {
               </div>
 
               <div className="p-4 md:p-5">
-                <span className="font-accent text-text-gray/40 text-[10px] tracking-[0.2em] uppercase">
+                <span className="font-accent text-text-gray/60 text-[10px] tracking-[0.2em] uppercase">
                   {col.number ? `0${col.number}` : col.slug}
                 </span>
                 <h3 className="font-heading text-anthracite text-sm md:text-base font-bold mt-1 group-hover:text-pumpkin transition-colors duration-300">
                   {col.name}
                 </h3>
                 {col.fabric && (
-                  <p className="font-body text-text-gray/50 text-xs mt-1 truncate">
+                  <p className="font-body text-text-gray/60 text-xs mt-1 truncate">
                     {col.fabric}
                   </p>
                 )}

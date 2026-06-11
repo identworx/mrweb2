@@ -129,7 +129,7 @@ export default async function UeberUnsPage() {
               Grün gewebt. Vom Tropfen an.
             </h2>
 
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-14">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-14">
               Spinndüsengefärbtes Polypropylen (PP) spart im Vergleich zu
               konventionell gefärbten Fasern erheblich Wasser, Energie und CO₂.
               Die Farbe wird bereits bei der Faserherstellung eingebracht — ein
@@ -142,14 +142,14 @@ export default async function UeberUnsPage() {
                   <span className="block font-heading text-pumpkin text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
                     {stat.value}
                   </span>
-                  <span className="block font-body text-white/60 text-sm mt-2">
+                  <span className="block font-body text-white/70 text-sm mt-2">
                     {stat.label}
                   </span>
                 </div>
               ))}
             </div>
 
-            <p className="font-body text-white/60 text-sm leading-[1.8] max-w-2xl">
+            <p className="font-body text-white/70 text-sm leading-[1.8] max-w-2xl">
               Im Vergleich zu konventionell stückgefärbtem Polyester. Werte
               basieren auf internen Berechnungen und Branchendaten.
             </p>

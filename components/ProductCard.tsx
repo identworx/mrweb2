@@ -61,7 +61,7 @@ export default function ProductCard({ product }: { product: ProductCardProps }) 
       </div>
 
       <div className="p-4 md:p-5">
-        <p className="font-accent text-text-gray/40 text-[10px] tracking-[0.15em] uppercase">
+        <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.15em] uppercase">
           {displayCollection} · {displayCategory}
         </p>
 

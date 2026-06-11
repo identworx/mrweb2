@@ -42,11 +42,11 @@ export default function ComparisonTableSection({
           <table className="w-full min-w-[600px] border border-light-gray bg-white">
             <thead>
               <tr className="bg-anthracite">
-                <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
+                <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70">
                   Eigenschaft
                 </th>
                 {columns.map((col) => (
-                  <th key={col} className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
+                  <th key={col} className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70">
                     {col}
                   </th>
                 ))}

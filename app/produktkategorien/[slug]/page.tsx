@@ -320,7 +320,7 @@ export default async function KategoriePage({ params }: PageProps) {
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
               Interessiert an {group.name}?
             </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
               Entdecken Sie unser komplettes Sortiment im Katalog oder nehmen
               Sie direkt Kontakt mit uns auf.
             </p>

@@ -171,7 +171,7 @@ export default async function ProduktmassePage() {
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
               Fragen zu Produktmaßen?
             </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
               Sprechen Sie uns an — wir beraten Sie gerne zu Maßen,
               Sonderanfertigungen und Verfügbarkeit.
             </p>

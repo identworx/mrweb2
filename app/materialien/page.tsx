@@ -220,7 +220,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/60" : "text-text-gray/60"
+                            isDark ? "text-white/70" : "text-text-gray/60"
                           }`}
                         >
                           Material
@@ -236,7 +236,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/60" : "text-text-gray/60"
+                            isDark ? "text-white/70" : "text-text-gray/60"
                           }`}
                         >
                           Gewicht
@@ -252,7 +252,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/60" : "text-text-gray/60"
+                            isDark ? "text-white/70" : "text-text-gray/60"
                           }`}
                         >
                           Faerbung
@@ -268,7 +268,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/60" : "text-text-gray/60"
+                            isDark ? "text-white/70" : "text-text-gray/60"
                           }`}
                         >
                           Komfort
@@ -285,7 +285,7 @@ export default async function MaterialienPage() {
                         <div>
                           <span
                             className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                              isDark ? "text-white/60" : "text-text-gray/60"
+                              isDark ? "text-white/70" : "text-text-gray/60"
                             }`}
                           >
                             Auflagenstaerke
@@ -338,7 +338,7 @@ export default async function MaterialienPage() {
                     {fabric.description && (
                       <p
                         className={`font-body text-sm mt-4 italic ${
-                          isDark ? "text-white/60" : "text-text-gray/70"
+                          isDark ? "text-white/70" : "text-text-gray/70"
                         }`}
                       >
                         {fabric.description}

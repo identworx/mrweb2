@@ -18,7 +18,7 @@ export default function CustomSizeCta() {
         Wir fertigen jede Form auf Wunsch in Sondermaßen.
       </p>
 
-      <p className="font-body text-white/60 text-sm mb-6">
+      <p className="font-body text-white/70 text-sm mb-6">
         sales@mosaroma.de
       </p>
 

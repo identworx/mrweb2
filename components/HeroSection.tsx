@@ -58,7 +58,7 @@ export default function HeroSection() {
             </p>
 
             {/* Text */}
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.75] mb-10 md:mb-12 max-w-[28rem] md:max-w-[32rem]">
               Mosaroma verbindet anspruchsvolles Design, langlebige Materialien
               und zuverlässige Outdoor-Performance für Garten, Terrasse,
               Hospitality und Fachhandel.
