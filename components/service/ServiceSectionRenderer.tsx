@@ -10,6 +10,8 @@ import IntroColumnsSection from "./IntroColumnsSection";
 import NumberedStepsSection from "./NumberedStepsSection";
 import CareSymbolsSection from "./CareSymbolsSection";
 import GuaranteeHeroSection from "./GuaranteeHeroSection";
+import ProcessChainSection from "./ProcessChainSection";
+import FabricPatternOverviewSection from "./FabricPatternOverviewSection";
 
 interface Props {
   section: FrontendServiceSection;
@@ -39,6 +41,10 @@ export default function ServiceSectionRenderer({ section, background = "white" }
       return <CareSymbolsSection section={section} className={bg} />;
     case "guarantee-hero":
       return <GuaranteeHeroSection section={section} />;
+    case "process-chain":
+      return <ProcessChainSection section={section} className={bg} />;
+    case "fabric-pattern-overview":
+      return <FabricPatternOverviewSection section={section} className={bg} />;
     case "cta":
       return <ServiceCtaSection section={section} />;
     default:

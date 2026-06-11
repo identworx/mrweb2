@@ -144,6 +144,34 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     sectionType: "CUSTOM",
     defaultSettings: { style: "news-teaser" },
   },
+  {
+    style: "process-chain",
+    label: "Prozesskette",
+    description: "Horizontale Schritt-für-Schritt-Kette (z.B. OceanCycle Kreislauf)",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "process-chain",
+      steps: [{ title: "Schritt 1", description: "" }],
+      highlights: [],
+    },
+  },
+  {
+    style: "fabric-pattern-overview",
+    label: "Stoff- & Musterübersicht",
+    description: "Gruppierte Übersicht aller Stoffe und Muster mit Farbfeldern",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "fabric-pattern-overview",
+      groups: [
+        {
+          name: "Gruppe",
+          quality: "Qualität",
+          description: "",
+          patterns: [{ name: "Muster", colors: [{ name: "Farbe", hex: "#000000" }] }],
+        },
+      ],
+    },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {

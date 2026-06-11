@@ -11,6 +11,8 @@ import {
   propertiesComparison,
   mackintoshTechnology,
   olefinBenefits,
+  oceanCycleProcess,
+  fabricPatternGroups,
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -353,6 +355,158 @@ export default async function MaterialienPage() {
             <p className="font-body text-text-gray/70 text-sm italic mt-10">
               Weitere Qualitäten auf Anfrage möglich.
             </p>
+          </div>
+        </section>
+
+        {/* OceanCycle Kreislauf */}
+        <section className="section-padding bg-cream">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                Nachhaltigkeit
+              </p>
+            </div>
+
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+              {oceanCycleProcess.title}
+            </h2>
+
+            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
+              {oceanCycleProcess.description}
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-light-gray">
+              {oceanCycleProcess.steps.map((step, i) => (
+                <ScrollReveal key={step.title} delay={i * 100}>
+                  <div className="bg-white p-6 md:p-8 h-full relative">
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="flex items-center justify-center w-8 h-8 bg-pumpkin/10 text-pumpkin font-heading text-sm font-bold">
+                        {i + 1}
+                      </span>
+                      {i < oceanCycleProcess.steps.length - 1 && (
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block"
+                        >
+                          <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                        </svg>
+                      )}
+                    </div>
+                    <h3 className="font-heading text-anthracite text-base font-bold mb-2">
+                      {step.title}
+                    </h3>
+                    <p className="font-body text-text-gray text-sm leading-[1.8]">
+                      {step.description}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+
+            <ScrollReveal>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {oceanCycleProcess.highlights.map((hl) => (
+                  <div key={hl} className="flex items-start gap-3">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-pumpkin flex-shrink-0 mt-0.5"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    <span className="font-body text-anthracite text-sm leading-relaxed">
+                      {hl}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+        </section>
+
+        {/* Stoffe & Muster */}
+        <section className="section-padding bg-white">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                Übersicht
+              </p>
+            </div>
+
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+              Stoffe & Muster
+            </h2>
+
+            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
+              Alle verfügbaren Stoffe und Muster im Überblick — von monochromen Dobby-Geweben über strukturierte Jacquards bis zu nachhaltigen NERIO-Stoffen und unserer Basic-Linie.
+            </p>
+
+            <div className="space-y-12 md:space-y-16">
+              {fabricPatternGroups.map((group, gi) => (
+                <ScrollReveal key={group.name} delay={gi * 80}>
+                  <div>
+                    <div className="flex items-baseline gap-3 mb-1">
+                      <h3 className="font-heading text-anthracite text-xl font-bold">
+                        {group.name}
+                      </h3>
+                      <span className="font-accent text-pumpkin text-xs tracking-[0.15em] uppercase">
+                        {group.quality}
+                      </span>
+                    </div>
+                    <p className="font-body text-text-gray text-sm leading-relaxed mb-6">
+                      {group.description}
+                    </p>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+                      {group.patterns.map((pattern) => (
+                        <div
+                          key={pattern.name}
+                          className="bg-cream p-4 transition-all duration-300 motion-safe:hover:-translate-y-0.5"
+                        >
+                          <p className="font-heading text-anthracite text-sm font-semibold mb-3 leading-tight">
+                            {pattern.name}
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {pattern.colors.map((color) => (
+                              <div
+                                key={color.name}
+                                className="group/swatch relative"
+                              >
+                                <div
+                                  className="w-5 h-5 border border-black/10"
+                                  style={{ backgroundColor: color.hex }}
+                                  title={color.name}
+                                />
+                                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 bg-anthracite text-white text-[10px] font-body whitespace-nowrap opacity-0 group-hover/swatch:opacity-100 transition-opacity duration-200 pointer-events-none">
+                                  {color.name}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                          <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.1em] uppercase mt-2">
+                            {pattern.colors.length}{" "}
+                            {pattern.colors.length === 1 ? "Farbe" : "Farben"}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
         </section>
 

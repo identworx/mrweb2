@@ -119,7 +119,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -186,6 +186,8 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "value-props" && <ValuePropsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "image-text-feature" && <BulletsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "sustainability-stats" && <SustainabilityStatsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "process-chain" && <ProcessChainFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "fabric-pattern-overview" && <FabricPatternOverviewFields settings={form.settings} updateSettings={updateSettings} />}
 
       {!styleDef && style !== "" && (
         <JsonFallbackField
@@ -923,6 +925,269 @@ function SustainabilityStatsFields({
                 className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface ProcessStep {
+  title: string;
+  description: string;
+}
+
+function ProcessChainFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const steps = Array.isArray(settings.steps) ? (settings.steps as ProcessStep[]) : [];
+  const highlights = Array.isArray(settings.highlights) ? (settings.highlights as string[]) : [];
+
+  function updateStep(index: number, field: keyof ProcessStep, value: string) {
+    const next = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("steps", next);
+  }
+
+  function addStep() {
+    updateSettings("steps", [...steps, { title: "", description: "" }]);
+  }
+
+  function removeStep(index: number) {
+    updateSettings("steps", steps.filter((_, i) => i !== index));
+  }
+
+  function updateHighlight(index: number, value: string) {
+    const next = [...highlights];
+    next[index] = value;
+    updateSettings("highlights", next);
+  }
+
+  function addHighlight() {
+    updateSettings("highlights", [...highlights, ""]);
+  }
+
+  function removeHighlight(index: number) {
+    updateSettings("highlights", highlights.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Schritte ({steps.length})</p>
+          <button type="button" onClick={addStep} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Schritt</button>
+        </div>
+        {steps.map((step, i) => (
+          <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">{step.title || `Schritt ${i + 1}`}</span>
+              <button type="button" onClick={() => removeStep(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+                <input
+                  type="text"
+                  value={step.title}
+                  onChange={(e) => updateStep(i, "title", e.target.value)}
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+                <textarea
+                  rows={2}
+                  value={step.description}
+                  onChange={(e) => updateStep(i, "description", e.target.value)}
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Highlights ({highlights.length})</p>
+          <button type="button" onClick={addHighlight} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Highlight</button>
+        </div>
+        {highlights.map((hl, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <input
+              type="text"
+              value={hl}
+              onChange={(e) => updateHighlight(i, e.target.value)}
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+            <button type="button" onClick={() => removeHighlight(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface PatternColor {
+  name: string;
+  hex: string;
+}
+
+interface PatternEntry {
+  name: string;
+  colors: PatternColor[];
+}
+
+interface PatternGroupEntry {
+  name: string;
+  quality: string;
+  description: string;
+  patterns: PatternEntry[];
+}
+
+function FabricPatternOverviewFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const groups = Array.isArray(settings.groups) ? (settings.groups as PatternGroupEntry[]) : [];
+
+  function updateGroup(gi: number, field: keyof Omit<PatternGroupEntry, "patterns">, value: string) {
+    const next = groups.map((g, i) => (i === gi ? { ...g, [field]: value } : g));
+    updateSettings("groups", next);
+  }
+
+  function addGroup() {
+    updateSettings("groups", [
+      ...groups,
+      { name: "", quality: "", description: "", patterns: [] },
+    ]);
+  }
+
+  function removeGroup(gi: number) {
+    updateSettings("groups", groups.filter((_, i) => i !== gi));
+  }
+
+  function updatePattern(gi: number, pi: number, field: string, value: unknown) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      const patterns = g.patterns.map((p, j) => (j === pi ? { ...p, [field]: value } : p));
+      return { ...g, patterns };
+    });
+    updateSettings("groups", next);
+  }
+
+  function addPattern(gi: number) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      return { ...g, patterns: [...g.patterns, { name: "", colors: [{ name: "", hex: "#000000" }] }] };
+    });
+    updateSettings("groups", next);
+  }
+
+  function removePattern(gi: number, pi: number) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      return { ...g, patterns: g.patterns.filter((_, j) => j !== pi) };
+    });
+    updateSettings("groups", next);
+  }
+
+  function updateColor(gi: number, pi: number, ci: number, field: keyof PatternColor, value: string) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      const patterns = g.patterns.map((p, j) => {
+        if (j !== pi) return p;
+        const colors = p.colors.map((c, k) => (k === ci ? { ...c, [field]: value } : c));
+        return { ...p, colors };
+      });
+      return { ...g, patterns };
+    });
+    updateSettings("groups", next);
+  }
+
+  function addColor(gi: number, pi: number) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      const patterns = g.patterns.map((p, j) => {
+        if (j !== pi) return p;
+        return { ...p, colors: [...p.colors, { name: "", hex: "#000000" }] };
+      });
+      return { ...g, patterns };
+    });
+    updateSettings("groups", next);
+  }
+
+  function removeColor(gi: number, pi: number, ci: number) {
+    const next = groups.map((g, i) => {
+      if (i !== gi) return g;
+      const patterns = g.patterns.map((p, j) => {
+        if (j !== pi) return p;
+        return { ...p, colors: p.colors.filter((_, k) => k !== ci) };
+      });
+      return { ...g, patterns };
+    });
+    updateSettings("groups", next);
+  }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stoffgruppen ({groups.length})</p>
+        <button type="button" onClick={addGroup} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Gruppe</button>
+      </div>
+
+      {groups.map((group, gi) => (
+        <div key={gi} className="p-4 bg-white rounded border border-gray-200 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{group.name || `Gruppe ${gi + 1}`}</span>
+            <button type="button" onClick={() => removeGroup(gi)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Name</label>
+              <input type="text" value={group.name} onChange={(e) => updateGroup(gi, "name", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Qualität</label>
+              <input type="text" value={group.quality} onChange={(e) => updateGroup(gi, "quality", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+              <input type="text" value={group.description} onChange={(e) => updateGroup(gi, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+
+          <div className="space-y-3 pl-4 border-l-2 border-gray-200">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-gray-500">Muster ({group.patterns.length})</span>
+              <button type="button" onClick={() => addPattern(gi)} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Muster</button>
+            </div>
+            {group.patterns.map((pattern, pi) => (
+              <div key={pi} className="p-3 bg-gray-50 rounded border border-gray-200 space-y-2">
+                <div className="flex items-center justify-between gap-2">
+                  <input type="text" value={pattern.name} onChange={(e) => updatePattern(gi, pi, "name", e.target.value)} placeholder="Mustername" className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                  <button type="button" onClick={() => removePattern(gi, pi)} className="text-gray-400 hover:text-red-500 text-xs">✕</button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {pattern.colors.map((color, ci) => (
+                    <div key={ci} className="flex items-center gap-1">
+                      <input type="color" value={color.hex} onChange={(e) => updateColor(gi, pi, ci, "hex", e.target.value)} className="w-6 h-6 rounded border border-gray-300 cursor-pointer" />
+                      <input type="text" value={color.name} onChange={(e) => updateColor(gi, pi, ci, "name", e.target.value)} placeholder="Farbe" className="w-24 rounded border border-gray-300 px-1.5 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                      <button type="button" onClick={() => removeColor(gi, pi, ci)} className="text-gray-400 hover:text-red-500 text-[10px]">✕</button>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addColor(gi, pi)} className="text-[10px] text-orange-600 hover:text-orange-700 font-medium px-1">+ Farbe</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       ))}

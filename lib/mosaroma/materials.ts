@@ -212,3 +212,272 @@ export const olefinBenefits = {
     "Dank dieser Eigenschaften sind Olefinstoffe besonders für den Außenbereich geeignet. Die Mosaroma Kollektionen bestehen vollständig aus Polypropylen und sind daher dauerhaft für den Einsatz im Freien konzipiert.",
   ],
 };
+
+/* -------------------------------------------------------------------------- */
+/*  OceanCycle Process (catalog p. 98)                                        */
+/* -------------------------------------------------------------------------- */
+
+export interface OceanCycleStep {
+  title: string;
+  description: string;
+}
+
+export const oceanCycleProcess = {
+  title: "OceanCycle Kreislauf",
+  description:
+    "Ozeangebundenes Plastik wird im Umkreis von 50 km der Küsten oder an größeren Wasserwegen gesammelt, die in die Ozeane münden. Durch ein zertifiziertes Verfahren wird es zu hochwertigem Material für unsere NERIO-Stoffe.",
+  steps: [
+    {
+      title: "Sammlung",
+      description:
+        "Ozeangebundenes Plastik wird in Küstennähe und an Wasserwegen eingesammelt, bevor es die Meere erreicht.",
+    },
+    {
+      title: "Sortierung",
+      description:
+        "Die gesammelten Materialien werden nach Polymertyp und Qualität getrennt und für die Weiterverarbeitung vorbereitet.",
+    },
+    {
+      title: "Reinigung",
+      description:
+        "Gründliche Reinigung und Aufbereitung des Materials zur Entfernung von Verunreinigungen und Fremdstoffen.",
+    },
+    {
+      title: "Recycling",
+      description:
+        "Verarbeitung zu hochwertigem recyceltem Polypropylen (rPP), das als Basis für NERIO-Garne dient.",
+    },
+  ] as OceanCycleStep[],
+  highlights: [
+    "Min. 50 % OceanCycle recyceltem Polypropylen",
+    "PFAS-frei — sicherer für Mensch und Planet",
+    "Solution-Dyed für exzellente Farbechtheit",
+    "Auf Langlebigkeit und lange Produktlebensdauer ausgelegt",
+    "Reduziert ozeangebundene Plastikverschmutzung",
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
+/*  Fabric Patterns overview (catalog pp. 14–16)                              */
+/* -------------------------------------------------------------------------- */
+
+export interface FabricPatternColor {
+  name: string;
+  hex: string;
+}
+
+export interface FabricPattern {
+  name: string;
+  colors: FabricPatternColor[];
+}
+
+export interface FabricPatternGroup {
+  name: string;
+  quality: string;
+  description: string;
+  patterns: FabricPattern[];
+}
+
+export const fabricPatternGroups: FabricPatternGroup[] = [
+  {
+    name: "Dobby",
+    quality: "Mackintosh® & Lite",
+    description: "Monochrome, durchgefärbte Gewebe mit klarer Textur.",
+    patterns: [
+      {
+        name: "Rocky Mountain",
+        colors: [
+          { name: "Olive", hex: "#6B7C3F" },
+          { name: "Forest Green", hex: "#2D5A27" },
+          { name: "Sage", hex: "#8BA888" },
+          { name: "Midnight", hex: "#1C2841" },
+          { name: "Mist Gray", hex: "#8B9DAF" },
+          { name: "Crimson Red", hex: "#8B1A1A" },
+          { name: "Rosebloom", hex: "#C4737B" },
+          { name: "Yellow Jasmine", hex: "#E8C547" },
+          { name: "Navajo White", hex: "#D4C5A9" },
+        ],
+      },
+      {
+        name: "St. Tropez",
+        colors: [
+          { name: "Citron", hex: "#D4C040" },
+          { name: "Mushroom", hex: "#8B7D6B" },
+        ],
+      },
+      {
+        name: "Canvas",
+        colors: [{ name: "Wheat", hex: "#D4B896" }],
+      },
+      {
+        name: "Birdeyes",
+        colors: [
+          { name: "Garnet", hex: "#722F37" },
+          { name: "Oatmeal", hex: "#C9B99A" },
+        ],
+      },
+      {
+        name: "Alpine",
+        colors: [
+          { name: "Forest Green", hex: "#2D5A27" },
+          { name: "Midnight", hex: "#1C2841" },
+        ],
+      },
+      {
+        name: "Midnight Marcie",
+        colors: [{ name: "Blue", hex: "#1C2841" }],
+      },
+    ],
+  },
+  {
+    name: "Jacquard",
+    quality: "Mackintosh® & Lite",
+    description: "Strukturierte Gewebe mit komplexen Mustern und edler Haptik.",
+    patterns: [
+      {
+        name: "Bean",
+        colors: [
+          { name: "Olive", hex: "#5C6B2B" },
+          { name: "Azure", hex: "#4A8BAD" },
+          { name: "Citron", hex: "#C5B84A" },
+          { name: "Tuscan", hex: "#A0522D" },
+          { name: "Charcoal", hex: "#4A4A4A" },
+        ],
+      },
+      {
+        name: "Palmway",
+        colors: [
+          { name: "Warm Pigments", hex: "#C4956B" },
+          { name: "Neutrals", hex: "#B5A896" },
+          { name: "Peat", hex: "#5C4B35" },
+        ],
+      },
+      {
+        name: "Tartan",
+        colors: [
+          { name: "Tuscan", hex: "#A0522D" },
+          { name: "Hemp", hex: "#8B7D6B" },
+        ],
+      },
+      {
+        name: "Caravan",
+        colors: [
+          { name: "Warm Pigments", hex: "#C4956B" },
+          { name: "Retro Warmth", hex: "#D49B4E" },
+        ],
+      },
+      {
+        name: "Vanity",
+        colors: [{ name: "Charcoal", hex: "#4A4A4A" }],
+      },
+      {
+        name: "Monaco",
+        colors: [{ name: "Peat", hex: "#5C4B35" }],
+      },
+      {
+        name: "Parker Stripe",
+        colors: [{ name: "Tuscan", hex: "#A0522D" }],
+      },
+      {
+        name: "Longitude",
+        colors: [{ name: "Warm Pigments", hex: "#C4956B" }],
+      },
+      {
+        name: "Rain Stripe",
+        colors: [{ name: "Brick & Ivory", hex: "#9B4A3C" }],
+      },
+      {
+        name: "Bouclé",
+        colors: [
+          { name: "Nordic Icebound", hex: "#B5C8D6" },
+          { name: "Glacial Mosaic", hex: "#94A8B0" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "NERIO",
+    quality: "OceanCycle rPP",
+    description: "Performance-Stoffe aus recyceltem Ozean-Polypropylen.",
+    patterns: [
+      {
+        name: "Basket",
+        colors: [
+          { name: "Chili", hex: "#C0392B" },
+          { name: "Midnight", hex: "#1C2841" },
+          { name: "Hemp", hex: "#8B7D6B" },
+          { name: "Stone", hex: "#A69B8D" },
+        ],
+      },
+      {
+        name: "Birdeye",
+        colors: [
+          { name: "Terracotta", hex: "#CC6633" },
+          { name: "Moss", hex: "#6B8F5E" },
+        ],
+      },
+      {
+        name: "Stripe",
+        colors: [
+          { name: "Sailor Blue", hex: "#2C5F7C" },
+          { name: "Rockstone", hex: "#7D7C7A" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Basic",
+    quality: "Polyester",
+    description: "Unkomplizierte, pflegeleichte Stoffe für saisonale Sortimente.",
+    patterns: [
+      {
+        name: "Earthy Chevron",
+        colors: [{ name: "Brown", hex: "#6B4226" }],
+      },
+      {
+        name: "Striato Ink",
+        colors: [{ name: "Ink", hex: "#2D2D3D" }],
+      },
+      {
+        name: "Midnight Ogee",
+        colors: [{ name: "Navy", hex: "#1C2841" }],
+      },
+      {
+        name: "Jungle Canopy",
+        colors: [{ name: "Green", hex: "#3D5A3D" }],
+      },
+      {
+        name: "Meadow Bloom",
+        colors: [{ name: "Blue", hex: "#4A6FA5" }],
+      },
+      {
+        name: "Red Bloom",
+        colors: [{ name: "Red", hex: "#A0522D" }],
+      },
+      {
+        name: "Timeless Stripe",
+        colors: [{ name: "Pink", hex: "#C4737B" }],
+      },
+      {
+        name: "Field Stripe",
+        colors: [{ name: "Yellow", hex: "#E8C547" }],
+      },
+      {
+        name: "Boletus Brown",
+        colors: [{ name: "Brown", hex: "#6B4226" }],
+      },
+      {
+        name: "Creme au Lait",
+        colors: [{ name: "Creme", hex: "#D4C5A9" }],
+      },
+      {
+        name: "Stone Blue",
+        colors: [{ name: "Blue", hex: "#5B7C8A" }],
+      },
+      {
+        name: "Elder Purple",
+        colors: [{ name: "Purple", hex: "#6B4C7C" }],
+      },
+    ],
+  },
+];
