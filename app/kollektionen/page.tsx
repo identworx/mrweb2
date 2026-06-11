@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
 import CollectionCard from "@/components/CollectionCard";
+import ScrollReveal from "@/components/ScrollReveal";
 import { getPublishedCollections } from "@/lib/cms/collections";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -49,17 +50,18 @@ export default async function KollektionenPage() {
               </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {collections.map((collection) => (
-                  <CollectionCard
-                    key={collection.slug}
-                    name={collection.name}
-                    slug={collection.slug}
-                    description={collection.shortDescription}
-                    moodColors={collection.moodColors}
-                    fabric={collection.fabric}
-                    image={collection.cardImage}
-                    alt={collection.cardAlt}
-                  />
+                {collections.map((collection, i) => (
+                  <ScrollReveal key={collection.slug} delay={i * 80}>
+                    <CollectionCard
+                      name={collection.name}
+                      slug={collection.slug}
+                      description={collection.shortDescription}
+                      moodColors={collection.moodColors}
+                      fabric={collection.fabric}
+                      image={collection.cardImage}
+                      alt={collection.cardAlt}
+                    />
+                  </ScrollReveal>
                 ))}
               </div>
             )}

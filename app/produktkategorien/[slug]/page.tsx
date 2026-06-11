@@ -328,7 +328,7 @@ export default async function KategoriePage({ params }: PageProps) {
               <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen
               </Link>
-              <Link href="/kontakt" className="btn-outline-white">
+              <Link href="/kontakt" className="btn-primary">
                 Kontakt aufnehmen
               </Link>
             </div>

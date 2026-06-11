@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import ScrollReveal from "@/components/ScrollReveal";
 import { servicePages, catalogLinks } from "@/lib/mosaroma/servicePages";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -162,9 +163,9 @@ export default async function KatalogePage() {
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {servicePages.map((page) => (
+              {servicePages.map((page, i) => (
+                <ScrollReveal key={page.slug} delay={i * 100}>
                 <Link
-                  key={page.slug}
                   href={page.href}
                   className="group block bg-white p-8 border border-light-gray transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 >
@@ -197,6 +198,7 @@ export default async function KatalogePage() {
                     </svg>
                   </span>
                 </Link>
+                </ScrollReveal>
               ))}
             </div>
           </div>

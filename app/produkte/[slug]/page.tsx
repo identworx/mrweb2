@@ -356,7 +356,7 @@ export default async function ProduktPage({ params }: PageProps) {
               Maßen und Verfügbarkeit.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-outline-white">
+              <Link href="/kontakt" className="btn-primary">
                 Kontakt aufnehmen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">

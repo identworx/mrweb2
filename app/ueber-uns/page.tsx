@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import ScrollReveal from "@/components/ScrollReveal";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 
@@ -105,18 +106,17 @@ export default async function UeberUnsPage() {
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {promises.map((promise) => (
-                <div
-                  key={promise.title}
-                  className="bg-white p-8 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
-                >
-                  <h3 className="font-heading text-anthracite text-lg font-bold mb-3">
-                    {promise.title}
-                  </h3>
-                  <p className="font-body text-text-gray text-sm leading-[1.8]">
-                    {promise.description}
-                  </p>
-                </div>
+              {promises.map((promise, i) => (
+                <ScrollReveal key={promise.title} delay={i * 80}>
+                  <div className="bg-white p-8 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+                    <h3 className="font-heading text-anthracite text-lg font-bold mb-3">
+                      {promise.title}
+                    </h3>
+                    <p className="font-body text-text-gray text-sm leading-[1.8]">
+                      {promise.description}
+                    </p>
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
           </div>
@@ -137,15 +137,17 @@ export default async function UeberUnsPage() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
-              {sustainabilityStats.map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <span className="block font-heading text-pumpkin text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                    {stat.value}
-                  </span>
-                  <span className="block font-body text-white/70 text-sm mt-2">
-                    {stat.label}
-                  </span>
-                </div>
+              {sustainabilityStats.map((stat, i) => (
+                <ScrollReveal key={stat.label} delay={i * 100}>
+                  <div className="text-center">
+                    <span className="block font-heading text-pumpkin text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                      {stat.value}
+                    </span>
+                    <span className="block font-body text-white/70 text-sm mt-2">
+                      {stat.label}
+                    </span>
+                  </div>
+                </ScrollReveal>
               ))}
             </div>
 
@@ -163,40 +165,42 @@ export default async function UeberUnsPage() {
               Oyten bei Bremen
             </h2>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  14.000m²
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Fläche
-                </span>
+            <ScrollReveal>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-10">
+                <div>
+                  <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
+                    14.000m²
+                  </span>
+                  <span className="block font-body text-text-gray text-sm mt-1">
+                    Fläche
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
+                    seit 2021
+                  </span>
+                  <span className="block font-body text-text-gray text-sm mt-1">
+                    am Standort
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
+                    2–4 Tage
+                  </span>
+                  <span className="block font-body text-text-gray text-sm mt-1">
+                    Lieferzeit DACH
+                  </span>
+                </div>
+                <div>
+                  <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
+                    DACH
+                  </span>
+                  <span className="block font-body text-text-gray text-sm mt-1">
+                    Liefergebiet
+                  </span>
+                </div>
               </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  seit 2021
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  am Standort
-                </span>
-              </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  2–4 Tage
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Lieferzeit DACH
-                </span>
-              </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  DACH
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Liefergebiet
-                </span>
-              </div>
-            </div>
+            </ScrollReveal>
 
             <Link href="/kontakt" className="btn-outline">
               Kontakt aufnehmen

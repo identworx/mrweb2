@@ -295,7 +295,7 @@ export default async function KollektionPage({ params }: PageProps) {
               <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen
               </Link>
-              <Link href="/kontakt" className="btn-outline-white">
+              <Link href="/kontakt" className="btn-primary">
                 Kontakt aufnehmen
               </Link>
             </div>
