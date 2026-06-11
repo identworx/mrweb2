@@ -157,7 +157,7 @@ export default async function ProduktPage({ params }: PageProps) {
                       {moodColors.map((color, i) => (
                         <div
                           key={i}
-                          className="w-4 h-4 first:rounded-l last:rounded-r"
+                          className="w-4 h-4"
                           style={{ backgroundColor: color }}
                         />
                       ))}
@@ -292,7 +292,7 @@ export default async function ProduktPage({ params }: PageProps) {
                       {moodColors.map((color, i) => (
                         <div
                           key={i}
-                          className="w-6 h-6 first:rounded-l last:rounded-r"
+                          className="w-6 h-6"
                           style={{ backgroundColor: color }}
                         />
                       ))}

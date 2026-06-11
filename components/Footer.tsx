@@ -70,7 +70,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.platform}
-                      className="text-white/25 hover:text-pumpkin transition-colors duration-400"
+                      className="text-white/40 hover:text-pumpkin transition-colors duration-400"
                     >
                       <SocialIcon name={s.platform} />
                     </a>
