@@ -12,12 +12,12 @@ export default function GuaranteeHeroSection({
     <section className="section-padding bg-pumpkin">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
-          <div>
-            <span className="block font-heading text-white text-[8rem] md:text-[10rem] lg:text-[12rem] font-extrabold leading-none tracking-tight">
+          <div aria-label={`${number} ${section.title || ""}`} role="group">
+            <span className="block font-heading text-white text-[8rem] md:text-[10rem] lg:text-[12rem] font-extrabold leading-none tracking-tight" aria-hidden="true">
               {number}
             </span>
             {section.title && (
-              <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight -mt-2 md:-mt-4">
+              <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight -mt-2 md:-mt-4" aria-hidden="true">
                 {section.title}
               </h2>
             )}

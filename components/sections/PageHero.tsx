@@ -12,6 +12,12 @@ type PageHeroProps = {
 
 const FALLBACK_IMAGE = "/images/placeholders/page-heroes/default-hero.svg";
 
+const HEIGHT_CLASSES = {
+  compact: "h-[240px] md:h-[260px]",
+  default: "h-[300px] md:h-[320px]",
+  large: "h-[400px] md:h-[480px]",
+};
+
 export default function PageHero({
   eyebrow,
   title,
@@ -19,13 +25,14 @@ export default function PageHero({
   image,
   alt = "MOSAROMA Hero",
   variant = "dark",
+  height = "default",
 }: PageHeroProps) {
   const heroImage = image || FALLBACK_IMAGE;
   const isDark = variant === "dark";
 
   return (
     <section
-      className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end"
+      className={`relative overflow-hidden ${HEIGHT_CLASSES[height]} flex items-end`}
     >
       <Image
         src={heroImage}
@@ -76,7 +83,7 @@ export default function PageHero({
           {description && (
             <p
               className={`font-body text-sm md:text-[0.9375rem] leading-[1.7] mt-3 max-w-2xl line-clamp-2 ${
-                isDark ? "text-white/60" : "text-text-gray"
+                isDark ? "text-white/70" : "text-text-gray"
               }`}
             >
               {description}

@@ -283,3 +283,13 @@ html {
 .rich-text a:hover {
   color: var(--color-burnt-orange);
 }
+
+@media print {
+  header, footer, nav, .print\:hidden { display: none !important; }
+  section { break-inside: avoid; }
+  .bg-pumpkin { background: white !important; color: var(--color-anthracite) !important; }
+  .bg-pumpkin * { color: var(--color-anthracite) !important; }
+  .bg-anthracite { background: white !important; color: var(--color-anthracite) !important; }
+  .bg-anthracite * { color: var(--color-anthracite) !important; }
+  body { font-size: 11pt; }
+}

@@ -1,11 +1,12 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import CareCardPrint from "./CareCardPrint";
 
 interface CareSymbol {
   key: string;
   label: string;
 }
 
-const CARE_ICONS: Record<string, React.ReactNode> = {
+export const CARE_ICONS: Record<string, React.ReactNode> = {
   "wash-30": (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M6 12c0-2 2-4 4-4h12c2 0 4 2 4 4v6c0 1-1 2-2 2H8c-1 0-2-1-2-2v-6z" />
@@ -69,18 +70,19 @@ export default function CareSymbolsSection({
           </h2>
         )}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 md:gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-8 md:gap-6">
           {symbols.map((symbol) => (
-            <div key={symbol.key} className="text-center">
-              <div className="w-16 h-16 mx-auto flex items-center justify-center border border-anthracite/15 text-anthracite mb-4">
+            <figure key={symbol.key} className="text-center">
+              <div className="w-16 h-16 mx-auto flex items-center justify-center border border-anthracite/15 text-anthracite mb-4" aria-hidden="true">
                 {CARE_ICONS[symbol.key] || null}
               </div>
-              <p className="font-body text-text-gray text-xs leading-snug">
+              <figcaption className="font-body text-text-gray text-xs leading-snug">
                 {symbol.label}
-              </p>
-            </div>
+              </figcaption>
+            </figure>
           ))}
         </div>
+        <CareCardPrint />
       </div>
     </section>
   );

@@ -21,12 +21,12 @@ export default function ServiceCtaSection({
         {section.content && (
           <RichTextRenderer
             html={section.content}
-            className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10 prose prose-sm prose-invert max-w-none"
+            className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10"
           />
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {section.buttonHref && section.buttonLabel && (
-            <Link href={section.buttonHref} className="btn-outline-white">
+            <Link href={section.buttonHref} className="btn-primary">
               {section.buttonLabel}
             </Link>
           )}
