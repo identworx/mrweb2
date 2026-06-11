@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import ScrollReveal from "@/components/ScrollReveal";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
   fabricQualities,
@@ -89,7 +90,7 @@ export default async function MaterialienPage() {
             {/* 3 Process Steps */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
               {mackintoshTechnology.steps.map((step, i) => (
-                <div key={step.title} className="relative">
+                <ScrollReveal key={step.title} delay={i * 120}>
                   <div className="flex items-center gap-4 mb-4">
                     <span className="flex items-center justify-center w-10 h-10 bg-pumpkin text-white font-heading text-sm font-bold">
                       {i + 1}
@@ -101,7 +102,6 @@ export default async function MaterialienPage() {
                   <p className="font-body text-text-gray text-sm leading-[1.8]">
                     {step.description}
                   </p>
-                  {/* Subline */}
                   <p className="font-accent text-pumpkin/70 text-xs tracking-[0.15em] uppercase mt-3">
                     {i === 0
                       ? "100 % PP"
@@ -109,38 +109,40 @@ export default async function MaterialienPage() {
                         ? "Additiv wasserabweisend"
                         : "spin-dyed UV-Pigmente"}
                   </p>
-                </div>
+                </ScrollReveal>
               ))}
             </div>
 
             {/* Benefits */}
-            <div className="bg-cream p-8 md:p-12">
-              <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
-                Vorteile der Mackintosh® Technology
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {mackintoshTechnology.benefits.map((benefit) => (
-                  <div key={benefit} className="flex items-start gap-3">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-pumpkin flex-shrink-0 mt-0.5"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span className="font-body text-anthracite text-sm leading-relaxed">
-                      {benefit}
-                    </span>
-                  </div>
-                ))}
+            <ScrollReveal>
+              <div className="bg-cream p-8 md:p-12">
+                <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
+                  Vorteile der Mackintosh® Technology
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {mackintoshTechnology.benefits.map((benefit) => (
+                    <div key={benefit} className="flex items-start gap-3">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-pumpkin flex-shrink-0 mt-0.5"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      <span className="font-body text-anthracite text-sm leading-relaxed">
+                        {benefit}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </section>
 
@@ -152,13 +154,14 @@ export default async function MaterialienPage() {
             </h2>
 
             <div className="flex flex-wrap gap-3 mb-12">
-              {olefinBenefits.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite"
-                >
-                  {tag}
-                </span>
+              {olefinBenefits.tags.map((tag, i) => (
+                <ScrollReveal key={tag} delay={i * 60}>
+                  <span
+                    className="inline-block font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite"
+                  >
+                    {tag}
+                  </span>
+                </ScrollReveal>
               ))}
             </div>
 
@@ -187,14 +190,14 @@ export default async function MaterialienPage() {
               {fabricQualities.map((fabric, i) => {
                 const isDark = i === 0;
                 return (
-                  <div
-                    key={fabric.slug}
-                    className={`p-7 transition-all duration-300 motion-safe:hover:-translate-y-1 ${
-                      isDark
-                        ? "bg-anthracite text-white"
-                        : "bg-light-gray text-anthracite"
-                    }`}
-                  >
+                  <ScrollReveal key={fabric.slug} delay={i * 80}>
+                    <div
+                      className={`p-7 transition-all duration-300 motion-safe:hover:-translate-y-1 ${
+                        isDark
+                          ? "bg-anthracite text-white"
+                          : "bg-light-gray text-anthracite"
+                      }`}
+                    >
                     <h3
                       className={`font-heading text-lg font-bold mb-1 ${
                         isDark ? "text-white" : "text-anthracite"
@@ -341,7 +344,8 @@ export default async function MaterialienPage() {
                         {fabric.description}
                       </p>
                     )}
-                  </div>
+                    </div>
+                  </ScrollReveal>
                 );
               })}
             </div>
@@ -367,6 +371,7 @@ export default async function MaterialienPage() {
               <span className="text-text-gray font-normal">· Polyester</span>
             </h2>
 
+            <ScrollReveal>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 <thead>
@@ -417,6 +422,7 @@ export default async function MaterialienPage() {
                 ² Die Bewertung der Waschechtheit und der Reibungsfestigkeit erfolgt auf einer Skala von 1–5, wobei 1 die schlechteste und 5 die beste Bewertung ist.
               </p>
             </div>
+            </ScrollReveal>
           </div>
         </section>
 
