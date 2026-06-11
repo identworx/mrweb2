@@ -6,6 +6,10 @@ import ComparisonTableSection from "./ComparisonTableSection";
 import HighlightCardsSection from "./HighlightCardsSection";
 import CrossLinkSection from "./CrossLinkSection";
 import ServiceCtaSection from "./ServiceCtaSection";
+import IntroColumnsSection from "./IntroColumnsSection";
+import NumberedStepsSection from "./NumberedStepsSection";
+import CareSymbolsSection from "./CareSymbolsSection";
+import GuaranteeHeroSection from "./GuaranteeHeroSection";
 
 interface Props {
   section: FrontendServiceSection;
@@ -27,6 +31,14 @@ export default function ServiceSectionRenderer({ section, background = "white" }
       return <HighlightCardsSection section={section} className={bg} />;
     case "cross-link":
       return <CrossLinkSection section={section} className={bg} />;
+    case "intro-columns":
+      return <IntroColumnsSection section={section} className={bg} />;
+    case "numbered-steps":
+      return <NumberedStepsSection section={section} className={bg} />;
+    case "care-symbols":
+      return <CareSymbolsSection section={section} className={bg} />;
+    case "guarantee-hero":
+      return <GuaranteeHeroSection section={section} />;
     case "cta":
       return <ServiceCtaSection section={section} />;
     default:

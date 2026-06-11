@@ -22,16 +22,16 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const washSteps = [
+const staticWashSteps = [
   {
     step: "01",
     title: "Waschen",
-    text: "Nehmen Sie die Füllung aus dem Bezug heraus. Waschen Sie den Bezug mit der Hand oder in der Maschine. Wählen Sie das **Feinwäscheprogramm bei max. 30 °C** und benutzen Sie Feinwaschmittel.",
+    text: "Nehmen Sie die Füllung aus dem Bezug heraus. Waschen Sie den Bezug mit der Hand oder in der Maschine. Wählen Sie das **Feinwäscheprogramm bei max. 30 °C** und benutzen Sie Feinwaschmittel.",
   },
   {
     step: "02",
     title: "Flecken behandeln",
-    text: "Hartnäckige Flecken mit einer Lösung aus **15 ml Feinwaschmittel + 50 ml Haushaltsbleichmittel** in 1 Liter Warmwasser (max. 30 °C) entfernen. Fleck leicht abtupfen oder mit weicher Bürste lösen, dann wie in Schritt 1 waschen.",
+    text: "Hartnäckige Flecken mit einer Lösung aus **15 ml Feinwaschmittel + 50 ml Haushaltsbleichmittel** in 1 Liter Warmwasser (max. 30 °C) entfernen. Fleck leicht abtupfen oder mit weicher Bürste lösen, dann wie in Schritt 1 waschen.",
   },
   {
     step: "03",
@@ -40,61 +40,12 @@ const washSteps = [
   },
 ];
 
-const careSymbols = [
-  {
-    label: "Feinwäsche, kein Weichspüler",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M6 12c0-2 2-4 4-4h12c2 0 4 2 4 4v6c0 1-1 2-2 2H8c-1 0-2-1-2-2v-6z" />
-        <path d="M6 12h20" />
-        <text x="16" y="18.5" textAnchor="middle" fill="currentColor" stroke="none" fontSize="6" fontWeight="600" fontFamily="system-ui">30°</text>
-        <path d="M4 20h24" />
-      </svg>
-    ),
-  },
-  {
-    label: "Bleiche verdünnt möglich",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M16 6L28 26H4L16 6z" />
-        <path d="M12 19h8" />
-        <path d="M13 16h6" />
-      </svg>
-    ),
-  },
-  {
-    label: "Nicht in den Trockner",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="16" cy="16" r="10" />
-        <path d="M10 10l12 12" />
-      </svg>
-    ),
-  },
-  {
-    label: "Lufttrocknen",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="8" y="8" width="16" height="16" />
-        <path d="M16 10v12" />
-      </svg>
-    ),
-  },
-  {
-    label: "Von Hitze fernhalten, trocken lagern",
-    icon: (
-      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="16" cy="14" r="6" />
-        <path d="M16 4v2" />
-        <path d="M24 14h2" />
-        <path d="M6 14h2" />
-        <path d="M21.7 8.3l1.4-1.4" />
-        <path d="M8.9 8.3L7.5 6.9" />
-        <path d="M10 26h12" />
-        <path d="M12 23h8" />
-      </svg>
-    ),
-  },
+const staticCareSymbols = [
+  { label: "Feinwäsche, kein Weichspüler", key: "wash-30" },
+  { label: "Bleiche verdünnt möglich", key: "bleach-dilute" },
+  { label: "Nicht in den Trockner", key: "no-dryer" },
+  { label: "Lufttrocknen", key: "line-dry" },
+  { label: "Von Hitze fernhalten, trocken lagern", key: "no-heat" },
 ];
 
 function BoldText({ text }: { text: string }) {
@@ -112,6 +63,51 @@ function BoldText({ text }: { text: string }) {
       )}
     </>
   );
+}
+
+function CareIcon({ iconKey }: { iconKey: string }) {
+  const icons: Record<string, React.ReactNode> = {
+    "wash-30": (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M6 12c0-2 2-4 4-4h12c2 0 4 2 4 4v6c0 1-1 2-2 2H8c-1 0-2-1-2-2v-6z" />
+        <path d="M6 12h20" />
+        <text x="16" y="18.5" textAnchor="middle" fill="currentColor" stroke="none" fontSize="6" fontWeight="600" fontFamily="system-ui">30°</text>
+        <path d="M4 20h24" />
+      </svg>
+    ),
+    "bleach-dilute": (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M16 6L28 26H4L16 6z" />
+        <path d="M12 19h8" />
+        <path d="M13 16h6" />
+      </svg>
+    ),
+    "no-dryer": (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="16" cy="16" r="10" />
+        <path d="M10 10l12 12" />
+      </svg>
+    ),
+    "line-dry": (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="8" y="8" width="16" height="16" />
+        <path d="M16 10v12" />
+      </svg>
+    ),
+    "no-heat": (
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <circle cx="16" cy="14" r="6" />
+        <path d="M16 4v2" />
+        <path d="M24 14h2" />
+        <path d="M6 14h2" />
+        <path d="M21.7 8.3l1.4-1.4" />
+        <path d="M8.9 8.3L7.5 6.9" />
+        <path d="M10 26h12" />
+        <path d="M12 23h8" />
+      </svg>
+    ),
+  };
+  return <>{icons[iconKey] || null}</>;
 }
 
 export default async function PflegeGarantiePage() {
@@ -220,7 +216,7 @@ export default async function PflegeGarantiePage() {
                 </h2>
 
                 <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8 max-w-5xl">
-                  {washSteps.map((step) => (
+                  {staticWashSteps.map((step) => (
                     <div key={step.step}>
                       <span className="font-heading text-pumpkin text-4xl md:text-5xl font-extrabold tracking-tight">
                         {step.step}
@@ -245,10 +241,10 @@ export default async function PflegeGarantiePage() {
                 </h2>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 md:gap-6">
-                  {careSymbols.map((symbol) => (
-                    <div key={symbol.label} className="text-center">
+                  {staticCareSymbols.map((symbol) => (
+                    <div key={symbol.key} className="text-center">
                       <div className="w-16 h-16 mx-auto flex items-center justify-center border border-anthracite/15 text-anthracite mb-4">
-                        {symbol.icon}
+                        <CareIcon iconKey={symbol.key} />
                       </div>
                       <p className="font-body text-text-gray text-xs leading-snug">
                         {symbol.label}
@@ -288,7 +284,7 @@ export default async function PflegeGarantiePage() {
               </div>
             </section>
 
-            {/* Material-Link + CTA */}
+            {/* CTA */}
             <section className="section-padding bg-anthracite">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
                 <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
