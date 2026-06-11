@@ -157,17 +157,17 @@ export default async function StoffTechnischeDatenPage() {
                   <table className="w-full min-w-[600px] border border-light-gray bg-white">
                     <thead>
                       <tr className="bg-anthracite">
-                        <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
                           Eigenschaft
                         </th>
-                        <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
-                          Olefin
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
+                          Prüfnorm
                         </th>
-                        <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
-                          Acryl
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-pumpkin">
+                          Solution Dyed Olefin
                         </th>
-                        <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/60">
-                          Polyester
+                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/60">
+                          Piece Dyed Polyester
                         </th>
                       </tr>
                     </thead>
@@ -182,11 +182,11 @@ export default async function StoffTechnischeDatenPage() {
                           <td className="px-5 py-4 font-heading text-anthracite text-sm font-semibold">
                             {row.property}
                           </td>
-                          <td className="px-5 py-4 font-body text-text-gray text-sm">
-                            {row.olefin}
+                          <td className="px-5 py-4 font-body text-text-gray/60 text-sm">
+                            {row.standard}
                           </td>
-                          <td className="px-5 py-4 font-body text-text-gray text-sm">
-                            {row.acryl}
+                          <td className="px-5 py-4 font-body text-anthracite text-sm font-semibold">
+                            {row.olefin}
                           </td>
                           <td className="px-5 py-4 font-body text-text-gray text-sm">
                             {row.polyester}
@@ -207,7 +207,7 @@ export default async function StoffTechnischeDatenPage() {
                 </h2>
 
                 {fabricQualities[0].highlights && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-5xl">
                     {fabricQualities[0].highlights.map((highlight) => (
                       <div
                         key={highlight}

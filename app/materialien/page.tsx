@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
   fabricQualities,
   propertiesComparison,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getServicePageBySlug } from "@/lib/cms/service-pages";
 
 export const revalidate = 60;
 
@@ -26,10 +28,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, result] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
+    getServicePageBySlug("materialien"),
   ]);
+
+  const hasCmsSections =
+    result.state === "published" && result.page.sections.length > 0;
 
   return (
     <>
@@ -45,6 +51,16 @@ export default async function MaterialienPage() {
         />
         <BreadcrumbBar items={[{ label: "Materialien" }]} />
 
+        {hasCmsSections ? (
+          result.page.sections.map((section, i) => (
+            <ServiceSectionRenderer
+              key={section.id}
+              section={section}
+              background={i % 2 === 0 ? "white" : "cream"}
+            />
+          ))
+        ) : (
+        <>
         {/* Mackintosh® Technologie */}
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -131,34 +147,30 @@ export default async function MaterialienPage() {
         {/* Warum Olefin? */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
-              Warum Olefin?
+            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
+              Warum <em className="text-pumpkin not-italic">Olefin?</em>
             </h2>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5">
-              {olefinBenefits.map((benefit) => (
-                <div
-                  key={benefit}
-                  className="bg-white p-6 text-center transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+            <div className="flex flex-wrap gap-3 mb-12">
+              {olefinBenefits.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite"
                 >
-                  <div className="w-10 h-10 mx-auto mb-4 flex items-center justify-center bg-pumpkin/10 text-pumpkin">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                  <p className="font-heading text-anthracite text-sm font-semibold leading-snug">
-                    {benefit}
-                  </p>
-                </div>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <div className="max-w-3xl space-y-5">
+              {olefinBenefits.paragraphs.map((p, i) => (
+                <p
+                  key={i}
+                  className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
+                  style={{ textWrap: "pretty" }}
+                >
+                  {p}
+                </p>
               ))}
             </div>
           </div>
@@ -333,31 +345,43 @@ export default async function MaterialienPage() {
                 );
               })}
             </div>
+
+            <p className="font-body text-text-gray/70 text-sm italic mt-10">
+              Weitere Qualitäten auf Anfrage möglich.
+            </p>
           </div>
         </section>
 
         {/* Eigenschaften im Vergleich */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="flex items-center gap-4 mb-5">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                Eigenschaften im Vergleich
+              </p>
+            </div>
+
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
-              Eigenschaften im Vergleich
+              Mackintosh® Olefin{" "}
+              <span className="text-text-gray font-normal">· Polyester</span>
             </h2>
 
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[600px]">
+              <table className="w-full min-w-[700px]">
                 <thead>
                   <tr>
-                    <th className="text-left font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
+                    <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
                       Eigenschaft
                     </th>
-                    <th className="text-left font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin py-4 px-5">
-                      Olefin
+                    <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
+                      Prüfnorm
                     </th>
-                    <th className="text-left font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
-                      Acryl
+                    <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-pumpkin py-4 px-5">
+                      Solution Dyed Olefin
                     </th>
-                    <th className="text-left font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
-                      Polyester
+                    <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-4 px-5">
+                      Piece Dyed Polyester
                     </th>
                   </tr>
                 </thead>
@@ -370,11 +394,11 @@ export default async function MaterialienPage() {
                       <td className="font-body text-anthracite text-sm font-medium py-4 px-5">
                         {row.property}
                       </td>
+                      <td className="font-body text-text-gray/60 text-sm py-4 px-5">
+                        {row.standard}
+                      </td>
                       <td className="font-body text-anthracite text-sm font-semibold py-4 px-5">
                         {row.olefin}
-                      </td>
-                      <td className="font-body text-text-gray text-sm py-4 px-5">
-                        {row.acryl}
                       </td>
                       <td className="font-body text-text-gray text-sm py-4 px-5">
                         {row.polyester}
@@ -385,9 +409,14 @@ export default async function MaterialienPage() {
               </table>
             </div>
 
-            <p className="font-body text-text-gray/50 text-xs mt-6">
-              Quelle: ISO 105-B02, ISO 4892-2
-            </p>
+            <div className="mt-6 space-y-1">
+              <p className="font-body text-text-gray/50 text-xs">
+                ¹ Die Bewertung erfolgt auf einer Skala von 1–8, wobei 1 die schlechteste und 8 die beste Bewertung darstellt.
+              </p>
+              <p className="font-body text-text-gray/50 text-xs">
+                ² Die Bewertung der Waschechtheit und der Reibungsfestigkeit erfolgt auf einer Skala von 1–5, wobei 1 die schlechteste und 5 die beste Bewertung ist.
+              </p>
+            </div>
           </div>
         </section>
 
@@ -397,7 +426,7 @@ export default async function MaterialienPage() {
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
               Alle Details im Katalog
             </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
               Entdecken Sie alle Stoffqualitaeten, Farben und technischen Daten
               in unserem aktuellen Katalog.
             </p>
@@ -406,6 +435,8 @@ export default async function MaterialienPage() {
             </Link>
           </div>
         </section>
+        </>
+        )}
       </main>
       <Footer {...layout.footer} />
     </>

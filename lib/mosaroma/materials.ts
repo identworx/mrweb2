@@ -27,7 +27,6 @@ export const fabricQualities: FabricQuality[] = [
       "Bleichfest",
       "Schimmelfest",
       "PFAS-frei",
-      "5 Jahre Garantie auf Stoff",
     ],
   },
   {
@@ -37,18 +36,22 @@ export const fabricQualities: FabricQuality[] = [
     weight: "ca. 170–300 g/m²",
     dyeing: "spinndüsengefärbt",
     comfort: "hoher Sitzkomfort",
-    cushionThickness: "3,5–6 cm Auflagen",
+    cushionThickness: "5–6 cm Auflagen",
     description: "etwas leichterer Stoff",
   },
   {
     slug: "nerio",
-    name: "Nerio",
+    name: "Mackintosh® Nerio",
     material: "100 % Olefin (50 % recycelt)",
-    weight: "ca. 250 g/m²",
+    weight: "ca. 200–230 g/m²",
     dyeing: "spinndüsengefärbt",
     comfort: "hoher Sitzkomfort",
     cushionThickness: "5–6 cm Auflagen",
-    subtitle: "OceanCycle rPP",
+    subtitle: "Aus dem Ozean geboren. Für die Zukunft gemacht.",
+    highlights: [
+      "OceanCycle® zertifiziert",
+      "50 % recyceltes Ozean-Polypropylen",
+    ],
   },
   {
     slug: "basic",
@@ -65,57 +68,85 @@ export const fabricQualities: FabricQuality[] = [
 /*  Properties comparison table (catalog page 11)                             */
 /* -------------------------------------------------------------------------- */
 
-export type MaterialColumnKey = "olefin" | "acryl" | "polyester";
-
 export interface PropertyRow {
   property: string;
+  standard: string;
   olefin: string;
-  acryl: string;
   polyester: string;
 }
 
 export const propertiesComparison: PropertyRow[] = [
   {
     property: "Lichtechtheit",
+    standard: "BS EN ISO 105-B02 / B04",
     olefin: "7–8",
-    acryl: "6–7",
-    polyester: "4–6",
+    polyester: "5–6",
   },
   {
-    property: "UV-Beständigkeit",
-    olefin: "★★★★★",
-    acryl: "★★★★",
-    polyester: "★★★",
+    property: "Reibechtheit",
+    standard: "BS EN ISO 105-X12",
+    olefin: "Trocken/Nass: 4–5",
+    polyester: "Trocken: 4+ / Nass: 3,5+",
   },
   {
-    property: "Wasseraufnahme",
-    olefin: "< 0,1 %",
-    acryl: "1–2 %",
-    polyester: "0,4 %",
+    property: "Waschechtheit",
+    standard: "BS EN ISO 105-C06",
+    olefin: "4–5",
+    polyester: "4",
   },
   {
-    property: "Bleichfest",
-    olefin: "Ja",
-    acryl: "Ja",
-    polyester: "Nein",
+    property: "Meerwasserechtheit",
+    standard: "BS EN ISO 105-E02",
+    olefin: "4–5",
+    polyester: "3,5",
   },
   {
-    property: "Schimmelfest",
-    olefin: "Ja",
-    acryl: "Ja",
-    polyester: "Bedingt",
+    property: "Entflammbarkeit",
+    standard: "BS EN 1021-1",
+    olefin: "Bestanden",
+    polyester: "Bestanden",
   },
   {
-    property: "Gewicht/m²",
-    olefin: "Leicht",
-    acryl: "Mittel",
-    polyester: "Mittel",
+    property: "Schimmelbeständigkeit",
+    standard: "AATCC 147",
+    olefin: "Bestanden",
+    polyester: "Bestanden",
   },
   {
-    property: "CO₂-Bilanz",
-    olefin: "Niedrig",
-    acryl: "Mittel",
-    polyester: "Mittel",
+    property: "Wasserabweisung",
+    standard: "AATCC 22",
+    olefin: "90",
+    polyester: "80",
+  },
+  {
+    property: "Pillingbeständigkeit",
+    standard: "BS EN ISO 12945-2",
+    olefin: "4–5 nach 5.000 Zyklen",
+    polyester: "4–5 nach 5.000 Zyklen",
+  },
+  {
+    property: "Abriebfestigkeit",
+    standard: "BS EN ISO 12947-2",
+    olefin: "15.000–56.000 Zyklen",
+    polyester: "15.000–25.000 Zyklen",
+  },
+  {
+    property: "Gesamtfluor / PFAS",
+    standard: "EN 14582:2016",
+    olefin: "Nicht nachgewiesen",
+    polyester: "Nicht nachgewiesen",
+  },
+  {
+    property: "Produktion / Nachhaltigkeit",
+    standard: "—",
+    olefin: "Geringerer Energieverbrauch in der Produktion",
+    polyester: "—",
+  },
+  {
+    property: "Haptik",
+    standard: "—",
+    olefin: "Sehr weich, textilähnlich",
+    polyester: "—",
   },
 ];
 
@@ -172,11 +203,12 @@ export const mackintoshTechnology: MackintoshTechnology = {
 /*  Olefin benefits                                                            */
 /* -------------------------------------------------------------------------- */
 
-export const olefinBenefits: string[] = [
-  "flexibel",
-  "geringes Gewicht",
-  "hitzebeständig",
-  "formstabil",
-  "langlebig",
-  "für den Außenbereich geeignet",
-];
+export const olefinBenefits = {
+  tags: ["Flexibel", "Geringes Gewicht", "Hitzebeständig", "Formstabil"],
+  paragraphs: [
+    "Polypropylen, seit vielen Jahren auch als Olefin bekannt, ist ein moderner Kunststoff, der durch die Polymerisation von Propylen entsteht. Zu seinen wichtigsten Eigenschaften zählen hohe Flexibilität, geringes Gewicht und eine sehr gute Hitzebeständigkeit.",
+    "Olefin kann zu Fasern versponnen werden und wird sowohl in Industrie- als auch in Haushaltstextilien eingesetzt. Das Material teilt einige Eigenschaften mit Polyethylen, ist jedoch stärker, steifer und widerstandsfähiger. Bei höheren Temperaturen bleibt es formstabil und langlebig. Ein großer Teil der weltweiten Polypropylen-Produktion wird zu Fasern verarbeitet.",
+    "Olefinfasern kommen in zahlreichen Produkten zum Einsatz, darunter Polstermöbel, Teppiche für den Innen- und Außenbereich, Seile, Taue, Fischfanggeräte sowie medizinische Anwendungen. Darüber hinaus werden Vliesstoffe aus Polypropylen zur Bodenstabilisierung und Bewehrung im Bauwesen und Straßenbau genutzt.",
+    "Dank dieser Eigenschaften sind Olefinstoffe besonders für den Außenbereich geeignet. Die Mosaroma Kollektionen bestehen vollständig aus Polypropylen und sind daher dauerhaft für den Einsatz im Freien konzipiert.",
+  ],
+};
