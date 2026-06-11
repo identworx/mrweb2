@@ -42,7 +42,7 @@ export default function HomepageCollections({ section, collections }: Props) {
             <Link
               key={col.slug}
               href={`/kollektionen/${col.slug}`}
-              className="group block relative overflow-hidden bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
+              className="group block relative overflow-hidden bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
             >
               <div className="relative aspect-[3/2] overflow-hidden bg-cream">
                 {col.cardImage ? (
@@ -50,12 +50,12 @@ export default function HomepageCollections({ section, collections }: Props) {
                     src={col.cardImage}
                     alt={col.cardAlt || `${col.name} Collection`}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
                     sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 ) : (
                   <div
-                    className="absolute inset-0 transition-transform duration-700 group-hover:scale-105"
+                    className="absolute inset-0 transition-transform duration-700 motion-safe:group-hover:scale-105"
                     style={{
                       background: col.moodColors.length >= 2
                         ? `linear-gradient(135deg, ${col.moodColors[0]} 0%, ${col.moodColors[col.moodColors.length - 1]} 100%)`

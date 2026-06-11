@@ -32,6 +32,10 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
 
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
@@ -83,6 +87,11 @@ html {
   box-shadow: 0 4px 20px rgba(224, 123, 18, 0.25);
 }
 
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-pumpkin);
+  outline-offset: 2px;
+}
+
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -105,6 +114,11 @@ html {
   background-color: var(--color-anthracite);
   color: white;
   transform: translateY(-1px);
+}
+
+.btn-outline:focus-visible {
+  outline: 2px solid var(--color-anthracite);
+  outline-offset: 2px;
 }
 
 /* White outline variant for dark backgrounds */
@@ -132,6 +146,11 @@ html {
   border-color: rgba(255, 255, 255, 0.6);
 }
 
+.btn-outline-white:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
 /* Decorative line */
 .accent-line {
   width: 3rem;
@@ -149,6 +168,24 @@ html {
 }
 
 /* TipTap Rich Text Editor */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-outline,
+  .btn-outline-white,
+  .img-zoom {
+    transition: none;
+  }
+
+  .btn-primary:hover,
+  .btn-outline:hover {
+    transform: none;
+  }
+
+  .group:hover .img-zoom {
+    transform: none;
+  }
+}
+
 .rich-text-editor-content .tiptap {
   outline: none;
 }
@@ -188,7 +225,7 @@ html {
 }
 
 .rich-text-editor-content .tiptap a {
-  color: #E07B12;
+  color: var(--color-pumpkin);
   text-decoration: underline;
 }
 
@@ -238,11 +275,11 @@ html {
 }
 
 .rich-text a {
-  color: #E07B12;
+  color: var(--color-pumpkin);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
 .rich-text a:hover {
-  color: #D35400;
+  color: var(--color-burnt-orange);
 }

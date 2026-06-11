@@ -118,13 +118,13 @@ export default async function KatalogePage() {
                 </p>
 
                 <div className="flex flex-wrap gap-2 mb-8">
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/50">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
                     Flipbook
                   </span>
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/50">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
                     Deutsch
                   </span>
-                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/50">
+                  <span className="font-heading text-[9px] font-semibold uppercase tracking-[0.1em] px-3 py-1.5 border border-white/20 text-white/60">
                     English
                   </span>
                 </div>
@@ -146,7 +146,7 @@ export default async function KatalogePage() {
                   )}
                 </div>
 
-                <p className="font-body text-white/30 text-xs mt-6">
+                <p className="font-body text-white/50 text-xs mt-6">
                   Öffnet in neuem Tab.
                 </p>
               </div>
@@ -166,7 +166,7 @@ export default async function KatalogePage() {
                 <Link
                   key={page.slug}
                   href={page.href}
-                  className="group block bg-white p-8 border border-light-gray transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                  className="group block bg-white p-8 border border-light-gray transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 >
                   <div className="w-12 h-12 flex items-center justify-center bg-pumpkin/10 text-pumpkin group-hover:bg-pumpkin group-hover:text-white transition-all duration-500 mb-6">
                     <ServiceIcon icon={page.icon} />

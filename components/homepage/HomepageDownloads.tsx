@@ -62,7 +62,7 @@ export default function HomepageDownloads({ section, downloads }: Props) {
                 href={href}
                 target={isExternal ? "_blank" : undefined}
                 rel={isExternal ? "noopener noreferrer" : undefined}
-                className="group flex items-start gap-5 p-7 bg-cream border border-transparent transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:border-pumpkin/10"
+                className="group flex items-start gap-5 p-7 bg-cream border border-transparent transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:border-pumpkin/10"
               >
                 <div className="shrink-0 mt-0.5 w-12 h-12 flex items-center justify-center bg-pumpkin/10 group-hover:bg-pumpkin/20 transition-colors duration-300">
                   <DownloadIcon />

@@ -48,7 +48,7 @@ export default function ProductCard({ product }: { product: ProductCardProps }) 
   return (
     <Link
       href={`/produkte/${product.slug}`}
-      className="group block bg-cream transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+      className="group block bg-cream transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
     >
       <div className="relative aspect-square bg-light-gray overflow-hidden">
         <Image

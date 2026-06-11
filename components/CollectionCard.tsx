@@ -22,7 +22,7 @@ export default function CollectionCard({
   return (
     <Link
       href={`/kollektionen/${slug}`}
-      className="group block bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+      className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
     >
       {/* Color swatches strip */}
       <div className="flex">
@@ -71,7 +71,8 @@ export default function CollectionCard({
               stroke="currentColor"
               strokeWidth="1.5"
               viewBox="0 0 24 24"
-              className="group-hover:translate-x-1 transition-transform duration-300"
+              className="motion-safe:group-hover:translate-x-1 transition-transform duration-300"
+              aria-hidden="true"
             >
               <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
             </svg>

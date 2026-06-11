@@ -108,7 +108,7 @@ export default async function UeberUnsPage() {
               {promises.map((promise) => (
                 <div
                   key={promise.title}
-                  className="bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                  className="bg-white p-8 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 >
                   <h3 className="font-heading text-anthracite text-lg font-bold mb-3">
                     {promise.title}
@@ -142,14 +142,14 @@ export default async function UeberUnsPage() {
                   <span className="block font-heading text-pumpkin text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
                     {stat.value}
                   </span>
-                  <span className="block font-body text-white/50 text-sm mt-2">
+                  <span className="block font-body text-white/60 text-sm mt-2">
                     {stat.label}
                   </span>
                 </div>
               ))}
             </div>
 
-            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-2xl">
+            <p className="font-body text-white/60 text-sm leading-[1.8] max-w-2xl">
               Im Vergleich zu konventionell stückgefärbtem Polyester. Werte
               basieren auf internen Berechnungen und Branchendaten.
             </p>

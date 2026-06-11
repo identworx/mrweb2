@@ -62,7 +62,8 @@ export default function CategoryCard({
               stroke="currentColor"
               strokeWidth="1.5"
               viewBox="0 0 24 24"
-              className="group-hover:translate-x-1 transition-transform duration-300"
+              className="motion-safe:group-hover:translate-x-1 transition-transform duration-300"
+              aria-hidden="true"
             >
               <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
             </svg>

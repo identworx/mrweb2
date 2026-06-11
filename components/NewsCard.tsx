@@ -23,7 +23,7 @@ export default function NewsCard({
   return (
     <Link
       href={`/neuigkeiten/${slug}`}
-      className="group block bg-white transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
+      className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
     >
       {isPlaceholder && (
         <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-gray/40 italic">
@@ -37,7 +37,7 @@ export default function NewsCard({
             src={imageUrl}
             alt={title}
             fill
-            className="object-cover transition-transform duration-700 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
@@ -70,7 +70,8 @@ export default function NewsCard({
             stroke="currentColor"
             strokeWidth="1.5"
             viewBox="0 0 24 24"
-            className="group-hover:translate-x-1 transition-transform duration-300"
+            className="motion-safe:group-hover:translate-x-1 transition-transform duration-300"
+            aria-hidden="true"
           >
             <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
           </svg>

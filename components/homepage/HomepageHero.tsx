@@ -94,7 +94,7 @@ export default function HomepageHero({ section }: Props) {
       </div>
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <svg width="16" height="24" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 16 24" className="opacity-40 animate-bounce">
+        <svg width="16" height="24" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 16 24" className="opacity-50 motion-safe:animate-bounce" aria-hidden="true">
           <path d="M8 3v14m0 0l-5-5m5 5l5-5" />
         </svg>
       </div>

@@ -84,7 +84,7 @@ export default async function NeuigkeitDetailPage({
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                     {article.category}
                   </span>
-                  <span className="font-body text-white/50 text-xs">
+                  <span className="font-body text-white/60 text-xs">
                     {article.publishedAt}
                   </span>
                 </div>
@@ -175,7 +175,7 @@ export default async function NeuigkeitDetailPage({
                 <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
                   {staticItem.tag}
                 </span>
-                <span className="font-body text-white/50 text-xs">
+                <span className="font-body text-white/60 text-xs">
                   {staticItem.date}
                 </span>
               </div>

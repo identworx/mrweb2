@@ -57,7 +57,7 @@ export default function HomepageValueProps({ section }: Props) {
           {cards.map((card, i) => (
             <div
               key={card.title}
-              className="flex items-start gap-5 p-6 md:p-7 transition-all duration-500 hover:-translate-y-0.5"
+              className="flex items-start gap-5 p-6 md:p-7 transition-all duration-500 motion-safe:hover:-translate-y-0.5"
             >
               <div className="shrink-0 w-12 h-12 flex items-center justify-center bg-pumpkin/10 text-pumpkin">
                 {ICON_MAP[card.iconKey] || getFallbackIcon()}

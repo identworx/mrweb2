@@ -115,7 +115,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
 
           <button
             aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
-            className={`lg:hidden p-3 -mr-1 transition-all duration-300 ${
+            className={`lg:hidden p-3.5 -mr-1 transition-all duration-300 ${
               scrolled || mobileOpen
                 ? "text-anthracite hover:bg-light-gray"
                 : "text-white hover:bg-white/10"

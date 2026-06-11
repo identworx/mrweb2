@@ -28,7 +28,7 @@ export default function HomepageImageTextFeature({ section }: Props) {
               src={imageUrl}
               alt={imageAlt}
               fill
-              className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:scale-105"
+              className="object-cover transition-transform duration-[1.2s] ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-safe:group-hover:scale-105"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>

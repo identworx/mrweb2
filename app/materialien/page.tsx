@@ -139,7 +139,7 @@ export default async function MaterialienPage() {
               {olefinBenefits.map((benefit) => (
                 <div
                   key={benefit}
-                  className="bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+                  className="bg-white p-6 text-center transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 >
                   <div className="w-10 h-10 mx-auto mb-4 flex items-center justify-center bg-pumpkin/10 text-pumpkin">
                     <svg
@@ -177,7 +177,7 @@ export default async function MaterialienPage() {
                 return (
                   <div
                     key={fabric.slug}
-                    className={`p-7 transition-all duration-300 hover:-translate-y-1 ${
+                    className={`p-7 transition-all duration-300 motion-safe:hover:-translate-y-1 ${
                       isDark
                         ? "bg-anthracite text-white"
                         : "bg-light-gray text-anthracite"
@@ -205,7 +205,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/50" : "text-text-gray/60"
+                            isDark ? "text-white/60" : "text-text-gray/60"
                           }`}
                         >
                           Material
@@ -221,7 +221,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/50" : "text-text-gray/60"
+                            isDark ? "text-white/60" : "text-text-gray/60"
                           }`}
                         >
                           Gewicht
@@ -237,7 +237,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/50" : "text-text-gray/60"
+                            isDark ? "text-white/60" : "text-text-gray/60"
                           }`}
                         >
                           Faerbung
@@ -253,7 +253,7 @@ export default async function MaterialienPage() {
                       <div>
                         <span
                           className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-white/50" : "text-text-gray/60"
+                            isDark ? "text-white/60" : "text-text-gray/60"
                           }`}
                         >
                           Komfort
@@ -270,7 +270,7 @@ export default async function MaterialienPage() {
                         <div>
                           <span
                             className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                              isDark ? "text-white/50" : "text-text-gray/60"
+                              isDark ? "text-white/60" : "text-text-gray/60"
                             }`}
                           >
                             Auflagenstaerke
@@ -323,7 +323,7 @@ export default async function MaterialienPage() {
                     {fabric.description && (
                       <p
                         className={`font-body text-sm mt-4 italic ${
-                          isDark ? "text-white/50" : "text-text-gray/70"
+                          isDark ? "text-white/60" : "text-text-gray/70"
                         }`}
                       >
                         {fabric.description}

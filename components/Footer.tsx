@@ -57,7 +57,7 @@ export default function Footer({
               height={45}
               className="h-10 w-auto mb-6 brightness-0 invert"
             />
-            <p className="font-body text-white/40 text-sm leading-[1.8] max-w-xs mb-6">
+            <p className="font-body text-white/60 text-sm leading-[1.8] max-w-xs mb-6">
               {brandDescription}
             </p>
             {/* Social */}
@@ -82,7 +82,7 @@ export default function Footer({
           {/* Link columns */}
           {footerColumns.map((column) => (
             <div key={column.title} className="lg:col-span-3">
-              <h4 className="font-heading text-white/50 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
+              <h4 className="font-heading text-white/70 text-[10px] font-semibold uppercase tracking-[0.2em] mb-6">
                 {column.title}
               </h4>
               <ul className="space-y-3.5">
@@ -93,7 +93,7 @@ export default function Footer({
                       {...(link.target === "_blank"
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="font-body text-white/35 text-sm hover:text-white/80 transition-colors duration-400"
+                      className="font-body text-white/60 text-sm hover:text-white/90 transition-colors duration-400"
                     >
                       {link.label}
                     </Link>
@@ -106,7 +106,7 @@ export default function Footer({
 
         {/* Bottom bar */}
         <div className="border-t border-white/[0.06] py-8 flex flex-col md:flex-row items-center justify-between gap-5">
-          <span className="font-body text-white/20 text-xs tracking-wide">
+          <span className="font-body text-white/50 text-xs tracking-wide">
             {copyright}
           </span>
 
@@ -116,7 +116,7 @@ export default function Footer({
               <Link
                 key={item.label}
                 href={item.href}
-                className="font-body text-white/20 hover:text-white/50 transition-colors duration-400"
+                className="font-body text-white/50 hover:text-white/80 transition-colors duration-400"
               >
                 {item.label}
               </Link>
