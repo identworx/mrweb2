@@ -208,14 +208,14 @@ export default async function UeberUnsPage() {
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              Bis zu 5 Jahre Garantie.
+              3 Jahre Garantie.
             </h2>
 
             <div className="max-w-3xl space-y-5">
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
-                Auf alle Mosaroma-Olefin-Stoffe gewähren wir 5 Jahre Garantie
-                gegen Ausbleichen, Pilling und Schimmel — bei sachgemäßer
-                Pflege. Auf Nähte und Verschlüsse 2 Jahre.
+                Auf alle Mosaroma-Bezugsstoffe gewähren wir 3 Jahre Garantie —
+                Schutz vor dem Verlust von Festigkeit oder Farbe, Pilling sowie
+                Abrieb durch normale Nutzung und Witterungseinflüsse.
               </p>
             </div>
           </div>
