@@ -42,18 +42,26 @@ export default async function NeuigkeitenPage() {
 
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {articles.map((item) => (
-                <NewsCard
-                  key={item.slug}
-                  title={item.title}
-                  tag={item.tag}
-                  date={item.date}
-                  description={item.description}
-                  slug={item.slug}
-                />
-              ))}
-            </div>
+            {articles.length === 0 ? (
+              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
+                Aktuell gibt es keine Neuigkeiten. Bitte schauen Sie später
+                wieder vorbei.
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {articles.map((item) => (
+                  <NewsCard
+                    key={item.slug}
+                    title={item.title}
+                    tag={item.tag}
+                    date={item.date}
+                    description={item.description}
+                    slug={item.slug}
+                    imageUrl={item.imageUrl}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       </main>

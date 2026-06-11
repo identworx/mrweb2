@@ -155,12 +155,6 @@ export default async function KategoriePage({ params }: PageProps) {
         {group.features.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Eigenschaften
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
                 Merkmale &amp; Vorteile
               </h2>
@@ -168,7 +162,7 @@ export default async function KategoriePage({ params }: PageProps) {
                 {group.features.map((feature) => (
                   <div
                     key={feature}
-                    className="flex items-start gap-4 p-6 bg-cream rounded"
+                    className="flex items-start gap-4 p-6 bg-cream"
                   >
                     <svg
                       width="20"
@@ -197,12 +191,6 @@ export default async function KategoriePage({ params }: PageProps) {
         {staticCat && staticCat.dimensions.length > 0 && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Abmessungen
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
                 Verfügbare Größen
               </h2>
@@ -231,12 +219,6 @@ export default async function KategoriePage({ params }: PageProps) {
         {staticCat && staticCat.availableFabrics.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Materialien
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
                 Verfügbare Stoffqualitäten
               </h2>
@@ -277,12 +259,6 @@ export default async function KategoriePage({ params }: PageProps) {
         {collectionGroups.length > 0 && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Produkte
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
                 Alle {group.name}
               </h2>
@@ -349,7 +325,7 @@ export default async function KategoriePage({ params }: PageProps) {
               Sie direkt Kontakt mit uns auf.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kataloge" className="btn-primary">
+              <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen
               </Link>
               <Link href="/kontakt" className="btn-outline-white">

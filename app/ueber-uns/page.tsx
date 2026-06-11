@@ -125,13 +125,6 @@ export default async function UeberUnsPage() {
         {/* Nachhaltigkeit */}
         <section className="section-padding bg-anthracite">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="w-12 h-px bg-pumpkin" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Nachhaltigkeit
-              </p>
-            </div>
-
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-6">
               Grün gewebt. Vom Tropfen an.
             </h2>
@@ -166,13 +159,6 @@ export default async function UeberUnsPage() {
         {/* Standort */}
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Standort
-              </p>
-            </div>
-
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
               Oyten bei Bremen
             </h2>
@@ -221,25 +207,15 @@ export default async function UeberUnsPage() {
         {/* Garantie */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Garantie
-              </p>
-            </div>
-
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              3 Jahre auf Mosaroma.
+              Bis zu 5 Jahre Garantie.
             </h2>
 
             <div className="max-w-3xl space-y-5">
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
                 Auf alle Mosaroma-Olefin-Stoffe gewähren wir 5 Jahre Garantie
                 gegen Ausbleichen, Pilling und Schimmel — bei sachgemäßer
-                Pflege.
-              </p>
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
-                Auf Nähte und Verschlüsse 2 Jahre.
+                Pflege. Auf Nähte und Verschlüsse 2 Jahre.
               </p>
             </div>
           </div>

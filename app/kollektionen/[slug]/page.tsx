@@ -168,12 +168,6 @@ export default async function KollektionPage({ params }: PageProps) {
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="max-w-3xl">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Stimmung
-                  </p>
-                </div>
                 <p className="font-heading text-anthracite text-xl md:text-2xl lg:text-[1.75rem] font-medium tracking-tight leading-snug">
                   {collection.longDescription}
                 </p>
@@ -186,12 +180,6 @@ export default async function KollektionPage({ params }: PageProps) {
         {collection.moodColors.length > 0 && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Farbpalette
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
                 Die Stimmungsfarben
               </h2>
@@ -233,13 +221,6 @@ export default async function KollektionPage({ params }: PageProps) {
                 {productGroups.map((group) => (
                   <div key={group.slug} id={`kategorie-${group.slug}`}>
                     <div className="mb-6">
-                      <div className="flex items-center gap-4 mb-2">
-                        <div className="accent-line" />
-                        <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                          {group.products.length}{" "}
-                          {group.products.length === 1 ? "Produkt" : "Produkte"}
-                        </p>
-                      </div>
                       <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
                         {group.name}
                       </h3>
@@ -260,12 +241,6 @@ export default async function KollektionPage({ params }: PageProps) {
         {collection.fabric && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Stoffqualität
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-6">
                 Material dieser Kollektion
               </h2>
@@ -314,7 +289,7 @@ export default async function KollektionPage({ params }: PageProps) {
               -- wir beraten Sie gerne.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kollektionen" className="btn-primary">
+              <Link href="/kollektionen" className="btn-outline-white">
                 Alle Kollektionen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">

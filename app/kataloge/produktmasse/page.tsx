@@ -97,12 +97,6 @@ export default async function ProduktmassePage() {
         {/* Lehner */}
         <section id="lehner" className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                {measurementGroups[1].title}
-              </p>
-            </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
               Hochlehner & Niedriglehner
             </h2>
@@ -118,12 +112,6 @@ export default async function ProduktmassePage() {
         {/* Bankauflagen */}
         <section id="bankauflagen" className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                {measurementGroups[2].title}
-              </p>
-            </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
               Bankauflagen
             </h2>
@@ -137,12 +125,6 @@ export default async function ProduktmassePage() {
         {/* Poufs */}
         <section id="poufs" className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                {measurementGroups[3].title}
-              </p>
-            </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
               Poufs
             </h2>
@@ -158,12 +140,6 @@ export default async function ProduktmassePage() {
         {/* Tischsets & Tischläufer */}
         <section id="tischsets" className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                {measurementGroups[4].title}
-              </p>
-            </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
               Tischsets & Tischläufer
             </h2>
@@ -200,7 +176,7 @@ export default async function ProduktmassePage() {
               Sonderanfertigungen und Verfügbarkeit.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-primary">
+              <Link href="/kontakt" className="btn-outline-white">
                 Kontakt aufnehmen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">

@@ -130,14 +130,16 @@ export default async function PflegeGarantiePage() {
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="max-w-3xl space-y-14">
-                  {staticCareSections.map((s) => (
+                  {staticCareSections.map((s, idx) => (
                     <div key={s.title}>
-                      <div className="flex items-center gap-4 mb-5">
-                        <div className="accent-line" />
-                        <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                          {s.title}
-                        </p>
-                      </div>
+                      {idx === 0 && (
+                        <div className="flex items-center gap-4 mb-5">
+                          <div className="accent-line" />
+                          <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                            {s.title}
+                          </p>
+                        </div>
+                      )}
                       <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
                         {s.title}
                       </h2>
@@ -145,7 +147,7 @@ export default async function PflegeGarantiePage() {
                         {s.items.map((item) => (
                           <div
                             key={item}
-                            className="flex items-start gap-4 p-5 bg-cream rounded"
+                            className="flex items-start gap-4 p-5 bg-cream"
                           >
                             <CheckIcon />
                             <span className="font-body text-anthracite text-sm md:text-base leading-relaxed">
@@ -199,7 +201,7 @@ export default async function PflegeGarantiePage() {
                   Garantiebedingungen.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link href="/kontakt" className="btn-primary">
+                  <Link href="/kontakt" className="btn-outline-white">
                     Kontakt aufnehmen
                   </Link>
                   <Link href="/kataloge" className="btn-outline-white">

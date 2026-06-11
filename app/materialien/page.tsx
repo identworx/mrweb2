@@ -131,13 +131,6 @@ export default async function MaterialienPage() {
         {/* Warum Olefin? */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Faserkunde
-              </p>
-            </div>
-
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
               Warum Olefin?
             </h2>
@@ -174,13 +167,6 @@ export default async function MaterialienPage() {
         {/* Unsere Stoffe */}
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Stoffqualitaeten
-              </p>
-            </div>
-
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
               Unsere Stoffe
             </h2>
@@ -353,13 +339,6 @@ export default async function MaterialienPage() {
         {/* Eigenschaften im Vergleich */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Vergleich
-              </p>
-            </div>
-
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
               Eigenschaften im Vergleich
             </h2>
@@ -422,7 +401,7 @@ export default async function MaterialienPage() {
               Entdecken Sie alle Stoffqualitaeten, Farben und technischen Daten
               in unserem aktuellen Katalog.
             </p>
-            <Link href="/kataloge" className="btn-primary">
+            <Link href="/kataloge" className="btn-outline-white">
               Katalog ansehen
             </Link>
           </div>

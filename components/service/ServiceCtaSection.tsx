@@ -26,7 +26,7 @@ export default function ServiceCtaSection({
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {section.buttonHref && section.buttonLabel && (
-            <Link href={section.buttonHref} className="btn-primary">
+            <Link href={section.buttonHref} className="btn-outline-white">
               {section.buttonLabel}
             </Link>
           )}

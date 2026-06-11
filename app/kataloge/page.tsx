@@ -55,7 +55,7 @@ function ExternalLinkIcon() {
   );
 }
 
-function CatalogCard({ download, variant }: { download: FrontendDownload; variant: "primary" | "secondary" }) {
+function CatalogCard({ download }: { download: FrontendDownload }) {
   const href = download.externalUrl || download.fileUrl || "#";
   const isExternal = download.opensInNewTab || href.startsWith("http");
 
@@ -64,7 +64,7 @@ function CatalogCard({ download, variant }: { download: FrontendDownload; varian
       href={href}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
-      className={variant === "primary" ? "btn-primary" : "btn-outline-white"}
+      className="btn-outline-white"
     >
       {download.buttonLabel}
       {isExternal && <ExternalLinkIcon />}
@@ -131,14 +131,14 @@ export default async function KatalogePage() {
 
                 <div className="flex flex-wrap items-center gap-4">
                   {catalogDe ? (
-                    <CatalogCard download={catalogDe} variant="primary" />
+                    <CatalogCard download={catalogDe} />
                   ) : (
-                    <a href={catalogLinks.de} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                    <a href={catalogLinks.de} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
                       Deutsch ansehen <ExternalLinkIcon />
                     </a>
                   )}
                   {catalogEn ? (
-                    <CatalogCard download={catalogEn} variant="secondary" />
+                    <CatalogCard download={catalogEn} />
                   ) : (
                     <a href={catalogLinks.en} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
                       English ansehen <ExternalLinkIcon />
@@ -157,12 +157,6 @@ export default async function KatalogePage() {
         {/* Service Cards */}
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Service
-              </p>
-            </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
               Weitere Informationen
             </h2>

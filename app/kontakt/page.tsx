@@ -160,13 +160,6 @@ export default async function KontaktPage() {
 
               {/* Right: Contact form */}
               <div>
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Nachricht
-                  </p>
-                </div>
-
                 <h2 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight mb-8">
                   Schreiben Sie uns
                 </h2>
@@ -185,56 +178,6 @@ export default async function KontaktPage() {
           </div>
         </section>
 
-        {/* Standort info */}
-        <section className="section-padding bg-cream">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Standort
-              </p>
-            </div>
-
-            <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              Oyten bei Bremen
-            </h2>
-
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  14.000m²
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Fläche
-                </span>
-              </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  seit 2021
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  am Standort
-                </span>
-              </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  2–4 Tage
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Lieferzeit DACH
-                </span>
-              </div>
-              <div>
-                <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                  DACH
-                </span>
-                <span className="block font-body text-text-gray text-sm mt-1">
-                  Liefergebiet
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* CTA */}
         <section className="section-padding bg-anthracite">
@@ -246,7 +189,7 @@ export default async function KontaktPage() {
               Entdecken Sie alle Produkte, Stoffqualitäten und Kollektionen in
               unserem aktuellen Katalog.
             </p>
-            <Link href="/kataloge" className="btn-primary">
+            <Link href="/kataloge" className="btn-outline-white">
               Katalog ansehen
             </Link>
           </div>

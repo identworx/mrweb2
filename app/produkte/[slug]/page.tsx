@@ -249,12 +249,6 @@ export default async function ProduktPage({ params }: PageProps) {
         {fabric && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Material
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
                 {fabric.name}
               </h2>
@@ -291,12 +285,6 @@ export default async function ProduktPage({ params }: PageProps) {
         {staticCollection && (
           <section className="section-padding bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Kollektion
-                </p>
-              </div>
               <div className="bg-white p-8 md:p-10 border border-light-gray max-w-2xl">
                 {moodColors.length > 0 && (
                   <div className="flex items-center gap-3 mb-4">
@@ -345,12 +333,6 @@ export default async function ProduktPage({ params }: PageProps) {
         {relatedProducts.length > 0 && (
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Weitere Produkte
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-10">
                 Das könnte Sie auch interessieren
               </h2>
@@ -374,7 +356,7 @@ export default async function ProduktPage({ params }: PageProps) {
               Maßen und Verfügbarkeit.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-primary">
+              <Link href="/kontakt" className="btn-outline-white">
                 Kontakt aufnehmen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">

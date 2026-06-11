@@ -149,12 +149,6 @@ export default async function StoffTechnischeDatenPage() {
             {/* Static fallback — Properties Comparison */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Vergleich
-                  </p>
-                </div>
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
                   Eigenschaften im Vergleich
                 </h2>
@@ -208,12 +202,6 @@ export default async function StoffTechnischeDatenPage() {
             {/* Static fallback — Mackintosh Highlights */}
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Highlights
-                  </p>
-                </div>
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
                   Mackintosh® im Detail
                 </h2>
@@ -223,7 +211,7 @@ export default async function StoffTechnischeDatenPage() {
                     {fabricQualities[0].highlights.map((highlight) => (
                       <div
                         key={highlight}
-                        className="flex items-start gap-3 p-4 bg-cream rounded"
+                        className="flex items-start gap-3 p-4 bg-cream"
                       >
                         <CheckIcon />
                         <span className="font-body text-anthracite text-sm leading-relaxed">
@@ -267,7 +255,7 @@ export default async function StoffTechnischeDatenPage() {
                   Stoffqualitäten.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link href="/kontakt" className="btn-primary">
+                  <Link href="/kontakt" className="btn-outline-white">
                     Kontakt aufnehmen
                   </Link>
                   <Link href="/kataloge" className="btn-outline-white">
