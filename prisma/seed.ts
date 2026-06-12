@@ -919,6 +919,22 @@ async function main() {
       description:
         "Design trifft Performance. Hochwertige Outdoor-Textilien für langlebige Momente im Freien.",
       copyrightText: "© 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.",
+      ctaEnabled: true,
+      ctaEyebrow: "Beratung & Muster",
+      ctaTitle: "Unsicher bei Farbe, Material oder Format?",
+      ctaText: "Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Formen und Sondermaßen beraten.",
+      ctaPrimaryLabel: "Muster anfordern",
+      ctaPrimaryHref: "/kontakt",
+      ctaSecondaryLabel: "Kataloge ansehen",
+      ctaSecondaryHref: "/kataloge",
+      contactTitle: "Kontakt",
+      companyName: "Mosaroma Industries GmbH",
+      addressLine1: "Rudolf-Diesel-Str. 11–13",
+      postalCity: "28876 Oyten",
+      country: "Deutschland",
+      email: "info@mosaroma.de",
+      contactButtonLabel: "Kontakt aufnehmen",
+      contactButtonHref: "/kontakt",
     },
   });
   console.log(`✔ FooterSettings: ${footer.id}`);

@@ -28,13 +28,31 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { logoMediaId, description, copyrightText, socialLinks } = body;
 
     const data = {
-      logoMediaId: logoMediaId || null,
-      description: description || null,
-      copyrightText: copyrightText || null,
-      socialLinks: socialLinks ? socialLinks : Prisma.JsonNull,
+      logoMediaId: body.logoMediaId || null,
+      description: body.description || null,
+      copyrightText: body.copyrightText || null,
+      socialLinks: body.socialLinks ? body.socialLinks : Prisma.JsonNull,
+      ctaEnabled: typeof body.ctaEnabled === "boolean" ? body.ctaEnabled : true,
+      ctaEyebrow: body.ctaEyebrow || null,
+      ctaTitle: body.ctaTitle || null,
+      ctaText: body.ctaText || null,
+      ctaPrimaryLabel: body.ctaPrimaryLabel || null,
+      ctaPrimaryHref: body.ctaPrimaryHref || null,
+      ctaSecondaryLabel: body.ctaSecondaryLabel || null,
+      ctaSecondaryHref: body.ctaSecondaryHref || null,
+      contactTitle: body.contactTitle || null,
+      companyName: body.companyName || null,
+      addressLine1: body.addressLine1 || null,
+      addressLine2: body.addressLine2 || null,
+      postalCity: body.postalCity || null,
+      country: body.country || null,
+      email: body.email || null,
+      phone: body.phone || null,
+      contactButtonLabel: body.contactButtonLabel || null,
+      contactButtonHref: body.contactButtonHref || null,
+      bottomNote: body.bottomNote || null,
     };
 
     const settings = await prisma.footerSettings.upsert({

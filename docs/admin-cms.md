@@ -400,9 +400,13 @@ resolveNavigationLink(item) → {
 ### Footer/Legal Links
 
 - Footer-Links (Kollektionen, Service, Legal) nutzen dasselbe NavigationMenu/NavigationItem System
-- FooterSettings speichert nur Logo, Description, Copyright, Social Links — NICHT Navigation
+- FooterSettings speichert Logo, Description, Copyright, Social Links, CTA-Felder, Kontakt-Daten, Bottom-Note
+- Footer hat 3 Ebenen: CTA-Bar (optional), Hauptfooter (Marke + Navigation + Kontakt), Bottom-Bar (Copyright + Legal)
+- CTA-Bar kann ueber `ctaEnabled` im Admin ein-/ausgeschaltet werden
+- Kontakt-Spalte zeigt Firmenadresse, E-Mail, Telefon und einen Button
 - Legal-Links (Impressum, Datenschutz, AGB) sind als PAGE verknuepft mit DRAFT-Seiten
 - Legal-Links werden oeffentlich erst angezeigt, wenn die Seiten PUBLISHED sind
+- Backfill-Script: `npx tsx scripts/backfill-premium-footer-settings.ts` (idempotent, produktionssicher)
 
 ### Dateien
 
@@ -579,6 +583,9 @@ Alle Helper nutzen `import "server-only"` und `try/catch` mit Fallback auf `null
 | Footer-Beschreibung    | `FooterSettings.description`     | `lib/mosaroma/footer.ts`              |
 | Footer-Copyright       | `FooterSettings.copyrightText`   | Hardcoded Fallback                    |
 | Footer-Social-Links    | `FooterSettings.socialLinks`     | Statische Platzhalter-Icons           |
+| Footer-CTA             | `FooterSettings.cta*`            | Hardcoded Defaults (Beratung & Muster)|
+| Footer-Kontakt         | `FooterSettings.company*/address*` | Mosaroma Industries GmbH Defaults   |
+| Footer-Bottom-Note     | `FooterSettings.bottomNote`      | Nicht angezeigt wenn leer             |
 | Seitenname             | `SiteSettings.siteName`          | "Mosaroma"                            |
 | SEO-Titel (global)     | `SiteSettings.defaultSeoTitle`   | "Mosaroma \| Design trifft Performance" |
 | SEO-Beschreibung       | `SiteSettings.defaultSeoDescription` | Statischer Text                   |
