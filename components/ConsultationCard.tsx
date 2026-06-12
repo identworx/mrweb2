@@ -1,6 +1,22 @@
 import Link from "next/link";
 
-export default function ConsultationCard() {
+interface ConsultationCardProps {
+  title?: string;
+  content?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+export default function ConsultationCard({
+  title = "Welche Farbwelt passt zu Ihnen?",
+  content = "Wir beraten Sie persönlich und senden passende Muster für Ihr Projekt.",
+  primaryLabel = "Muster & Beratung",
+  primaryHref = "/kontakt",
+  secondaryLabel = "Kontakt aufnehmen",
+  secondaryHref = "/kontakt",
+}: ConsultationCardProps) {
   return (
     <div className="relative flex flex-col border border-black/[0.06] bg-cream overflow-hidden">
       <div className="absolute inset-0 opacity-[0.03]"
@@ -16,23 +32,23 @@ export default function ConsultationCard() {
           <div className="w-10 h-px bg-pumpkin mb-5" />
 
           <h3 className="font-heading text-anthracite text-lg md:text-xl font-bold tracking-tight leading-tight mb-3">
-            Welche Farbwelt passt zu Ihnen?
+            {title}
           </h3>
 
           <p className="font-body text-text-gray text-sm leading-[1.7] mb-6">
-            Wir beraten Sie persönlich und senden passende Muster für Ihr Projekt.
+            {content}
           </p>
         </div>
 
         <div className="flex flex-col gap-3 mt-auto">
-          <Link href="/kontakt" className="btn-primary text-center">
-            Muster & Beratung
+          <Link href={primaryHref} className="btn-primary text-center">
+            {primaryLabel}
           </Link>
           <Link
-            href="/kontakt"
+            href={secondaryHref}
             className="inline-flex items-center justify-center gap-2 font-heading text-anthracite/60 text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
           >
-            Kontakt aufnehmen
+            {secondaryLabel}
             <svg
               width="12"
               height="12"

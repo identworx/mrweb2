@@ -437,6 +437,69 @@ async function main() {
   }
 
   // ---------------------------------------------------------------------------
+  // 3d. PageSections for kollektionen page
+  // ---------------------------------------------------------------------------
+  const kollektionenPage = await prisma.page.findUnique({ where: { slug: "kollektionen" } });
+
+  if (kollektionenPage) {
+    const existingKollSections = await prisma.pageSection.count({ where: { pageId: kollektionenPage.id } });
+    if (existingKollSections === 0) {
+      await prisma.pageSection.createMany({
+        data: [
+          {
+            pageId: kollektionenPage.id,
+            type: "CUSTOM",
+            title: "Welche Farbwelt passt zu Ihnen?",
+            content: "Wir beraten Sie persönlich und senden passende Muster für Ihr Projekt.",
+            buttonLabel: "Muster & Beratung",
+            buttonHref: "/kontakt",
+            order: 0,
+            settings: {
+              style: "collection-consultation-card",
+              secondaryLabel: "Kontakt aufnehmen",
+              secondaryHref: "/kontakt",
+            },
+          },
+          {
+            pageId: kollektionenPage.id,
+            type: "CUSTOM",
+            title: "Eine Performance. Sieben Farbwelten.",
+            content: "Unabhängig von der Farbe: Jede Mosaroma-Kollektion wird aus wetterfesten Outdoor-Stoffen gefertigt.",
+            order: 1,
+            settings: {
+              style: "collection-benefits",
+              items: [
+                { iconKey: "sun", title: "UV-beständig", text: "Spinndüsengefärbte Fasern für höchste Lichtechtheit, auch bei dauerhafter Sonneneinstrahlung." },
+                { iconKey: "droplet", title: "Wasserabweisend", text: "Stoffe, die Regen und Feuchtigkeit abperlen lassen und schnell trocknen." },
+                { iconKey: "shield", title: "Schimmelfest", text: "Resistente Materialien, die auch in feuchten Umgebungen sauber bleiben." },
+                { iconKey: "star", title: "3 Jahre Garantie", text: "Qualitätsversprechen auf alle Mosaroma-Produkte gemäß Garantiebedingungen." },
+              ],
+            },
+          },
+          {
+            pageId: kollektionenPage.id,
+            type: "CTA",
+            eyebrow: "Noch unentschlossen?",
+            title: "Lassen Sie sich ein Musterset schicken.",
+            content: "Vergleichen Sie die Farbwelten in Ruhe zu Hause. Wir senden Ihnen Stoffmuster Ihrer Favoriten und beraten zu Formen und Sondermaßen.",
+            buttonLabel: "Musterset anfordern",
+            buttonHref: "/kontakt",
+            order: 2,
+            settings: {
+              style: "collection-cta",
+              secondaryLabel: "Kataloge ansehen",
+              secondaryHref: "/kataloge",
+            },
+          },
+        ],
+      });
+      console.log("✔ PageSections: kollektionen (3 sections)");
+    } else {
+      console.log(`✔ PageSections: kollektionen already has ${existingKollSections} sections, skipping`);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // 4. Navigation menus
   // ---------------------------------------------------------------------------
 

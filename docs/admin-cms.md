@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-10 (Homepage CMS-Managed Sections) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-12 (Kollektionen-Sections CMS-editierbar) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -96,6 +96,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 - 12 Measurements (Kissen, Auflagen, Lehner, Bankauflagen, Poufs, Tischsets)
 - 4 News-Artikel (Kollektionen 2027, Mackintosh, NERIO Oceana, Pflegehinweise)
 - 7 PageSections fuer Startseite (1 home-hero, 1 value-props, 1 image-text-feature, 1 collection-showcase, 1 sustainability-stats, 1 downloads-teaser, 1 news-teaser)
+- 3 PageSections fuer Kollektionen (1 collection-consultation-card, 1 collection-benefits, 1 collection-cta)
 - 6 PageSections fuer Pflege & Garantie (4 care-list, 1 cross-link, 1 cta)
 - 4 PageSections fuer Stoff- & technische Daten (1 fabric-cards, 1 comparison-table, 1 highlight-cards, 1 cta)
 
@@ -875,7 +876,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 ### Phase 2E — erledigt
 - [x] PageSections CRUD API (`/api/admin/page-sections`) mit Auth, Validierung, Rollenlogik
 - [x] PageSectionsEditor Komponente — Sektionen anzeigen, anlegen, bearbeiten, sortieren, aktivieren/deaktivieren, loeschen, duplizieren
-- [x] PageSectionEditForm — Style-spezifische Formulare fuer alle 7 Section-Styles
+- [x] PageSectionEditForm — Style-spezifische Formulare fuer alle Section-Styles
 - [x] Section-Style-Schemas (`lib/admin/page-section-schemas.ts`) — Labels, Defaults, Beschreibungen
 - [x] Integration in `/admin/pages/[id]` — Sektionen unterhalb der Seitengrundaten
 - [x] Pages-Liste zeigt Anzahl aktiver/gesamter Sektionen
@@ -904,6 +905,9 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 | sustainability-stats | Nachhaltigkeit | Dunkle Sektion mit Statistik-Karten | Startseite |
 | downloads-teaser | Downloads-Teaser | Zeigt aktive Downloads als Karten | Startseite |
 | news-teaser | News-Teaser | Zeigt 3 neueste News-Artikel | Startseite |
+| collection-consultation-card | Beratungskarte (Kollektionen) | Service-Karte im Collection Grid mit Beratungsangebot | Kollektionen |
+| collection-benefits | Kollektion Benefits | Performance-Vorteile (UV, Wasser, Schimmel, Garantie) | Kollektionen |
+| collection-cta | Musterset-CTA (Kollektionen) | Dunkler Premium-CTA fuer Musterset-Anforderung | Kollektionen |
 
 #### Seiten mit Sections
 
@@ -912,7 +916,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 | Startseite | home | 7 (1× home-hero, 1× value-props, 1× image-text-feature, 1× collection-showcase, 1× sustainability-stats, 1× downloads-teaser, 1× news-teaser) |
 | Pflege & Garantie | pflege-garantie | 6 (4× care-list, 1× cross-link, 1× cta) |
 | Stoff- & techn. Daten | stoff-technische-daten | 4 (1× fabric-cards, 1× comparison-table, 1× highlight-cards, 1× cta) |
-| Kollektionen | kollektionen | 0 (statische Fallbacks fuer Benefits + CTA, PageSections optional) |
+| Kollektionen | kollektionen | 3 (1× collection-consultation-card, 1× collection-benefits, 1× collection-cta) |
 
 #### Seed vs. Admin
 
@@ -925,8 +929,10 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 
 - **Homepage Sections** werden beim Seed nur initial angelegt, wenn fuer die Page `home` noch keine Sections existieren
 - Der vollstaendige Seed (`npx prisma db seed`) erstellt Contact Form Fields neu (`deleteMany` + `createMany`). Auf Produktion mit bereits gepflegten Formulardaten sollte er daher **nicht** als einziges Mittel zum Backfill genutzt werden.
-- Fuer Produktion gibt es ein gezieltes Backfill-Script: `npx tsx scripts/backfill-homepage-sections.ts`
-  - Legt nur die Page `home` an (falls sie fehlt) und erstellt 7 Homepage-Sections (falls keine vorhanden)
+- Fuer Produktion gibt es gezielte Backfill-Scripts:
+  - `npx tsx scripts/backfill-homepage-sections.ts` — 7 Homepage-Sections
+  - `npx tsx scripts/backfill-collection-page-sections.ts` — 3 Kollektionen-Sections
+  - Jedes Script legt nur die jeweilige Page an (falls sie fehlt) und erstellt fehlende Sections
   - Fasst keine anderen Daten an (keine Products, Collections, News, Downloads, Contact Form Fields, Users)
   - Idempotent: kann mehrfach ausgefuehrt werden
 
@@ -1211,6 +1217,9 @@ Die oeffentliche Seite `/kollektionen` zeigt alle veroeffentlichten Kollektionen
 | Collection Farbpunkte | `Collection.moodColors` (JSON) | Kollektionen → Stimmungsfarben |
 | Collection Card-Bild | `Collection.cardImage` (MediaAsset) | Kollektionen → Bilder → Card-Bild |
 | SEO Titel/Beschreibung | `Page.seoTitle/Description` | Seiten → kollektionen → SEO |
+| Beratungskarte (Titel, Text, Buttons) | `PageSection` (style: collection-consultation-card) | Seiten → kollektionen → Sektionen |
+| Benefits (Titel, 4 Items) | `PageSection` (style: collection-benefits) | Seiten → kollektionen → Sektionen |
+| Musterset-CTA (Eyebrow, Titel, Text, Buttons) | `PageSection` (style: collection-cta) | Seiten → kollektionen → Sektionen |
 
 ### Collection Card Bilder pflegen
 
@@ -1232,16 +1241,37 @@ Wenn eine Kollektion kein Card-Bild im CMS hat, wird ein CSS-Placeholder angezei
 
 Unter dem Hero wird ein durchgaengiger Farbbalken aus allen Kollektion-Stimmungsfarben angezeigt. Dieser entsteht automatisch aus den `moodColors` aller veroeffentlichten Kollektionen.
 
-### Benefits-Sektion und CTA
+### CMS-editierbare Sektionen
 
-Die Seite unterstuetzt PageSections: Wenn im Admin fuer die Seite "kollektionen" Sektionen angelegt werden (z.B. highlight-cards fuer Benefits, cta fuer Musterset-CTA), werden diese statt der statischen Fallbacks gerendert. Ohne CMS-Sektionen werden hochwertige statische Fallbacks angezeigt:
+Alle redaktionellen Inhalte der Seite sind ueber PageSections im CMS bearbeitbar. Die Seite verwendet 3 dedizierte Section-Styles:
 
-- **Benefits:** UV-bestaendig, Wasserabweisend, Schimmelfest, 3 Jahre Garantie
-- **CTA:** Dunkler Anthrazit-Bereich mit "Musterset anfordern" + "Kataloge ansehen"
+| Section-Style | Label | Was wird bearbeitet | Admin-Felder |
+|--------------|-------|---------------------|-------------|
+| `collection-consultation-card` | Beratungskarte | Service-Karte im Grid | Titel, Inhalt, Primaer-Button (Label + Href), Sekundaer-Link (Label + Href) |
+| `collection-benefits` | Kollektion Benefits | 4 Performance-Vorteile | Titel, Inhalt, Items (je Icon + Titel + Text) |
+| `collection-cta` | Musterset-CTA | Dunkler CTA am Seitenende | Eyebrow, Titel, Inhalt, Primaer-Button (Label + Href), Sekundaer-Link (Label + Href) |
+
+#### Admin-Pflege
+
+1. Seiten → `kollektionen` → Sektionen
+2. Beratungskarte: Titel "Welche Farbwelt passt zu Ihnen?", Inhalt, CTA-Buttons
+3. Benefits: Titel, 4 Items mit Icon-Auswahl (Sonne/Tropfen/Schild/Stern), Titel und Beschreibung
+4. Musterset-CTA: Eyebrow, Titel, Inhalt, Button-Labels und Ziel-URLs
+
+#### Fallback-Verhalten
+
+Wenn eine Section im CMS fehlt, wird der hartcodierte Fallback aus `app/kollektionen/page.tsx` verwendet. Alle Fallback-Texte entsprechen den Seed-Daten.
+
+#### Backfill
+
+Fuer Produktion: `npx tsx scripts/backfill-collection-page-sections.ts`
+- Erstellt nur die 3 fehlenden Sections (prueft jede einzeln per Style)
+- Fasst keine Collections, Products oder andere Daten an
+- Idempotent: mehrfach ausfuehrbar ohne Duplikate
 
 ### Beratungskarte
 
-Am Ende des Collection-Grids erscheint eine Service-Karte "Welche Farbwelt passt zu Ihnen?" mit Links zu `/kontakt`. Diese Karte hat ein anderes Design als die Collection Cards (Cream-Hintergrund, kein Bild, kein Farbbalken).
+Am Ende des Collection-Grids erscheint eine CMS-editierbare Service-Karte "Welche Farbwelt passt zu Ihnen?" mit Links zu `/kontakt`. Diese Karte hat ein anderes Design als die Collection Cards (Cream-Hintergrund, kein Bild, kein Farbbalken).
 
 ### Designregeln
 

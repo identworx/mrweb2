@@ -119,7 +119,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -130,7 +130,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -188,6 +188,27 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "sustainability-stats" && <SustainabilityStatsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "process-chain" && <ProcessChainFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "fabric-pattern-overview" && <FabricPatternOverviewFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "collection-consultation-card" && (
+        <CollectionConsultationCardFields
+          settings={form.settings}
+          updateSettings={updateSettings}
+        />
+      )}
+      {style === "collection-benefits" && (
+        <CollectionBenefitsFields
+          settings={form.settings}
+          updateSettings={updateSettings}
+        />
+      )}
+      {style === "collection-cta" && (
+        <CtaFields
+          buttonLabel={form.buttonLabel}
+          buttonHref={form.buttonHref}
+          settings={form.settings}
+          updateField={updateField}
+          updateSettings={updateSettings}
+        />
+      )}
 
       {!styleDef && style !== "" && (
         <JsonFallbackField
@@ -1287,6 +1308,127 @@ function FabricPatternOverviewFields({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function CollectionConsultationCardFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sekundärer Link</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär Label</label>
+          <input
+            type="text"
+            value={(settings.secondaryLabel as string) || ""}
+            onChange={(e) => updateSettings("secondaryLabel", e.target.value)}
+            placeholder="z.B. Kontakt aufnehmen"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär Href</label>
+          <input
+            type="text"
+            value={(settings.secondaryHref as string) || ""}
+            onChange={(e) => updateSettings("secondaryHref", e.target.value)}
+            placeholder="z.B. /kontakt"
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface CollectionBenefitItem {
+  iconKey: string;
+  title: string;
+  text: string;
+}
+
+const BENEFIT_ICON_OPTIONS = [
+  { value: "sun", label: "Sonne (UV)" },
+  { value: "droplet", label: "Tropfen (Wasser)" },
+  { value: "shield", label: "Schild (Schutz)" },
+  { value: "star", label: "Stern (Garantie)" },
+];
+
+function CollectionBenefitsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const items = Array.isArray(settings.items) ? (settings.items as CollectionBenefitItem[]) : [];
+
+  function updateItem(index: number, field: keyof CollectionBenefitItem, value: string) {
+    const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+    updateSettings("items", next);
+  }
+
+  function addItem() {
+    updateSettings("items", [...items, { iconKey: "shield", title: "", text: "" }]);
+  }
+
+  function removeItem(index: number) {
+    updateSettings("items", items.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Benefits ({items.length})</p>
+        <button type="button" onClick={addItem} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Benefit</button>
+      </div>
+      {items.map((item, i) => (
+        <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{item.title || `Benefit ${i + 1}`}</span>
+            <button type="button" onClick={() => removeItem(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Icon</label>
+              <select
+                value={item.iconKey}
+                onChange={(e) => updateItem(i, "iconKey", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                {BENEFIT_ICON_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+              <input
+                type="text"
+                value={item.title}
+                onChange={(e) => updateItem(i, "title", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Text</label>
+              <textarea
+                rows={2}
+                value={item.text}
+                onChange={(e) => updateItem(i, "text", e.target.value)}
+                className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

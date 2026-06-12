@@ -183,6 +183,43 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       ],
     },
   },
+  {
+    style: "collection-consultation-card",
+    label: "Beratungskarte (Kollektionen)",
+    description: "Service-Karte im Collection Grid mit Beratungsangebot und Musterset-CTA",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "collection-consultation-card",
+      secondaryLabel: "Kontakt aufnehmen",
+      secondaryHref: "/kontakt",
+    },
+  },
+  {
+    style: "collection-benefits",
+    label: "Kollektion Benefits",
+    description: "Performance-Vorteile der Mosaroma-Kollektionen (UV, Wasser, Schimmel, Garantie)",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "collection-benefits",
+      items: [
+        { iconKey: "sun", title: "UV-beständig", text: "Spinndüsengefärbte Fasern für höchste Lichtechtheit, auch bei dauerhafter Sonneneinstrahlung." },
+        { iconKey: "droplet", title: "Wasserabweisend", text: "Stoffe, die Regen und Feuchtigkeit abperlen lassen und schnell trocknen." },
+        { iconKey: "shield", title: "Schimmelfest", text: "Resistente Materialien, die auch in feuchten Umgebungen sauber bleiben." },
+        { iconKey: "star", title: "3 Jahre Garantie", text: "Qualitätsversprechen auf alle Mosaroma-Produkte gemäß Garantiebedingungen." },
+      ],
+    },
+  },
+  {
+    style: "collection-cta",
+    label: "Musterset-CTA (Kollektionen)",
+    description: "Dunkler Premium-CTA für Musterset-Anforderung am Ende der Kollektionsseite",
+    sectionType: "CTA",
+    defaultSettings: {
+      style: "collection-cta",
+      secondaryLabel: "Kataloge ansehen",
+      secondaryHref: "/kataloge",
+    },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {

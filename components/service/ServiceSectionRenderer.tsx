@@ -12,6 +12,8 @@ import CareSymbolsSection from "./CareSymbolsSection";
 import GuaranteeHeroSection from "./GuaranteeHeroSection";
 import ProcessChainSection from "./ProcessChainSection";
 import FabricPatternOverviewSection from "./FabricPatternOverviewSection";
+import CollectionBenefitsSection from "./CollectionBenefitsSection";
+import CollectionCtaSection from "./CollectionCtaSection";
 
 interface Props {
   section: FrontendServiceSection;
@@ -45,6 +47,10 @@ export default function ServiceSectionRenderer({ section, background = "white" }
       return <ProcessChainSection section={section} className={bg} />;
     case "fabric-pattern-overview":
       return <FabricPatternOverviewSection section={section} className={bg} />;
+    case "collection-benefits":
+      return <CollectionBenefitsSection section={section} className={bg} />;
+    case "collection-cta":
+      return <CollectionCtaSection section={section} />;
     case "cta":
       return <ServiceCtaSection section={section} />;
     default:
