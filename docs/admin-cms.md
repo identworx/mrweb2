@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-12 (Kollektionen-Sections CMS-editierbar) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-12 (Kollektionen Premium Visuals) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1223,23 +1223,33 @@ Die oeffentliche Seite `/kollektionen` zeigt alle veroeffentlichten Kollektionen
 
 ### Collection Card Bilder pflegen
 
-1. Bild in `/admin/media` hochladen (empfohlen: mind. 800×600px, 4:3 Seitenverhaeltnis)
+1. Bild in `/admin/media` hochladen (empfohlen: mind. 800×1000px, 3:4 Hochformat)
 2. In `/admin/collections/[id]` die Kollektion oeffnen
 3. Unter "Bilder" → "Card-Bild" das hochgeladene Bild auswaehlen
-4. Bild wird auf der Card mit Overlay und Titel angezeigt
+4. Bild wird auf der Card mit einheitlichem Overlay und Titel angezeigt
+5. Echte Bilder erhalten dasselbe Gradient-Overlay wie Placeholder — keine Kollektion wirkt visuell dominanter
 
 ### Placeholder-System
 
-Wenn eine Kollektion kein Card-Bild im CMS hat, wird ein CSS-Placeholder angezeigt:
-- Gradient in der jeweiligen Kollektion-Farbwelt (z.B. Gruentoene fuer "Green")
-- Dezente CSS-Stoffstruktur (diagonale Linien)
+Wenn eine Kollektion kein Card-Bild im CMS hat, wird ein CSS-Mood-Cover angezeigt:
+- 3-Stufen-Gradient (from/via/to) in der jeweiligen Kollektion-Farbwelt
+- Dezente Webstruktur (horizontale + vertikale Faserlinien) und diagonaler Lichteffekt
 - Sieht wie bewusstes Mood-Cover aus, nicht wie "Bild fehlt"
 - 7 vordefinierte Farbpaletten (green, blue, red, golden, earth-grey, nerio-oceana, basic)
 - Neutraler Premium-Fallback fuer unbekannte Slugs
+- Card-Aspect-Ratio: 3:4 (Hochformat) fuer wertigere Wirkung
 
 ### Farbbalken (Color Mood Bar)
 
-Unter dem Hero wird ein durchgaengiger Farbbalken aus allen Kollektion-Stimmungsfarben angezeigt. Dieser entsteht automatisch aus den `moodColors` aller veroeffentlichten Kollektionen.
+Im Content-Bereich oberhalb des Collection-Grids wird ein Farbbalken aus allen Kollektion-Stimmungsfarben angezeigt. Dieser entsteht automatisch aus den `moodColors` aller veroeffentlichten Kollektionen. Der Balken ist auf die Content-Breite begrenzt (max-width 1440px).
+
+### Hero-Copy Safe-Update Script
+
+Optional fuer Produktion: `npx tsx scripts/update-kollektionen-hero-defaults.ts`
+- Aendert Headline nur wenn exakt "Unsere Kollektionen" → "Sieben Farbwelten."
+- Aendert Eyebrow nur wenn exakt "Saison 2027" → "Saison 2027 · Outdoor Living"
+- Ueberschreibt keine manuell gepflegten Inhalte
+- Idempotent, mehrfach ausfuehrbar
 
 ### CMS-editierbare Sektionen
 

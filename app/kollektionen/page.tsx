@@ -59,7 +59,7 @@ const FALLBACK_CTA: FrontendServiceSection = {
   type: "CTA",
   title: "Lassen Sie sich ein Musterset schicken.",
   eyebrow: "Noch unentschlossen?",
-  content: "Vergleichen Sie die Farbwelten in Ruhe zu Hause. Wir senden Ihnen Stoffmuster Ihrer Favoriten und beraten zu Formen und Sondermaßen.",
+  content: "Vergleichen Sie Farben, Texturen und Haptik in Ruhe. Wir stellen passende Stoffmuster für Ihr Projekt zusammen.",
   settings: {
     style: "collection-cta",
     secondaryLabel: "Kataloge ansehen",
@@ -126,24 +126,24 @@ export default async function KollektionenPage() {
         />
         <BreadcrumbBar items={[{ label: "Kollektionen" }]} />
 
-        {/* Color mood bar */}
-        {allMoodColors.length > 0 && (
-          <div className="flex" aria-hidden="true">
-            {allMoodColors.map((color, i) => (
-              <div
-                key={i}
-                className="flex-1 h-1"
-                style={{ backgroundColor: color }}
-              />
-            ))}
-          </div>
-        )}
-
         {/* Collection grid */}
         <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+            {/* Mood color bar */}
+            {allMoodColors.length > 0 && (
+              <div className="flex mb-10 md:mb-14" aria-hidden="true">
+                {allMoodColors.map((color, i) => (
+                  <div
+                    key={i}
+                    className="flex-1 h-1.5"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            )}
+
             <ScrollReveal>
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-2xl mb-12 md:mb-16">
+              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mb-12 md:mb-16">
                 {introText}
               </p>
             </ScrollReveal>
@@ -154,7 +154,7 @@ export default async function KollektionenPage() {
                 später wieder vorbei.
               </p>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                 {collections.map((collection, i) => (
                   <ScrollReveal key={collection.slug} delay={i * 60}>
                     <CollectionCard

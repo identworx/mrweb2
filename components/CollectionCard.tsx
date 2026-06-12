@@ -11,29 +11,29 @@ interface CollectionCardProps {
   alt: string;
 }
 
-const MOOD_PALETTES: Record<string, { from: string; to: string; accent: string }> = {
-  green: { from: "#3D5A3A", to: "#6B8F5E", accent: "rgba(107,143,94,0.35)" },
-  blue: { from: "#1E4D6B", to: "#4A8BAD", accent: "rgba(74,139,173,0.35)" },
-  red: { from: "#6B1E1E", to: "#B8503A", accent: "rgba(184,80,58,0.35)" },
-  golden: { from: "#7A6017", to: "#C9A230", accent: "rgba(201,162,48,0.35)" },
-  "earth-grey": { from: "#4A3F34", to: "#8B7D6B", accent: "rgba(139,125,107,0.35)" },
-  "nerio-oceana": { from: "#0E4A4C", to: "#2E8B8B", accent: "rgba(46,139,139,0.35)" },
-  basic: { from: "#3A3A3A", to: "#6B6B6B", accent: "rgba(107,107,107,0.35)" },
+const MOOD_PALETTES: Record<string, { from: string; via: string; to: string }> = {
+  green: { from: "#2E4A2A", via: "#4A6E3E", to: "#6B8F5E" },
+  blue: { from: "#162F45", via: "#2A5F7E", to: "#5A9AB8" },
+  red: { from: "#4A1A14", via: "#8B3A2A", to: "#C06050" },
+  golden: { from: "#4A3810", via: "#8A6B1E", to: "#C9A230" },
+  "earth-grey": { from: "#332C24", via: "#5E5244", to: "#8B7D6B" },
+  "nerio-oceana": { from: "#0A3234", via: "#1A6060", to: "#3A9898" },
+  basic: { from: "#282828", via: "#484848", to: "#707070" },
 };
 
 function getPlaceholderStyle(slug: string, moodColors: string[]) {
   const palette = MOOD_PALETTES[slug];
   if (palette) {
     return {
-      background: `linear-gradient(145deg, ${palette.from} 0%, ${palette.to} 100%)`,
+      background: `linear-gradient(160deg, ${palette.from} 0%, ${palette.via} 45%, ${palette.to} 100%)`,
     };
   }
   if (moodColors.length >= 2) {
     return {
-      background: `linear-gradient(145deg, ${moodColors[0]} 0%, ${moodColors[moodColors.length - 1]} 100%)`,
+      background: `linear-gradient(160deg, ${moodColors[0]} 0%, ${moodColors[moodColors.length - 1]} 100%)`,
     };
   }
-  return { background: moodColors[0] || "#555" };
+  return { background: moodColors[0] || "#444" };
 }
 
 function isPlaceholder(image: string) {
@@ -54,74 +54,82 @@ export default function CollectionCard({
   return (
     <Link
       href={`/kollektionen/${slug}`}
-      className="group relative flex flex-col bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] hover:border-black/[0.10]"
+      className="group relative flex flex-col bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.12]"
     >
-      <div className="relative overflow-hidden aspect-[4/3]">
+      <div className="relative overflow-hidden aspect-[3/4]">
         {hasRealImage ? (
           <Image
             src={image}
             alt={alt}
             fill
-            className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-[1.04]"
+            className="object-cover transition-transform duration-[1.2s] ease-out motion-safe:group-hover:scale-[1.03]"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         ) : (
-          <div className="absolute inset-0 transition-transform duration-700 motion-safe:group-hover:scale-[1.04]">
+          <div className="absolute inset-0 transition-transform duration-[1.2s] ease-out motion-safe:group-hover:scale-[1.03]">
             <div className="absolute inset-0" style={getPlaceholderStyle(slug, moodColors)} />
+            {/* Woven fiber texture */}
             <div
-              className="absolute inset-0 opacity-[0.07]"
+              className="absolute inset-0 opacity-[0.06]"
               style={{
                 backgroundImage:
-                  "repeating-linear-gradient(45deg, transparent, transparent 8px, currentColor 8px, currentColor 8.5px), repeating-linear-gradient(-45deg, transparent, transparent 8px, currentColor 8.5px, currentColor 9px)",
-                color: "white",
+                  "repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.4) 3px, rgba(255,255,255,0.4) 4px), repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.25) 3px, rgba(255,255,255,0.25) 4px)",
+              }}
+            />
+            {/* Diagonal highlight */}
+            <div
+              className="absolute inset-0 opacity-[0.08]"
+              style={{
+                background: "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.15) 100%)",
               }}
             />
           </div>
         )}
 
+        {/* Unified gradient overlay for both real and placeholder images */}
         <div
           className="absolute inset-0"
           style={{
-            background: hasRealImage
-              ? "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.10) 50%, transparent 100%)"
-              : "linear-gradient(to top, rgba(0,0,0,0.30) 0%, transparent 60%)",
+            background: "linear-gradient(to top, rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.18) 40%, rgba(0,0,0,0.04) 70%, transparent 100%)",
           }}
         />
 
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          <h3 className="font-heading text-white text-lg md:text-xl font-bold tracking-tight leading-tight">
+        {/* Title overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-5 pb-4">
+          <p className="font-accent text-white/50 text-[9px] tracking-[0.2em] uppercase mb-1.5">
+            {fabric}
+          </p>
+          <h3 className="font-heading text-white text-xl md:text-[1.375rem] font-bold tracking-tight leading-tight">
             {name}
           </h3>
         </div>
       </div>
 
+      {/* Mood color strip */}
       <div className="flex">
         {moodColors.map((color, i) => (
           <div
             key={i}
-            className="flex-1 h-1.5 transition-all duration-500 group-hover:h-2"
+            className="flex-1 h-1"
             style={{ backgroundColor: color }}
           />
         ))}
       </div>
 
+      {/* Content */}
       <div className="flex flex-col flex-1 p-5 pt-4">
-        <p className="font-body text-text-gray text-sm leading-[1.7] line-clamp-2 flex-1">
+        <p className="font-body text-text-gray text-[13px] leading-[1.75] line-clamp-2 flex-1">
           {description}
         </p>
 
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-black/[0.06]">
-          <span className="font-accent text-[9px] font-medium uppercase tracking-[0.12em] text-anthracite/45 group-hover:text-pumpkin/60 transition-colors duration-500">
-            {fabric}
-          </span>
-
-          <span className="flex items-center gap-1.5 text-pumpkin opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
+        <div className="flex items-center justify-end mt-4 pt-3 border-t border-black/[0.05]">
+          <span className="flex items-center gap-1.5 text-pumpkin/70 group-hover:text-pumpkin transition-colors duration-500">
+            <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.14em]">
               Entdecken
             </span>
             <svg
-              width="12"
-              height="12"
+              width="14"
+              height="14"
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"

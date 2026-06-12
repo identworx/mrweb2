@@ -19,23 +19,25 @@ export default function ConsultationCard({
 }: ConsultationCardProps) {
   return (
     <div className="relative flex flex-col border border-black/[0.06] bg-cream overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.03]"
+      {/* Fine linen texture */}
+      <div
+        className="absolute inset-0 opacity-[0.025]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 11px, currentColor 11px, currentColor 11.5px), repeating-linear-gradient(90deg, transparent, transparent 11px, currentColor 11.5px, currentColor 12px)",
+            "repeating-linear-gradient(0deg, transparent, transparent 7px, currentColor 7px, currentColor 7.3px), repeating-linear-gradient(90deg, transparent, transparent 7px, currentColor 7px, currentColor 7.3px)",
           color: "#2D2D2D",
         }}
       />
 
-      <div className="relative flex flex-col flex-1 p-6 md:p-7">
+      <div className="relative flex flex-col flex-1 p-6 md:p-8">
         <div className="flex-1">
-          <div className="w-10 h-px bg-pumpkin mb-5" />
+          <div className="w-8 h-px bg-pumpkin mb-6" />
 
           <h3 className="font-heading text-anthracite text-lg md:text-xl font-bold tracking-tight leading-tight mb-3">
             {title}
           </h3>
 
-          <p className="font-body text-text-gray text-sm leading-[1.7] mb-6">
+          <p className="font-body text-text-gray text-[13px] leading-[1.75] mb-8">
             {content}
           </p>
         </div>
@@ -46,7 +48,7 @@ export default function ConsultationCard({
           </Link>
           <Link
             href={secondaryHref}
-            className="inline-flex items-center justify-center gap-2 font-heading text-anthracite/60 text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
+            className="inline-flex items-center justify-center gap-2 font-heading text-anthracite/50 text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
           >
             {secondaryLabel}
             <svg

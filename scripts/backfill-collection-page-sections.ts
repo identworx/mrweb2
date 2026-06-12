@@ -99,8 +99,8 @@ async function main() {
         title: "Kollektionen",
         status: "PUBLISHED",
         type: "COLLECTION_INDEX",
-        eyebrow: "Saison 2027",
-        headline: "Unsere Kollektionen",
+        eyebrow: "Saison 2027 · Outdoor Living",
+        headline: "Sieben Farbwelten.",
         introText:
           "Sieben kuratierte Farbwelten für den Außenbereich — jede Kollektion erzählt ihre eigene Geschichte aus Farbe, Material und Stimmung.",
         seoTitle: "Kollektionen 2027 | Mosaroma",

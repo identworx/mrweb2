@@ -8,10 +8,10 @@ export interface PageHeroData {
 
 export const pageHeroes: Record<string, PageHeroData> = {
   kollektionen: {
-    eyebrow: "Saison 2027",
-    title: "Unsere Kollektionen",
+    eyebrow: "Saison 2027 · Outdoor Living",
+    title: "Sieben Farbwelten.",
     description:
-      "Sieben kuratierte Farbwelten für den Außenbereich -- jede Kollektion erzählt ihre eigene Geschichte aus Farbe, Material und Stimmung.",
+      "Jede Kollektion erzählt ihre eigene Geschichte aus Farbe, Material und Stimmung. Wählen Sie die Welt, die zu Ihrem Außenbereich passt.",
     image: "/images/placeholders/page-heroes/kollektionen-hero.svg",
     alt: "Mosaroma Kollektionen Hero Platzhalter mit Stoffstruktur und Farbfeldern",
   },
