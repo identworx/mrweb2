@@ -912,6 +912,7 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
 | Startseite | home | 7 (1× home-hero, 1× value-props, 1× image-text-feature, 1× collection-showcase, 1× sustainability-stats, 1× downloads-teaser, 1× news-teaser) |
 | Pflege & Garantie | pflege-garantie | 6 (4× care-list, 1× cross-link, 1× cta) |
 | Stoff- & techn. Daten | stoff-technische-daten | 4 (1× fabric-cards, 1× comparison-table, 1× highlight-cards, 1× cta) |
+| Kollektionen | kollektionen | 0 (statische Fallbacks fuer Benefits + CTA, PageSections optional) |
 
 #### Seed vs. Admin
 
@@ -1189,3 +1190,70 @@ Props:
 | alt | string? | "MOSAROMA Hero" | Bild Alt-Text |
 | variant | "light" / "dark" | "dark" | Overlay-Variante |
 | height | "compact" / "default" / "large" | — | Legacy-Prop (alle Varianten identisch) |
+
+## 14. Kollektionen-Uebersichtsseite (`/kollektionen`)
+
+### Ueberblick
+
+Die oeffentliche Seite `/kollektionen` zeigt alle veroeffentlichten Kollektionen als gleichwertige Cards in einem Grid. Keine Kollektion wird groesser oder prominenter dargestellt als eine andere — Unterschiede entstehen nur durch Farbe, Name, Text, Mood-Bild und Farbpunkte.
+
+### Inhalte aus der Datenbank
+
+| Inhalt | Quelle | Admin-Pflege |
+|--------|--------|-------------|
+| Hero-Eyebrow | `Page.eyebrow` (Seite "kollektionen") | Seiten → kollektionen → Eyebrow |
+| Hero-Titel | `Page.headline` | Seiten → kollektionen → Headline |
+| Hero-Beschreibung | `Page.introText` | Seiten → kollektionen → Einleitungstext |
+| Hero-Bild | `Page.heroImage` (MediaAsset) | Seiten → kollektionen → Hero-Bild |
+| Collection Name | `Collection.name` | Kollektionen → Name |
+| Collection Beschreibung | `Collection.shortDescription` | Kollektionen → Kurzbeschreibung |
+| Collection Stoff | `Collection.fabric` | Kollektionen → Stoff |
+| Collection Farbpunkte | `Collection.moodColors` (JSON) | Kollektionen → Stimmungsfarben |
+| Collection Card-Bild | `Collection.cardImage` (MediaAsset) | Kollektionen → Bilder → Card-Bild |
+| SEO Titel/Beschreibung | `Page.seoTitle/Description` | Seiten → kollektionen → SEO |
+
+### Collection Card Bilder pflegen
+
+1. Bild in `/admin/media` hochladen (empfohlen: mind. 800×600px, 4:3 Seitenverhaeltnis)
+2. In `/admin/collections/[id]` die Kollektion oeffnen
+3. Unter "Bilder" → "Card-Bild" das hochgeladene Bild auswaehlen
+4. Bild wird auf der Card mit Overlay und Titel angezeigt
+
+### Placeholder-System
+
+Wenn eine Kollektion kein Card-Bild im CMS hat, wird ein CSS-Placeholder angezeigt:
+- Gradient in der jeweiligen Kollektion-Farbwelt (z.B. Gruentoene fuer "Green")
+- Dezente CSS-Stoffstruktur (diagonale Linien)
+- Sieht wie bewusstes Mood-Cover aus, nicht wie "Bild fehlt"
+- 7 vordefinierte Farbpaletten (green, blue, red, golden, earth-grey, nerio-oceana, basic)
+- Neutraler Premium-Fallback fuer unbekannte Slugs
+
+### Farbbalken (Color Mood Bar)
+
+Unter dem Hero wird ein durchgaengiger Farbbalken aus allen Kollektion-Stimmungsfarben angezeigt. Dieser entsteht automatisch aus den `moodColors` aller veroeffentlichten Kollektionen.
+
+### Benefits-Sektion und CTA
+
+Die Seite unterstuetzt PageSections: Wenn im Admin fuer die Seite "kollektionen" Sektionen angelegt werden (z.B. highlight-cards fuer Benefits, cta fuer Musterset-CTA), werden diese statt der statischen Fallbacks gerendert. Ohne CMS-Sektionen werden hochwertige statische Fallbacks angezeigt:
+
+- **Benefits:** UV-bestaendig, Wasserabweisend, Schimmelfest, 3 Jahre Garantie
+- **CTA:** Dunkler Anthrazit-Bereich mit "Musterset anfordern" + "Kataloge ansehen"
+
+### Beratungskarte
+
+Am Ende des Collection-Grids erscheint eine Service-Karte "Welche Farbwelt passt zu Ihnen?" mit Links zu `/kontakt`. Diese Karte hat ein anderes Design als die Collection Cards (Cream-Hintergrund, kein Bild, kein Farbbalken).
+
+### Designregeln
+
+- **Hero-Hoehe ist fest** (300px/320px) und darf nicht veraendert werden
+- **Alle Kollektionen gleichwertig**: gleiche Card-Groesse, gleiches Layout, gleiche Gewichtung
+- **Keine Featured Collection**: keine groessere, prominentere oder hervorgehobene Kollektion
+- **Responsive Grid**: 4 Spalten Desktop, 2 Spalten Tablet, 1 Spalte Mobile
+
+### Revalidation
+
+| Aenderung im Admin | Revalidiert |
+|---------------------|------------|
+| Kollektion speichern | `/`, `/kollektionen`, `/kollektionen/[slug]` |
+| Seite "kollektionen" speichern | `/kollektionen` |
+| PageSection fuer "kollektionen" speichern | `/kollektionen` |
