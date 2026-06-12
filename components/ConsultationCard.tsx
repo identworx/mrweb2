@@ -18,7 +18,7 @@ export default function ConsultationCard({
   secondaryHref = "/kontakt",
 }: ConsultationCardProps) {
   return (
-    <div className="relative flex flex-col border border-black/[0.06] bg-cream overflow-hidden">
+    <div className="relative flex flex-col h-full border border-black/[0.06] bg-cream overflow-hidden">
       {/* Fine linen texture */}
       <div
         className="absolute inset-0 opacity-[0.025]"

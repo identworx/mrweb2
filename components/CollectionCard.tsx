@@ -54,7 +54,7 @@ export default function CollectionCard({
   return (
     <Link
       href={`/kollektionen/${slug}`}
-      className="group relative flex flex-col bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.12]"
+      className="group relative flex flex-col h-full bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.12]"
     >
       <div className="relative overflow-hidden aspect-[3/4]">
         {hasRealImage ? (
