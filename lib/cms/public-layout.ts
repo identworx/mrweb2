@@ -94,7 +94,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
       columns: footerColumns,
       legalLinks,
       socialLinks,
-      ctaEnabled: footerSettings?.ctaEnabled ?? true,
+      ctaEnabled: footerSettings?.ctaEnabled ?? false,
       ctaEyebrow: footerSettings?.ctaEyebrow ?? null,
       ctaTitle: footerSettings?.ctaTitle ?? null,
       ctaText: footerSettings?.ctaText ?? null,

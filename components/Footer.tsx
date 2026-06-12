@@ -102,7 +102,7 @@ export default function Footer({
       : footerData.legal.map((l) => ({ label: l.label, href: l.href }));
   const socials = socialLinks && socialLinks.length > 0 ? socialLinks : null;
 
-  const showCta = ctaEnabled !== false;
+  const showCta = ctaEnabled === true;
 
   const resolvedContact = {
     title: contactTitle || CONTACT_DEFAULTS.title,

@@ -394,7 +394,7 @@ model FooterSettings {
   socialLinks   Json?
 
   // Footer CTA
-  ctaEnabled        Boolean @default(true)
+  ctaEnabled        Boolean @default(false)
   ctaEyebrow        String?
   ctaTitle           String?
   ctaText            String?

@@ -21,7 +21,7 @@ async function main() {
     await prisma.footerSettings.create({
       data: {
         id: "footer-settings",
-        ctaEnabled: true,
+        ctaEnabled: false,
         ctaEyebrow: "Beratung & Muster",
         ctaTitle: "Unsicher bei Farbe, Material oder Format?",
         ctaText: "Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Formen und Sondermaßen beraten.",

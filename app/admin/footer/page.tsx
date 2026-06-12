@@ -36,7 +36,7 @@ export default async function FooterPage() {
           description: settings?.description ?? "",
           copyrightText: settings?.copyrightText ?? "",
           socialLinks,
-          ctaEnabled: settings?.ctaEnabled ?? true,
+          ctaEnabled: settings?.ctaEnabled ?? false,
           ctaEyebrow: settings?.ctaEyebrow ?? "",
           ctaTitle: settings?.ctaTitle ?? "",
           ctaText: settings?.ctaText ?? "",

@@ -919,7 +919,7 @@ async function main() {
       description:
         "Design trifft Performance. Hochwertige Outdoor-Textilien für langlebige Momente im Freien.",
       copyrightText: "© 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.",
-      ctaEnabled: true,
+      ctaEnabled: false,
       ctaEyebrow: "Beratung & Muster",
       ctaTitle: "Unsicher bei Farbe, Material oder Format?",
       ctaText: "Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Formen und Sondermaßen beraten.",

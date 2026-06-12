@@ -175,6 +175,10 @@ export default function FooterEditForm({ settings }: { settings: FooterData }) {
           </label>
         </div>
 
+        <p className="text-xs text-gray-400">
+          Der Footer CTA ist optional und standardmäßig deaktiviert, damit Seiten mit eigenen CTAs nicht doppelt wirken.
+        </p>
+
         {form.ctaEnabled && (
           <>
             <div>

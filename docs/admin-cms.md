@@ -402,11 +402,13 @@ resolveNavigationLink(item) → {
 - Footer-Links (Kollektionen, Service, Legal) nutzen dasselbe NavigationMenu/NavigationItem System
 - FooterSettings speichert Logo, Description, Copyright, Social Links, CTA-Felder, Kontakt-Daten, Bottom-Note
 - Footer hat 3 Ebenen: CTA-Bar (optional), Hauptfooter (Marke + Navigation + Kontakt), Bottom-Bar (Copyright + Legal)
+- CTA-Bar ist optional und standardmaessig deaktiviert (`ctaEnabled` default: `false`)
 - CTA-Bar kann ueber `ctaEnabled` im Admin ein-/ausgeschaltet werden
 - Kontakt-Spalte zeigt Firmenadresse, E-Mail, Telefon und einen Button
 - Legal-Links (Impressum, Datenschutz, AGB) sind als PAGE verknuepft mit DRAFT-Seiten
 - Legal-Links werden oeffentlich erst angezeigt, wenn die Seiten PUBLISHED sind
 - Backfill-Script: `npx tsx scripts/backfill-premium-footer-settings.ts` (idempotent, produktionssicher)
+- CTA deaktivieren auf Produktion: `npx tsx scripts/disable-footer-cta.ts` (idempotent, aendert nur `ctaEnabled`)
 
 ### Dateien
 

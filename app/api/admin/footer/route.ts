@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       description: body.description || null,
       copyrightText: body.copyrightText || null,
       socialLinks: body.socialLinks ? body.socialLinks : Prisma.JsonNull,
-      ctaEnabled: typeof body.ctaEnabled === "boolean" ? body.ctaEnabled : true,
+      ctaEnabled: typeof body.ctaEnabled === "boolean" ? body.ctaEnabled : false,
       ctaEyebrow: body.ctaEyebrow || null,
       ctaTitle: body.ctaTitle || null,
       ctaText: body.ctaText || null,
