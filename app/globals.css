@@ -284,6 +284,15 @@ html {
   color: var(--color-burnt-orange);
 }
 
+/* Hide scrollbar for anchor nav */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media print {
   header, footer, nav, .print\:hidden { display: none !important; }
   section { break-inside: avoid; }

@@ -745,6 +745,63 @@ Dies ist ein TODO fuer das Deployment-Setup und noch nicht implementiert.
 - TypeScript-Build ohne Fehler
 - ESLint ohne Fehler
 
+### Premium Collection Detail Template
+
+Die Kollektions-Detailseite (`/kollektionen/[slug]`) ist als generisches Premium-Template fuer alle Kollektionen aufgebaut.
+
+**Seitenstruktur:**
+
+1. **Hero** — Collection Name, Eyebrow, Subtitle, CMS-Bild oder Mood-Color-Gradient als Fallback
+2. **BreadcrumbBar** — Standard-Breadcrumb
+3. **Anchor Navigation** — sticky, scrollt zu Sektionen (Farben, Produkte, Material, Service, Beratung)
+4. **Intro + Quick Facts** — LongDescription links, Quick-Facts-Box rechts (Stoff, Faerbung, Material, Produktanzahl, Palette)
+5. **Stimmungsfarben** — Mood Colors als groessere Farbfelder mit HEX-Code und Collection-Nummerierung
+6. **Produkte** — gruppiert nach Produktgruppen mit Gruppenheader, Produktanzahl, Premium-Produktkarten
+7. **Material** — zweispaltig: Stoffbeschreibung links, Eigenschaften-Checkliste rechts
+8. **Service Links** — 4 Karten: Produktmasse, Pflege & Garantie, Technische Daten, Kataloge
+9. **Collection CTA** — dynamischer CTA mit Collection-Name, dunkler Hintergrund
+10. **Footer**
+
+**Datenquellen:**
+
+| Bereich | DB-Quelle | Fallback |
+|---|---|---|
+| Hero-Bild | Collection.heroImage (MediaAsset) | Mood-Color-Gradient |
+| Intro | Collection.longDescription, shortDescription | Statische Fallbacks |
+| Quick Facts | Collection.fabric + fabricQualities (statisch) | Nur verfuegbare Daten |
+| Mood Colors | Collection.moodColors (JSON Array) | Leerer Bereich |
+| Produkte | Product + ProductGroup (DB) | Statische Produkte |
+| Material | Collection.fabric + fabricQualities | Nur Fabric-Name |
+| CTA | Collection.name (dynamisch) | Generischer Text |
+
+**Komponenten:**
+
+| Komponente | Datei | Verwendung |
+|---|---|---|
+| CollectionProductCard | `components/CollectionProductCard.tsx` | Nur Collection-Detail |
+| CollectionAnchorNav | `components/CollectionAnchorNav.tsx` | Nur Collection-Detail |
+| ProductCard (global) | `components/ProductCard.tsx` | Nicht veraendert, genutzt auf anderen Seiten |
+
+**Placeholder-System:**
+
+- Hero: Mood-Color-Gradient mit Fasertextur (kein SVG-Fallback noetig)
+- Produktbilder: Collection-Mood-Color-Gradient mit Fasertextur
+- Kein "Bild fehlt" Icon, stattdessen visuelle Qualitaet
+
+**CMS-Pflege:**
+
+- Collection-Daten: Admin → Kollektionen → Kollektion bearbeiten
+- Mood Colors: Farbeditor im Admin
+- Produkte: Admin → Produkte → Bilder, Texte, Material, Gruppe
+- Produktgruppen: Admin → Produktkategorien → Name, Beschreibung, Reihenfolge
+- Kein Backfill noetig — alle Daten bestehen bereits
+
+**Revalidation:**
+
+- Collection-Aenderung → `revalidateCollection(slug)` → /, /kollektionen, /kollektionen/[slug]
+- Product-Aenderung → `revalidateProduct(slug, collectionSlug)` → /kollektionen/[collectionSlug]
+- MediaAsset-Aenderung → sichtbar beim naechsten Rebuild (revalidate=60)
+
 ## 11. Was noch fehlt (Phase 2C / spaeter)
 
 ### Phase 2A — erledigt
