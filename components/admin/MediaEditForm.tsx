@@ -48,8 +48,8 @@ export default function MediaEditForm({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      setMessage({ type: "error", text: "Datei darf maximal 5 MB groß sein." });
+    if (file.size > 15 * 1024 * 1024) {
+      setMessage({ type: "error", text: "Datei darf maximal 15 MB groß sein." });
       if (fileInputRef.current) fileInputRef.current.value = "";
       return;
     }
@@ -166,7 +166,7 @@ export default function MediaEditForm({
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
             />
             <p className="text-xs text-gray-400 mt-1">
-              Bilder, PDF oder SVG. Maximal 5 MB.
+              Bilder (JPEG, PNG, GIF, WebP, AVIF). Maximal 15 MB. JPEG/PNG werden automatisch zu WebP optimiert.
             </p>
             {preview && (
               <div className="mt-3 max-w-xs">

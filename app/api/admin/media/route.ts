@@ -3,10 +3,18 @@ import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { getMediaAssetUsage } from "@/lib/admin/delete-guards";
 import { revalidateAllPublicPages } from "@/lib/server/revalidate-cms";
+import {
+  isOptimizableImage,
+  isRecompressableImage,
+  optimizeToWebP,
+  recompressWebP,
+  readImageMetadata,
+  buildOptimizedFilename,
+} from "@/lib/server/image-optimizer";
 import { writeFile, mkdir, unlink } from "fs/promises";
 import path from "path";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_FILE_SIZE = 15 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = [
   "image/jpeg",
   "image/png",
@@ -182,46 +190,92 @@ export async function POST(request: NextRequest) {
 
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: "Datei darf maximal 5 MB groß sein" },
+        { error: "Datei darf maximal 15 MB groß sein" },
         { status: 400 },
       );
     }
 
     const mimeType = file.type;
-    if (!ALLOWED_MIME_TYPES.includes(mimeType) && !mimeType.startsWith("image/")) {
+    if (!ALLOWED_MIME_TYPES.includes(mimeType)) {
       return NextResponse.json(
-        { error: "Dateityp nicht erlaubt. Nur Bilder sind zulässig." },
+        { error: "Dateityp nicht erlaubt. Erlaubt: JPEG, PNG, GIF, WebP, AVIF." },
         { status: 400 },
       );
     }
 
-    const filename = sanitizeFilename(file.name);
     const uploadDir = path.join(process.cwd(), "public", "uploads", "general");
     await mkdir(uploadDir, { recursive: true });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+    const rawBuffer = Buffer.from(await file.arrayBuffer());
 
-    if (!validateImageMagicBytes(buffer)) {
+    if (!validateImageMagicBytes(rawBuffer)) {
       return NextResponse.json(
         { error: "Datei ist kein gültiges Bild." },
         { status: 400 },
       );
     }
 
-    const filePath = path.join(uploadDir, filename);
-    await writeFile(filePath, buffer);
+    let finalBuffer: Buffer = rawBuffer;
+    let finalMimeType = mimeType;
+    let finalFilename = sanitizeFilename(file.name);
+    let width: number | null = null;
+    let height: number | null = null;
 
-    const url = `/uploads/general/${filename}`;
+    if (isOptimizableImage(mimeType)) {
+      try {
+        const result = await optimizeToWebP(rawBuffer);
+        finalBuffer = result.buffer;
+        finalMimeType = result.mimeType;
+        finalFilename = buildOptimizedFilename(finalFilename, result.extension);
+        width = result.width;
+        height = result.height;
+      } catch (err) {
+        console.error("Image optimization failed, saving original:", err);
+        const meta = await readImageMetadata(rawBuffer);
+        if (meta) {
+          width = meta.width;
+          height = meta.height;
+        }
+      }
+    } else if (isRecompressableImage(mimeType)) {
+      try {
+        const result = await recompressWebP(rawBuffer);
+        finalBuffer = result.buffer;
+        finalMimeType = result.mimeType;
+        width = result.width;
+        height = result.height;
+      } catch (err) {
+        console.error("WebP recompression failed, saving original:", err);
+        const meta = await readImageMetadata(rawBuffer);
+        if (meta) {
+          width = meta.width;
+          height = meta.height;
+        }
+      }
+    } else {
+      const meta = await readImageMetadata(rawBuffer);
+      if (meta) {
+        width = meta.width;
+        height = meta.height;
+      }
+    }
+
+    const filePath = path.join(uploadDir, finalFilename);
+    await writeFile(filePath, finalBuffer);
+
+    const url = `/uploads/general/${finalFilename}`;
 
     const asset = await prisma.mediaAsset.create({
       data: {
-        filename,
+        filename: finalFilename,
         originalName: file.name,
         url,
         alt: sanitizeString(alt, MAX_ALT_LENGTH),
         caption: sanitizeString(caption, MAX_CAPTION_LENGTH),
-        mimeType,
-        size: file.size,
+        mimeType: finalMimeType,
+        size: finalBuffer.length,
+        width,
+        height,
       },
     });
 

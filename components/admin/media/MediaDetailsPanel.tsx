@@ -213,6 +213,12 @@ export default function MediaDetailsPanel({
                 <span className="text-gray-700">{asset.width} × {asset.height} px</span>
               </div>
             )}
+            {asset.mimeType === "image/webp" && asset.originalName && !/\.webp$/i.test(asset.originalName) && (
+              <div className="flex justify-between">
+                <span>Optimierung</span>
+                <span className="text-green-600 font-medium">Als WebP optimiert</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span>Hochgeladen</span>
               <span className="text-gray-700">{formatDate(asset.createdAt)}</span>

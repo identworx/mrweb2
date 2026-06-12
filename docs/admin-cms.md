@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-12 (Kollektionen Premium Visuals) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-12 (WebP-Bildoptimierung) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -13,6 +13,7 @@ Stand: 2026-06-12 (Kollektionen Premium Visuals) | Branch: `claude/add-logo-i2yF
 | Auth             | jose (JWT) + bcryptjs (Hashing)    |
 | Styling          | Tailwind CSS v4                    |
 | Validierung      | Zod v4                             |
+| Bildoptimierung  | sharp 0.35 (WebP-Konvertierung)    |
 | Runtime          | Node.js, PM2 (Produktion)         |
 
 ## 2. Installation & Setup
@@ -220,11 +221,32 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 ## 8. Medien-Upload & Medien-Browser
 
 - **Erlaubte Typen:** JPEG, PNG, GIF, WebP, AVIF
-- **Maximale Groesse:** 5 MB
+- **Maximale Groesse:** 15 MB
 - **Speicherort:** `public/uploads/general/`
-- **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.jpg`)
+- **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.webp`)
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
 - **Sicherheit:** Magic-Byte-Validierung (prueft Datei-Header, nicht nur MIME-Type)
+
+### Automatische WebP-Optimierung
+
+Beim Upload werden Bilder serverseitig automatisch optimiert (via `sharp`):
+
+| Quellformat | Verhalten | Zielformat |
+| ----------- | --------- | ---------- |
+| JPEG, PNG   | Konvertierung zu WebP (Qualitaet 84, max 2880px Breite) | WebP |
+| WebP        | Re-Kompression (Qualitaet 84, max 2880px Breite) | WebP |
+| GIF, AVIF   | Unveraendert durchgereicht (Dimensionen ausgelesen) | Original |
+
+- **Qualitaet:** WebP Q84 — visuell verlustfrei fuer Stofftexturen
+- **Max. Breite:** 2880px (Retina-Displays), Seitenverhaeltnis bleibt erhalten
+- **Kein Cropping:** Bilder werden nur verkleinert, nie beschnitten
+- **EXIF-Daten:** Automatisch entfernt (Datenschutz, Dateigrösse)
+- **Rotation:** EXIF-Rotation wird vor Konvertierung angewendet
+- **Fehlerfall:** Bei Sharp-Fehler wird das Original gespeichert (mit Log-Warnung)
+- **Dimensionen:** `width` und `height` werden bei jedem Upload gespeichert
+- **Admin-Anzeige:** Details-Panel zeigt "Als WebP optimiert" wenn Original nicht WebP war
+- **Bestandsdaten:** Bestehende MediaAssets bleiben unveraendert (nur neue Uploads)
+- **Implementierung:** `lib/server/image-optimizer.ts` (sharp-basiert)
 
 ### MediaPicker (Phase 2F-A)
 

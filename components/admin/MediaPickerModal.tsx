@@ -72,8 +72,8 @@ export default function MediaPickerModal({
   }, [search, loadAssets]);
 
   async function handleUpload(file: File) {
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError("Datei darf maximal 5 MB groß sein.");
+    if (file.size > 15 * 1024 * 1024) {
+      setUploadError("Datei darf maximal 15 MB groß sein.");
       return;
     }
     setUploading(true);
