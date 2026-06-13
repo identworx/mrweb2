@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-13 (Premium Product Info Panel) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-13 (Product Image Normalization) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -247,6 +247,43 @@ Beim Upload werden Bilder serverseitig automatisch optimiert (via `sharp`):
 - **Admin-Anzeige:** Details-Panel zeigt "Als WebP optimiert" wenn Original nicht WebP war
 - **Bestandsdaten:** Bestehende MediaAssets bleiben unveraendert (nur neue Uploads)
 - **Implementierung:** `lib/server/image-optimizer.ts` (sharp-basiert)
+
+### Produktbild-Normalisierung
+
+Produktbilder werden serverseitig normalisiert, damit alle Produkte im Frontend einheitlich dargestellt werden — unabhaengig von Bildformat, Seitenverhaeltnis oder Randanteil im Original.
+
+| Parameter | Wert |
+| --------- | ---- |
+| Canvas | 1600 × 1600 px (quadratisch) |
+| Produktfuellung | ~80% der Canvas-Flaeche |
+| Sicherheitsrand | ~10% pro Seite |
+| Hintergrund | #FAF8F5 (Cream, passend zum Layout) |
+| Ausgabeformat | WebP Q86 |
+| Trim-Threshold | 20 (konservativ, kein Produkt-Anschnitt) |
+
+**Ablauf:**
+1. Leerer Rand/Hintergrund wird getrimmt (konservativer Threshold)
+2. Produkt wird proportional skaliert (max 1280 × 1280 px, kein Upscaling)
+3. Produkt wird zentriert auf 1600 × 1600 Canvas gesetzt
+4. Ausgabe als WebP Q86
+
+**Dateien:**
+- `lib/server/product-image-normalizer.ts` — Normalisierungs-Logik (Sharp-basiert)
+- `scripts/normalize-product-images.ts` — Batch-Skript fuer bestehende Bilder
+
+**Batch-Skript ausfuehren:**
+```bash
+npx tsx scripts/normalize-product-images.ts              # Dry-Run (zeigt was passieren wuerde)
+npx tsx scripts/normalize-product-images.ts --apply      # Normalisierung durchfuehren
+```
+
+**Datenmodell:**
+- `MediaAsset.normalizedUrl` (String, optional) — Pfad zum normalisierten Bild
+- Normalisierte Bilder liegen in `public/uploads/normalized/`
+- Frontend (`getMediaUrl`) bevorzugt automatisch `normalizedUrl` wenn vorhanden
+- Originaldateien bleiben erhalten (kein Loeschen, kein Ueberschreiben)
+
+**Nur Produktbilder:** Hero-Bilder, Ambient-Bilder, Logos, Collection-Bilder und Katalogbilder werden NICHT normalisiert.
 
 ### MediaPicker (Phase 2F-A)
 
@@ -1347,7 +1384,7 @@ Alle oeffentlichen Produktbilder laufen ueber diese zentrale Komponente. Sie ste
 **Hinweis:**
 - Diese Phase aendert nur die Darstellung (Frontend-Rendering)
 - Bestehende Bilddateien bleiben unveraendert
-- Upload-Canvas-Normalisierung ist nicht Teil dieser Phase
+- Upload-Canvas-Normalisierung verfuegbar via `scripts/normalize-product-images.ts`
 - Keine Migration noetig
 - Galerie-Thumbnails erscheinen wenn ein Produkt mehrere Bilder hat (ueber ProductImage-Tabelle)
 

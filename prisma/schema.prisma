@@ -109,20 +109,21 @@ model SiteSettings {
 }
 
 model MediaAsset {
-  id           String   @id @default(cuid())
-  filename     String
-  originalName String
-  url          String
-  mimeType     String
-  size         Int
-  width        Int?
-  height       Int?
-  alt          String?
-  title        String?
-  caption      String?
-  folder       String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id            String   @id @default(cuid())
+  filename      String
+  originalName  String
+  url           String
+  normalizedUrl String?
+  mimeType      String
+  size          Int
+  width         Int?
+  height        Int?
+  alt           String?
+  title         String?
+  caption       String?
+  folder        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Reverse relations
   siteLogos             SiteSettings[]   @relation("SiteLogoImage")
