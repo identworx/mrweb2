@@ -200,42 +200,73 @@ export default async function ProduktPage({ params }: PageProps) {
                 />
               </div>
 
-              {/* Product Info */}
-              <div>
+              {/* Product Info Panel */}
+              <div className="bg-white border border-black/[0.06] p-6 md:p-8 lg:p-10 self-start">
+                {/* Collection Context */}
+                {moodColors.length > 0 && (
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="flex">
+                      {moodColors.map((color, i) => (
+                        <div
+                          key={i}
+                          className="w-3 h-3"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                    <Link
+                      href={`/kollektionen/${product.collectionSlug}`}
+                      className="font-accent text-text-gray/50 text-[10px] tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
+                    >
+                      {displayCollection} Collection
+                    </Link>
+                  </div>
+                )}
+
+                {product.productGroupName && (
+                  <Link
+                    href={`/produktkategorien/${product.categorySlug}`}
+                    className="inline-block font-accent text-text-gray/40 text-[10px] tracking-[0.15em] uppercase hover:text-pumpkin transition-colors mb-5"
+                  >
+                    {product.productGroupName}
+                  </Link>
+                )}
+
+                {/* Description */}
                 {product.description && (
-                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
+                  <p className="font-body text-anthracite/80 text-[15px] md:text-base leading-[1.85] max-w-lg mb-7">
                     {product.description}
                   </p>
                 )}
 
-                {/* Specs */}
-                <div className="mt-7 border-t border-black/[0.06] pt-7">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3.5">
+                {/* Spec Cards */}
+                {(product.material || product.size || product.code || product.colorName || product.patternName) && (
+                  <div className="grid grid-cols-2 gap-2.5 mb-7">
                     {product.material && (
-                      <SpecRow label="Material" value={product.material} />
+                      <SpecCard label="Material" value={product.material} />
                     )}
                     {product.size && (
-                      <SpecRow label="Größe" value={product.size} />
+                      <SpecCard label="Größe" value={product.size} />
                     )}
                     {product.code && (
-                      <SpecRow label="Artikelcode" value={product.code} />
+                      <SpecCard label="Artikelcode" value={product.code} />
                     )}
                     {product.colorName && (
-                      <SpecRow label="Farbe" value={product.colorName} />
+                      <SpecCard label="Farbe" value={product.colorName} />
                     )}
                     {product.patternName && (
-                      <SpecRow label="Muster" value={product.patternName} />
+                      <SpecCard label="Muster" value={product.patternName} />
                     )}
                   </div>
-                </div>
+                )}
 
                 {/* Features */}
                 {product.features.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-6">
+                  <div className="flex flex-wrap gap-2 mb-7">
                     {product.features.map((feature) => (
                       <span
                         key={feature}
-                        className="font-accent text-[10px] tracking-[0.1em] uppercase px-3 py-1.5 border border-pumpkin/25 text-pumpkin/70 bg-pumpkin/5"
+                        className="font-accent text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 border border-black/[0.08] text-text-gray/60 bg-[#FAF8F5]"
                       >
                         {feature}
                       </span>
@@ -244,23 +275,28 @@ export default async function ProduktPage({ params }: PageProps) {
                 )}
 
                 {/* CTAs */}
-                <div className="flex flex-wrap items-center gap-4 mt-8">
-                  <Link href="/kontakt" className="btn-primary">
-                    Anfrage senden
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                    </svg>
-                  </Link>
-                  <Link href="/kataloge" className="btn-outline">
-                    Katalog ansehen
-                  </Link>
+                <div className="border-t border-black/[0.06] pt-6">
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link href="/kontakt" className="btn-primary flex-1 justify-center">
+                      Anfrage senden
+                      <svg
+                        width="14"
+                        height="14"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
+                      </svg>
+                    </Link>
+                    <Link href="/kataloge" className="btn-outline flex-1 justify-center">
+                      Katalog ansehen
+                    </Link>
+                  </div>
+                  <p className="font-body text-text-gray/40 text-xs mt-3 text-center">
+                    Muster & Beratung auf Anfrage
+                  </p>
                 </div>
               </div>
             </div>
@@ -397,13 +433,15 @@ export default async function ProduktPage({ params }: PageProps) {
   );
 }
 
-function SpecRow({ label, value }: { label: string; value: string }) {
+function SpecCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start gap-4">
-      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/50 w-24 shrink-0 pt-0.5">
+    <div className="p-3.5 md:p-4 bg-[#FAF8F5] border border-black/[0.04]">
+      <p className="font-accent text-text-gray/45 text-[9px] tracking-[0.2em] uppercase mb-1">
         {label}
-      </span>
-      <span className="font-body text-anthracite text-sm">{value}</span>
+      </p>
+      <p className="font-heading text-anthracite text-[13px] md:text-sm font-semibold leading-snug">
+        {value}
+      </p>
     </div>
   );
 }

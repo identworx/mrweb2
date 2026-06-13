@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-13 (Product Hero Kontrast) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-13 (Premium Product Info Panel) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1351,11 +1351,24 @@ Alle oeffentlichen Produktbilder laufen ueber diese zentrale Komponente. Sie ste
 - Keine Migration noetig
 - Galerie-Thumbnails erscheinen wenn ein Produkt mehrere Bilder hat (ueber ProductImage-Tabelle)
 
+**Premium Product Info Panel:**
+
+Die Produktinformationen rechts in der Product Stage werden als weißes Panel mit dezenter Border dargestellt:
+- Collection-Kontext (Farbswatches + Eyebrow)
+- Produktgruppe als Link
+- Beschreibung (15px, anthracite/80, max-w-lg)
+- Spec Cards (2-Spalten Grid, Cream-Hintergrund, Label oben klein, Wert darunter groesser)
+- Feature Chips (dezent, Cream-Hintergrund, dunkle Border)
+- CTA-Bereich mit Trennlinie (Primary + Secondary nebeneinander, volle Breite)
+- Serviceline: "Muster & Beratung auf Anfrage"
+- Fehlende Werte werden automatisch ausgeblendet, keine leeren Felder
+- Alle Daten aus bestehenden Product-Feldern, keine neuen CMS-Felder
+
 **Responsive Layout:**
 
-Desktop: Dunkler Hero-Kopf → 2-Spalten Product Stage (Galerie 0.9fr | Info 1fr) → Material → Collection → Related → CTA
+Desktop: Dunkler Hero-Kopf → 2-Spalten Product Stage (Galerie 0.9fr | Info Panel 1fr) → Material → Collection → Related → CTA
 
-Mobile: Dunkler Hero-Kopf (Breadcrumb, Badge, Name, Gruppe) → Hauptbild → Thumbnails → Beschreibung → Specs → CTAs → Material → Collection → Related → CTA
+Mobile: Dunkler Hero-Kopf (Breadcrumb, Badge, Name, Gruppe) → Hauptbild → Thumbnails → Info Panel (Beschreibung → Spec Cards → Features → CTAs) → Material → Collection → Related → CTA
 
 ## 14. Kollektionen-Uebersichtsseite (`/kollektionen`)
 
