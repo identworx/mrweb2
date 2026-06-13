@@ -8,6 +8,7 @@ interface ProductImageFrameProps {
   variant: Variant;
   collectionName?: string;
   collectionColors?: string[];
+  collectionSlug?: string;
   productName?: string;
   className?: string;
   isActive?: boolean;
@@ -18,23 +19,43 @@ function isPlaceholder(src: string) {
   return src.includes("/placeholders/") || src.endsWith(".svg");
 }
 
+const COLLECTION_COLOR_FALLBACKS: Record<string, string[]> = {
+  green: ["#4A7C59", "#6B8F71", "#8FB996"],
+  blue: ["#2C5F7C", "#4A8BAD", "#7AB3CC"],
+  red: ["#8B2500", "#C0392B", "#E67E73"],
+  golden: ["#B8860B", "#DAA520", "#F0C75E"],
+  "earth-grey": ["#6B5B4B", "#8B7D6B", "#A69B8D"],
+  "nerio-oceana": ["#1B6B6D", "#2E8B8B", "#5CACAC"],
+  basic: ["#555555", "#888888", "#AAAAAA"],
+};
+
+function resolveColors(
+  collectionColors?: string[],
+  collectionSlug?: string,
+): string[] {
+  if (collectionColors && collectionColors.length > 0) return collectionColors;
+  if (collectionSlug && COLLECTION_COLOR_FALLBACKS[collectionSlug]) {
+    return COLLECTION_COLOR_FALLBACKS[collectionSlug];
+  }
+  return [];
+}
+
 function getPlaceholderGradient(colors: string[]) {
   if (colors.length >= 2) {
     return `linear-gradient(145deg, ${colors[0]} 0%, ${colors[Math.min(1, colors.length - 1)]} 50%, ${colors[Math.min(2, colors.length - 1)]} 100%)`;
   }
-  return colors[0] || "linear-gradient(145deg, #C4A882 0%, #A08060 50%, #887050 100%)";
+  return colors[0] || "linear-gradient(145deg, #888 0%, #AAA 50%, #CCC 100%)";
 }
 
 const variantConfig: Record<Variant, {
   aspect: string;
   padding: string;
   sizes: string;
-  maxClass?: string;
 }> = {
   detail: {
     aspect: "aspect-square",
-    padding: "p-6 sm:p-8 md:p-10 lg:p-14",
-    sizes: "(max-width: 1024px) 100vw, 50vw",
+    padding: "p-5 sm:p-7 md:p-8 lg:p-10",
+    sizes: "(max-width: 1024px) 100vw, 45vw",
   },
   thumbnail: {
     aspect: "aspect-square",
@@ -64,6 +85,7 @@ export default function ProductImageFrame({
   variant,
   collectionName,
   collectionColors,
+  collectionSlug,
   productName,
   className,
   isActive,
@@ -71,7 +93,7 @@ export default function ProductImageFrame({
 }: ProductImageFrameProps) {
   const config = variantConfig[variant];
   const hasImage = src && !isPlaceholder(src);
-  const colors = collectionColors || [];
+  const colors = resolveColors(collectionColors, collectionSlug);
 
   const thumbnailRing = variant === "thumbnail"
     ? isActive

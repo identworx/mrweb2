@@ -55,6 +55,7 @@ export default function ProductCard({ product }: { product: ProductCardProps }) 
         alt={product.alt}
         variant="card"
         collectionName={displayCollection}
+        collectionSlug={product.collectionSlug}
         productName={product.name}
       />
 

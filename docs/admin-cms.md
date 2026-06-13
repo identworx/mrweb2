@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-13 (Produktbild-Normalisierung) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-13 (Product Hero Kontrast) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1286,9 +1286,23 @@ Props:
 | variant | "light" / "dark" | "dark" | Overlay-Variante |
 | height | "compact" / "default" / "large" | — | Legacy-Prop (alle Varianten identisch) |
 
-### 9f. Product Stage Hero & Produktbild-Normalisierung
+### 9f. Product Hero & Produktbild-Normalisierung
 
-**Produktdetailseiten** (`/produkte/[slug]`) nutzen einen integrierten Product Stage Hero statt eines generischen PageHero. Der Hero-Bereich kombiniert Produktgalerie und Produktinformationen auf einer gemeinsamen Premium-Buehne.
+**Produktdetailseiten** (`/produkte/[slug]`) nutzen einen zweiteiligen Product Hero:
+
+1. **Dunkle Product-Hero-Kopfflaeche** (Anthrazit, mit dezenter Collection-Farbe im Verlauf)
+   - Sorgt fuer Lesbarkeit von weißem Logo und Navigation
+   - Enthaelt: Breadcrumb (light variant), Collection Badge mit Farbswatches, H1 (Produktname), Produktgruppe
+   - Kompakt — kein leerer dekorativer Bereich
+   - Orientiert sich visuell an Unterseiten-Heros, ist aber produktbezogen
+
+2. **Product Stage** (helle Flaeche #FAF8F5)
+   - Links: Produktgalerie (Hauptbild + Thumbnails)
+   - Rechts: Beschreibung, Specs, Features, CTAs
+   - Grid: `lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)]` — Galerie etwas schmaler als Info
+   - Hauptbild bewusst kontrolliert (max-w-580px auf Mobil, reduziertes Padding)
+
+**H1-Struktur:** Eine einzige H1 im dunklen Hero-Kopf. In der Product Stage kein zweiter Produktname.
 
 **Zentrale Bildkomponente: `components/products/ProductImageFrame.tsx`**
 
@@ -1299,23 +1313,30 @@ Alle oeffentlichen Produktbilder laufen ueber diese zentrale Komponente. Sie ste
 - Sauberes Padding innerhalb des Rahmens
 - Hochwertige Placeholder bei fehlenden Bildern (Collection-Farbverlauf + Faserstruktur)
 - Unterschiedliche Upload-Groessen wirken im Layout einheitlich
+- Collection-Farb-Fallbacks per `collectionSlug` wenn keine expliziten `collectionColors` uebergeben werden
 
 | Variante | Aspect Ratio | Verwendung | Padding |
 |----------|-------------|------------|---------|
-| `detail` | 1:1 | Produktdetail-Hauptbild | 24-56px responsiv |
+| `detail` | 1:1 | Produktdetail-Hauptbild | 20-40px responsiv |
 | `thumbnail` | 1:1 | Galerie-Thumbnails | 8-10px |
 | `card` | 4:5 | Produktkarten (alle Seiten) | 20-24px |
 | `related` | 4:5 | Related Products | 16-20px |
 | `compact` | 1:1 | Kleine Teaser | 12px |
 
+**Placeholder-Farblogik:**
+- Wenn `collectionColors` uebergeben werden: diese werden verwendet
+- Wenn nur `collectionSlug` verfuegbar: Fallback aus `COLLECTION_COLOR_FALLBACKS` (alle 7 Kollektionen)
+- Wenn weder noch: neutraler Grau-Verlauf (kein Braun/Golden mehr)
+- Blue-Produkte → blaue Placeholder, Green → gruene, Red → rote, etc.
+
 **Betroffene Komponenten:**
 
 | Komponente | Datei | Aenderung |
 |---|---|---|
-| ProductImageFrame | `components/products/ProductImageFrame.tsx` | NEU — zentrale Bildlogik |
+| ProductImageFrame | `components/products/ProductImageFrame.tsx` | Zentrale Bildlogik mit Collection-Farb-Fallbacks |
 | ProductImageGallery | `components/products/ProductImageGallery.tsx` | Nutzt ProductImageFrame |
-| ProductCard | `components/ProductCard.tsx` | Nutzt ProductImageFrame (card) |
-| CollectionProductCard | `components/CollectionProductCard.tsx` | Nutzt ProductImageFrame (card) |
+| ProductCard | `components/ProductCard.tsx` | Nutzt ProductImageFrame mit collectionSlug |
+| CollectionProductCard | `components/CollectionProductCard.tsx` | Nutzt ProductImageFrame mit collectionSlug |
 
 **Nicht veraendert (keine Produktbilder):**
 - CollectionCard (Collection-Bilder, object-cover bleibt)
@@ -1328,12 +1349,13 @@ Alle oeffentlichen Produktbilder laufen ueber diese zentrale Komponente. Sie ste
 - Bestehende Bilddateien bleiben unveraendert
 - Upload-Canvas-Normalisierung ist nicht Teil dieser Phase
 - Keine Migration noetig
+- Galerie-Thumbnails erscheinen wenn ein Produkt mehrere Bilder hat (ueber ProductImage-Tabelle)
 
-**Product Stage Hero Layout:**
+**Responsive Layout:**
 
-Desktop: 2-Spalten — links Galerie mit Hauptbild + Thumbnails, rechts Produktinfos (Collection Badge, Name, Beschreibung, Specs, CTAs)
+Desktop: Dunkler Hero-Kopf → 2-Spalten Product Stage (Galerie 0.9fr | Info 1fr) → Material → Collection → Related → CTA
 
-Mobile: Breadcrumb → Collection Badge → Produktname → Hauptbild → Thumbnails → Beschreibung → Specs → CTAs
+Mobile: Dunkler Hero-Kopf (Breadcrumb, Badge, Name, Gruppe) → Hauptbild → Thumbnails → Beschreibung → Specs → CTAs → Material → Collection → Related → CTA
 
 ## 14. Kollektionen-Uebersichtsseite (`/kollektionen`)
 

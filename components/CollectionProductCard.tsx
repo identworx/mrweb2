@@ -22,6 +22,7 @@ export default function CollectionProductCard({
         variant="card"
         collectionName={product.collectionName}
         collectionColors={collectionColors}
+        collectionSlug={product.collectionSlug}
         productName={product.name}
       />
 

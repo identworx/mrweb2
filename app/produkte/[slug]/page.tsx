@@ -128,11 +128,21 @@ export default async function ProduktPage({ params }: PageProps) {
     <>
       <Header {...layout.header} />
       <main>
-        {/* ── Product Stage Hero ── */}
-        <section className="bg-[#FAF8F5] pt-28 md:pt-32 pb-12 md:pb-20">
+        {/* ── Product Hero Band ── */}
+        <section
+          className="relative bg-anthracite pt-28 md:pt-32 pb-6 md:pb-8"
+          style={
+            moodColors.length >= 2
+              ? {
+                  background: `linear-gradient(135deg, #2D2D2D 0%, #2D2D2D 60%, ${moodColors[0]}33 100%)`,
+                }
+              : undefined
+          }
+        >
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="mb-5 md:mb-6">
+            <div className="mb-4">
               <Breadcrumbs
+                variant="light"
                 items={[
                   { label: "Kollektionen", href: "/kollektionen" },
                   {
@@ -144,9 +154,44 @@ export default async function ProduktPage({ params }: PageProps) {
               />
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
+            {moodColors.length > 0 && (
+              <div className="flex items-center gap-3 mb-3">
+                <div className="flex">
+                  {moodColors.map((color, i) => (
+                    <div
+                      key={i}
+                      className="w-3.5 h-3.5"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+                <Link
+                  href={`/kollektionen/${product.collectionSlug}`}
+                  className="font-accent text-white/40 text-[11px] tracking-[0.2em] uppercase hover:text-white/70 transition-colors"
+                >
+                  {displayCollection} Collection
+                </Link>
+              </div>
+            )}
+
+            <h1 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.1]">
+              {product.name}
+            </h1>
+
+            {product.productGroupName && (
+              <p className="font-body text-white/50 text-sm md:text-base mt-1.5">
+                {product.productGroupName}
+              </p>
+            )}
+          </div>
+        </section>
+
+        {/* ── Product Stage ── */}
+        <section className="bg-[#FAF8F5] py-10 md:py-14">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] gap-8 lg:gap-12">
               {/* Gallery */}
-              <div>
+              <div className="max-w-[580px] lg:max-w-none">
                 <ProductImageGallery
                   items={galleryItems}
                   productName={product.name}
@@ -156,50 +201,16 @@ export default async function ProduktPage({ params }: PageProps) {
               </div>
 
               {/* Product Info */}
-              <div className="lg:pt-2">
-                {/* Collection Badge */}
-                {moodColors.length > 0 && (
-                  <div className="flex items-center gap-3 mb-5">
-                    <div className="flex">
-                      {moodColors.map((color, i) => (
-                        <div
-                          key={i}
-                          className="w-4 h-4"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
-                    <Link
-                      href={`/kollektionen/${product.collectionSlug}`}
-                      className="font-accent text-text-gray/60 text-xs tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
-                    >
-                      {displayCollection} Collection
-                    </Link>
-                  </div>
-                )}
-
-                <h1 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.1]">
-                  {product.name}
-                </h1>
-
-                {product.productGroupName && (
-                  <Link
-                    href={`/produktkategorien/${product.categorySlug}`}
-                    className="inline-block mt-2 font-body text-text-gray text-base hover:text-pumpkin transition-colors"
-                  >
-                    {product.productGroupName}
-                  </Link>
-                )}
-
+              <div>
                 {product.description && (
-                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6">
+                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
                     {product.description}
                   </p>
                 )}
 
                 {/* Specs */}
-                <div className="mt-8 border-t border-black/[0.06] pt-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                <div className="mt-7 border-t border-black/[0.06] pt-7">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3.5">
                     {product.material && (
                       <SpecRow label="Material" value={product.material} />
                     )}
@@ -233,7 +244,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 )}
 
                 {/* CTAs */}
-                <div className="flex flex-wrap items-center gap-4 mt-10">
+                <div className="flex flex-wrap items-center gap-4 mt-8">
                   <Link href="/kontakt" className="btn-primary">
                     Anfrage senden
                     <svg
