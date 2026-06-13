@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-12 (WebP-Bildoptimierung) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-13 (Produktbild-Normalisierung) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1265,10 +1265,11 @@ Typografie im Hero:
 
 ### 9d. Seiten ohne Hero-Banner
 
-Produktdetailseiten (`/produkte/[slug]`) und Kategoriedetailseiten (`/produktkategorien/[slug]`) haben keinen Hero-Banner. Stattdessen:
+Kategoriedetailseiten (`/produktkategorien/[slug]`) haben keinen Hero-Banner. Stattdessen:
 - Breadcrumbs (Inline) mit Header-Clearance-Padding (`pt-28 md:pt-32`)
 - Direkt im Content-Bereich (Cream-Hintergrund)
-- Produktbilder / Kategorie-Inhalte direkt darunter
+
+Produktdetailseiten (`/produkte/[slug]`) nutzen einen integrierten **Product Stage Hero** (siehe 9f).
 
 ### 9e. PageHero-Komponente
 
@@ -1284,6 +1285,55 @@ Props:
 | alt | string? | "MOSAROMA Hero" | Bild Alt-Text |
 | variant | "light" / "dark" | "dark" | Overlay-Variante |
 | height | "compact" / "default" / "large" | — | Legacy-Prop (alle Varianten identisch) |
+
+### 9f. Product Stage Hero & Produktbild-Normalisierung
+
+**Produktdetailseiten** (`/produkte/[slug]`) nutzen einen integrierten Product Stage Hero statt eines generischen PageHero. Der Hero-Bereich kombiniert Produktgalerie und Produktinformationen auf einer gemeinsamen Premium-Buehne.
+
+**Zentrale Bildkomponente: `components/products/ProductImageFrame.tsx`**
+
+Alle oeffentlichen Produktbilder laufen ueber diese zentrale Komponente. Sie stellt sicher:
+
+- `object-fit: contain` — Produktbilder werden nie gecroppt
+- Einheitlicher Hintergrund (#FAF8F5) fuer alle Varianten
+- Sauberes Padding innerhalb des Rahmens
+- Hochwertige Placeholder bei fehlenden Bildern (Collection-Farbverlauf + Faserstruktur)
+- Unterschiedliche Upload-Groessen wirken im Layout einheitlich
+
+| Variante | Aspect Ratio | Verwendung | Padding |
+|----------|-------------|------------|---------|
+| `detail` | 1:1 | Produktdetail-Hauptbild | 24-56px responsiv |
+| `thumbnail` | 1:1 | Galerie-Thumbnails | 8-10px |
+| `card` | 4:5 | Produktkarten (alle Seiten) | 20-24px |
+| `related` | 4:5 | Related Products | 16-20px |
+| `compact` | 1:1 | Kleine Teaser | 12px |
+
+**Betroffene Komponenten:**
+
+| Komponente | Datei | Aenderung |
+|---|---|---|
+| ProductImageFrame | `components/products/ProductImageFrame.tsx` | NEU — zentrale Bildlogik |
+| ProductImageGallery | `components/products/ProductImageGallery.tsx` | Nutzt ProductImageFrame |
+| ProductCard | `components/ProductCard.tsx` | Nutzt ProductImageFrame (card) |
+| CollectionProductCard | `components/CollectionProductCard.tsx` | Nutzt ProductImageFrame (card) |
+
+**Nicht veraendert (keine Produktbilder):**
+- CollectionCard (Collection-Bilder, object-cover bleibt)
+- CategoryCard (Kategorie-Bilder, background-cover bleibt)
+- HomepageCollections (Collection-Bilder, object-cover bleibt)
+- Admin-Komponenten (MediaBrowser, MediaPicker)
+
+**Hinweis:**
+- Diese Phase aendert nur die Darstellung (Frontend-Rendering)
+- Bestehende Bilddateien bleiben unveraendert
+- Upload-Canvas-Normalisierung ist nicht Teil dieser Phase
+- Keine Migration noetig
+
+**Product Stage Hero Layout:**
+
+Desktop: 2-Spalten — links Galerie mit Hauptbild + Thumbnails, rechts Produktinfos (Collection Badge, Name, Beschreibung, Specs, CTAs)
+
+Mobile: Breadcrumb → Collection Badge → Produktname → Hauptbild → Thumbnails → Beschreibung → Specs → CTAs
 
 ## 14. Kollektionen-Uebersichtsseite (`/kollektionen`)
 

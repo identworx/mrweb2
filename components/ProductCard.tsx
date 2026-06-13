@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductImageFrame from "./products/ProductImageFrame";
 
 interface ProductCardProps {
   slug: string;
@@ -48,17 +48,15 @@ export default function ProductCard({ product }: { product: ProductCardProps }) 
   return (
     <Link
       href={`/produkte/${product.slug}`}
-      className="group block bg-cream transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
+      className="group block bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
     >
-      <div className="relative aspect-square bg-light-gray overflow-hidden">
-        <Image
-          src={product.image}
-          alt={product.alt}
-          fill
-          className="object-cover img-zoom"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
-      </div>
+      <ProductImageFrame
+        src={product.image}
+        alt={product.alt}
+        variant="card"
+        collectionName={displayCollection}
+        productName={product.name}
+      />
 
       <div className="p-4 md:p-5">
         <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.15em] uppercase">

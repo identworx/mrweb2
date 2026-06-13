@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import ProductImageFrame from "./products/ProductImageFrame";
 import type { FrontendProduct } from "@/lib/cms/products";
 
 interface CollectionProductCardProps {
@@ -7,59 +7,23 @@ interface CollectionProductCardProps {
   collectionColors: string[];
 }
 
-function isPlaceholder(src: string) {
-  return src.includes("/placeholders/") || src.endsWith(".svg");
-}
-
-function getPlaceholderGradient(colors: string[]) {
-  if (colors.length >= 2) {
-    return `linear-gradient(145deg, ${colors[0]} 0%, ${colors[Math.min(1, colors.length - 1)]} 50%, ${colors[Math.min(2, colors.length - 1)]} 100%)`;
-  }
-  return colors[0] || "#888";
-}
-
 export default function CollectionProductCard({
   product,
   collectionColors,
 }: CollectionProductCardProps) {
-  const hasImage = !isPlaceholder(product.image);
-
   return (
     <Link
       href={`/produkte/${product.slug}`}
       className="group flex flex-col h-full bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-light-gray">
-        {hasImage ? (
-          <Image
-            src={product.image}
-            alt={product.alt}
-            fill
-            className="object-cover transition-transform duration-[1.2s] ease-out motion-safe:group-hover:scale-[1.03]"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          />
-        ) : (
-          <div className="absolute inset-0">
-            <div
-              className="absolute inset-0 transition-transform duration-[1.2s] ease-out motion-safe:group-hover:scale-[1.03]"
-              style={{ background: getPlaceholderGradient(collectionColors) }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.06]"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.4) 3px, rgba(255,255,255,0.4) 4px), repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.25) 3px, rgba(255,255,255,0.25) 4px)",
-              }}
-            />
-            <div
-              className="absolute inset-0 opacity-[0.08]"
-              style={{
-                background: "linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.15) 100%)",
-              }}
-            />
-          </div>
-        )}
-      </div>
+      <ProductImageFrame
+        src={product.image}
+        alt={product.alt}
+        variant="card"
+        collectionName={product.collectionName}
+        collectionColors={collectionColors}
+        productName={product.name}
+      />
 
       <div className="flex flex-col flex-1 p-4 md:p-5">
         <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase">

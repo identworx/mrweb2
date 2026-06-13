@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import ProductImageFrame from "./ProductImageFrame";
 
 export interface ProductGalleryItem {
   id: string;
@@ -12,9 +12,16 @@ export interface ProductGalleryItem {
 interface Props {
   items: ProductGalleryItem[];
   productName: string;
+  collectionName?: string;
+  collectionColors?: string[];
 }
 
-export default function ProductImageGallery({ items, productName }: Props) {
+export default function ProductImageGallery({
+  items,
+  productName,
+  collectionName,
+  collectionColors,
+}: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (items.length === 0) return null;
@@ -23,17 +30,16 @@ export default function ProductImageGallery({ items, productName }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-square bg-light-gray overflow-hidden">
-        <Image
-          key={active.id}
-          src={active.url}
-          alt={active.alt}
-          fill
-          className="object-cover"
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          priority={activeIndex === 0}
-        />
-      </div>
+      <ProductImageFrame
+        key={active.id}
+        src={active.url}
+        alt={active.alt}
+        variant="detail"
+        productName={productName}
+        collectionName={collectionName}
+        collectionColors={collectionColors}
+        priority={activeIndex === 0}
+      />
 
       {items.length > 1 && (
         <div
@@ -48,18 +54,14 @@ export default function ProductImageGallery({ items, productName }: Props) {
               onClick={() => setActiveIndex(i)}
               aria-label={`${item.alt} anzeigen`}
               aria-current={i === activeIndex ? "true" : undefined}
-              className={`relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 overflow-hidden transition-all ${
-                i === activeIndex
-                  ? "ring-2 ring-pumpkin ring-offset-1"
-                  : "ring-1 ring-gray-200 opacity-70 hover:opacity-100"
-              }`}
+              className="relative flex-shrink-0 w-20 h-20 md:w-24 md:h-24 transition-all"
             >
-              <Image
+              <ProductImageFrame
                 src={item.url}
                 alt={item.alt}
-                fill
-                className="object-cover"
-                sizes="96px"
+                variant="thumbnail"
+                isActive={i === activeIndex}
+                collectionColors={collectionColors}
               />
             </button>
           ))}

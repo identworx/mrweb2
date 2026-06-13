@@ -122,37 +122,44 @@ export default async function ProduktPage({ params }: PageProps) {
   const galleryItems = [mainItem, ...extraItems];
 
   const moodColors = staticCollection?.moodColors || [];
+  const displayCollection = product.collectionName || staticCollection?.name || product.collectionSlug;
 
   return (
     <>
       <Header {...layout.header} />
       <main>
-        {/* Product detail with breadcrumbs */}
-        <section className="bg-cream pt-28 md:pt-32 pb-16 md:pb-24">
+        {/* ── Product Stage Hero ── */}
+        <section className="bg-[#FAF8F5] pt-28 md:pt-32 pb-12 md:pb-20">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className="mb-6 md:mb-8">
+            <div className="mb-5 md:mb-6">
               <Breadcrumbs
                 items={[
                   { label: "Kollektionen", href: "/kollektionen" },
                   {
-                    label: product.collectionName || product.collectionSlug,
+                    label: displayCollection,
                     href: `/kollektionen/${product.collectionSlug}`,
                   },
                   { label: product.name },
                 ]}
               />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
               {/* Gallery */}
-              <ProductImageGallery
-                items={galleryItems}
-                productName={product.name}
-              />
+              <div>
+                <ProductImageGallery
+                  items={galleryItems}
+                  productName={product.name}
+                  collectionName={displayCollection}
+                  collectionColors={moodColors}
+                />
+              </div>
 
               {/* Product Info */}
-              <div className="lg:pt-4">
+              <div className="lg:pt-2">
+                {/* Collection Badge */}
                 {moodColors.length > 0 && (
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-5">
                     <div className="flex">
                       {moodColors.map((color, i) => (
                         <div
@@ -166,7 +173,7 @@ export default async function ProduktPage({ params }: PageProps) {
                       href={`/kollektionen/${product.collectionSlug}`}
                       className="font-accent text-text-gray/60 text-xs tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
                     >
-                      {product.collectionName || product.collectionSlug} Collection
+                      {displayCollection} Collection
                     </Link>
                   </div>
                 )}
@@ -184,27 +191,31 @@ export default async function ProduktPage({ params }: PageProps) {
                   </Link>
                 )}
 
-                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6">
-                  {product.description}
-                </p>
+                {product.description && (
+                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mt-6">
+                    {product.description}
+                  </p>
+                )}
 
-                {/* Details */}
-                <div className="mt-8 space-y-4 border-t border-light-gray pt-8">
-                  {product.material && (
-                    <DetailRow label="Material" value={product.material} />
-                  )}
-                  {product.size && (
-                    <DetailRow label="Größe" value={product.size} />
-                  )}
-                  {product.code && (
-                    <DetailRow label="Artikelcode" value={product.code} />
-                  )}
-                  {product.colorName && (
-                    <DetailRow label="Farbe" value={product.colorName} />
-                  )}
-                  {product.patternName && (
-                    <DetailRow label="Muster" value={product.patternName} />
-                  )}
+                {/* Specs */}
+                <div className="mt-8 border-t border-black/[0.06] pt-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                    {product.material && (
+                      <SpecRow label="Material" value={product.material} />
+                    )}
+                    {product.size && (
+                      <SpecRow label="Größe" value={product.size} />
+                    )}
+                    {product.code && (
+                      <SpecRow label="Artikelcode" value={product.code} />
+                    )}
+                    {product.colorName && (
+                      <SpecRow label="Farbe" value={product.colorName} />
+                    )}
+                    {product.patternName && (
+                      <SpecRow label="Muster" value={product.patternName} />
+                    )}
+                  </div>
                 </div>
 
                 {/* Features */}
@@ -245,18 +256,21 @@ export default async function ProduktPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* Material Section */}
+        {/* ── Material Section ── */}
         {fabric && (
-          <section className="section-padding bg-white">
+          <section className="py-12 md:py-16 bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
-                {fabric.name}
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <InfoCard label="Material" value={fabric.material} />
-                <InfoCard label="Gewicht" value={fabric.weight} />
-                <InfoCard label="Färbung" value={fabric.dyeing} />
-                <InfoCard label="Komfort" value={fabric.comfort} />
+              <div className="flex items-center gap-4 mb-8">
+                <div className="w-8 h-px bg-pumpkin" />
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight">
+                  {fabric.name}
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+                <MaterialCard label="Material" value={fabric.material} />
+                <MaterialCard label="Gewicht" value={fabric.weight} />
+                <MaterialCard label="Färbung" value={fabric.dyeing} />
+                <MaterialCard label="Komfort" value={fabric.comfort} />
               </div>
               <Link
                 href="/materialien"
@@ -281,28 +295,26 @@ export default async function ProduktPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Collection Link */}
+        {/* ── Collection Reference ── */}
         {staticCollection && (
-          <section className="section-padding bg-cream">
+          <section className="py-12 md:py-16 bg-[#FAF8F5]">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <div className="bg-white p-8 md:p-10 border border-light-gray max-w-2xl">
+              <div className="bg-white border border-black/[0.06] p-8 md:p-10 lg:p-12 max-w-3xl">
                 {moodColors.length > 0 && (
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="flex">
-                      {moodColors.map((color, i) => (
-                        <div
-                          key={i}
-                          className="w-6 h-6"
-                          style={{ backgroundColor: color }}
-                        />
-                      ))}
-                    </div>
+                  <div className="flex gap-0.5 mb-5">
+                    {moodColors.map((color, i) => (
+                      <div
+                        key={i}
+                        className="w-7 h-7"
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
                   </div>
                 )}
-                <h3 className="font-heading text-anthracite text-xl font-bold">
-                  {product.collectionName || staticCollection.name} Collection
+                <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
+                  {displayCollection} Collection
                 </h3>
-                <p className="font-body text-text-gray text-sm leading-[1.8] mt-2">
+                <p className="font-body text-text-gray text-sm md:text-base leading-[1.8] mt-3 max-w-xl">
                   {staticCollection.description}
                 </p>
                 <Link
@@ -310,7 +322,7 @@ export default async function ProduktPage({ params }: PageProps) {
                   className="inline-flex items-center gap-3 text-pumpkin mt-6 group"
                 >
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
-                    Zur {product.collectionName || staticCollection.name} Collection
+                    Zur {displayCollection} Collection
                   </span>
                   <svg
                     width="14"
@@ -329,13 +341,16 @@ export default async function ProduktPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* Related Products */}
+        {/* ── Related Products ── */}
         {relatedProducts.length > 0 && (
-          <section className="section-padding bg-white">
+          <section className="py-12 md:py-16 bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-              <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-10">
-                Das könnte Sie auch interessieren
-              </h2>
+              <div className="flex items-center gap-4 mb-10">
+                <div className="w-8 h-px bg-pumpkin" />
+                <h2 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
+                  Das könnte Sie auch interessieren
+                </h2>
+              </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
                 {relatedProducts.map((p) => (
                   <ProductCard key={p.slug} product={p} />
@@ -345,22 +360,22 @@ export default async function ProduktPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* CTA */}
-        <section className="section-padding bg-anthracite">
+        {/* ── Product CTA ── */}
+        <section className="py-14 md:py-20 bg-anthracite">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Interesse an diesem Produkt?
+              {product.name} für Ihr Projekt?
             </h2>
-            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Sprechen Sie uns direkt an — wir beraten Sie gerne zu Materialien,
-              Maßen und Verfügbarkeit.
+            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+              Fordern Sie ein Muster an oder lassen Sie sich zu Material,
+              Maßen und Verfügbarkeit beraten.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/kontakt" className="btn-primary">
                 Kontakt aufnehmen
               </Link>
               <Link href="/kataloge" className="btn-outline-white">
-                Katalog herunterladen
+                Katalog ansehen
               </Link>
             </div>
           </div>
@@ -371,10 +386,10 @@ export default async function ProduktPage({ params }: PageProps) {
   );
 }
 
-function DetailRow({ label, value }: { label: string; value: string }) {
+function SpecRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start gap-4">
-      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/50 w-28 shrink-0 pt-0.5">
+      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/50 w-24 shrink-0 pt-0.5">
         {label}
       </span>
       <span className="font-body text-anthracite text-sm">{value}</span>
@@ -382,9 +397,9 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function InfoCard({ label, value }: { label: string; value: string }) {
+function MaterialCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-5 bg-cream">
+    <div className="p-5 md:p-6 bg-[#FAF8F5] border border-black/[0.04]">
       <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.2em] uppercase mb-2">
         {label}
       </p>
