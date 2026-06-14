@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-13 (Product Image Normalization) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-14 (CMS Fabric Library) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -55,7 +55,7 @@ pm2 restart mosaroma
 
 ## 4. Datenbank (Prisma Schema)
 
-### Modelle (17 Tabellen)
+### Modelle (21 Tabellen)
 
 | Modell            | Beschreibung                                  |
 | ----------------- | --------------------------------------------- |
@@ -78,6 +78,10 @@ pm2 restart mosaroma
 | `Form`            | Kontaktformular-Konfiguration                 |
 | `FormField`       | Formular-Felder                               |
 | `FormSubmission`  | Formular-Einreichungen                        |
+| `FabricFamily`    | Stofffamilien (Mackintosh, Basic, etc.)        |
+| `FabricSwatch`    | Einzelne Stoffmuster mit Bild und Farbe       |
+| `FabricProductType`| Produktarten fuer Verfuegbarkeitsmatrix       |
+| `FabricAvailability`| Zuordnung Stoff ↔ Produktart (mit Notiz)    |
 
 ### Seed-Daten
 
@@ -154,6 +158,8 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | `/admin/news/[id]`              | News-Artikel bearbeiten/erstellen | Funktional |
 | `/admin/service/pflege-garantie`| Service: Pflege & Garantie      | Funktional |
 | `/admin/service/stoff-technische-daten` | Service: Stoff- & techn. Daten | Funktional |
+| `/admin/fabrics`                | Stoffbibliothek (Stoffe, Familien, Produktarten) | Funktional |
+| `/admin/fabrics/[id]`           | Stoff bearbeiten/erstellen (inkl. Verfuegbarkeiten) | Funktional |
 
 ## 7. API-Endpunkte
 
@@ -198,6 +204,10 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | POST    | `/api/admin/news`        | News-Artikel erstellen / aktualisieren    |
 | PATCH   | `/api/admin/news`        | News-Status aendern                       |
 | DELETE  | `/api/admin/news`        | News-Artikel loeschen (ADMIN)             |
+| GET     | `/api/admin/fabrics`     | Stoffbibliothek laden (`?entity=families\|swatches\|product-types`) |
+| POST    | `/api/admin/fabrics`     | Familie/Stoff/Produktart erstellen/aktualisieren |
+| PATCH   | `/api/admin/fabrics`     | Aktiv-Status umschalten (`?entity=...&id=...`) |
+| DELETE  | `/api/admin/fabrics`     | Loeschen (ADMIN, `?entity=...&id=...`)    |
 | GET     | `/api/admin/page-sections?pageId=` | PageSections einer Seite laden       |
 | POST    | `/api/admin/page-sections` | PageSection erstellen                   |
 | PATCH   | `/api/admin/page-sections?id=` | PageSection aktualisieren              |
@@ -1103,6 +1113,7 @@ app/
     products/               # Produkte-Verwaltung
     product-groups/         # Produktgruppen-Verwaltung
     materials/              # Materialien-Verwaltung
+    fabrics/                # Stoffbibliothek (Stoffe, Familien, Produktarten)
     media/                  # Medien-Verwaltung
     navigation/             # Navigations-Verwaltung
     footer/page.tsx         # Footer-Einstellungen
@@ -1112,7 +1123,8 @@ app/
   api/admin/                # Alle Admin-API-Routen
 components/homepage/        # 7 Homepage-Section-Komponenten (CMS-gesteuert)
 components/service/         # 7 Service-Section-Renderer (Phase 2D-C)
-components/admin/           # 15 Client-Formular-Komponenten (inkl. PageSectionsEditor, PageSectionEditForm)
+components/admin/           # 17 Client-Formular-Komponenten (inkl. PageSectionsEditor, PageSectionEditForm, FabricAdminList, FabricSwatchEditForm)
+components/materials/       # Oeffentliche Stoffbibliothek-Komponenten (FabricLibrary, SwatchCard, MatrixView, DetailDrawer)
 lib/
   auth/session.ts           # JWT + bcrypt Auth-Logik
   cms/                      # CMS-Helper (server-only, aktiv in Phase 2A)
@@ -1130,10 +1142,11 @@ lib/
     homepage.ts             # getHomepageData() (Startseite CMS-Sektionen)
     service-pages.ts        # getServicePageBySlug() (Phase 2D-C)
     forms.ts                # getFormBySlug() (noch nicht im Frontend)
+    fabric-library.ts       # getFabricLibraryData(), getFabricFamilies() (Stoffbibliothek)
   db/prisma.ts              # Prisma Client Singleton
   generated/prisma/         # Generierter Prisma Client (gitignored)
 prisma/
-  schema.prisma             # Datenbank-Schema (17 Modelle)
+  schema.prisma             # Datenbank-Schema (21 Modelle)
   seed.ts                   # Seed-Daten
   migrations/               # SQLite Migrationen
   admin/
@@ -1507,3 +1520,242 @@ Am Ende des Collection-Grids erscheint eine CMS-editierbare Service-Karte "Welch
 | Kollektion speichern | `/`, `/kollektionen`, `/kollektionen/[slug]` |
 | Seite "kollektionen" speichern | `/kollektionen` |
 | PageSection fuer "kollektionen" speichern | `/kollektionen` |
+
+## 15. Stoffbibliothek (Fabric Library)
+
+### Ueberblick
+
+Die Stoffbibliothek auf `/materialien` ersetzt den früheren statischen „Stoffe & Muster"-Bereich durch eine interaktive, CMS-gesteuerte Premium-Stoffbibliothek. Sie bildet die Katalog-Doppelseiten (Mackintosh® & Lite, Mackintosh®, NERIO/Oceana, Basic) webseitentauglich ab: Stoffname, Artikelnummer, Stofffamilie, Stoffbild und verfuegbare Produktarten.
+
+### Datenmodell
+
+4 neue Prisma-Modelle (Migration `20260614160440_add_fabric_library`):
+
+| Modell | Beschreibung | Schluesselfelder |
+|--------|-------------|-----------------|
+| `FabricFamily` | Stofffamilien (Tabs) | slug (unique), name, description, eyebrow, order, isActive |
+| `FabricSwatch` | Einzelne Stoffmuster | slug (unique), familyId → FabricFamily, name, articleNumber, swatchImageId → MediaAsset, colorHex, patternType, subtitle, description, order, isActive |
+| `FabricProductType` | Produktarten fuer Matrix | slug (unique), name, iconKey, order, isActive |
+| `FabricAvailability` | Zuordnung Stoff ↔ Produktart | swatchId + productTypeId (@@unique), note, isAvailable |
+
+**Relationen:**
+- FabricSwatch.familyId → FabricFamily (onDelete: Cascade)
+- FabricSwatch.swatchImageId → MediaAsset (onDelete: SetNull)
+- FabricAvailability.swatchId → FabricSwatch (onDelete: Cascade)
+- FabricAvailability.productTypeId → FabricProductType (onDelete: Cascade)
+
+### Admin-Pflege
+
+#### Routen
+
+| Route | Funktion |
+|-------|----------|
+| `/admin/fabrics` | Stoffbibliothek mit 3 Tabs (Stoffe, Familien, Produktarten) |
+| `/admin/fabrics/[id]` | Stoff bearbeiten/erstellen (inkl. Verfuegbarkeiten) |
+
+#### Tab: Stoffe
+
+- Tabelle mit Name, Artikelnummer, Familie, Aktiv-Status, Aktionen
+- Suche nach Name/Artikelnummer
+- Filter nach Familie
+- Link zu Detailseite (`/admin/fabrics/[id]`)
+- Toggle aktiv/inaktiv (EDITOR+)
+- Loeschen (ADMIN only)
+
+#### Tab: Familien
+
+- Inline-CRUD (kein eigener Router)
+- Name, Slug (auto-generiert), Beschreibung, Eyebrow, Reihenfolge
+- Erstellen, Bearbeiten, Loeschen direkt in der Liste
+
+#### Tab: Produktarten
+
+- Inline-CRUD (kein eigener Router)
+- Name, Slug (auto-generiert), IconKey, Reihenfolge
+- Erstellen, Bearbeiten, Loeschen direkt in der Liste
+
+#### Stoff-Detailformular (`/admin/fabrics/[id]`)
+
+| Feld | Typ | Pflicht |
+|------|-----|---------|
+| Name | Text | Ja |
+| Slug | Text (auto) | Nein (wird generiert) |
+| Familie | Dropdown | Ja |
+| Artikelnummer | Text | Nein |
+| Mustertyp | Text (z.B. Dobby, Jacquard, Uni) | Nein |
+| Farbe (Hex) | Farbpicker + Textfeld | Nein |
+| Untertitel | Text | Nein |
+| Beschreibung | Textarea | Nein |
+| Reihenfolge | Zahl | Nein (Default: 0) |
+| Aktiv | Checkbox | Nein (Default: true) |
+| Stoffbild | MediaPickerField | Nein |
+| Verfuegbare Produktarten | Checkbox-Liste mit optionalem Hinweisfeld | Nein |
+
+**Verfuegbarkeiten:** Pro Produktart eine Checkbox. Bei aktivierter Checkbox erscheint ein optionales Hinweisfeld (z.B. „mit Keder", „ohne Keder", „auf Anfrage").
+
+### API
+
+| Methode | Route | Funktion |
+|---------|-------|----------|
+| GET | `/api/admin/fabrics?entity=swatches` | Alle Stoffe laden (mit Familie, Bild, Verfuegbarkeiten) |
+| GET | `/api/admin/fabrics?entity=families` | Alle Familien laden |
+| GET | `/api/admin/fabrics?entity=product-types` | Alle Produktarten laden |
+| GET | `/api/admin/fabrics?id=<id>` | Einzelnen Stoff laden |
+| POST | `/api/admin/fabrics` (entity: swatch) | Stoff erstellen/aktualisieren (inkl. Verfuegbarkeiten) |
+| POST | `/api/admin/fabrics` (entity: family) | Familie erstellen/aktualisieren |
+| POST | `/api/admin/fabrics` (entity: product-type) | Produktart erstellen/aktualisieren |
+| PATCH | `/api/admin/fabrics?entity=...&id=...` | Aktiv-Status umschalten |
+| DELETE | `/api/admin/fabrics?entity=...&id=...` | Loeschen (ADMIN only) |
+
+**Slug-Handling:** Slugs werden automatisch aus dem Namen generiert (Sanitizing: lowercase, Umlaute, Sonderzeichen). Bei Duplikaten wird 409 zurueckgegeben.
+
+**Verfuegbarkeiten-Speicherung:** Beim Speichern eines Swatches werden bestehende Verfuegbarkeiten geloescht und neu erstellt (delete + recreate Pattern, analog zu FormFields).
+
+### Public Darstellung
+
+#### Datenloader (`lib/cms/fabric-library.ts`)
+
+- `getFabricLibraryData()` — Laedt alle aktiven Familien, Stoffe (mit Familie, Bild, Verfuegbarkeiten) und Produktarten
+- `getFabricFamilies()` — Laedt nur aktive Familien
+- Nur aktive Daten (`isActive: true`, `isAvailable: true`)
+- Sortiert nach `order`
+- Swatch-Bilder via `getMediaUrl()`
+
+#### Komponenten
+
+| Komponente | Datei | Funktion |
+|------------|-------|----------|
+| `FabricLibrary` | `components/materials/FabricLibrary.tsx` | Hauptorchestrator: Tabs, Suche, Filter, Ansichtsumschaltung |
+| `FabricSwatchCard` | `components/materials/FabricSwatchCard.tsx` | Stoffkarte in Kachelansicht |
+| `FabricMatrixView` | `components/materials/FabricMatrixView.tsx` | Matrixansicht (Tabelle Desktop, Cards Mobile) |
+| `FabricDetailDrawer` | `components/materials/FabricDetailDrawer.tsx` | Detail-Drawer (Slide-in von rechts) |
+
+#### Kachelansicht (Standard)
+
+- Quadratisches Stoffbild (oder colorHex-Fallback, oder Gradient-Placeholder)
+- Familienname, Stoffname, Artikelnummer
+- Verfuegbare Produktarten als Chips (max. 5 sichtbar, +N fuer Ueberlauf)
+- „Details"-CTA mit Pfeil
+- Responsive: 3-4 Spalten Desktop, 2 Tablet, 1 Mobile
+
+#### Matrixansicht (B2B/Planung)
+
+- **Desktop:** Tabelle mit Stoff-Info (Bild, Name, Artikelnummer) + Produktart-Spalten, Haekchen fuer Verfuegbarkeit, Hinweise als Tooltip
+- **Mobile:** Karten-Liste mit Stoff-Info und Produktart-Chips (keine kaputte breite Tabelle)
+- Zeilen klickbar → oeffnet Detail-Drawer
+
+#### Tabs
+
+- „Alle" + eine Tab pro aktive Familie
+- Filtert Stoffe nach Familie
+- Kombinierbar mit Suche und Produktfilter
+
+#### Suche
+
+- Sofort filternd (Client-Side)
+- Durchsucht: Name, Artikelnummer, Familienname, Mustertyp
+
+#### Produktfilter
+
+- Dropdown mit allen aktiven Produktarten
+- Filtert Stoffe, die fuer die gewaehlte Produktart verfuegbar sind
+- Kombinierbar mit Tab-Auswahl und Suche
+
+#### Ergebnisanzeige
+
+- Anzahl angezeigter Stoffe (z.B. „24 Stoffe")
+- Button „Filter zuruecksetzen" wenn Filter aktiv
+
+#### Detail-Drawer
+
+- Slide-in von rechts (volle Hoehe, max-w-lg)
+- Grosses Stoffbild, Familienname, Stoffname, Artikelnummer
+- Mustertyp, Untertitel, Beschreibung
+- Verfuegbare Produktarten mit Hinweisen
+- CTAs: „Muster anfragen" (→ /kontakt), „Katalog ansehen" (→ /kataloge)
+- Schliesst via Escape-Taste, Backdrop-Klick oder X-Button
+- Body-Scroll-Lock waehrend geoeffnet
+- Animation: `slide-in-right` mit `prefers-reduced-motion` Fallback (Crossfade)
+
+### Integration in `/materialien`
+
+Der bisherige „Stoffe & Muster"-Bereich (statische Musterkarten aus `fabricPatternGroups`) wurde ersetzt durch die neue FabricLibrary-Komponente. Alle anderen Bereiche der Materialseite bleiben unveraendert:
+
+- Mackintosh Technology
+- Warum Olefin?
+- OceanCycle Kreislauf
+- Technische Daten
+- CTA/Footer
+
+Neue Section:
+- Eyebrow: „Stoffe & Muster"
+- Headline: „Alle Stoffe nach Materialfamilie und Produktart"
+- Darunter: FabricLibrary-Komponente mit allen Daten
+
+### Import-Script
+
+**Datei:** `scripts/import-fabric-library.ts`
+
+Akzeptiert JSON aus `data/import/fabric-library.json` (konfigurierbar via `--file`).
+
+```bash
+npx tsx scripts/import-fabric-library.ts                    # Dry-Run (zeigt was passieren wuerde)
+npx tsx scripts/import-fabric-library.ts --apply            # Import durchfuehren
+npx tsx scripts/import-fabric-library.ts --apply --file data/import/meine-daten.json
+```
+
+**Verhalten:**
+- Upsert nach Slug (idempotent — mehrfach ausfuehrbar)
+- Legt ProductTypes, Families, Swatches, Availabilities an
+- Familien-Zuordnung via `familySlug`
+- Produktart-Zuordnung via `productTypeSlug`
+- Ueberschreibt keine manuell gesetzten Bilder (swatchImageId wird nicht angefasst)
+- Verfuegbarkeiten werden pro Swatch geloescht und neu erstellt
+- Summary mit created/updated/skipped/errors Zaehler
+
+**Beispiel-JSON:** `data/import/fabric-library.example.json`
+- 4 Produktarten (Deko-Kissen, Hochlehner, Niedriglehner, Sitzkissen)
+- 2 Familien (Mackintosh® & Lite, Basic)
+- 3 Stoffe (Rocky Mountain Olive, St. Tropez Citron, Boletus Brown)
+
+### Revalidation
+
+| Aenderung im Admin | Revalidiert |
+|---------------------|------------|
+| Stoff speichern/loeschen | `/materialien` |
+| Familie speichern/loeschen | `/materialien` |
+| Produktart speichern/loeschen | `/materialien` |
+| Aktiv-Status umschalten | `/materialien` |
+
+Revalidation erfolgt via `revalidateMaterials()` → `safeRevalidate("/materialien")`.
+
+Import-Script loest keine Revalidation aus. Nach Import auf Produktion: Seite wird beim naechsten Request nach Ablauf von `revalidate=60` automatisch neu gerendert, oder manuell im Admin eine beliebige Aenderung speichern.
+
+### Produktionshinweise
+
+- **Kein Full Seed** fuer Stoffbibliothek auf Produktion
+- **Gezielter Import** ueber `scripts/import-fabric-library.ts`
+- **Upload-Limit bleibt 15 MB** — keine Aenderung
+- **Swatch-Bilder:** Ueber `/admin/fabrics/[id]` → MediaPicker hochladen und zuweisen
+- **Keine bestehenden MediaAssets veraendert**
+- **Keine bestehenden Produktdaten beschaedigt**
+- **Rollback:** Migration `20260614160440_add_fabric_library` ist rein additiv (4 neue Tabellen). Rollback durch Entfernen der Modelle aus schema.prisma und `prisma migrate resolve`
+
+### Dateien
+
+| Datei | Beschreibung |
+|-------|-------------|
+| `prisma/schema.prisma` | 4 neue Modelle (FabricFamily, FabricSwatch, FabricProductType, FabricAvailability) |
+| `prisma/migrations/20260614160440_add_fabric_library/` | Additive Migration |
+| `app/api/admin/fabrics/route.ts` | Full CRUD API |
+| `app/admin/fabrics/page.tsx` | Admin-Listenseite (3 Tabs) |
+| `app/admin/fabrics/[id]/page.tsx` | Admin-Detailseite (Stoff bearbeiten) |
+| `components/admin/FabricAdminList.tsx` | Admin-Liste Client-Komponente |
+| `components/admin/FabricSwatchEditForm.tsx` | Admin-Formular Client-Komponente |
+| `lib/cms/fabric-library.ts` | Public Datenloader (server-only) |
+| `components/materials/FabricLibrary.tsx` | Public Hauptkomponente |
+| `components/materials/FabricSwatchCard.tsx` | Stoffkarte (Kachelansicht) |
+| `components/materials/FabricMatrixView.tsx` | Matrixansicht |
+| `components/materials/FabricDetailDrawer.tsx` | Detail-Drawer |
+| `scripts/import-fabric-library.ts` | JSON-Import-Script |
+| `data/import/fabric-library.example.json` | Beispiel-Importdaten |

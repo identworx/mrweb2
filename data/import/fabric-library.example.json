@@ -1,0 +1,67 @@
+{
+  "productTypes": [
+    { "name": "Deko-Kissen", "slug": "deko-kissen", "iconKey": "dekokissen", "order": 1 },
+    { "name": "Hochlehner", "slug": "hochlehner", "iconKey": "hochlehner", "order": 2 },
+    { "name": "Niedriglehner", "slug": "niedriglehner", "iconKey": "niedriglehner", "order": 3 },
+    { "name": "Sitzkissen", "slug": "sitzkissen", "iconKey": "sitzkissen", "order": 4 }
+  ],
+  "families": [
+    {
+      "name": "Mackintosh® & Lite",
+      "slug": "mackintosh-lite",
+      "description": "Hochleistungsgewebe aus Solution-Dyed Olefin – UV-beständig, wasserabweisend und pflegeleicht.",
+      "order": 1
+    },
+    {
+      "name": "Basic",
+      "slug": "basic",
+      "description": "Bewährte Standardstoffe für den Outdoor-Einsatz.",
+      "order": 2
+    }
+  ],
+  "swatches": [
+    {
+      "name": "Rocky Mountain Olive",
+      "slug": "rocky-mountain-olive",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "405.813",
+      "colorHex": "#6B7C3F",
+      "patternType": "Dobby",
+      "order": 1,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "St. Tropez Citron",
+      "slug": "st-tropez-citron",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "405.817",
+      "colorHex": "#D4C040",
+      "patternType": "Dobby",
+      "order": 2,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Boletus Brown",
+      "slug": "boletus-brown",
+      "familySlug": "basic",
+      "articleNumber": "000.000",
+      "colorHex": "#6B4226",
+      "patternType": "Uni",
+      "order": 1,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen" },
+        { "productTypeSlug": "hochlehner" },
+        { "productTypeSlug": "niedriglehner" },
+        { "productTypeSlug": "sitzkissen" }
+      ]
+    }
+  ]
+}

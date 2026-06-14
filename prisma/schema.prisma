@@ -143,6 +143,7 @@ model MediaAsset {
   newsHeroImages        NewsArticle[]  @relation("NewsHeroImage")
   newsCardImages        NewsArticle[]  @relation("NewsCardImage")
   measurementImages     Measurement[]  @relation("MeasurementImage")
+  fabricSwatchImages    FabricSwatch[] @relation("FabricSwatchImage")
 }
 
 model NavigationMenu {
@@ -470,4 +471,67 @@ model FormSubmission {
   createdAt DateTime @default(now())
 
   form Form @relation(fields: [formId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Fabric Library
+// ---------------------------------------------------------------------------
+
+model FabricFamily {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String?
+  eyebrow     String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  swatches FabricSwatch[]
+}
+
+model FabricSwatch {
+  id            String   @id @default(cuid())
+  familyId      String
+  slug          String   @unique
+  name          String
+  articleNumber String?
+  subtitle      String?
+  description   String?
+  swatchImageId String?
+  colorHex      String?
+  patternType   String?
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  family         FabricFamily        @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  swatchImage    MediaAsset?         @relation("FabricSwatchImage", fields: [swatchImageId], references: [id], onDelete: SetNull)
+  availabilities FabricAvailability[]
+}
+
+model FabricProductType {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  iconKey  String?
+  order    Int     @default(0)
+  isActive Boolean @default(true)
+
+  availabilities FabricAvailability[]
+}
+
+model FabricAvailability {
+  id            String  @id @default(cuid())
+  swatchId      String
+  productTypeId String
+  note          String?
+  isAvailable   Boolean @default(true)
+
+  swatch      FabricSwatch      @relation(fields: [swatchId], references: [id], onDelete: Cascade)
+  productType FabricProductType @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([swatchId, productTypeId])
 }

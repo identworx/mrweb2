@@ -12,13 +12,12 @@ import {
   mackintoshTechnology,
   olefinBenefits,
   oceanCycleProcess,
-  fabricPatternGroups,
-  defaultCategoryIcons,
 } from "@/lib/mosaroma/materials";
-import FabricPatternCard from "@/components/service/FabricPatternCard";
+import FabricLibrary from "@/components/materials/FabricLibrary";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
+import { getFabricLibraryData } from "@/lib/cms/fabric-library";
 
 export const revalidate = 60;
 
@@ -33,10 +32,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero, result] = await Promise.all([
+  const [layout, hero, result, fabricData] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
     getServicePageBySlug("materialien"),
+    getFabricLibraryData(),
   ]);
 
   const hasCmsSections =
@@ -438,56 +438,25 @@ export default async function MaterialienPage() {
           </div>
         </section>
 
-        {/* Stoffe & Muster */}
+        {/* Stoffe & Muster — Fabric Library */}
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
               <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Übersicht
+                Stoffe & Muster
               </p>
             </div>
 
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Stoffe & Muster
+              Alle Stoffe nach Materialfamilie und Produktart
             </h2>
 
-            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-              Alle verfügbaren Stoffe und Muster im Überblick — von monochromen Dobby-Geweben über strukturierte Jacquards bis zu nachhaltigen NERIO-Stoffen und unserer Basic-Linie.
+            <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10">
+              Durchsuchen Sie unsere komplette Stoffbibliothek — filtern Sie nach Materialfamilie, Produktart oder suchen Sie gezielt nach Stoffname und Artikelnummer.
             </p>
 
-            <div className="space-y-12 md:space-y-16">
-              {fabricPatternGroups.map((group, gi) => (
-                <ScrollReveal key={group.name} delay={gi * 80}>
-                  <div>
-                    <div className="flex items-baseline gap-3 mb-1">
-                      <h3 className="font-heading text-anthracite text-xl font-bold">
-                        {group.name}
-                      </h3>
-                      <span className="font-accent text-pumpkin text-xs tracking-[0.15em] uppercase">
-                        {group.quality}
-                      </span>
-                    </div>
-                    <p className="font-body text-text-gray text-sm leading-relaxed mb-6">
-                      {group.description}
-                    </p>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {group.patterns.map((pattern) => (
-                        <FabricPatternCard
-                          key={pattern.name}
-                          name={pattern.name}
-                          thumbnailUrl={pattern.thumbnailUrl}
-                          colors={pattern.colors}
-                          availableCategories={pattern.availableCategories}
-                          categoryIcons={defaultCategoryIcons}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
+            <FabricLibrary data={fabricData} />
           </div>
         </section>
 
