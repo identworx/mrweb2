@@ -74,7 +74,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.08) 75%, transparent 100%)",
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.12) 75%, transparent 100%)",
           }}
         />
       )}
