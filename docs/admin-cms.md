@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-14 (CMS Fabric Library) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-15 (Materialsystem Seitenstruktur) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1827,3 +1827,153 @@ Import-Script loest keine Revalidation aus. Nach Import auf Produktion: Seite wi
 | `components/materials/FabricDetailDrawer.tsx` | Detail-Drawer |
 | `scripts/import-fabric-library.ts` | JSON-Import-Script |
 | `data/import/fabric-library.example.json` | Beispiel-Importdaten |
+
+## 16. Materialsystem — Seitenstruktur
+
+Stand: 2026-06-15
+
+### Uebersicht
+
+Die Materialseite wurde in ein Premium-Materialsystem mit Hub und Unterseiten aufgeteilt:
+
+| Route | Funktion | Typ |
+|-------|----------|-----|
+| `/materialien` | Material-Hub / Uebersichtsseite | Hub mit Teasern |
+| `/materialien/stoffe-muster` | Vollstaendige Stoffbibliothek | Unterseite |
+| `/materialien/technische-daten` | Technische Datentabelle / Materialvergleich | Unterseite |
+
+Keine Migration erforderlich. Alle neuen Routen nutzen bestehende Page/PageSection-Modelle.
+
+### /materialien (Hub)
+
+Die Hub-Seite zeigt:
+
+1. **PageHero** — aus CMS (Page slug `materialien`)
+2. **Anchor-Navigation** — kompakte Seitennavigation nach dem Hero
+3. **Mackintosh® Technology** — Technologie-Teaser (Daten aus `materials.ts`)
+4. **Warum Olefin?** — Argumentationsbereich (Daten aus `materials.ts`)
+5. **Stofffamilien** — 4 Cards (Mackintosh, Lite, Nerio, Basic), verlinkt auf `/materialien/stoffe-muster`
+6. **OceanCycle** — Nachhaltigkeits-Teaser (Daten aus `materials.ts`)
+7. **Stoffe & Muster Preview** — 6 Stoffkarten (datengetrieben aus FabricSwatch), CTA auf `/materialien/stoffe-muster`
+8. **Technische Daten Teaser** — 4 Kennzahlen im Kurzvergleich, CTA auf `/materialien/technische-daten`
+9. **Katalog CTA** — Verweis auf `/kataloge`
+
+**Wichtig:** Die vollstaendige FabricLibrary wird NICHT mehr auf der Hub-Seite angezeigt. Nur eine Preview mit 6 Stoffkarten.
+
+### /materialien/stoffe-muster
+
+Zeigt die vollstaendige interaktive Stoffbibliothek:
+
+- **Tabs** nach Materialfamilie
+- **Suche** nach Name, Artikelnummer, Familie, Mustertyp
+- **Produktart-Filter** per Dropdown
+- **Kachelansicht** und **Matrixansicht**
+- **Detail-Drawer** von rechts (Slide-in bei Klick auf Stoffkarte)
+
+Der Detail-Drawer ist Pflicht und bleibt auf dieser Seite vollstaendig erhalten:
+
+- Oeffnet beim Klick auf eine Stoffkarte
+- Slide-in Animation von rechts (300ms ease-out)
+- Backdrop-Close + Escape-Taste
+- Body-Scroll wird blockiert
+
+Datenquelle: `getFabricLibraryData()` aus `lib/cms/fabric-library.ts`
+
+### /materialien/technische-daten
+
+Zeigt die vollstaendige technische Vergleichstabelle:
+
+- Stoffqualitaeten (Material & Gewicht)
+- Eigenschaftenvergleich Olefin vs. Polyester (12 Pruefwerte)
+- Mackintosh® Highlights
+- CTA zu Kontakt und Katalog
+
+Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/materials.ts`
+
+### CMS-Pflegbarkeit
+
+| Bereich | Pflegbar ueber | Datenquelle |
+|---------|---------------|-------------|
+| Hero (alle 3 Seiten) | Admin → Seiten → Page Record | `getPageHeroData()` |
+| SEO Title/Description | Admin → Seiten → Page Record | Page.seoTitle/seoDescription |
+| Breadcrumbs | automatisch | Hardcoded Pfade |
+| Anchor-Navigation Labels | Code (UI-Labels) | `MaterialAnchorNav.tsx` |
+| Mackintosh® Technologie | Code | `materials.ts` |
+| Warum Olefin? | Code | `materials.ts` |
+| Stofffamilien-Cards | Code | `materials.ts` |
+| OceanCycle | Code | `materials.ts` |
+| Stoffe & Muster Preview | Admin → Stoffbibliothek | `getFabricPreviewSwatches()` |
+| Stoffe & Muster Full | Admin → Stoffbibliothek | `getFabricLibraryData()` |
+| Technische Tabelle | Code | `materials.ts` |
+| CTA-Texte auf Hub | Code (Fallback) | CMS-Override via ServiceSectionRenderer |
+
+Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materialien` im Admin Sections angelegt und publiziert werden, rendern diese via `ServiceSectionRenderer` statt der Fallback-Sections.
+
+### Wiederverwendete CMS-Funktionen
+
+- **Page/PageSection-Modell** — neue Page Records fuer Unterseiten
+- **getPageHeroData()** — Hero + SEO aus CMS mit Fallback
+- **getServicePageBySlug()** — CMS-Section-Override
+- **ServiceSectionRenderer** — Section-Rendering
+- **BreadcrumbBar** — Navigation
+- **PageHero** — Hero-Rendering
+- **getFabricLibraryData()** / **getFabricPreviewSwatches()** — Stoffbibliothek-Daten
+- **Revalidation** — `revalidateMaterials()` deckt alle 3 Routen ab
+
+### Nicht vorhandene CMS-Funktionen (bewusst nicht gebaut)
+
+- **Technische Tabellenwerte im CMS** — Daten bleiben in `materials.ts` (TODO)
+- **Materialdetailseiten** (`/materialien/mackintosh` etc.) — FabricFamily-Modell hat nicht genug Content-Felder (TODO)
+- **Anchor-Navigation im CMS** — Labels sind UI-Konstanten, keine Inhalte
+
+### Neue Dateien
+
+| Datei | Beschreibung |
+|-------|-------------|
+| `app/materialien/stoffe-muster/page.tsx` | Vollstaendige Stoffbibliothek-Seite |
+| `app/materialien/technische-daten/page.tsx` | Technische Datenseite |
+| `components/materials/TechnicalDataTable.tsx` | Wiederverwendbare Vergleichstabelle |
+| `components/materials/FabricLibraryPreview.tsx` | Stoffvorschau-Komponente (6 Cards) |
+| `components/materials/MaterialAnchorNav.tsx` | Anchor-Navigation fuer Hub |
+| `scripts/backfill-material-pages.ts` | Backfill fuer Page Records |
+
+### Revalidation
+
+`revalidateMaterials()` revalidiert jetzt alle 3 Routen:
+
+- `/materialien`
+- `/materialien/stoffe-muster`
+- `/materialien/technische-daten`
+
+ISR mit `revalidate = 60` auf allen Seiten.
+
+### Backfill
+
+```bash
+# Dry-run (zeigt was angelegt wuerde)
+npx tsx scripts/backfill-material-pages.ts
+
+# Apply (schreibt in DB)
+npx tsx scripts/backfill-material-pages.ts --apply
+```
+
+Legt Page Records an fuer:
+- `stoffe-muster` (PUBLISHED, MATERIAL_INDEX)
+- `technische-daten` (PUBLISHED, MATERIAL_INDEX)
+
+Idempotent. Ueberschreibt keine bestehenden Pages.
+
+### Produktionshinweise
+
+- **Keine Migration** noetig
+- **Backfill-Script** muss einmalig ausgefuehrt werden
+- **Upload-Limit bleibt 15 MB**
+- **Keine bestehenden Daten beschaedigt**
+- **Rollback:** `git revert <commit>`, Page Records im Admin deaktivieren/loeschen
+
+### TODOs
+
+- [ ] Technische Tabellenwerte in CMS ueberfuehren (eigenes Modell oder PageSection-Style)
+- [ ] Materialdetailseiten (`/materialien/mackintosh`, `/materialien/mackintosh-lite`, `/materialien/nerio`, `/materialien/basic`) mit enriched FabricFamily-Daten
+- [ ] Stofffamilien-Card-Texte in CMS ueberfuehren (FabricFamily erweitern oder PageSections nutzen)
+- [ ] OceanCycle / Mackintosh-Technologie-Texte in CMS ueberfuehren

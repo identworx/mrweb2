@@ -67,6 +67,8 @@ export function revalidateProductGroup(slug?: string) {
 
 export function revalidateMaterials() {
   safeRevalidate("/materialien");
+  safeRevalidate("/materialien/stoffe-muster");
+  safeRevalidate("/materialien/technische-daten");
 }
 
 export function revalidateDownloads() {

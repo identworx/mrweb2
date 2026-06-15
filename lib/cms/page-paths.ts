@@ -5,6 +5,8 @@ export const PAGE_SLUG_TO_PATH: Record<string, string> = {
   home: "/",
   kollektionen: "/kollektionen",
   materialien: "/materialien",
+  "stoffe-muster": "/materialien/stoffe-muster",
+  "technische-daten": "/materialien/technische-daten",
   "ueber-uns": "/ueber-uns",
   kataloge: "/kataloge",
   produktmasse: "/kataloge/produktmasse",

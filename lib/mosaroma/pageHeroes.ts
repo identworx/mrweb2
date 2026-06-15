@@ -71,6 +71,22 @@ export const pageHeroes: Record<string, PageHeroData> = {
     image: "/images/placeholders/page-heroes/pflege-garantie-hero.svg",
     alt: "Mosaroma Pflege und Garantie Hero Platzhalter",
   },
+  stoffeMuster: {
+    eyebrow: "Stoffbibliothek",
+    title: "Stoffe & Muster",
+    description:
+      "Filtern Sie nach Materialfamilie, Produktart oder suchen Sie gezielt nach Stoffname und Artikelnummer.",
+    image: "/images/placeholders/page-heroes/materialien-hero.svg",
+    alt: "Mosaroma Stoffe und Muster Hero Platzhalter",
+  },
+  technischeDaten: {
+    eyebrow: "Materialvergleich",
+    title: "Technische Daten",
+    description:
+      "Materialeigenschaften, Prüfwerte und Outdoor-Performance unserer Stoffqualitäten im Vergleich.",
+    image: "/images/placeholders/page-heroes/materialien-hero.svg",
+    alt: "Mosaroma Technische Daten Hero Platzhalter",
+  },
   stoffTechnischeDaten: {
     eyebrow: "Service",
     title: "Stoff- & technische Daten",

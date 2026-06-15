@@ -92,6 +92,45 @@ export async function getFabricFamilies(): Promise<FrontendFabricFamily[]> {
   }
 }
 
+export interface FabricPreviewSwatch {
+  id: string;
+  slug: string;
+  name: string;
+  articleNumber: string;
+  familyName: string;
+  swatchImageUrl: string;
+  colorHex: string;
+}
+
+export async function getFabricPreviewSwatches(
+  limit = 6,
+): Promise<FabricPreviewSwatch[]> {
+  try {
+    const swatches = await prisma.fabricSwatch.findMany({
+      where: { isActive: true },
+      orderBy: [{ family: { order: "asc" } }, { order: "asc" }],
+      take: limit,
+      include: {
+        family: { select: { name: true } },
+        swatchImage: { select: { url: true, normalizedUrl: true } },
+      },
+    });
+
+    return swatches.map((s) => ({
+      id: s.id,
+      slug: s.slug || "",
+      name: s.name || "",
+      articleNumber: s.articleNumber || "",
+      familyName: s.family?.name || "",
+      swatchImageUrl: getMediaUrl(s.swatchImage, ""),
+      colorHex: s.colorHex || "",
+    }));
+  } catch (error) {
+    console.error("CMS: getFabricPreviewSwatches failed", error);
+    return [];
+  }
+}
+
 type DbFamily = NonNullable<Awaited<ReturnType<typeof prisma.fabricFamily.findFirst>>>;
 
 type DbSwatch = NonNullable<
