@@ -71,7 +71,12 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
       }
     >
       {!scrolled && (
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-transparent pointer-events-none" />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 50%, rgba(0,0,0,0.08) 75%, transparent 100%)",
+          }}
+        />
       )}
 
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
@@ -88,7 +93,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
               className={`transition-all duration-700 ease-out w-auto ${
                 scrolled
                   ? "h-[44px] md:h-[50px]"
-                  : "h-[52px] md:h-[62px] brightness-0 invert drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+                  : "h-[52px] md:h-[62px] brightness-0 invert drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]"
               }`}
             />
           </Link>
@@ -102,8 +107,9 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
                 className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
                   scrolled
                     ? "text-anthracite/85 hover:text-pumpkin"
-                    : "text-white/90 hover:text-white"
+                    : "text-white hover:text-white"
                 }`}
+                style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
               >
                 {link.label}
                 {link.badgeText && (
@@ -126,8 +132,9 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
               className={`font-heading text-[11px] font-semibold uppercase tracking-[0.12em] px-5 py-2.5 transition-all duration-300 ${
                 scrolled
                   ? "border border-anthracite/20 text-anthracite hover:bg-anthracite hover:text-white"
-                  : "border border-white/30 text-white/90 hover:bg-white/10"
+                  : "border border-white/50 text-white hover:bg-white/10"
               }`}
+              style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
             >
               Kontakt
             </Link>
