@@ -22,6 +22,15 @@ interface FamilyRow {
   name: string;
   slug: string;
   description: string;
+  eyebrow: string;
+  subtitle: string;
+  material: string;
+  weight: string;
+  dyeing: string;
+  comfort: string;
+  cushionThickness: string;
+  hubHighlights: string;
+  isHighlighted: boolean;
   order: number;
   isActive: boolean;
 }
@@ -265,6 +274,15 @@ function FamilyManager({
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
+  const [eyebrow, setEyebrow] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [material, setMaterial] = useState("");
+  const [weight, setWeight] = useState("");
+  const [dyeing, setDyeing] = useState("");
+  const [comfort, setComfort] = useState("");
+  const [cushionThickness, setCushionThickness] = useState("");
+  const [hubHighlights, setHubHighlights] = useState("");
+  const [isHighlighted, setIsHighlighted] = useState(false);
   const [order, setOrder] = useState(0);
 
   function startEdit(f: FamilyRow) {
@@ -272,6 +290,15 @@ function FamilyManager({
     setName(f.name);
     setSlug(f.slug);
     setDescription(f.description);
+    setEyebrow(f.eyebrow);
+    setSubtitle(f.subtitle);
+    setMaterial(f.material);
+    setWeight(f.weight);
+    setDyeing(f.dyeing);
+    setComfort(f.comfort);
+    setCushionThickness(f.cushionThickness);
+    setHubHighlights(f.hubHighlights);
+    setIsHighlighted(f.isHighlighted);
     setOrder(f.order);
     setShowForm(true);
   }
@@ -281,6 +308,15 @@ function FamilyManager({
     setName("");
     setSlug("");
     setDescription("");
+    setEyebrow("");
+    setSubtitle("");
+    setMaterial("");
+    setWeight("");
+    setDyeing("");
+    setComfort("");
+    setCushionThickness("");
+    setHubHighlights("");
+    setIsHighlighted(false);
     setOrder(families.length);
     setShowForm(true);
   }
@@ -291,6 +327,15 @@ function FamilyManager({
       name,
       slug: slug || undefined,
       description,
+      eyebrow,
+      subtitle,
+      material,
+      weight,
+      dyeing,
+      comfort,
+      cushionThickness,
+      hubHighlights,
+      isHighlighted,
       order,
     };
     if (editId) body.id = editId;
@@ -311,6 +356,9 @@ function FamilyManager({
     onRefresh();
   }
 
+  const inputCls = "w-full px-3 py-2 border border-gray-300 rounded text-sm";
+  const labelCls = "block text-sm font-medium text-gray-700 mb-1";
+
   return (
     <div>
       <div className="flex justify-end mb-4">
@@ -323,26 +371,91 @@ function FamilyManager({
       </div>
 
       {showForm && (
-        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4 space-y-3">
+        <div className="bg-white border border-gray-200 rounded-lg p-5 mb-4 space-y-5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">Basisdaten</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-              <input value={name} onChange={(e) => setName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded text-sm" />
+              <label className={labelCls}>Name *</label>
+              <input value={name} onChange={(e) => setName(e.target.value)} className={inputCls} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
-              <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto" className="w-full px-3 py-2 border border-gray-300 rounded text-sm" />
+              <label className={labelCls}>Slug</label>
+              <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto" className={inputCls} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className={labelCls}>Subtitle</label>
+              <input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="z.B. Aus dem Ozean geboren." className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Eyebrow</label>
+              <input value={eyebrow} onChange={(e) => setEyebrow(e.target.value)} placeholder="z.B. Premium Outdoor" className={inputCls} />
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Beschreibung</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className="w-full px-3 py-2 border border-gray-300 rounded text-sm" />
+            <label className={labelCls}>Beschreibung</label>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={inputCls} />
           </div>
-          <div className="w-32">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Reihenfolge</label>
-            <input type="number" value={order} onChange={(e) => setOrder(parseInt(e.target.value) || 0)} className="w-full px-3 py-2 border border-gray-300 rounded text-sm" />
+
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 pt-2">Hub-Card Inhalte</p>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className={labelCls}>Material</label>
+              <input value={material} onChange={(e) => setMaterial(e.target.value)} placeholder="z.B. 100 % Olefin" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Gewicht</label>
+              <input value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="z.B. ab 260 g/m²" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Färbung</label>
+              <input value={dyeing} onChange={(e) => setDyeing(e.target.value)} placeholder="z.B. spinndüsengefärbt" className={inputCls} />
+            </div>
           </div>
-          <div className="flex gap-2">
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className={labelCls}>Komfort</label>
+              <input value={comfort} onChange={(e) => setComfort(e.target.value)} placeholder="z.B. hoher Sitzkomfort" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Polsterstärke</label>
+              <input value={cushionThickness} onChange={(e) => setCushionThickness(e.target.value)} placeholder="z.B. 5–6 cm" className={inputCls} />
+            </div>
+          </div>
+          <div>
+            <label className={labelCls}>Highlights für Hub-Card</label>
+            <textarea
+              value={hubHighlights}
+              onChange={(e) => setHubHighlights(e.target.value)}
+              rows={4}
+              placeholder={"Eine Zeile pro Highlight, z.B.:\nHöchste Lichtechtheit (7–8)\nUV-Beständigkeit 5/5\nWasseraufnahme < 0,1 %"}
+              className={inputCls}
+            />
+            <p className="text-xs text-gray-400 mt-1">Eine Zeile pro Highlight. Leere Zeilen werden ignoriert.</p>
+          </div>
+
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 pt-2">Darstellung</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="w-32">
+              <label className={labelCls}>Reihenfolge</label>
+              <input type="number" value={order} onChange={(e) => setOrder(parseInt(e.target.value) || 0)} className={inputCls} />
+            </div>
+            <div className="flex items-center gap-2 pt-6">
+              <input
+                type="checkbox"
+                id="isHighlighted"
+                checked={isHighlighted}
+                onChange={(e) => setIsHighlighted(e.target.checked)}
+                className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+              />
+              <label htmlFor="isHighlighted" className="text-sm text-gray-700">
+                Auf Materialien-Hub hervorheben (dunkle Premium-Card)
+              </label>
+            </div>
+          </div>
+
+          <div className="flex gap-2 pt-2">
             <button onClick={save} className="px-4 py-2 bg-orange-600 text-white text-sm rounded hover:bg-orange-700">Speichern</button>
             <button onClick={() => setShowForm(false)} className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded hover:bg-gray-200">Abbrechen</button>
           </div>
@@ -355,6 +468,7 @@ function FamilyManager({
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Name</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Slug</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600">Material</th>
               <th className="text-center px-4 py-3 font-medium text-gray-600">Reihenfolge</th>
               <th className="text-center px-4 py-3 font-medium text-gray-600">Status</th>
               <th className="text-right px-4 py-3 font-medium text-gray-600">Aktionen</th>
@@ -363,8 +477,14 @@ function FamilyManager({
           <tbody className="divide-y divide-gray-100">
             {families.map((f) => (
               <tr key={f.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-medium text-gray-900">{f.name}</td>
+                <td className="px-4 py-3">
+                  <span className="font-medium text-gray-900">{f.name}</span>
+                  {f.isHighlighted && (
+                    <span className="ml-2 px-1.5 py-0.5 text-[10px] rounded bg-orange-100 text-orange-700">Hub</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-gray-500">{f.slug}</td>
+                <td className="px-4 py-3 text-gray-500">{f.material || "—"}</td>
                 <td className="px-4 py-3 text-center text-gray-500">{f.order}</td>
                 <td className="px-4 py-3 text-center">
                   <button
@@ -383,7 +503,7 @@ function FamilyManager({
               </tr>
             ))}
             {families.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Keine Familien vorhanden.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Keine Familien vorhanden.</td></tr>
             )}
           </tbody>
         </table>

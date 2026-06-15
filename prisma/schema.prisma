@@ -480,15 +480,23 @@ model FormSubmission {
 // ---------------------------------------------------------------------------
 
 model FabricFamily {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  name        String
-  description String?
-  eyebrow     String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  description      String?
+  eyebrow          String?
+  subtitle         String?
+  material         String?
+  weight           String?
+  dyeing           String?
+  comfort          String?
+  cushionThickness String?
+  hubHighlights    String?
+  isHighlighted    Boolean  @default(false)
+  order            Int      @default(0)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   swatches FabricSwatch[]
 }

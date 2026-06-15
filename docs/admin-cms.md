@@ -1900,7 +1900,7 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | Mackintosh® Technologie | Code | `materials.ts` |
 | Warum Olefin? (Text) | Code | `materials.ts` |
 | Warum Olefin? (Bild) | Admin → Seiten → materialien → Section "Warum Olefin? — Bild" | `getSectionImage("materialien", "materials-olefin")` |
-| Stofffamilien-Cards | Code | `materials.ts` |
+| Stofffamilien-Cards | Admin → Stoffbibliothek → Familien | `getFabricFamiliesForHub()` aus FabricFamily DB |
 | OceanCycle | Code | `materials.ts` |
 | Stoffe & Muster Preview | Admin → Stoffbibliothek | `getFabricPreviewSwatches()` |
 | Stoffe & Muster Full | Admin → Stoffbibliothek | `getFabricLibraryData()` |
@@ -1939,6 +1939,32 @@ Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materia
 | `components/materials/MaterialAnchorNav.tsx` | Anchor-Navigation fuer Hub |
 | `scripts/backfill-material-pages.ts` | Backfill fuer Page Records |
 | `scripts/backfill-materials-olefin-image-section.ts` | Backfill fuer Olefin-Bild Section |
+| `scripts/backfill-fabric-family-hub-fields.ts` | Backfill Hub-Felder aus fabricQualities |
+
+### Stofffamilien-Cards (CMS-gesteuert)
+
+Die Stofffamilien-Cards auf `/materialien` werden aus dem FabricFamily-Modell geladen (`getFabricFamiliesForHub()`).
+
+**Pflegepfad:** `/admin/fabrics` → Tab "Familien" → Familie bearbeiten
+
+Neue Felder auf FabricFamily (Migration `add_fabric_family_hub_fields`):
+
+| Feld | Beschreibung | Pflege |
+|------|-------------|--------|
+| `subtitle` | Untertitel (z.B. "Aus dem Ozean geboren.") | Textfeld |
+| `material` | Materialangabe (z.B. "100 % Olefin") | Textfeld |
+| `weight` | Gewichtsangabe (z.B. "ab 260 g/m²") | Textfeld |
+| `dyeing` | Faerbungsart (z.B. "spinnduesengefaerbt") | Textfeld |
+| `comfort` | Komfortbeschreibung | Textfeld |
+| `cushionThickness` | Polsterstaerke (z.B. "5-6 cm") | Textfeld |
+| `hubHighlights` | Highlights fuer Hub-Card | Textarea, eine Zeile pro Highlight |
+| `isHighlighted` | Premium-Hervorhebung (dunkle Card) | Checkbox |
+
+**Highlights:** Im Admin als Textarea pflegen, eine Zeile pro Highlight. Leere Zeilen werden ignoriert. Im Frontend automatisch in Array gesplittet.
+
+**Hervorhebung:** Genau eine Familie sollte `isHighlighted = true` haben. Diese wird auf dem Hub als dunkle Premium-Card dargestellt. Falls keine Family hervorgehoben ist, wird die erste aktive Familie als Fallback hervorgehoben.
+
+**Hinweis:** `fabricQualities` in `materials.ts` wird weiterhin auf anderen Seiten verwendet (technische Daten, Produkte, Kollektionen). Auf `/materialien` wird es nicht mehr fuer die Stofffamilien-Cards genutzt.
 
 ### Revalidation
 
@@ -1976,9 +2002,20 @@ npx tsx scripts/backfill-materials-olefin-image-section.ts --apply
 
 Legt eine Helper-Section mit `settings = { style: "materials-olefin", helper: true }` auf der Page `materialien` an. Diese Section ist eine Helper-Section und wird NICHT als normaler Content-Block gerendert. Sie dient ausschliesslich als Bildquelle fuer den Olefin-Abschnitt. Danach im Admin ein Bild an die Section anhaengen. Ohne Bild zeigt die Seite den bisherigen Text-Only-Abschnitt. Idempotent.
 
+```bash
+# Fabric Family Hub-Felder (dry-run)
+npx tsx scripts/backfill-fabric-family-hub-fields.ts
+
+# Fabric Family Hub-Felder (apply)
+npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply
+```
+
+Uebertraegt Material, Gewicht, Faerbung, Komfort, Polsterstaerke, Subtitle, Highlights und isHighlighted aus den bisherigen fabricQualities-Daten in bestehende FabricFamily-Records. Ueberschreibt keine manuell gepflegten Werte. Idempotent.
+
 ### Produktionshinweise
 
-- **Keine Migration** noetig
+- **Migration noetig:** `npx prisma migrate deploy` (additive Felder auf FabricFamily)
+- **Backfill empfohlen:** `npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply`
 - **Backfill-Script** muss einmalig ausgefuehrt werden
 - **Upload-Limit bleibt 15 MB**
 - **Keine bestehenden Daten beschaedigt**

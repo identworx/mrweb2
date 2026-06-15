@@ -78,6 +78,51 @@ export async function getFabricLibraryData(): Promise<FabricLibraryData> {
   }
 }
 
+export interface HubFabricFamily {
+  id: string;
+  slug: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  material: string;
+  weight: string;
+  dyeing: string;
+  comfort: string;
+  cushionThickness: string;
+  highlights: string[];
+  isHighlighted: boolean;
+}
+
+export async function getFabricFamiliesForHub(): Promise<HubFabricFamily[]> {
+  try {
+    const families = await prisma.fabricFamily.findMany({
+      where: { isActive: true },
+      orderBy: { order: "asc" },
+    });
+
+    return families.map((f) => ({
+      id: f.id,
+      slug: f.slug || "",
+      name: f.name || "",
+      subtitle: f.subtitle || f.eyebrow || "",
+      description: f.description || "",
+      material: f.material || "",
+      weight: f.weight || "",
+      dyeing: f.dyeing || "",
+      comfort: f.comfort || "",
+      cushionThickness: f.cushionThickness || "",
+      highlights: (f.hubHighlights || "")
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean),
+      isHighlighted: f.isHighlighted,
+    }));
+  } catch (error) {
+    console.error("CMS: getFabricFamiliesForHub failed", error);
+    return [];
+  }
+}
+
 export async function getFabricFamilies(): Promise<FrontendFabricFamily[]> {
   try {
     const families = await prisma.fabricFamily.findMany({

@@ -9,7 +9,6 @@ import MaterialAnchorNav from "@/components/materials/MaterialAnchorNav";
 import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
-  fabricQualities,
   mackintoshTechnology,
   olefinBenefits,
   oceanCycleProcess,
@@ -17,7 +16,7 @@ import {
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug, getSectionImage } from "@/lib/cms/service-pages";
-import { getFabricPreviewSwatches } from "@/lib/cms/fabric-library";
+import { getFabricPreviewSwatches, getFabricFamiliesForHub } from "@/lib/cms/fabric-library";
 import Image from "next/image";
 
 export const revalidate = 60;
@@ -33,12 +32,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero, result, previewSwatches, olefinImage] = await Promise.all([
+  const [layout, hero, result, previewSwatches, olefinImage, hubFamilies] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
     getServicePageBySlug("materialien"),
     getFabricPreviewSwatches(6),
     getSectionImage("materialien", "materials-olefin"),
+    getFabricFamiliesForHub(),
   ]);
 
   const contentSections =
@@ -206,12 +206,13 @@ export default async function MaterialienPage() {
             </section>
 
             {/* Unsere Stofffamilien */}
+            {hubFamilies.length > 0 && (
             <section id="stofffamilien" className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Vier Qualitäten
+                    {hubFamilies.length} Qualitäten
                   </p>
                 </div>
 
@@ -220,14 +221,14 @@ export default async function MaterialienPage() {
                 </h2>
 
                 <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-                  Vier Materialfamilien, entwickelt für unterschiedliche Anforderungen im Outdoor-Bereich — von Premium-Olefin bis recyceltem Ozean-Polypropylen.
+                  {hubFamilies.length} Materialfamilien, entwickelt für unterschiedliche Anforderungen im Outdoor-Bereich — von Premium-Olefin bis recyceltem Ozean-Polypropylen.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {fabricQualities.map((fabric, i) => {
-                    const isDark = i === 0;
+                <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${hubFamilies.length >= 4 ? "lg:grid-cols-4" : hubFamilies.length === 3 ? "lg:grid-cols-3" : ""}`}>
+                  {hubFamilies.map((family, i) => {
+                    const isDark = family.isHighlighted || (!hubFamilies.some((f) => f.isHighlighted) && i === 0);
                     return (
-                      <ScrollReveal key={fabric.slug} delay={i * 80}>
+                      <ScrollReveal key={family.slug || family.id} delay={i * 80}>
                         <Link
                           href="/materialien/stoffe-muster"
                           className={`block p-7 h-full transition-all duration-300 motion-safe:hover:-translate-y-1 group ${
@@ -243,92 +244,58 @@ export default async function MaterialienPage() {
                                 : "text-anthracite group-hover:text-pumpkin"
                             }`}
                           >
-                            {fabric.name}
+                            {family.name}
                           </h3>
-                          {fabric.subtitle && (
+                          {family.subtitle ? (
                             <p className="font-accent text-xs tracking-[0.15em] uppercase mb-4 text-pumpkin">
-                              {fabric.subtitle}
+                              {family.subtitle}
                             </p>
+                          ) : (
+                            <div className="mb-4" />
                           )}
-                          {!fabric.subtitle && <div className="mb-4" />}
 
                           <div className="space-y-3 text-sm">
-                            <div>
-                              <span
-                                className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                                  isDark ? "text-white/70" : "text-text-gray/60"
-                                }`}
-                              >
-                                Material
-                              </span>
-                              <p
-                                className={`font-body leading-relaxed ${
-                                  isDark ? "text-white/80" : "text-anthracite"
-                                }`}
-                              >
-                                {fabric.material}
-                              </p>
-                            </div>
-                            <div>
-                              <span
-                                className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                                  isDark ? "text-white/70" : "text-text-gray/60"
-                                }`}
-                              >
-                                Gewicht
-                              </span>
-                              <p
-                                className={`font-body leading-relaxed ${
-                                  isDark ? "text-white/80" : "text-anthracite"
-                                }`}
-                              >
-                                {fabric.weight}
-                              </p>
-                            </div>
-                            <div>
-                              <span
-                                className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${
-                                  isDark ? "text-white/70" : "text-text-gray/60"
-                                }`}
-                              >
-                                Färbung
-                              </span>
-                              <p
-                                className={`font-body leading-relaxed ${
-                                  isDark ? "text-white/80" : "text-anthracite"
-                                }`}
-                              >
-                                {fabric.dyeing}
-                              </p>
-                            </div>
+                            {family.material && (
+                              <div>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                  Material
+                                </span>
+                                <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
+                                  {family.material}
+                                </p>
+                              </div>
+                            )}
+                            {family.weight && (
+                              <div>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                  Gewicht
+                                </span>
+                                <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
+                                  {family.weight}
+                                </p>
+                              </div>
+                            )}
+                            {family.dyeing && (
+                              <div>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                  Färbung
+                                </span>
+                                <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
+                                  {family.dyeing}
+                                </p>
+                              </div>
+                            )}
                           </div>
 
-                          {fabric.highlights && fabric.highlights.length > 0 && (
+                          {family.highlights.length > 0 && (
                             <div className={`mt-5 pt-5 ${isDark ? "border-t border-white/10" : "border-t border-anthracite/10"}`}>
                               <ul className="space-y-2">
-                                {fabric.highlights.slice(0, 3).map((hl) => (
-                                  <li
-                                    key={hl}
-                                    className="flex items-start gap-2 text-sm"
-                                  >
-                                    <svg
-                                      width="14"
-                                      height="14"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      className="text-pumpkin flex-shrink-0 mt-0.5"
-                                    >
+                                {family.highlights.slice(0, 3).map((hl) => (
+                                  <li key={hl} className="flex items-start gap-2 text-sm">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pumpkin flex-shrink-0 mt-0.5">
                                       <polyline points="20 6 9 17 4 12" />
                                     </svg>
-                                    <span
-                                      className={`font-body leading-relaxed ${
-                                        isDark ? "text-white/70" : "text-text-gray"
-                                      }`}
-                                    >
+                                    <span className={`font-body leading-relaxed ${isDark ? "text-white/70" : "text-text-gray"}`}>
                                       {hl}
                                     </span>
                                   </li>
@@ -337,19 +304,9 @@ export default async function MaterialienPage() {
                             </div>
                           )}
 
-                          <div className={`mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] ${
-                            isDark ? "text-pumpkin" : "text-pumpkin"
-                          }`}>
+                          <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin">
                             <span>Stoffe ansehen</span>
-                            <svg
-                              width="12"
-                              height="12"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                              className="group-hover:translate-x-1 transition-transform duration-300"
-                            >
+                            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="group-hover:translate-x-1 transition-transform duration-300">
                               <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
                             </svg>
                           </div>
@@ -360,6 +317,7 @@ export default async function MaterialienPage() {
                 </div>
               </div>
             </section>
+            )}
 
             {/* OceanCycle Kreislauf */}
             <section id="nachhaltigkeit" className="section-padding bg-cream">
