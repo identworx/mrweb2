@@ -207,7 +207,7 @@ export default async function MaterialienPage() {
             {/* Warum Olefin? */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className={`grid grid-cols-1 items-start gap-10 lg:gap-14 ${olefinImage ? "lg:grid-cols-[11fr_7fr]" : ""}`}>
+                <div className={`grid grid-cols-1 items-start gap-10 lg:gap-10 ${olefinImage ? "lg:grid-cols-[5fr_4fr]" : ""}`}>
                   <div>
                     <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
                       Warum <em className="text-pumpkin not-italic">Olefin?</em>
@@ -226,10 +226,10 @@ export default async function MaterialienPage() {
                     {olefin.content ? (
                       <RichTextRenderer
                         html={olefin.content}
-                        className="max-w-[58ch] font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] [&_p+p]:mt-5 [text-wrap:pretty]"
+                        className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] [&_p+p]:mt-5 [text-wrap:pretty]"
                       />
                     ) : (
-                      <div className="max-w-[58ch] space-y-5">
+                      <div className="space-y-5">
                         {olefin.fallbackParagraphs.map((p, i) => (
                           <p
                             key={i}
@@ -245,7 +245,7 @@ export default async function MaterialienPage() {
 
                   {olefinImage && (
                     <ScrollReveal>
-                      <div className="lg:mt-14">
+                      <div className="lg:mt-10">
                         <Image
                           src={olefinImage.url}
                           alt={olefinImage.alt}
