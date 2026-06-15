@@ -1982,7 +1982,7 @@ Neue Felder auf FabricSwatch (Migration `add_fabric_swatch_materials_preview_fie
 | `featuredOnMaterials` | Swatch auf Hub anzeigen | Checkbox |
 | `materialsPreviewOrder` | Reihenfolge in der Vorschau | Zahl (optional, null = automatisch) |
 
-**Logik:** Featured Swatches werden zuerst angezeigt (sortiert nach `materialsPreviewOrder`, dann `family.order` → `swatch.order`). Sind weniger als 6 featured, wird mit nicht-featured Swatches aufgefuellt. Ohne featured Swatches zeigt die Vorschau die ersten 6 aktiven Swatches nach family.order/swatch.order (bisheriges Verhalten).
+**Logik:** Wenn mindestens ein aktiver Swatch `featuredOnMaterials = true` hat, werden ausschliesslich diese Featured Swatches angezeigt (max. 6, sortiert nach `materialsPreviewOrder ASC` mit null zuletzt, dann `family.order`, `swatch.order`, `name`). Es wird NICHT mit nicht-featured Swatches aufgefuellt. Nur wenn kein einziger Swatch featured ist, greift der Fallback: die ersten 6 aktiven Swatches aus aktiven Families nach `family.order`, `swatch.order`, `name`.
 
 ### Katalog-CTA (CMS-gesteuert)
 
