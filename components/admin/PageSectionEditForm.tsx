@@ -137,7 +137,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -227,6 +227,9 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
           updateSettings={updateSettings}
         />
       )}
+      {style === "materials-technology" && <MaterialsTechnologyFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "materials-olefin" && <MaterialsOlefinFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "materials-oceancycle" && <MaterialsOceanCycleFields settings={form.settings} updateSettings={updateSettings} />}
 
       {helper && (
         <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1458,6 +1461,259 @@ function CollectionBenefitsFields({
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+interface TechStep {
+  title: string;
+  label: string;
+  description: string;
+}
+
+function MaterialsTechnologyFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const steps = Array.isArray(settings.steps) ? (settings.steps as TechStep[]) : [];
+  const benefits = Array.isArray(settings.benefits) ? (settings.benefits as string[]) : [];
+
+  function updateStep(index: number, field: keyof TechStep, value: string) {
+    const next = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("steps", next);
+  }
+
+  function addStep() {
+    updateSettings("steps", [...steps, { title: "", label: "", description: "" }]);
+  }
+
+  function removeStep(index: number) {
+    updateSettings("steps", steps.filter((_, i) => i !== index));
+  }
+
+  function updateBenefit(index: number, value: string) {
+    const next = [...benefits];
+    next[index] = value;
+    updateSettings("benefits", next);
+  }
+
+  function addBenefit() {
+    updateSettings("benefits", [...benefits, ""]);
+  }
+
+  function removeBenefit(index: number) {
+    updateSettings("benefits", benefits.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Schritte ({steps.length})</p>
+          <button type="button" onClick={addStep} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Schritt</button>
+        </div>
+        {steps.map((step, i) => (
+          <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">{step.title || `Schritt ${i + 1}`}</span>
+              <button type="button" onClick={() => removeStep(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+                <input
+                  type="text"
+                  value={step.title}
+                  onChange={(e) => updateStep(i, "title", e.target.value)}
+                  placeholder="z.B. Granulat"
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Label</label>
+                <input
+                  type="text"
+                  value={step.label}
+                  onChange={(e) => updateStep(i, "label", e.target.value)}
+                  placeholder="z.B. 100 % PP"
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div className="md:col-span-1">
+                <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+                <textarea
+                  rows={2}
+                  value={step.description}
+                  onChange={(e) => updateStep(i, "description", e.target.value)}
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Vorteile ({benefits.length})</p>
+          <button type="button" onClick={addBenefit} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Vorteil</button>
+        </div>
+        {benefits.map((b, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <input
+              type="text"
+              value={b}
+              onChange={(e) => updateBenefit(i, e.target.value)}
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+            <button type="button" onClick={() => removeBenefit(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function MaterialsOlefinFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const tags = Array.isArray(settings.tags) ? (settings.tags as string[]) : [];
+
+  function updateTag(index: number, value: string) {
+    const next = [...tags];
+    next[index] = value;
+    updateSettings("tags", next);
+  }
+
+  function addTag() {
+    updateSettings("tags", [...tags, ""]);
+  }
+
+  function removeTag(index: number) {
+    updateSettings("tags", tags.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Tags ({tags.length})</p>
+        <button type="button" onClick={addTag} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Tag</button>
+      </div>
+      {tags.map((tag, i) => (
+        <div key={i} className="flex items-start gap-2">
+          <input
+            type="text"
+            value={tag}
+            onChange={(e) => updateTag(i, e.target.value)}
+            placeholder="z.B. Flexibel"
+            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+          <button type="button" onClick={() => removeTag(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MaterialsOceanCycleFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const steps = Array.isArray(settings.steps) ? (settings.steps as ProcessStep[]) : [];
+  const highlights = Array.isArray(settings.highlights) ? (settings.highlights as string[]) : [];
+
+  function updateStep(index: number, field: keyof ProcessStep, value: string) {
+    const next = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("steps", next);
+  }
+
+  function addStep() {
+    updateSettings("steps", [...steps, { title: "", description: "" }]);
+  }
+
+  function removeStep(index: number) {
+    updateSettings("steps", steps.filter((_, i) => i !== index));
+  }
+
+  function updateHighlight(index: number, value: string) {
+    const next = [...highlights];
+    next[index] = value;
+    updateSettings("highlights", next);
+  }
+
+  function addHighlight() {
+    updateSettings("highlights", [...highlights, ""]);
+  }
+
+  function removeHighlight(index: number) {
+    updateSettings("highlights", highlights.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Schritte ({steps.length})</p>
+          <button type="button" onClick={addStep} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Schritt</button>
+        </div>
+        {steps.map((step, i) => (
+          <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">{step.title || `Schritt ${i + 1}`}</span>
+              <button type="button" onClick={() => removeStep(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+                <input
+                  type="text"
+                  value={step.title}
+                  onChange={(e) => updateStep(i, "title", e.target.value)}
+                  placeholder="z.B. Sammlung"
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+                <textarea
+                  rows={2}
+                  value={step.description}
+                  onChange={(e) => updateStep(i, "description", e.target.value)}
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Highlights ({highlights.length})</p>
+          <button type="button" onClick={addHighlight} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Highlight</button>
+        </div>
+        {highlights.map((hl, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <input
+              type="text"
+              value={hl}
+              onChange={(e) => updateHighlight(i, e.target.value)}
+              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+            <button type="button" onClick={() => removeHighlight(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

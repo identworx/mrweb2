@@ -123,6 +123,7 @@ export interface SectionData {
   buttonLabel: string | null;
   buttonHref: string | null;
   imageUrl: string | null;
+  settings: Record<string, unknown>;
 }
 
 export async function getSectionData(
@@ -151,6 +152,7 @@ export async function getSectionData(
       buttonLabel: match.buttonLabel,
       buttonHref: match.buttonHref,
       imageUrl: match.image ? getMediaUrl(match.image, "") : null,
+      settings: parseSettings(match.settings),
     };
   } catch (error) {
     console.error(`CMS: getSectionData("${pageSlug}", "${style}") failed`, error);

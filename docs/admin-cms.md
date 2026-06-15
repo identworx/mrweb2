@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-15 (Phase 2: Preview + CTA CMS-pflegbar) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-15 (Phase 3: Core Sections CMS-pflegbar) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1850,10 +1850,10 @@ Die Hub-Seite zeigt:
 
 1. **PageHero** — aus CMS (Page slug `materialien`)
 2. **Anchor-Navigation** — kompakte Seitennavigation nach dem Hero
-3. **Mackintosh® Technology** — Technologie-Teaser (Daten aus `materials.ts`)
-4. **Warum Olefin?** — Argumentationsbereich (Text aus `materials.ts`, Bild aus CMS via `getSectionImage`)
+3. **Mackintosh® Technology** — Technologie-Teaser (CMS via Helper-Section `materials-technology`, Fallback `materials.ts`)
+4. **Warum Olefin?** — Argumentationsbereich (CMS via Helper-Section `materials-olefin`, Fallback `materials.ts`)
 5. **Stofffamilien** — 4 Cards (Mackintosh, Lite, Nerio, Basic), verlinkt auf `/materialien/stoffe-muster`
-6. **OceanCycle** — Nachhaltigkeits-Teaser (Daten aus `materials.ts`)
+6. **OceanCycle** — Nachhaltigkeits-Teaser (CMS via Helper-Section `materials-oceancycle`, Fallback `materials.ts`)
 7. **Stoffe & Muster Preview** — 6 Stoffkarten (datengetrieben aus FabricSwatch), CTA auf `/materialien/stoffe-muster`
 8. **Katalog CTA** — Verweis auf `/kataloge`
 
@@ -1897,11 +1897,11 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | SEO Title/Description | Admin → Seiten → Page Record | Page.seoTitle/seoDescription |
 | Breadcrumbs | automatisch | Hardcoded Pfade |
 | Anchor-Navigation Labels | Code (UI-Labels) | `MaterialAnchorNav.tsx` |
-| Mackintosh® Technologie | Code | `materials.ts` |
-| Warum Olefin? (Text) | Code | `materials.ts` |
-| Warum Olefin? (Bild) | `/admin/pages` → Materialien → Seitenbereiche → Olefin-Bild (Helper, mit MediaPicker) | `getSectionImage("materialien", "materials-olefin")` |
+| Mackintosh® Technologie | `/admin/pages` → Materialien → Seitenbereiche → Helper "materials-technology" | `getSectionData("materialien", "materials-technology")` mit Fallback auf `materials.ts` |
+| Warum Olefin? (Text+Tags) | `/admin/pages` → Materialien → Seitenbereiche → Helper "materials-olefin" | `getSectionData("materialien", "materials-olefin")` mit Fallback auf `materials.ts` |
+| Warum Olefin? (Bild) | `/admin/pages` → Materialien → Seitenbereiche → Helper "materials-olefin" (MediaPicker) | `getSectionImage("materialien", "materials-olefin")` |
 | Stofffamilien-Cards | Admin → Stoffbibliothek → Familien | `getFabricFamiliesForHub()` aus FabricFamily DB |
-| OceanCycle | Code | `materials.ts` |
+| OceanCycle Kreislauf | `/admin/pages` → Materialien → Seitenbereiche → Helper "materials-oceancycle" | `getSectionData("materialien", "materials-oceancycle")` mit Fallback auf `materials.ts` |
 | Stoffe & Muster Preview | Admin → Stoffbibliothek → Stoff bearbeiten → "Auf Materialien-Hub anzeigen" | `getFabricPreviewSwatches()` mit `featuredOnMaterials`-Steuerung |
 | Stoffe & Muster Full | Admin → Stoffbibliothek | `getFabricLibraryData()` |
 | Technische Tabelle | Code | `materials.ts` |
@@ -1950,6 +1950,7 @@ Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materia
 | `scripts/backfill-fabric-family-hub-fields.ts` | Backfill Hub-Felder aus fabricQualities |
 | `scripts/backfill-materials-preview-swatches.ts` | Backfill featuredOnMaterials fuer erste 6 Swatches |
 | `scripts/backfill-materials-catalog-cta-section.ts` | Backfill Katalog-CTA Helper-Section |
+| `scripts/backfill-materials-core-sections.ts` | Backfill Technology, Olefin, OceanCycle Helper-Sections |
 
 ### Stofffamilien-Cards (CMS-gesteuert)
 
@@ -2008,6 +2009,53 @@ Im Admin wird die Section mit einem **Helper**-Badge markiert und zeigt folgende
 | Button Href | `buttonHref` | Button-Link | "/kataloge" |
 
 Die Section nutzt `settings = { style: "materials-catalog-cta", helper: true }`. Das Settings-JSON ist im Admin schreibgeschuetzt (collapsed), damit `helper: true` und `style` nicht versehentlich geloescht werden. Als Helper-Section loest sie NICHT den CMS-Override aus. Geladen ueber `getSectionData("materialien", "materials-catalog-cta")`.
+
+### Mackintosh® Technology (CMS-gesteuert)
+
+Der Technologie-Bereich auf `/materialien` ist ueber eine Helper-Section steuerbar.
+
+**Pflegepfad:** `/admin/pages` → Materialien → Seitenbereiche → "Mackintosh® Technology"
+
+| Feld im Admin | DB-Feld | Beschreibung | Fallback |
+|---------------|---------|-------------|----------|
+| Eyebrow | `eyebrow` | Eyebrow-Text ueber dem Titel | "Technologie" |
+| Titel | `title` | Ueberschrift | "Mackintosh® Technology" |
+| Inhalt | `content` | Beschreibungstext (Absaetze durch doppelten Zeilenumbruch getrennt) | 2 Absaetze aus `materials.ts` |
+| Schritte | `settings.steps` | Prozessschritte mit Titel, Label und Beschreibung | 3 Schritte (Granulat, Additiv, Spinnduesenfaerbung) |
+| Vorteile | `settings.benefits` | Liste der Vorteile | 6 Eintraege aus `materials.ts` |
+
+Die Schritte werden im Admin als Karten-Editor gepflegt (Titel, Label, Beschreibung pro Schritt). Das Label erscheint als farbiger Zusatztext unter der Schrittbeschreibung. Die Vorteile werden als einfache Textliste gepflegt.
+
+### Warum Olefin? (CMS-gesteuert)
+
+Der Olefin-Abschnitt auf `/materialien` ist ueber eine Helper-Section steuerbar, die auch das optionale Bild traegt.
+
+**Pflegepfad:** `/admin/pages` → Materialien → Seitenbereiche → "Warum Olefin?"
+
+| Feld im Admin | DB-Feld | Beschreibung | Fallback |
+|---------------|---------|-------------|----------|
+| Titel | `title` | Ueberschrift | "Warum Olefin?" |
+| Inhalt | `content` | Beschreibungstext (Absaetze durch doppelten Zeilenumbruch getrennt) | 4 Absaetze aus `materials.ts` |
+| Tags | `settings.tags` | Eigenschafts-Tags (z.B. "Flexibel", "Hitzebestaendig") | 4 Tags aus `materials.ts` |
+| Bild | `imageId` | Optionales Bild (MediaPicker) | (keines) |
+
+Die Tags werden als einfache Textliste gepflegt und im Frontend als Border-Badges angezeigt.
+
+### OceanCycle Kreislauf (CMS-gesteuert)
+
+Der OceanCycle-Bereich auf `/materialien` ist ueber eine Helper-Section steuerbar.
+
+**Pflegepfad:** `/admin/pages` → Materialien → Seitenbereiche → "OceanCycle Kreislauf"
+
+| Feld im Admin | DB-Feld | Beschreibung | Fallback |
+|---------------|---------|-------------|----------|
+| Eyebrow | `eyebrow` | Eyebrow-Text ueber dem Titel | "Nachhaltigkeit" |
+| Titel | `title` | Ueberschrift | "OceanCycle Kreislauf" |
+| Inhalt | `content` | Einleitungstext | 1 Absatz aus `materials.ts` |
+| Schritte | `settings.steps` | Prozessschritte mit Titel und Beschreibung | 4 Schritte (Sammlung, Sortierung, Reinigung, Recycling) |
+| Highlights | `settings.highlights` | Highlight-Liste | 5 Eintraege aus `materials.ts` |
+
+Die Schritte werden im Admin als Karten-Editor gepflegt (Titel, Beschreibung pro Schritt). Die Highlights werden als einfache Textliste gepflegt.
 
 ### Revalidation
 
@@ -2075,12 +2123,28 @@ npx tsx scripts/backfill-materials-catalog-cta-section.ts --apply
 
 Legt eine Helper-Section mit `settings = { style: "materials-catalog-cta", helper: true }` auf der Page `materialien` an, vorausgefuellt mit den bisherigen CTA-Texten. Idempotent.
 
+```bash
+# Core Sections (Technology + Olefin + OceanCycle) (dry-run)
+npx tsx scripts/backfill-materials-core-sections.ts
+
+# Core Sections (apply)
+npx tsx scripts/backfill-materials-core-sections.ts --apply
+```
+
+Legt 3 Helper-Sections auf der Page `materialien` an:
+- `materials-technology` — Mackintosh® Technology mit Schritte-Karten und Vorteile-Liste
+- `materials-olefin` — Ergaenzt bestehende Olefin-Section um Titel, Text und Tags (oder legt neu an falls nicht vorhanden)
+- `materials-oceancycle` — OceanCycle Kreislauf mit Prozesskette und Highlights
+
+Alle vorausgefuellt mit den bisherigen Hardcoded-Daten aus `materials.ts`. Idempotent: ueberspringt bei bestehenden Sections, ergaenzt nur fehlende Felder auf existierender Olefin-Section.
+
 ### Produktionshinweise
 
 - **Migration noetig:** `npx prisma migrate deploy` (additive Felder auf FabricFamily + FabricSwatch)
 - **Backfill empfohlen:** `npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply`
 - **Backfill empfohlen:** `npx tsx scripts/backfill-materials-preview-swatches.ts --apply`
 - **Backfill empfohlen:** `npx tsx scripts/backfill-materials-catalog-cta-section.ts --apply`
+- **Backfill empfohlen:** `npx tsx scripts/backfill-materials-core-sections.ts --apply`
 - **Backfill-Scripts** muessen einmalig ausgefuehrt werden
 - **Upload-Limit bleibt 15 MB**
 - **Keine bestehenden Daten beschaedigt**
@@ -2093,4 +2157,4 @@ Legt eine Helper-Section mit `settings = { style: "materials-catalog-cta", helpe
 - [x] Stofffamilien-Card-Texte in CMS ueberfuehren (FabricFamily Hub-Felder)
 - [x] Stoffe-&-Muster-Vorschau steuerbar via `featuredOnMaterials`
 - [x] Katalog-CTA CMS-pflegbar via Helper-Section
-- [ ] OceanCycle / Mackintosh-Technologie-Texte in CMS ueberfuehren
+- [x] OceanCycle / Mackintosh-Technologie-Texte in CMS ueberfuehren (Phase 3: Helper-Sections)

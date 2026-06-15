@@ -221,22 +221,49 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
+    style: "materials-technology",
+    label: "Mackintosh® Technology (Materialien)",
+    description: "Helper-Section: Technologie-Bereich mit Schritte-Karten und Vorteile-Liste.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "materials-technology",
+      helper: true,
+      steps: [
+        { title: "Granulat", label: "100 % PP", description: "" },
+      ],
+      benefits: ["Erster Vorteil"],
+    },
+  },
+  {
+    style: "materials-olefin",
+    label: "Warum Olefin? (Materialien)",
+    description: "Helper-Section: Text, Tags und optionales Bild für den Olefin-Abschnitt.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "materials-olefin",
+      helper: true,
+      tags: ["Flexibel"],
+    },
+  },
+  {
+    style: "materials-oceancycle",
+    label: "OceanCycle Kreislauf (Materialien)",
+    description: "Helper-Section: Prozesskette mit Schritten und Highlights für OceanCycle.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "materials-oceancycle",
+      helper: true,
+      steps: [{ title: "Schritt 1", description: "" }],
+      highlights: ["Erster Highlight"],
+    },
+  },
+  {
     style: "materials-catalog-cta",
     label: "Katalog-CTA (Materialien)",
     description: "Helper-Section: CTA-Block am Ende des Materialien-Hubs. Titel, Text, Button.",
     sectionType: "CTA",
     defaultSettings: {
       style: "materials-catalog-cta",
-      helper: true,
-    },
-  },
-  {
-    style: "materials-olefin",
-    label: "Olefin-Bild (Materialien)",
-    description: "Helper-Section: Optionales Bild für den Abschnitt 'Warum Olefin?' auf dem Materialien-Hub.",
-    sectionType: "CUSTOM",
-    defaultSettings: {
-      style: "materials-olefin",
       helper: true,
     },
   },

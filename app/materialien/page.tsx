@@ -32,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData] = await Promise.all([
+  const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
     getServicePageBySlug("materialien"),
@@ -40,7 +40,49 @@ export default async function MaterialienPage() {
     getSectionImage("materialien", "materials-olefin"),
     getFabricFamiliesForHub(),
     getSectionData("materialien", "materials-catalog-cta"),
+    getSectionData("materialien", "materials-technology"),
+    getSectionData("materialien", "materials-olefin"),
+    getSectionData("materialien", "materials-oceancycle"),
   ]);
+
+  const tech = {
+    eyebrow: techData?.eyebrow || "Technologie",
+    title: techData?.title || mackintoshTechnology.title,
+    paragraphs: techData?.content?.trim()
+      ? techData.content.split("\n\n").filter(Boolean)
+      : mackintoshTechnology.description,
+    steps: Array.isArray(techData?.settings?.steps) && (techData.settings.steps as Array<{title: string; label: string; description: string}>).length > 0
+      ? (techData.settings.steps as Array<{title: string; label: string; description: string}>)
+      : mackintoshTechnology.steps.map((s, i) => ({
+          ...s,
+          label: ["100 % PP", "Additiv wasserabweisend", "spin-dyed UV-Pigmente"][i] || "",
+        })),
+    benefits: Array.isArray(techData?.settings?.benefits) && (techData.settings.benefits as string[]).length > 0
+      ? (techData.settings.benefits as string[])
+      : mackintoshTechnology.benefits,
+  };
+
+  const olefin = {
+    title: olefinData?.title || "Warum Olefin?",
+    tags: Array.isArray(olefinData?.settings?.tags) && (olefinData.settings.tags as string[]).length > 0
+      ? (olefinData.settings.tags as string[])
+      : olefinBenefits.tags,
+    paragraphs: olefinData?.content?.trim()
+      ? olefinData.content.split("\n\n").filter(Boolean)
+      : olefinBenefits.paragraphs,
+  };
+
+  const ocean = {
+    eyebrow: oceanData?.eyebrow || "Nachhaltigkeit",
+    title: oceanData?.title || oceanCycleProcess.title,
+    description: oceanData?.content?.trim() || oceanCycleProcess.description,
+    steps: Array.isArray(oceanData?.settings?.steps) && (oceanData.settings.steps as Array<{title: string; description: string}>).length > 0
+      ? (oceanData.settings.steps as Array<{title: string; description: string}>)
+      : oceanCycleProcess.steps,
+    highlights: Array.isArray(oceanData?.settings?.highlights) && (oceanData.settings.highlights as string[]).length > 0
+      ? (oceanData.settings.highlights as string[])
+      : oceanCycleProcess.highlights,
+  };
 
   const contentSections =
     result.state === "published"
@@ -81,16 +123,16 @@ export default async function MaterialienPage() {
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Technologie
+                    {tech.eyebrow}
                   </p>
                 </div>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-                  {mackintoshTechnology.title}
+                  {tech.title}
                 </h2>
 
                 <div className="max-w-3xl space-y-5 mb-16">
-                  {mackintoshTechnology.description.map((paragraph, i) => (
+                  {tech.paragraphs.map((paragraph, i) => (
                     <p
                       key={i}
                       className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
@@ -101,7 +143,7 @@ export default async function MaterialienPage() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                  {mackintoshTechnology.steps.map((step, i) => (
+                  {tech.steps.map((step, i) => (
                     <ScrollReveal key={step.title} delay={i * 120}>
                       <div className="flex items-center gap-4 mb-4">
                         <span className="flex items-center justify-center w-10 h-10 bg-pumpkin text-white font-heading text-sm font-bold">
@@ -114,13 +156,11 @@ export default async function MaterialienPage() {
                       <p className="font-body text-text-gray text-sm leading-[1.8]">
                         {step.description}
                       </p>
-                      <p className="font-accent text-pumpkin/70 text-xs tracking-[0.15em] uppercase mt-3">
-                        {i === 0
-                          ? "100 % PP"
-                          : i === 1
-                            ? "Additiv wasserabweisend"
-                            : "spin-dyed UV-Pigmente"}
-                      </p>
+                      {step.label && (
+                        <p className="font-accent text-pumpkin/70 text-xs tracking-[0.15em] uppercase mt-3">
+                          {step.label}
+                        </p>
+                      )}
                     </ScrollReveal>
                   ))}
                 </div>
@@ -131,7 +171,7 @@ export default async function MaterialienPage() {
                       Vorteile der Mackintosh® Technology
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {mackintoshTechnology.benefits.map((benefit) => (
+                      {tech.benefits.map((benefit) => (
                         <div key={benefit} className="flex items-start gap-3">
                           <svg
                             width="18"
@@ -167,7 +207,7 @@ export default async function MaterialienPage() {
                     </h2>
 
                     <div className="flex flex-wrap gap-3 mb-12">
-                      {olefinBenefits.tags.map((tag, i) => (
+                      {olefin.tags.map((tag, i) => (
                         <ScrollReveal key={tag} delay={i * 60}>
                           <span className="inline-block font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite">
                             {tag}
@@ -177,7 +217,7 @@ export default async function MaterialienPage() {
                     </div>
 
                     <div className="max-w-3xl space-y-5">
-                      {olefinBenefits.paragraphs.map((p, i) => (
+                      {olefin.paragraphs.map((p, i) => (
                         <p
                           key={i}
                           className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
@@ -326,27 +366,27 @@ export default async function MaterialienPage() {
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Nachhaltigkeit
+                    {ocean.eyebrow}
                   </p>
                 </div>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  {oceanCycleProcess.title}
+                  {ocean.title}
                 </h2>
 
                 <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-                  {oceanCycleProcess.description}
+                  {ocean.description}
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-light-gray">
-                  {oceanCycleProcess.steps.map((step, i) => (
+                  {ocean.steps.map((step, i) => (
                     <ScrollReveal key={step.title} delay={i * 100}>
                       <div className="bg-white p-6 md:p-8 h-full relative">
                         <div className="flex items-center gap-3 mb-4">
                           <span className="flex items-center justify-center w-8 h-8 bg-pumpkin/10 text-pumpkin font-heading text-sm font-bold">
                             {i + 1}
                           </span>
-                          {i < oceanCycleProcess.steps.length - 1 && (
+                          {i < ocean.steps.length - 1 && (
                             <svg
                               width="20"
                               height="20"
@@ -373,7 +413,7 @@ export default async function MaterialienPage() {
 
                 <ScrollReveal>
                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {oceanCycleProcess.highlights.map((hl) => (
+                    {ocean.highlights.map((hl) => (
                       <div key={hl} className="flex items-start gap-3">
                         <svg
                           width="16"
