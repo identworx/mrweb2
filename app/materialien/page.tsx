@@ -8,6 +8,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import MaterialAnchorNav from "@/components/materials/MaterialAnchorNav";
 import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
+import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import {
   mackintoshTechnology,
   olefinBenefits,
@@ -48,9 +49,8 @@ export default async function MaterialienPage() {
   const tech = {
     eyebrow: techData?.eyebrow || "Technologie",
     title: techData?.title || mackintoshTechnology.title,
-    paragraphs: techData?.content?.trim()
-      ? techData.content.split("\n\n").filter(Boolean)
-      : mackintoshTechnology.description,
+    content: techData?.content?.trim() || null,
+    fallbackParagraphs: mackintoshTechnology.description,
     steps: Array.isArray(techData?.settings?.steps) && (techData.settings.steps as Array<{title: string; label: string; description: string}>).length > 0
       ? (techData.settings.steps as Array<{title: string; label: string; description: string}>)
       : mackintoshTechnology.steps.map((s, i) => ({
@@ -67,15 +67,15 @@ export default async function MaterialienPage() {
     tags: Array.isArray(olefinData?.settings?.tags) && (olefinData.settings.tags as string[]).length > 0
       ? (olefinData.settings.tags as string[])
       : olefinBenefits.tags,
-    paragraphs: olefinData?.content?.trim()
-      ? olefinData.content.split("\n\n").filter(Boolean)
-      : olefinBenefits.paragraphs,
+    content: olefinData?.content?.trim() || null,
+    fallbackParagraphs: olefinBenefits.paragraphs,
   };
 
   const ocean = {
     eyebrow: oceanData?.eyebrow || "Nachhaltigkeit",
     title: oceanData?.title || oceanCycleProcess.title,
-    description: oceanData?.content?.trim() || oceanCycleProcess.description,
+    content: oceanData?.content?.trim() || null,
+    fallbackDescription: oceanCycleProcess.description,
     steps: Array.isArray(oceanData?.settings?.steps) && (oceanData.settings.steps as Array<{title: string; description: string}>).length > 0
       ? (oceanData.settings.steps as Array<{title: string; description: string}>)
       : oceanCycleProcess.steps,
@@ -131,16 +131,23 @@ export default async function MaterialienPage() {
                   {tech.title}
                 </h2>
 
-                <div className="max-w-3xl space-y-5 mb-16">
-                  {tech.paragraphs.map((paragraph, i) => (
-                    <p
-                      key={i}
-                      className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
+                {tech.content ? (
+                  <RichTextRenderer
+                    html={tech.content}
+                    className="max-w-3xl font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] [&_p+p]:mt-5 mb-16"
+                  />
+                ) : (
+                  <div className="max-w-3xl space-y-5 mb-16">
+                    {tech.fallbackParagraphs.map((paragraph, i) => (
+                      <p
+                        key={i}
+                        className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                   {tech.steps.map((step, i) => (
@@ -200,7 +207,7 @@ export default async function MaterialienPage() {
             {/* Warum Olefin? */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className={`grid grid-cols-1 items-start gap-12 ${olefinImage ? "lg:grid-cols-[1fr_auto]" : ""}`}>
+                <div className={`grid grid-cols-1 items-start gap-10 lg:gap-16 ${olefinImage ? "lg:grid-cols-[3fr_2fr]" : ""}`}>
                   <div>
                     <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
                       Warum <em className="text-pumpkin not-italic">Olefin?</em>
@@ -216,28 +223,35 @@ export default async function MaterialienPage() {
                       ))}
                     </div>
 
-                    <div className="max-w-3xl space-y-5">
-                      {olefin.paragraphs.map((p, i) => (
-                        <p
-                          key={i}
-                          className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
-                          style={{ textWrap: "pretty" }}
-                        >
-                          {p}
-                        </p>
-                      ))}
-                    </div>
+                    {olefin.content ? (
+                      <RichTextRenderer
+                        html={olefin.content}
+                        className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] [&_p+p]:mt-5 [text-wrap:pretty]"
+                      />
+                    ) : (
+                      <div className="space-y-5">
+                        {olefin.fallbackParagraphs.map((p, i) => (
+                          <p
+                            key={i}
+                            className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
+                            style={{ textWrap: "pretty" }}
+                          >
+                            {p}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {olefinImage && (
                     <ScrollReveal>
-                      <div className="w-full lg:w-[420px] xl:w-[480px]">
+                      <div className="lg:pt-6">
                         <Image
                           src={olefinImage.url}
                           alt={olefinImage.alt}
-                          width={480}
-                          height={640}
-                          className="w-full h-auto object-cover rounded-[14px] shadow-[0_24px_60px_rgba(45,45,45,0.10)] ring-1 ring-black/5"
+                          width={560}
+                          height={700}
+                          className="w-full aspect-[4/5] object-cover rounded-[16px] shadow-[0_12px_40px_rgba(45,45,45,0.08)] ring-1 ring-anthracite/5"
                         />
                       </div>
                     </ScrollReveal>
@@ -374,9 +388,16 @@ export default async function MaterialienPage() {
                   {ocean.title}
                 </h2>
 
-                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-                  {ocean.description}
-                </p>
+                {ocean.content ? (
+                  <RichTextRenderer
+                    html={ocean.content}
+                    className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12 [&_p+p]:mt-5"
+                  />
+                ) : (
+                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
+                    {ocean.fallbackDescription}
+                  </p>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-light-gray">
                   {ocean.steps.map((step, i) => (
