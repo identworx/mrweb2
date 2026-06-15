@@ -167,6 +167,8 @@ model NavigationItem {
   isActive     Boolean  @default(true)
   parentId     String?
   linkedPageId String?
+  badgeText    String?
+  badgeVariant String   @default("blue")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 

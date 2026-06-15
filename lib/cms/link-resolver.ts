@@ -22,6 +22,8 @@ export interface ResolvedLink {
   rel?: string;
   status: LinkStatus;
   source: LinkSource;
+  badgeText?: string | null;
+  badgeVariant?: string;
 }
 
 interface NavigationItemInput {
@@ -32,10 +34,16 @@ interface NavigationItemInput {
   linkedPageId?: string | null;
   linkedPage?: { slug: string; status: string } | null;
   isActive?: boolean;
+  badgeText?: string | null;
+  badgeVariant?: string;
 }
 
 export function resolveNavigationLink(item: NavigationItemInput): ResolvedLink {
-  const base = { label: item.label };
+  const base = {
+    label: item.label,
+    badgeText: item.badgeText || null,
+    badgeVariant: item.badgeVariant || "blue",
+  };
   const targetProps = resolveTarget(item.target, item.href);
 
   switch (item.linkType) {

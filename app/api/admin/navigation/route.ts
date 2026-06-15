@@ -56,6 +56,8 @@ export async function POST(request: NextRequest) {
                 order: number;
                 openInNewTab: boolean;
                 isActive?: boolean;
+                badgeText?: string;
+                badgeVariant?: string;
               }) => ({
                 label: item.label,
                 linkType: item.linkType || "CUSTOM_URL",
@@ -64,6 +66,8 @@ export async function POST(request: NextRequest) {
                 order: item.order,
                 target: item.openInNewTab ? "_blank" : "_self",
                 isActive: item.isActive ?? true,
+                badgeText: item.badgeText || null,
+                badgeVariant: item.badgeVariant || "blue",
               }),
             ),
           },

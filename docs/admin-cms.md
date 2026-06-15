@@ -492,9 +492,45 @@ resolveNavigationLink(item) → {
 | `app/admin/navigation/[id]/page.tsx` | Laedt Pages-Liste und linkedPage-Daten |
 | `app/api/admin/navigation/route.ts` | Speichert linkType, linkedPageId, isActive |
 
-### Migration
+### Navigation Badges
+
+NavigationItems koennen optional einen Badge (kleines Label) neben dem Menuepunkt anzeigen.
+
+**Prisma-Felder:**
+- `badgeText String?` — Badge-Text (z.B. „NEU", „Sale", „2027"). Wenn leer/null: kein Badge.
+- `badgeVariant String @default("blue")` — Farbvariante: `blue`, `orange`, `dark`, `light`.
+
+**Admin-Pflege:**
+- Pro NavigationItem: Badge-Text (Textfeld) + Badge-Farbe (Dropdown)
+- Inline-Vorschau im Editor wenn Badge-Text gesetzt
+- Badge-Info in der Item-Kopfzeile als blaues Tag sichtbar
+
+**Badge-Varianten:**
+
+| Variante | Hintergrund | Text |
+|----------|-------------|------|
+| `blue` | #2F7195 (Nerio/Oceana-Blau) | Weiss |
+| `orange` | Pumpkin | Weiss |
+| `dark` | Anthracite | Weiss |
+| `light` | Weiss/90 | Anthracite |
+
+**Rendering:**
+- Desktop: Badge inline rechts neben dem Label, 9px uppercase, bold, gerundet
+- Mobile: Badge inline rechts neben dem Label in der Mobile-Nav
+- Badges werden auf hellem und dunklem Header-Hintergrund sauber dargestellt
+- Wenn `badgeText` leer ist, wird kein Badge gerendert
+
+**Backfill-Script:** `scripts/backfill-nerio-nav-badge.ts`
+- Ersetzt den Header-Menuepunkt „Kontakt" durch „Nerio" mit Link auf `/kollektionen/nerio-oceana` und Badge „NEU"
+- Idempotent: erkennt bestehende Nerio-Eintraege
+- Dry-run: `npx tsx scripts/backfill-nerio-nav-badge.ts`
+- Apply: `npx tsx scripts/backfill-nerio-nav-badge.ts --apply`
+- Der rechte Kontakt-CTA-Button im Header bleibt unveraendert (hardcodiert in Header.tsx)
+
+### Migrationen
 
 - `20260609141011_add_nav_link_type`: Fuegt `linkType` Spalte zu NavigationItem hinzu (Default: CUSTOM_URL)
+- `20260615064442_add_navigation_badges`: Fuegt `badgeText` und `badgeVariant` zu NavigationItem hinzu
 
 ## 8b. Rich Text Editing (Phase 2G)
 

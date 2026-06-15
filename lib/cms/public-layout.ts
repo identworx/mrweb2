@@ -39,6 +39,8 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
           label: link.label,
           href: link.href!,
           target: link.target,
+          badgeText: link.badgeText,
+          badgeVariant: link.badgeVariant,
         }))
     : [];
 

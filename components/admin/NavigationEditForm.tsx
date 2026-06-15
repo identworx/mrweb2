@@ -22,6 +22,8 @@ interface NavigationItemData {
   openInNewTab: boolean;
   isActive: boolean;
   pageStatus?: string | null;
+  badgeText: string;
+  badgeVariant: string;
 }
 
 interface MenuData {
@@ -125,6 +127,8 @@ export default function NavigationEditForm({
           order: prev.items.length > 0 ? Math.max(...prev.items.map((i) => i.order)) + 1 : 0,
           openInNewTab: false,
           isActive: true,
+          badgeText: "",
+          badgeVariant: "blue",
         },
       ],
     }));
@@ -248,6 +252,9 @@ export default function NavigationEditForm({
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-gray-400 font-mono">#{item.order}</span>
                   {getStatusBadge(item, pages)}
+                  {item.badgeText && (
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800">Badge: {item.badgeText}</span>
+                  )}
                   {!item.isActive && (
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-500">Inaktiv</span>
                   )}
@@ -385,6 +392,42 @@ export default function NavigationEditForm({
                     Neues Tab
                   </label>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-2 border-t border-gray-100">
+                <div className="md:col-span-3">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Badge-Text</label>
+                  <input
+                    type="text"
+                    value={item.badgeText}
+                    onChange={(e) => updateItem(index, "badgeText", e.target.value)}
+                    placeholder="z.B. NEU, Sale, 2027"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Badge-Farbe</label>
+                  <select
+                    value={item.badgeVariant}
+                    onChange={(e) => updateItem(index, "badgeVariant", e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  >
+                    <option value="blue">Blau</option>
+                    <option value="orange">Orange</option>
+                    <option value="dark">Dunkel</option>
+                    <option value="light">Hell</option>
+                  </select>
+                </div>
+                {item.badgeText && (
+                  <div className="md:col-span-4 flex items-end pb-1.5">
+                    <span className="text-xs text-gray-500">Vorschau: {item.label} <span className={`inline-flex items-center px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-wide leading-none rounded-[3px] ${
+                      item.badgeVariant === "orange" ? "bg-orange-500 text-white"
+                      : item.badgeVariant === "dark" ? "bg-gray-800 text-white"
+                      : item.badgeVariant === "light" ? "bg-gray-100 text-gray-800"
+                      : "bg-[#2F7195] text-white"
+                    }`}>{item.badgeText}</span></span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

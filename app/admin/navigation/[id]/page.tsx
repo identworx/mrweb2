@@ -63,6 +63,8 @@ export default async function NavigationEditPage({
             openInNewTab: item.target === "_blank",
             isActive: item.isActive,
             pageStatus: item.linkedPage?.status ?? null,
+            badgeText: item.badgeText ?? "",
+            badgeVariant: item.badgeVariant ?? "blue",
           })),
         }}
         pages={pages}

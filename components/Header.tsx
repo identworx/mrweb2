@@ -9,12 +9,25 @@ export interface HeaderNavItem {
   label: string;
   href: string;
   target?: string;
+  badgeText?: string | null;
+  badgeVariant?: string;
 }
 
 interface HeaderProps {
   navItems?: HeaderNavItem[];
   logoUrl?: string | null;
   siteName?: string | null;
+}
+
+const BADGE_VARIANTS: Record<string, string> = {
+  blue: "bg-[#2F7195] text-white",
+  orange: "bg-pumpkin text-white",
+  dark: "bg-anthracite text-white",
+  light: "bg-white/90 text-anthracite",
+};
+
+function badgeClasses(variant?: string): string {
+  return BADGE_VARIANTS[variant || "blue"] || BADGE_VARIANTS.blue;
 }
 
 export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
@@ -86,13 +99,20 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
                 key={link.href}
                 href={link.href}
                 {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
+                className={`group relative flex items-center gap-1.5 font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
                   scrolled
                     ? "text-anthracite/85 hover:text-pumpkin"
                     : "text-white/90 hover:text-white"
                 }`}
               >
                 {link.label}
+                {link.badgeText && (
+                  <span className={`inline-flex items-center px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.08em] leading-none rounded-[3px] ${
+                    badgeClasses(link.badgeVariant)
+                  }`}>
+                    {link.badgeText}
+                  </span>
+                )}
                 <span className={`absolute -bottom-1.5 left-0 h-px w-0 transition-all duration-400 ease-out group-hover:w-full ${
                   scrolled ? "bg-pumpkin/70" : "bg-white/50"
                 }`} />
@@ -172,7 +192,16 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
               className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
               style={{ animationDelay: `${i * 50}ms` }}
             >
-              {link.label}
+              <span className="flex items-center gap-2">
+                {link.label}
+                {link.badgeText && (
+                  <span className={`inline-flex items-center px-1.5 py-[2px] text-[9px] font-bold uppercase tracking-[0.08em] leading-none rounded-[3px] ${
+                    badgeClasses(link.badgeVariant)
+                  }`}>
+                    {link.badgeText}
+                  </span>
+                )}
+              </span>
               <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300">
                 <path d="M8.25 4.5l7.5 7.5-7.5 7.5" />
               </svg>
