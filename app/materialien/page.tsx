@@ -10,7 +10,6 @@ import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
   fabricQualities,
-  propertiesComparison,
   mackintoshTechnology,
   olefinBenefits,
   oceanCycleProcess,
@@ -433,84 +432,6 @@ export default async function MaterialienPage() {
                 </p>
 
                 <FabricLibraryPreview swatches={previewSwatches} />
-              </div>
-            </section>
-
-            {/* Technische Daten — Teaser */}
-            <section className="section-padding bg-cream">
-              <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Materialvergleich
-                  </p>
-                </div>
-
-                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  Technische Daten im Überblick
-                </h2>
-
-                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10">
-                  Solution Dyed Olefin und Piece Dyed Polyester im direkten Vergleich — Lichtechtheit, Abriebfestigkeit, Nachhaltigkeit und mehr.
-                </p>
-
-                <ScrollReveal>
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[600px]">
-                      <thead>
-                        <tr>
-                          <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-3 px-4">
-                            Eigenschaft
-                          </th>
-                          <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-pumpkin py-3 px-4">
-                            Olefin
-                          </th>
-                          <th className="text-left font-accent text-[11px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-3 px-4">
-                            Polyester
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {propertiesComparison.slice(0, 4).map((row, i) => (
-                          <tr
-                            key={row.property}
-                            className={i % 2 === 0 ? "bg-white" : "bg-transparent"}
-                          >
-                            <td className="font-body text-anthracite text-sm font-medium py-3 px-4">
-                              {row.property}
-                            </td>
-                            <td className="font-body text-anthracite text-sm font-semibold py-3 px-4">
-                              {row.olefin}
-                            </td>
-                            <td className="font-body text-text-gray text-sm py-3 px-4">
-                              {row.polyester}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </ScrollReveal>
-
-                <div className="mt-8">
-                  <Link
-                    href="/materialien/technische-daten"
-                    className="inline-flex items-center gap-2 font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] hover:text-anthracite transition-colors duration-300 group"
-                  >
-                    <span>Alle technischen Daten ansehen</span>
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      className="group-hover:translate-x-1 transition-transform duration-300"
-                    >
-                      <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                    </svg>
-                  </Link>
-                </div>
               </div>
             </section>
 

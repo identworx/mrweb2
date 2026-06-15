@@ -1855,8 +1855,7 @@ Die Hub-Seite zeigt:
 5. **Stofffamilien** — 4 Cards (Mackintosh, Lite, Nerio, Basic), verlinkt auf `/materialien/stoffe-muster`
 6. **OceanCycle** — Nachhaltigkeits-Teaser (Daten aus `materials.ts`)
 7. **Stoffe & Muster Preview** — 6 Stoffkarten (datengetrieben aus FabricSwatch), CTA auf `/materialien/stoffe-muster`
-8. **Technische Daten Teaser** — 4 Kennzahlen im Kurzvergleich, CTA auf `/materialien/technische-daten`
-9. **Katalog CTA** — Verweis auf `/kataloge`
+8. **Katalog CTA** — Verweis auf `/kataloge`
 
 **Wichtig:** Die vollstaendige FabricLibrary wird NICHT mehr auf der Hub-Seite angezeigt. Nur eine Preview mit 6 Stoffkarten.
 
