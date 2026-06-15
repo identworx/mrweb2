@@ -133,7 +133,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 | `/admin/pages/[id]`             | Seite bearbeiten / erstellen    | Funktional |
 | `/admin/collections`            | Kollektionen-Liste              | Funktional |
 | `/admin/collections/[id]`       | Kollektion bearbeiten/erstellen | Funktional |
-| `/admin/products`               | Produkte-Liste (mit Bild, Slug, Aktionen) | Funktional |
+| `/admin/products`               | Produkte-Liste (Suche, Filter, Pagination, Bildstatus) | Funktional |
 | `/admin/products/[id]`          | Produkt bearbeiten/erstellen (mit Bildauswahl) | Funktional |
 | `/admin/product-groups`         | Produktgruppen-Liste            | Funktional |
 | `/admin/product-groups/[id]`    | Produktgruppe bearbeiten/erstellen | Funktional |
@@ -939,7 +939,7 @@ Die Kollektions-Detailseite (`/kollektionen/[slug]`) ist als generisches Premium
 - [x] ProductCard akzeptiert sowohl statische als auch DB-Produkte
 - [x] Admin: Produktgruppen-Verwaltung (Liste, Erstellen, Bearbeiten, Icon/Bild-Picker)
 - [x] Admin: Produkt-Bearbeitung erweitert (Kurzbeschreibung, Hauptbild, Hero-Bild aus MediaAssets)
-- [x] Admin: Produkte-Liste mit Bildvorschau, Slug und Aktionen
+- [x] Admin: Produkte-Liste mit Suche, Filter, Pagination, Sortierung, Bildstatus
 - [x] Admin: Produktgruppen im Sidebar
 - [x] API: `POST /api/admin/products` erweitert (shortDescription, heroImageId, mainImageId)
 - [x] API: `GET/POST /api/admin/product-groups`
@@ -1106,6 +1106,38 @@ Die Datenbank ist jetzt die primaere Quelle fuer alle 209 Produkte. Die statisch
   - Jedes Script legt nur die jeweilige Page an (falls sie fehlt) und erstellt fehlende Sections
   - Fasst keine anderen Daten an (keine Products, Collections, News, Downloads, Contact Form Fields, Users)
   - Idempotent: kann mehrfach ausgefuehrt werden
+
+### Admin-Produktuebersicht Filter & Suche
+
+Die Produktuebersicht (`/admin/products`) bietet erweiterte Filter-, Such- und Paginierungsfunktionen fuer die Verwaltung grosser Produktbestaende.
+
+**Suche:** Freitext-Suche ueber Name, Slug, Artikelcode, Farbe, Muster, Kollektion, Produktgruppe und Material. Sofort filternd (Client-seitig).
+
+**Filter:**
+
+| Filter | Typ | Optionen |
+|--------|-----|----------|
+| Status | Buttons | Alle, Veroeffentlicht, Entwurf, Archiviert |
+| Kollektion | Dropdown | Alle Kollektionen aus DB |
+| Produktgruppe | Dropdown | Alle aktiven Produktgruppen aus DB |
+| Material | Dropdown | Alle aktiven Materialien aus DB |
+| Bildstatus | Dropdown | Alle, Mit Hauptbild, Ohne Hauptbild, Mit Galerie, Ohne Galerie |
+
+**Sortierung:** Name A–Z, Name Z–A, Zuletzt geaendert, Neueste, Artikelnummer, Kollektion, Produktgruppe.
+
+**Pagination:** 25 / 50 / 100 pro Seite (Standard: 50). Navigation ueber Seitenbuttons.
+
+**URL-Parameter:** Filter werden in der URL gespeichert (`?q=...&collection=...&group=...&status=...&image=...&sort=...&page=...`). Filter bleiben beim Zuruecknavigieren erhalten.
+
+**Tabellenspalten:** Thumbnail, Name/Slug, Code, Kollektion, Produktgruppe, Material, Status, Bildstatus (Hauptbild-Indikator + Galerieanzahl), Aktionen.
+
+**Bildstatus-Anzeige:** Gruener Punkt = Hauptbild vorhanden, Roter Punkt = kein Hauptbild. Galerieanzahl als Zahl (z.B. „3 Gal.").
+
+**Komponenten:**
+- `app/admin/products/page.tsx` — Server-Seite, laedt Produkte + Filter-Optionen
+- `components/admin/ProductAdminList.tsx` — Client-Komponente mit Filter, Suche, Pagination, Tabelle
+
+**Hinweis:** Hauptbilder werden bei Filterung/Anzeige NICHT ueberschrieben. Bestehende Galerien bleiben erhalten. Upload-Limit bleibt 15 MB. Keine Migration erforderlich.
 
 ### Spaeter
 11. **Rich-Text-Editor** — Fuer Seitentexte, Beschreibungen etc.
