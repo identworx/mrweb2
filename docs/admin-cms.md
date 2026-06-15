@@ -1899,7 +1899,7 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | Anchor-Navigation Labels | Code (UI-Labels) | `MaterialAnchorNav.tsx` |
 | Mackintosh® Technologie | Code | `materials.ts` |
 | Warum Olefin? (Text) | Code | `materials.ts` |
-| Warum Olefin? (Bild) | Admin → Seiten → materialien → Section "Warum Olefin? — Bild" | `getSectionImage("materialien", "materials-olefin")` |
+| Warum Olefin? (Bild) | `/admin/pages` → Materialien → Seitenbereiche → Olefin-Bild (Helper, mit MediaPicker) | `getSectionImage("materialien", "materials-olefin")` |
 | Stofffamilien-Cards | Admin → Stoffbibliothek → Familien | `getFabricFamiliesForHub()` aus FabricFamily DB |
 | OceanCycle | Code | `materials.ts` |
 | Stoffe & Muster Preview | Admin → Stoffbibliothek → Stoff bearbeiten → "Auf Materialien-Hub anzeigen" | `getFabricPreviewSwatches()` mit `featuredOnMaterials`-Steuerung |
@@ -1909,7 +1909,14 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 
 Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materialien` im Admin echte Content-Sections angelegt und publiziert werden, rendern diese via `ServiceSectionRenderer` statt der Fallback-Sections.
 
-**Helper-Sections** (erkennbar an `settings.helper = true` oder `settings.style` mit Prefix `materials-`) werden vom CMS-Override ausgeschlossen. Sie dienen ausschliesslich als Datenquelle fuer spezifische Felder (z.B. Bilder) innerhalb der Fallback-Abschnitte. Eine Helper-Section loest NICHT den CMS-Override aus und wird NICHT als eigener Content-Block gerendert. Beispiel: Die Section "Warum Olefin? — Bild" (`settings.style = "materials-olefin"`, `settings.helper = true`) liefert das optionale Bild fuer den Olefin-Abschnitt, ohne die gesamte Hub-Seite zu ersetzen.
+**Helper-Sections** (erkennbar an `settings.helper = true` oder `settings.style` mit Prefix `materials-`) werden vom CMS-Override ausgeschlossen. Sie dienen ausschliesslich als Datenquelle fuer spezifische Felder (z.B. Bilder, CTA-Texte) innerhalb der Fallback-Abschnitte. Eine Helper-Section loest NICHT den CMS-Override aus und wird NICHT als eigener Content-Block gerendert.
+
+**Admin-Darstellung von Helper-Sections:**
+- Blaues **Helper**-Badge in der Sektionsliste und im Bearbeitungsformular
+- Hinweistext: "Diese Section dient als Datenquelle und wird nicht direkt als eigener Seitenblock gerendert."
+- Style-Dropdown ist gesperrt (damit `helper: true` nicht versehentlich geloescht wird)
+- Settings JSON ist schreibgeschuetzt in einem collapsed Details-Element sichtbar
+- Inhaltliche Felder (Titel, Text, Button, Bild) sind je nach Helper-Typ sichtbar und pflegbar
 
 ### Wiederverwendete CMS-Funktionen
 
@@ -1988,18 +1995,19 @@ Neue Felder auf FabricSwatch (Migration `add_fabric_swatch_materials_preview_fie
 
 Der Katalog-CTA am Ende von `/materialien` ist ueber eine Helper-Section steuerbar.
 
-**Pflegepfad:** Admin → Seiten → materialien → Section mit `settings.style = "materials-catalog-cta"`
+**Pflegepfad:** `/admin/pages` → Materialien → Seitenbereiche → "Alle Details im Katalog"
 
-Felder:
+Im Admin wird die Section mit einem **Helper**-Badge markiert und zeigt folgende Pflegefelder:
 
-| Feld | Beschreibung | Fallback |
-|------|-------------|----------|
-| `title` | Ueberschrift | "Alle Details im Katalog" |
-| `content` | Beschreibungstext | "Entdecken Sie alle Stoffqualitaeten..." |
-| `buttonLabel` | Button-Text | "Katalog ansehen" |
-| `buttonHref` | Button-Link | "/kataloge" |
+| Feld im Admin | DB-Feld | Beschreibung | Fallback auf /materialien |
+|---------------|---------|-------------|--------------------------|
+| Eyebrow | `eyebrow` | Optionaler Eyebrow-Text | (keiner) |
+| Titel | `title` | Ueberschrift | "Alle Details im Katalog" |
+| Inhalt | `content` | Beschreibungstext | "Entdecken Sie alle Stoffqualitaeten..." |
+| Button Label | `buttonLabel` | Button-Text | "Katalog ansehen" |
+| Button Href | `buttonHref` | Button-Link | "/kataloge" |
 
-Die Section nutzt `settings = { style: "materials-catalog-cta", helper: true }`. Als Helper-Section loest sie NICHT den CMS-Override aus. Geladen ueber `getSectionData("materialien", "materials-catalog-cta")`.
+Die Section nutzt `settings = { style: "materials-catalog-cta", helper: true }`. Das Settings-JSON ist im Admin schreibgeschuetzt (collapsed), damit `helper: true` und `style` nicht versehentlich geloescht werden. Als Helper-Section loest sie NICHT den CMS-Override aus. Geladen ueber `getSectionData("materialien", "materials-catalog-cta")`.
 
 ### Revalidation
 

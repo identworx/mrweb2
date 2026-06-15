@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { getStyleLabel } from "@/lib/admin/page-section-schemas";
+import { getStyleLabel, isHelperSection } from "@/lib/admin/page-section-schemas";
 import PageSectionEditForm from "./PageSectionEditForm";
 
 interface SectionRow {
@@ -267,6 +267,11 @@ export default function PageSectionsEditor({ pageId, initialSections, userRole }
                   <span className="text-xs text-gray-400 shrink-0">
                     #{section.order}
                   </span>
+                  {isHelperSection(section.settings) && (
+                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700">
+                      Helper
+                    </span>
+                  )}
                   {!section.isActive && (
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-200 text-gray-600">
                       Inaktiv

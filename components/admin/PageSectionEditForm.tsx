@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SECTION_STYLES, getStyleDef } from "@/lib/admin/page-section-schemas";
+import { SECTION_STYLES, getStyleDef, isHelperSection } from "@/lib/admin/page-section-schemas";
 import RichTextEditor from "./RichTextEditor";
 import MediaPickerField from "./MediaPickerField";
 
@@ -33,6 +33,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
 
   const style = (form.settings.style as string) || "";
   const styleDef = getStyleDef(style);
+  const helper = isHelperSection(form.settings);
 
   function updateField(field: keyof SectionData, value: unknown) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -46,6 +47,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
   }
 
   function handleStyleChange(newStyle: string) {
+    if (helper) return;
     const def = getStyleDef(newStyle);
     if (def) {
       setForm((prev) => ({
@@ -68,35 +70,51 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
 
   return (
     <div className="space-y-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Style</label>
-          <select
-            value={style}
-            onChange={(e) => handleStyleChange(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          >
-            <option value="">— Kein Style —</option>
-            {SECTION_STYLES.map((s) => (
-              <option key={s.style} value={s.style}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-          {styleDef && (
-            <p className="text-xs text-gray-400 mt-1">{styleDef.description}</p>
-          )}
+      {helper && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-100 text-blue-700 uppercase tracking-wider">
+              Helper-Section
+            </span>
+            <span className="text-xs text-blue-600 font-mono">{style}</span>
+          </div>
+          <p className="text-xs text-blue-700 leading-relaxed">
+            Diese Section dient als Datenquelle und wird nicht direkt als eigener Seitenblock gerendert.
+          </p>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Typ (intern)</label>
-          <input
-            type="text"
-            value={form.type}
-            readOnly
-            className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
-          />
+      )}
+
+      {!helper && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Style</label>
+            <select
+              value={style}
+              onChange={(e) => handleStyleChange(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="">— Kein Style —</option>
+              {SECTION_STYLES.filter((s) => !isHelperSection(s.defaultSettings)).map((s) => (
+                <option key={s.style} value={s.style}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+            {styleDef && (
+              <p className="text-xs text-gray-400 mt-1">{styleDef.description}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Typ (intern)</label>
+            <input
+              type="text"
+              value={form.type}
+              readOnly
+              className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -119,7 +137,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -130,7 +148,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || style === "materials-catalog-cta" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -153,7 +171,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "home-hero" || style === "image-text-feature") && (
+      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin") && (
         <MediaPickerField
           label="Bild"
           value={form.imageId || ""}
@@ -210,7 +228,18 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         />
       )}
 
-      {!styleDef && style !== "" && (
+      {helper && (
+        <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <summary className="text-xs font-medium text-gray-500 cursor-pointer select-none">
+            Settings JSON (geschützt)
+          </summary>
+          <pre className="mt-2 text-xs text-gray-400 font-mono whitespace-pre-wrap break-words">
+            {JSON.stringify(form.settings, null, 2)}
+          </pre>
+        </details>
+      )}
+
+      {!styleDef && style !== "" && !helper && (
         <JsonFallbackField
           settings={form.settings}
           onChange={(s) => updateField("settings", s)}

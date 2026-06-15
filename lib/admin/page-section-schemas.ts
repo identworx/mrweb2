@@ -220,6 +220,26 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       secondaryHref: "/kataloge",
     },
   },
+  {
+    style: "materials-catalog-cta",
+    label: "Katalog-CTA (Materialien)",
+    description: "Helper-Section: CTA-Block am Ende des Materialien-Hubs. Titel, Text, Button.",
+    sectionType: "CTA",
+    defaultSettings: {
+      style: "materials-catalog-cta",
+      helper: true,
+    },
+  },
+  {
+    style: "materials-olefin",
+    label: "Olefin-Bild (Materialien)",
+    description: "Helper-Section: Optionales Bild für den Abschnitt 'Warum Olefin?' auf dem Materialien-Hub.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "materials-olefin",
+      helper: true,
+    },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {
@@ -228,4 +248,11 @@ export function getStyleDef(style: string): SectionStyleDef | undefined {
 
 export function getStyleLabel(style: string): string {
   return getStyleDef(style)?.label ?? style;
+}
+
+export function isHelperSection(settings: Record<string, unknown>): boolean {
+  return (
+    settings.helper === true ||
+    String(settings.style ?? "").startsWith("materials-")
+  );
 }
