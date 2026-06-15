@@ -99,7 +99,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
                 key={link.href}
                 href={link.href}
                 {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className={`group relative flex items-center gap-1.5 font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
+                className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
                   scrolled
                     ? "text-anthracite/85 hover:text-pumpkin"
                     : "text-white/90 hover:text-white"
@@ -107,7 +107,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
               >
                 {link.label}
                 {link.badgeText && (
-                  <span className={`inline-flex items-center px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-[0.08em] leading-none rounded-[3px] ${
+                  <span className={`relative -top-[5px] ml-0.5 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
                     badgeClasses(link.badgeVariant)
                   }`}>
                     {link.badgeText}
@@ -192,10 +192,10 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
               className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
               style={{ animationDelay: `${i * 50}ms` }}
             >
-              <span className="flex items-center gap-2">
+              <span>
                 {link.label}
                 {link.badgeText && (
-                  <span className={`inline-flex items-center px-1.5 py-[2px] text-[9px] font-bold uppercase tracking-[0.08em] leading-none rounded-[3px] ${
+                  <span className={`relative -top-[5px] ml-1 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
                     badgeClasses(link.badgeVariant)
                   }`}>
                     {link.badgeText}
