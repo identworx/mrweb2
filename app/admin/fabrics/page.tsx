@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/db/prisma";
 import { getSessionUser } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
-import AdminShell from "@/components/admin/AdminShell";
 import FabricAdminList from "@/components/admin/FabricAdminList";
 
 export default async function FabricsAdminPage() {
@@ -22,38 +21,36 @@ export default async function FabricsAdminPage() {
   ]);
 
   return (
-    <AdminShell user={{ id: user.id, name: user.name, email: user.email, role: user.role }}>
-      <FabricAdminList
-        swatches={swatches.map((s) => ({
-          id: s.id,
-          name: s.name,
-          slug: s.slug,
-          articleNumber: s.articleNumber || "",
-          familyId: s.familyId,
-          familyName: s.family.name,
-          colorHex: s.colorHex || "",
-          swatchImageUrl: s.swatchImage?.url || "",
-          isActive: s.isActive,
-          availabilityCount: s.availabilities.filter((a) => a.isAvailable).length,
-        }))}
-        families={families.map((f) => ({
-          id: f.id,
-          name: f.name,
-          slug: f.slug,
-          description: f.description || "",
-          order: f.order,
-          isActive: f.isActive,
-        }))}
-        productTypes={productTypes.map((pt) => ({
-          id: pt.id,
-          name: pt.name,
-          slug: pt.slug,
-          iconKey: pt.iconKey || "",
-          order: pt.order,
-          isActive: pt.isActive,
-        }))}
-        userRole={user.role}
-      />
-    </AdminShell>
+    <FabricAdminList
+      swatches={swatches.map((s) => ({
+        id: s.id,
+        name: s.name,
+        slug: s.slug,
+        articleNumber: s.articleNumber || "",
+        familyId: s.familyId,
+        familyName: s.family.name,
+        colorHex: s.colorHex || "",
+        swatchImageUrl: s.swatchImage?.url || "",
+        isActive: s.isActive,
+        availabilityCount: s.availabilities.filter((a) => a.isAvailable).length,
+      }))}
+      families={families.map((f) => ({
+        id: f.id,
+        name: f.name,
+        slug: f.slug,
+        description: f.description || "",
+        order: f.order,
+        isActive: f.isActive,
+      }))}
+      productTypes={productTypes.map((pt) => ({
+        id: pt.id,
+        name: pt.name,
+        slug: pt.slug,
+        iconKey: pt.iconKey || "",
+        order: pt.order,
+        isActive: pt.isActive,
+      }))}
+      userRole={user.role}
+    />
   );
 }
