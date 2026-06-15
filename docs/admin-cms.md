@@ -1851,7 +1851,7 @@ Die Hub-Seite zeigt:
 1. **PageHero** — aus CMS (Page slug `materialien`)
 2. **Anchor-Navigation** — kompakte Seitennavigation nach dem Hero
 3. **Mackintosh® Technology** — Technologie-Teaser (Daten aus `materials.ts`)
-4. **Warum Olefin?** — Argumentationsbereich (Daten aus `materials.ts`)
+4. **Warum Olefin?** — Argumentationsbereich (Text aus `materials.ts`, Bild aus CMS via `getSectionImage`)
 5. **Stofffamilien** — 4 Cards (Mackintosh, Lite, Nerio, Basic), verlinkt auf `/materialien/stoffe-muster`
 6. **OceanCycle** — Nachhaltigkeits-Teaser (Daten aus `materials.ts`)
 7. **Stoffe & Muster Preview** — 6 Stoffkarten (datengetrieben aus FabricSwatch), CTA auf `/materialien/stoffe-muster`
@@ -1898,7 +1898,8 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | Breadcrumbs | automatisch | Hardcoded Pfade |
 | Anchor-Navigation Labels | Code (UI-Labels) | `MaterialAnchorNav.tsx` |
 | Mackintosh® Technologie | Code | `materials.ts` |
-| Warum Olefin? | Code | `materials.ts` |
+| Warum Olefin? (Text) | Code | `materials.ts` |
+| Warum Olefin? (Bild) | Admin → Seiten → materialien → Section "Warum Olefin? — Bild" | `getSectionImage("materialien", "materials-olefin")` |
 | Stofffamilien-Cards | Code | `materials.ts` |
 | OceanCycle | Code | `materials.ts` |
 | Stoffe & Muster Preview | Admin → Stoffbibliothek | `getFabricPreviewSwatches()` |
@@ -1935,6 +1936,7 @@ Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materia
 | `components/materials/FabricLibraryPreview.tsx` | Stoffvorschau-Komponente (6 Cards) |
 | `components/materials/MaterialAnchorNav.tsx` | Anchor-Navigation fuer Hub |
 | `scripts/backfill-material-pages.ts` | Backfill fuer Page Records |
+| `scripts/backfill-materials-olefin-image-section.ts` | Backfill fuer Olefin-Bild Section |
 
 ### Revalidation
 
@@ -1961,6 +1963,16 @@ Legt Page Records an fuer:
 - `technische-daten` (PUBLISHED, MATERIAL_INDEX)
 
 Idempotent. Ueberschreibt keine bestehenden Pages.
+
+```bash
+# Olefin-Bild Section (dry-run)
+npx tsx scripts/backfill-materials-olefin-image-section.ts
+
+# Olefin-Bild Section (apply)
+npx tsx scripts/backfill-materials-olefin-image-section.ts --apply
+```
+
+Legt eine PageSection mit `settings.style = "materials-olefin"` auf der Page `materialien` an. Danach im Admin ein Bild an die Section anhaengen. Ohne Bild zeigt die Seite den bisherigen Text-Only-Abschnitt. Idempotent.
 
 ### Produktionshinweise
 

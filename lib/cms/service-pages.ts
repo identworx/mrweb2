@@ -82,6 +82,40 @@ export async function getServicePageBySlug(slug: string): Promise<ServicePageRes
   }
 }
 
+export interface SectionImage {
+  url: string;
+  alt: string;
+}
+
+export async function getSectionImage(
+  pageSlug: string,
+  style: string,
+): Promise<SectionImage | null> {
+  try {
+    const sections = await prisma.pageSection.findMany({
+      where: {
+        page: { slug: pageSlug },
+        isActive: true,
+        imageId: { not: null },
+      },
+      include: { image: true },
+      orderBy: { order: "asc" },
+    });
+
+    const match = sections.find(
+      (s) => parseSettings(s.settings).style === style && s.image,
+    );
+    if (!match?.image) return null;
+
+    const url = getMediaUrl(match.image, "");
+    if (!url) return null;
+    return { url, alt: match.image.alt || match.title || "" };
+  } catch (error) {
+    console.error(`CMS: getSectionImage("${pageSlug}", "${style}") failed`, error);
+    return null;
+  }
+}
+
 function parseSettings(raw: unknown): Record<string, unknown> {
   if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
     return raw as Record<string, unknown>;

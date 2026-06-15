@@ -16,8 +16,9 @@ import {
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
-import { getServicePageBySlug } from "@/lib/cms/service-pages";
+import { getServicePageBySlug, getSectionImage } from "@/lib/cms/service-pages";
 import { getFabricPreviewSwatches } from "@/lib/cms/fabric-library";
+import Image from "next/image";
 
 export const revalidate = 60;
 
@@ -32,11 +33,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero, result, previewSwatches] = await Promise.all([
+  const [layout, hero, result, previewSwatches, olefinImage] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
     getServicePageBySlug("materialien"),
     getFabricPreviewSwatches(6),
+    getSectionImage("materialien", "materials-olefin"),
   ]);
 
   const hasCmsSections =
@@ -151,30 +153,48 @@ export default async function MaterialienPage() {
             {/* Warum Olefin? */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-                  Warum <em className="text-pumpkin not-italic">Olefin?</em>
-                </h2>
+                <div className={`grid grid-cols-1 items-start gap-12 ${olefinImage ? "lg:grid-cols-[1fr_auto]" : ""}`}>
+                  <div>
+                    <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
+                      Warum <em className="text-pumpkin not-italic">Olefin?</em>
+                    </h2>
 
-                <div className="flex flex-wrap gap-3 mb-12">
-                  {olefinBenefits.tags.map((tag, i) => (
-                    <ScrollReveal key={tag} delay={i * 60}>
-                      <span className="inline-block font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite">
-                        {tag}
-                      </span>
+                    <div className="flex flex-wrap gap-3 mb-12">
+                      {olefinBenefits.tags.map((tag, i) => (
+                        <ScrollReveal key={tag} delay={i * 60}>
+                          <span className="inline-block font-accent text-xs tracking-[0.15em] uppercase border border-anthracite/20 px-4 py-2 text-anthracite">
+                            {tag}
+                          </span>
+                        </ScrollReveal>
+                      ))}
+                    </div>
+
+                    <div className="max-w-3xl space-y-5">
+                      {olefinBenefits.paragraphs.map((p, i) => (
+                        <p
+                          key={i}
+                          className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
+                          style={{ textWrap: "pretty" }}
+                        >
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  {olefinImage && (
+                    <ScrollReveal>
+                      <div className="w-full lg:w-[420px] xl:w-[480px]">
+                        <Image
+                          src={olefinImage.url}
+                          alt={olefinImage.alt}
+                          width={480}
+                          height={640}
+                          className="w-full h-auto object-cover rounded-[14px] shadow-[0_24px_60px_rgba(45,45,45,0.10)] ring-1 ring-black/5"
+                        />
+                      </div>
                     </ScrollReveal>
-                  ))}
-                </div>
-
-                <div className="max-w-3xl space-y-5">
-                  {olefinBenefits.paragraphs.map((p, i) => (
-                    <p
-                      key={i}
-                      className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]"
-                      style={{ textWrap: "pretty" }}
-                    >
-                      {p}
-                    </p>
-                  ))}
+                  )}
                 </div>
               </div>
             </section>
