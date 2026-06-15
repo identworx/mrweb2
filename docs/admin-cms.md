@@ -2010,7 +2010,7 @@ npx tsx scripts/backfill-fabric-family-hub-fields.ts
 npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply
 ```
 
-Uebertraegt Material, Gewicht, Faerbung, Komfort, Polsterstaerke, Subtitle, Highlights und isHighlighted aus den bisherigen fabricQualities-Daten in bestehende FabricFamily-Records. Ueberschreibt keine manuell gepflegten Werte. Idempotent.
+Uebertraegt Hub-Felder aus den bisherigen fabricQualities-Daten in bestehende FabricFamily-Records. Erstellt fehlende Families (Mackintosh®, Mackintosh® Nerio) falls nicht vorhanden. Matching ueber Slug-Aliase (z.B. mackintosh, mackintosh-classic) und Name-Aliase (z.B. NERIO, Nerio, NERIO / Oceana). Ueberschreibt keine manuell gepflegten Werte. Kein Full Seed, keine bestehenden Daten geloescht. Idempotent.
 
 ### Produktionshinweise
 
