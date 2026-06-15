@@ -41,8 +41,14 @@ export default async function MaterialienPage() {
     getSectionImage("materialien", "materials-olefin"),
   ]);
 
-  const hasCmsSections =
-    result.state === "published" && result.page.sections.length > 0;
+  const contentSections =
+    result.state === "published"
+      ? result.page.sections.filter(
+          (s) => !s.settings?.helper && !String(s.settings?.style ?? "").startsWith("materials-"),
+        )
+      : [];
+
+  const hasCmsSections = contentSections.length > 0;
 
   return (
     <>
@@ -59,7 +65,7 @@ export default async function MaterialienPage() {
         <MaterialAnchorNav />
 
         {hasCmsSections ? (
-          result.page.sections.map((section, i) => (
+          contentSections.map((section, i) => (
             <ServiceSectionRenderer
               key={section.id}
               section={section}

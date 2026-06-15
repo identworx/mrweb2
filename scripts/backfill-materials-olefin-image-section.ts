@@ -79,7 +79,7 @@ async function main() {
       type: "CUSTOM" as never,
       title: "Warum Olefin? — Bild",
       content: "CMS-gesteuertes Bild für den Olefin-Abschnitt auf der Materialien-Übersicht.",
-      settings: JSON.stringify({ style: STYLE }),
+      settings: JSON.stringify({ style: STYLE, helper: true }),
       order: newOrder,
       isActive: true,
     },

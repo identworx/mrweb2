@@ -1907,7 +1907,9 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | Technische Tabelle | Code | `materials.ts` |
 | CTA-Texte auf Hub | Code (Fallback) | CMS-Override via ServiceSectionRenderer |
 
-Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materialien` im Admin Sections angelegt und publiziert werden, rendern diese via `ServiceSectionRenderer` statt der Fallback-Sections.
+Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materialien` im Admin echte Content-Sections angelegt und publiziert werden, rendern diese via `ServiceSectionRenderer` statt der Fallback-Sections.
+
+**Helper-Sections** (erkennbar an `settings.helper = true` oder `settings.style` mit Prefix `materials-`) werden vom CMS-Override ausgeschlossen. Sie dienen ausschliesslich als Datenquelle fuer spezifische Felder (z.B. Bilder) innerhalb der Fallback-Abschnitte. Eine Helper-Section loest NICHT den CMS-Override aus und wird NICHT als eigener Content-Block gerendert. Beispiel: Die Section "Warum Olefin? — Bild" (`settings.style = "materials-olefin"`, `settings.helper = true`) liefert das optionale Bild fuer den Olefin-Abschnitt, ohne die gesamte Hub-Seite zu ersetzen.
 
 ### Wiederverwendete CMS-Funktionen
 
@@ -1972,7 +1974,7 @@ npx tsx scripts/backfill-materials-olefin-image-section.ts
 npx tsx scripts/backfill-materials-olefin-image-section.ts --apply
 ```
 
-Legt eine PageSection mit `settings.style = "materials-olefin"` auf der Page `materialien` an. Danach im Admin ein Bild an die Section anhaengen. Ohne Bild zeigt die Seite den bisherigen Text-Only-Abschnitt. Idempotent.
+Legt eine Helper-Section mit `settings = { style: "materials-olefin", helper: true }` auf der Page `materialien` an. Diese Section ist eine Helper-Section und wird NICHT als normaler Content-Block gerendert. Sie dient ausschliesslich als Bildquelle fuer den Olefin-Abschnitt. Danach im Admin ein Bild an die Section anhaengen. Ohne Bild zeigt die Seite den bisherigen Text-Only-Abschnitt. Idempotent.
 
 ### Produktionshinweise
 
