@@ -511,11 +511,13 @@ model FabricSwatch {
   description   String?
   swatchImageId String?
   colorHex      String?
-  patternType   String?
-  order         Int      @default(0)
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  patternType             String?
+  featuredOnMaterials     Boolean  @default(false)
+  materialsPreviewOrder   Int?
+  order                   Int      @default(0)
+  isActive                Boolean  @default(true)
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
 
   family         FabricFamily        @relation(fields: [familyId], references: [id], onDelete: Cascade)
   swatchImage    MediaAsset?         @relation("FabricSwatchImage", fields: [swatchImageId], references: [id], onDelete: SetNull)

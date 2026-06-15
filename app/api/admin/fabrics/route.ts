@@ -181,6 +181,8 @@ export async function POST(request: NextRequest) {
       swatchImageId: data.swatchImageId || null,
       colorHex: sanitize(data.colorHex),
       patternType: sanitize(data.patternType),
+      featuredOnMaterials: data.featuredOnMaterials === true,
+      materialsPreviewOrder: typeof data.materialsPreviewOrder === "number" ? data.materialsPreviewOrder : null,
       order: typeof data.order === "number" ? data.order : 0,
       isActive: data.isActive !== false,
     };

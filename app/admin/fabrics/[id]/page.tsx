@@ -46,6 +46,8 @@ export default async function FabricEditPage({
               swatchImageUrl: swatch.swatchImage?.url || "",
               colorHex: swatch.colorHex || "",
               patternType: swatch.patternType || "",
+              featuredOnMaterials: swatch.featuredOnMaterials,
+              materialsPreviewOrder: swatch.materialsPreviewOrder,
               order: swatch.order,
               isActive: swatch.isActive,
               availabilities: swatch.availabilities.map((a) => ({

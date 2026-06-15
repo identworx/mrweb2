@@ -116,6 +116,48 @@ export async function getSectionImage(
   }
 }
 
+export interface SectionData {
+  title: string | null;
+  eyebrow: string | null;
+  content: string | null;
+  buttonLabel: string | null;
+  buttonHref: string | null;
+  imageUrl: string | null;
+}
+
+export async function getSectionData(
+  pageSlug: string,
+  style: string,
+): Promise<SectionData | null> {
+  try {
+    const sections = await prisma.pageSection.findMany({
+      where: {
+        page: { slug: pageSlug },
+        isActive: true,
+      },
+      include: { image: true },
+      orderBy: { order: "asc" },
+    });
+
+    const match = sections.find(
+      (s) => parseSettings(s.settings).style === style,
+    );
+    if (!match) return null;
+
+    return {
+      title: match.title,
+      eyebrow: match.eyebrow,
+      content: match.content,
+      buttonLabel: match.buttonLabel,
+      buttonHref: match.buttonHref,
+      imageUrl: match.image ? getMediaUrl(match.image, "") : null,
+    };
+  } catch (error) {
+    console.error(`CMS: getSectionData("${pageSlug}", "${style}") failed`, error);
+    return null;
+  }
+}
+
 function parseSettings(raw: unknown): Record<string, unknown> {
   if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
     return raw as Record<string, unknown>;

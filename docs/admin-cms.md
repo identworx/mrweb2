@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-15 (Materialsystem Seitenstruktur) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-15 (Phase 2: Preview + CTA CMS-pflegbar) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -1902,10 +1902,10 @@ Datenquelle: `fabricQualities` und `propertiesComparison` aus `lib/mosaroma/mate
 | Warum Olefin? (Bild) | Admin → Seiten → materialien → Section "Warum Olefin? — Bild" | `getSectionImage("materialien", "materials-olefin")` |
 | Stofffamilien-Cards | Admin → Stoffbibliothek → Familien | `getFabricFamiliesForHub()` aus FabricFamily DB |
 | OceanCycle | Code | `materials.ts` |
-| Stoffe & Muster Preview | Admin → Stoffbibliothek | `getFabricPreviewSwatches()` |
+| Stoffe & Muster Preview | Admin → Stoffbibliothek → Stoff bearbeiten → "Auf Materialien-Hub anzeigen" | `getFabricPreviewSwatches()` mit `featuredOnMaterials`-Steuerung |
 | Stoffe & Muster Full | Admin → Stoffbibliothek | `getFabricLibraryData()` |
 | Technische Tabelle | Code | `materials.ts` |
-| CTA-Texte auf Hub | Code (Fallback) | CMS-Override via ServiceSectionRenderer |
+| Katalog-CTA auf Hub | Admin → Seiten → materialien → Helper-Section "materials-catalog-cta" | `getSectionData("materialien", "materials-catalog-cta")` mit Fallback |
 
 Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materialien` im Admin echte Content-Sections angelegt und publiziert werden, rendern diese via `ServiceSectionRenderer` statt der Fallback-Sections.
 
@@ -1920,6 +1920,7 @@ Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materia
 - **BreadcrumbBar** — Navigation
 - **PageHero** — Hero-Rendering
 - **getFabricLibraryData()** / **getFabricPreviewSwatches()** — Stoffbibliothek-Daten
+- **getSectionData()** — Laedt beliebige Helper-Section Daten (Titel, Text, Button) nach Style
 - **Revalidation** — `revalidateMaterials()` deckt alle 3 Routen ab
 
 ### Nicht vorhandene CMS-Funktionen (bewusst nicht gebaut)
@@ -1940,6 +1941,8 @@ Die Hub-Seite unterstuetzt **CMS-Section-Override**: Wenn fuer die Page `materia
 | `scripts/backfill-material-pages.ts` | Backfill fuer Page Records |
 | `scripts/backfill-materials-olefin-image-section.ts` | Backfill fuer Olefin-Bild Section |
 | `scripts/backfill-fabric-family-hub-fields.ts` | Backfill Hub-Felder aus fabricQualities |
+| `scripts/backfill-materials-preview-swatches.ts` | Backfill featuredOnMaterials fuer erste 6 Swatches |
+| `scripts/backfill-materials-catalog-cta-section.ts` | Backfill Katalog-CTA Helper-Section |
 
 ### Stofffamilien-Cards (CMS-gesteuert)
 
@@ -1965,6 +1968,38 @@ Neue Felder auf FabricFamily (Migration `add_fabric_family_hub_fields`):
 **Hervorhebung:** Genau eine Familie sollte `isHighlighted = true` haben. Diese wird auf dem Hub als dunkle Premium-Card dargestellt. Falls keine Family hervorgehoben ist, wird die erste aktive Familie als Fallback hervorgehoben.
 
 **Hinweis:** `fabricQualities` in `materials.ts` wird weiterhin auf anderen Seiten verwendet (technische Daten, Produkte, Kollektionen). Auf `/materialien` wird es nicht mehr fuer die Stofffamilien-Cards genutzt.
+
+### Stoffe-&-Muster Vorschau (CMS-gesteuert)
+
+Die Stoff-Vorschau auf `/materialien` zeigt bis zu 6 Stoffe. Welche Stoffe angezeigt werden, ist ueber `featuredOnMaterials` steuerbar.
+
+**Pflegepfad:** `/admin/fabrics` → Stoff bearbeiten → Abschnitt "Materialien-Hub Vorschau"
+
+Neue Felder auf FabricSwatch (Migration `add_fabric_swatch_materials_preview_fields`):
+
+| Feld | Beschreibung | Pflege |
+|------|-------------|--------|
+| `featuredOnMaterials` | Swatch auf Hub anzeigen | Checkbox |
+| `materialsPreviewOrder` | Reihenfolge in der Vorschau | Zahl (optional, null = automatisch) |
+
+**Logik:** Featured Swatches werden zuerst angezeigt (sortiert nach `materialsPreviewOrder`, dann `family.order` → `swatch.order`). Sind weniger als 6 featured, wird mit nicht-featured Swatches aufgefuellt. Ohne featured Swatches zeigt die Vorschau die ersten 6 aktiven Swatches nach family.order/swatch.order (bisheriges Verhalten).
+
+### Katalog-CTA (CMS-gesteuert)
+
+Der Katalog-CTA am Ende von `/materialien` ist ueber eine Helper-Section steuerbar.
+
+**Pflegepfad:** Admin → Seiten → materialien → Section mit `settings.style = "materials-catalog-cta"`
+
+Felder:
+
+| Feld | Beschreibung | Fallback |
+|------|-------------|----------|
+| `title` | Ueberschrift | "Alle Details im Katalog" |
+| `content` | Beschreibungstext | "Entdecken Sie alle Stoffqualitaeten..." |
+| `buttonLabel` | Button-Text | "Katalog ansehen" |
+| `buttonHref` | Button-Link | "/kataloge" |
+
+Die Section nutzt `settings = { style: "materials-catalog-cta", helper: true }`. Als Helper-Section loest sie NICHT den CMS-Override aus. Geladen ueber `getSectionData("materialien", "materials-catalog-cta")`.
 
 ### Revalidation
 
@@ -2012,11 +2047,33 @@ npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply
 
 Uebertraegt Hub-Felder aus den bisherigen fabricQualities-Daten in bestehende FabricFamily-Records. Erstellt fehlende Families (Mackintosh®, Mackintosh® Nerio) falls nicht vorhanden. Matching ueber Slug-Aliase (z.B. mackintosh, mackintosh-classic) und Name-Aliase (z.B. NERIO, Nerio, NERIO / Oceana). Ueberschreibt keine manuell gepflegten Werte. Kein Full Seed, keine bestehenden Daten geloescht. Idempotent.
 
+```bash
+# Featured Preview Swatches (dry-run)
+npx tsx scripts/backfill-materials-preview-swatches.ts
+
+# Featured Preview Swatches (apply)
+npx tsx scripts/backfill-materials-preview-swatches.ts --apply
+```
+
+Setzt `featuredOnMaterials=true` und `materialsPreviewOrder=0..5` auf die ersten 6 aktiven Swatches. Idempotent: ueberspringt wenn bereits featured Swatches existieren.
+
+```bash
+# Katalog-CTA Section (dry-run)
+npx tsx scripts/backfill-materials-catalog-cta-section.ts
+
+# Katalog-CTA Section (apply)
+npx tsx scripts/backfill-materials-catalog-cta-section.ts --apply
+```
+
+Legt eine Helper-Section mit `settings = { style: "materials-catalog-cta", helper: true }` auf der Page `materialien` an, vorausgefuellt mit den bisherigen CTA-Texten. Idempotent.
+
 ### Produktionshinweise
 
-- **Migration noetig:** `npx prisma migrate deploy` (additive Felder auf FabricFamily)
+- **Migration noetig:** `npx prisma migrate deploy` (additive Felder auf FabricFamily + FabricSwatch)
 - **Backfill empfohlen:** `npx tsx scripts/backfill-fabric-family-hub-fields.ts --apply`
-- **Backfill-Script** muss einmalig ausgefuehrt werden
+- **Backfill empfohlen:** `npx tsx scripts/backfill-materials-preview-swatches.ts --apply`
+- **Backfill empfohlen:** `npx tsx scripts/backfill-materials-catalog-cta-section.ts --apply`
+- **Backfill-Scripts** muessen einmalig ausgefuehrt werden
 - **Upload-Limit bleibt 15 MB**
 - **Keine bestehenden Daten beschaedigt**
 - **Rollback:** `git revert <commit>`, Page Records im Admin deaktivieren/loeschen
@@ -2025,5 +2082,7 @@ Uebertraegt Hub-Felder aus den bisherigen fabricQualities-Daten in bestehende Fa
 
 - [ ] Technische Tabellenwerte in CMS ueberfuehren (eigenes Modell oder PageSection-Style)
 - [ ] Materialdetailseiten (`/materialien/mackintosh`, `/materialien/mackintosh-lite`, `/materialien/nerio`, `/materialien/basic`) mit enriched FabricFamily-Daten
-- [ ] Stofffamilien-Card-Texte in CMS ueberfuehren (FabricFamily erweitern oder PageSections nutzen)
+- [x] Stofffamilien-Card-Texte in CMS ueberfuehren (FabricFamily Hub-Felder)
+- [x] Stoffe-&-Muster-Vorschau steuerbar via `featuredOnMaterials`
+- [x] Katalog-CTA CMS-pflegbar via Helper-Section
 - [ ] OceanCycle / Mackintosh-Technologie-Texte in CMS ueberfuehren

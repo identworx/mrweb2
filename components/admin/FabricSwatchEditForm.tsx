@@ -23,6 +23,8 @@ interface SwatchData {
   swatchImageUrl: string;
   colorHex: string;
   patternType: string;
+  featuredOnMaterials: boolean;
+  materialsPreviewOrder: number | null;
   order: number;
   isActive: boolean;
   availabilities: AvailabilityRow[];
@@ -53,6 +55,10 @@ export default function FabricSwatchEditForm({
   const [swatchImageId, setSwatchImageId] = useState(swatch?.swatchImageId || "");
   const [colorHex, setColorHex] = useState(swatch?.colorHex || "");
   const [patternType, setPatternType] = useState(swatch?.patternType || "");
+  const [featuredOnMaterials, setFeaturedOnMaterials] = useState(swatch?.featuredOnMaterials ?? false);
+  const [materialsPreviewOrder, setMaterialsPreviewOrder] = useState<string>(
+    swatch?.materialsPreviewOrder != null ? String(swatch.materialsPreviewOrder) : "",
+  );
   const [order, setOrder] = useState(swatch?.order || 0);
   const [isActive, setIsActive] = useState(swatch?.isActive ?? true);
   const [saving, setSaving] = useState(false);
@@ -114,6 +120,8 @@ export default function FabricSwatchEditForm({
         swatchImageId: swatchImageId || null,
         colorHex,
         patternType,
+        featuredOnMaterials,
+        materialsPreviewOrder: materialsPreviewOrder !== "" ? parseInt(materialsPreviewOrder, 10) : null,
         order,
         isActive,
         availabilities: availabilities
@@ -255,6 +263,35 @@ export default function FabricSwatchEditForm({
             onChange={setSwatchImageId}
             previewUrl={swatch?.swatchImageUrl || null}
           />
+        </div>
+
+        {/* Materials Hub Preview */}
+        <div className="bg-white border border-gray-200 rounded-lg p-5 space-y-3">
+          <h2 className="text-lg font-semibold text-gray-900">Materialien-Hub Vorschau</h2>
+          <p className="text-xs text-gray-400">Steuert, ob dieser Stoff in der Vorschau auf /materialien angezeigt wird.</p>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={featuredOnMaterials}
+                onChange={(e) => setFeaturedOnMaterials(e.target.checked)}
+                className="w-4 h-4"
+              />
+              <span className="text-sm text-gray-700">Auf Materialien-Hub anzeigen</span>
+            </label>
+            {featuredOnMaterials && (
+              <div className="w-32">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Reihenfolge</label>
+                <input
+                  type="number"
+                  value={materialsPreviewOrder}
+                  onChange={(e) => setMaterialsPreviewOrder(e.target.value)}
+                  placeholder="auto"
+                  className="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Availabilities */}

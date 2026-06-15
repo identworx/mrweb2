@@ -151,9 +151,13 @@ export async function getFabricPreviewSwatches(
   limit = 6,
 ): Promise<FabricPreviewSwatch[]> {
   try {
-    const swatches = await prisma.fabricSwatch.findMany({
-      where: { isActive: true },
-      orderBy: [{ family: { order: "asc" } }, { order: "asc" }],
+    const featured = await prisma.fabricSwatch.findMany({
+      where: { isActive: true, featuredOnMaterials: true },
+      orderBy: [
+        { materialsPreviewOrder: { sort: "asc", nulls: "last" } },
+        { family: { order: "asc" } },
+        { order: "asc" },
+      ],
       take: limit,
       include: {
         family: { select: { name: true } },
@@ -161,7 +165,26 @@ export async function getFabricPreviewSwatches(
       },
     });
 
-    return swatches.map((s) => ({
+    let results = featured;
+
+    if (results.length < limit) {
+      const featuredIds = results.map((s) => s.id);
+      const filler = await prisma.fabricSwatch.findMany({
+        where: {
+          isActive: true,
+          id: { notIn: featuredIds },
+        },
+        orderBy: [{ family: { order: "asc" } }, { order: "asc" }],
+        take: limit - results.length,
+        include: {
+          family: { select: { name: true } },
+          swatchImage: { select: { url: true, normalizedUrl: true } },
+        },
+      });
+      results = [...results, ...filler];
+    }
+
+    return results.map((s) => ({
       id: s.id,
       slug: s.slug || "",
       name: s.name || "",
