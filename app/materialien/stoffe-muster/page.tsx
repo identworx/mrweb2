@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import MaterialAnchorNav from "@/components/materials/MaterialAnchorNav";
 import FabricLibrary from "@/components/materials/FabricLibrary";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -46,6 +47,7 @@ export default async function StoffeMusterPage() {
             { label: "Stoffe & Muster" },
           ]}
         />
+        <MaterialAnchorNav />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

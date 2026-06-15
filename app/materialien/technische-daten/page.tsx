@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
+import MaterialAnchorNav from "@/components/materials/MaterialAnchorNav";
 import ScrollReveal from "@/components/ScrollReveal";
 import TechnicalDataTable from "@/components/materials/TechnicalDataTable";
 import { fabricQualities } from "@/lib/mosaroma/materials";
@@ -58,6 +59,7 @@ export default async function TechnischeDatenPage() {
             { label: "Technische Daten" },
           ]}
         />
+        <MaterialAnchorNav />
 
         {/* Stoffqualitäten */}
         <section className="section-padding bg-white">
