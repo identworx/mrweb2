@@ -245,7 +245,7 @@ export default async function MaterialienPage() {
 
                   {olefinImage && (
                     <ScrollReveal>
-                      <div className="lg:mt-16">
+                      <div className="lg:mt-20">
                         <Image
                           src={olefinImage.url}
                           alt={olefinImage.alt}
