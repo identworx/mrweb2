@@ -193,6 +193,36 @@ export async function resolveVideoThumbnails(
   }
 }
 
+export interface ResolvedMedia {
+  url: string;
+  alt: string;
+}
+
+export async function resolveMediaIds(
+  ids: (string | null | undefined)[],
+): Promise<Record<string, ResolvedMedia>> {
+  const validIds = ids.filter(
+    (id): id is string => typeof id === "string" && id.length > 0,
+  );
+  if (validIds.length === 0) return {};
+
+  try {
+    const assets = await prisma.mediaAsset.findMany({
+      where: { id: { in: validIds } },
+    });
+    const result: Record<string, ResolvedMedia> = {};
+    for (const asset of assets) {
+      const url = getMediaUrl(asset, "");
+      if (url) {
+        result[asset.id] = { url, alt: asset.alt || "" };
+      }
+    }
+    return result;
+  } catch {
+    return {};
+  }
+}
+
 function parseSettings(raw: unknown): Record<string, unknown> {
   if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
     return raw as Record<string, unknown>;

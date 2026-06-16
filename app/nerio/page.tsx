@@ -25,6 +25,7 @@ import {
   getSectionData,
   getSectionImage,
   resolveVideoThumbnails,
+  resolveMediaIds,
 } from "@/lib/cms/service-pages";
 import { getNerioFabricSwatches } from "@/lib/cms/fabric-library";
 import NerioVideoSection from "@/components/nerio/NerioVideoSection";
@@ -92,16 +93,26 @@ export default async function NerioPage() {
     fallbackParagraphs: nerioStory.paragraphs,
   };
 
+  type OceanStep = { title: string; description: string; imageId?: string | null };
+  const oceanSteps: OceanStep[] =
+    Array.isArray(oceanData?.settings?.steps) &&
+    (oceanData.settings.steps as OceanStep[]).length > 0
+      ? (oceanData.settings.steps as OceanStep[])
+      : oceanCycleProcess.steps;
+
+  const oceanStepImages = await resolveMediaIds(
+    oceanSteps.map((s) => s.imageId),
+  );
+
   const ocean = {
     eyebrow: oceanData?.eyebrow || "OceanCycle®",
     title: oceanData?.title || oceanCycleProcess.title,
     content: oceanData?.content?.trim() || null,
     fallbackDescription: oceanCycleProcess.description,
-    steps:
-      Array.isArray(oceanData?.settings?.steps) &&
-      (oceanData.settings.steps as Array<{ title: string; description: string }>).length > 0
-        ? (oceanData.settings.steps as Array<{ title: string; description: string }>)
-        : oceanCycleProcess.steps,
+    steps: oceanSteps.map((s) => ({
+      ...s,
+      image: s.imageId ? oceanStepImages[s.imageId] ?? null : null,
+    })),
     highlights:
       Array.isArray(oceanData?.settings?.highlights) &&
       (oceanData.settings.highlights as string[]).length > 0
@@ -394,28 +405,42 @@ export default async function NerioPage() {
                   {ocean.steps.map((step, i) => (
                     <ScrollReveal key={step.title} delay={i * 100}>
                       <div className="bg-white h-full">
-                        <div
-                          className="aspect-[4/3] relative overflow-hidden"
-                          style={{
-                            background: `linear-gradient(135deg, ${
-                              ["#0C3D40", "#145A5C", "#1B6B6D", "#1A5C5E"][i] || "#1B6B6D"
-                            }, ${
-                              ["#145A5C", "#1B6B6D", "#2E8B8B", "#1B6B6D"][i] || "#165858"
-                            })`,
-                          }}
-                        >
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              backgroundImage:
-                                "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 11px)",
-                            }}
-                          />
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="w-12 h-12 flex items-center justify-center bg-white/10 text-white/60 font-heading text-lg font-bold">
-                              {i + 1}
-                            </span>
-                          </div>
+                        <div className="aspect-[4/3] relative overflow-hidden">
+                          {step.image ? (
+                            <Image
+                              src={step.image.url}
+                              alt={step.image.alt || step.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            />
+                          ) : (
+                            <>
+                              <div
+                                className="absolute inset-0"
+                                style={{
+                                  background: `linear-gradient(135deg, ${
+                                    ["#0C3D40", "#145A5C", "#1B6B6D", "#1A5C5E"][i] || "#1B6B6D"
+                                  }, ${
+                                    ["#145A5C", "#1B6B6D", "#2E8B8B", "#1B6B6D"][i] || "#165858"
+                                  })`,
+                                }}
+                              >
+                                <div
+                                  className="absolute inset-0"
+                                  style={{
+                                    backgroundImage:
+                                      "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 11px)",
+                                  }}
+                                />
+                              </div>
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="w-12 h-12 flex items-center justify-center bg-white/10 text-white/60 font-heading text-lg font-bold">
+                                  {i + 1}
+                                </span>
+                              </div>
+                            </>
+                          )}
                         </div>
                         <div className="p-6 md:p-8">
                           <h3 className="font-heading text-anthracite text-lg font-bold mb-2">

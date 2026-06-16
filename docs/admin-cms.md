@@ -2246,3 +2246,24 @@ Jedes Video hat folgende Felder:
 **Rollback:**
 - Section `nerio-videos` im CMS deaktivieren oder löschen
 - Seite zeigt dann nur Fallback-Videos (keine kaputte Darstellung)
+
+### OceanCycle Step-Bilder
+
+**Position auf `/nerio`:** Im Bereich „OceanCycle Kreislauf" — jede der vier Prozesskarten (Sammlung, Sortierung, Reinigung, Recycling)
+
+**Pflegepfad:** `/admin/pages` → NERIO → Seitenbereiche → `nerio-oceancycle`
+
+**Pro Step pflegbar:**
+- Titel
+- Beschreibung
+- Bild per MediaPicker (optional)
+
+**Verhalten:**
+- Wenn ein Bild gesetzt ist: CMS-Bild wird in 4:3-Format mit `object-fit: cover` angezeigt
+- Wenn kein Bild gesetzt ist: hochwertiger Teal-Gradient-Platzhalter mit Nummer wird angezeigt
+- Alt-Text aus MediaAsset
+- Upload-Limit bleibt 15 MB
+
+**Backfill-Script:** `scripts/backfill-nerio-oceancycle-images.ts`
+- Ergänzt fehlende `imageId`-Felder in bestehenden Steps
+- Überschreibt keine manuell gepflegten Bilder

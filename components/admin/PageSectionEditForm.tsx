@@ -993,6 +993,7 @@ function SustainabilityStatsFields({
 interface ProcessStep {
   title: string;
   description: string;
+  imageId?: string | null;
 }
 
 function ProcessChainFields({
@@ -1733,11 +1734,11 @@ function NerioOceanCycleFields({
   const steps = Array.isArray(settings.steps) ? (settings.steps as ProcessStep[]) : [];
   const highlights = Array.isArray(settings.highlights) ? (settings.highlights as string[]) : [];
 
-  function updateStep(index: number, field: keyof ProcessStep, value: string) {
+  function updateStep(index: number, field: keyof ProcessStep, value: unknown) {
     const next = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s));
     updateSettings("steps", next);
   }
-  function addStep() { updateSettings("steps", [...steps, { title: "", description: "" }]); }
+  function addStep() { updateSettings("steps", [...steps, { title: "", description: "", imageId: null }]); }
   function removeStep(index: number) { updateSettings("steps", steps.filter((_, i) => i !== index)); }
   function updateHighlight(index: number, value: string) {
     const next = [...highlights]; next[index] = value; updateSettings("highlights", next);
@@ -1768,6 +1769,12 @@ function NerioOceanCycleFields({
                 <textarea rows={2} value={step.description} onChange={(e) => updateStep(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
               </div>
             </div>
+            <MediaPickerField
+              label="Bild (optional)"
+              value={step.imageId || ""}
+              onChange={(id) => updateStep(i, "imageId", id || null)}
+              placeholder="Kein Bild — Teal-Platzhalter wird angezeigt"
+            />
           </div>
         ))}
       </div>
