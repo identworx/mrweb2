@@ -196,7 +196,7 @@ function VideoCard({
     <button
       type="button"
       onClick={onPlay}
-      className="group text-left w-full bg-[#FAF8F5] border-x border-b border-[#e8e4df] rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(45,45,45,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(45,45,45,0.08)] motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6B6D] focus-visible:ring-offset-2"
+      className="group text-left w-full bg-[#0C3D40] border border-[#e8e4df] rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(45,45,45,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(45,45,45,0.08)] motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6B6D] focus-visible:ring-offset-2"
       aria-label={`Video abspielen: ${video.title}`}
     >
       {/* Thumbnail area (16:9) */}
@@ -241,7 +241,7 @@ function VideoCard({
       </div>
 
       {/* Card body */}
-      <div className="p-5 md:p-6">
+      <div className="p-5 md:p-6 bg-[#FAF8F5]">
         <h3 className="font-heading text-anthracite text-base md:text-lg font-bold tracking-tight mb-2 group-hover:text-[#1B6B6D] transition-colors duration-300">
           {video.title}
         </h3>
