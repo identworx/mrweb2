@@ -7,6 +7,7 @@ import { getHomepageData, type HomepageSection } from "@/lib/cms/homepage";
 import { getPublishedCollections } from "@/lib/cms/collections";
 import { getPublicDownloads } from "@/lib/cms/downloads";
 import { getPublishedNewsArticles } from "@/lib/cms/news";
+import { getIconSlots } from "@/lib/cms/icons";
 import HomepageHero from "@/components/homepage/HomepageHero";
 import HomepageValueProps from "@/components/homepage/HomepageValueProps";
 import HomepageImageTextFeature from "@/components/homepage/HomepageImageTextFeature";
@@ -158,12 +159,16 @@ const FALLBACK_SECTIONS: HomepageSection[] = [
 ];
 
 export default async function Home() {
-  const [layout, homepageData, collections, downloads, articles] = await Promise.all([
+  const [layout, homepageData, collections, downloads, articles, icons] = await Promise.all([
     getPublicLayoutData(),
     getHomepageData(),
     getPublishedCollections(),
     getPublicDownloads(),
     getPublishedNewsArticles(),
+    getIconSlots([
+      "arrow-right", "scroll-down", "download-book",
+      "value-comfort", "value-quality", "value-sustainability", "value-design",
+    ]),
   ]);
 
   const sections = homepageData?.sections.length
@@ -177,19 +182,19 @@ export default async function Home() {
         {sections.map((section) => {
           switch (section.style) {
             case "home-hero":
-              return <HomepageHero key={section.id} section={section} />;
+              return <HomepageHero key={section.id} section={section} icons={icons} />;
             case "value-props":
-              return <HomepageValueProps key={section.id} section={section} />;
+              return <HomepageValueProps key={section.id} section={section} icons={icons} />;
             case "image-text-feature":
-              return <HomepageImageTextFeature key={section.id} section={section} />;
+              return <HomepageImageTextFeature key={section.id} section={section} icons={icons} />;
             case "collection-showcase":
-              return <HomepageCollections key={section.id} section={section} collections={collections} />;
+              return <HomepageCollections key={section.id} section={section} collections={collections} icons={icons} />;
             case "sustainability-stats":
-              return <HomepageSustainability key={section.id} section={section} />;
+              return <HomepageSustainability key={section.id} section={section} icons={icons} />;
             case "downloads-teaser":
-              return <HomepageDownloads key={section.id} section={section} downloads={downloads} />;
+              return <HomepageDownloads key={section.id} section={section} downloads={downloads} icons={icons} />;
             case "news-teaser":
-              return <HomepageNews key={section.id} section={section} articles={articles} />;
+              return <HomepageNews key={section.id} section={section} articles={articles} icons={icons} />;
             default:
               return null;
           }

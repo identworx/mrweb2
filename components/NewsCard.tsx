@@ -1,5 +1,7 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import Image from "next/image";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface NewsCardProps {
   title: string;
@@ -9,6 +11,7 @@ interface NewsCardProps {
   slug: string;
   imageUrl?: string | null;
   isPlaceholder?: boolean;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function NewsCard({
@@ -19,6 +22,7 @@ export default function NewsCard({
   slug,
   imageUrl,
   isPlaceholder = false,
+  icons = {},
 }: NewsCardProps) {
   return (
     <Link
@@ -63,18 +67,7 @@ export default function NewsCard({
           <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
             Weiterlesen
           </span>
-          <svg
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-            className="motion-safe:group-hover:translate-x-1 transition-transform duration-300"
-            aria-hidden="true"
-          >
-            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-          </svg>
+          <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
         </div>
       </div>
     </Link>

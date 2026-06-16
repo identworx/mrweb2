@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface ConsultationCardProps {
   title?: string;
@@ -7,6 +9,7 @@ interface ConsultationCardProps {
   primaryHref?: string;
   secondaryLabel?: string;
   secondaryHref?: string;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function ConsultationCard({
@@ -16,6 +19,7 @@ export default function ConsultationCard({
   primaryHref = "/kontakt",
   secondaryLabel = "Kontakt aufnehmen",
   secondaryHref = "/kontakt",
+  icons = {},
 }: ConsultationCardProps) {
   return (
     <div className="relative flex flex-col h-full border border-black/[0.06] bg-cream overflow-hidden">
@@ -51,17 +55,7 @@ export default function ConsultationCard({
             className="inline-flex items-center justify-center gap-2 font-heading text-anthracite/50 text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
           >
             {secondaryLabel}
-            <svg
-              width="12"
-              height="12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-            </svg>
+            <CmsIcon icon={icons["arrow-right"]} width={12} height={12} />
           </Link>
         </div>
       </div>

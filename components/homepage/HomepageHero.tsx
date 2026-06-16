@@ -1,14 +1,17 @@
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 const FALLBACK_IMAGE = "/Luxury-Outdoor-Space-with-Premium-Garden-Furniture.jpg";
 
-export default function HomepageHero({ section }: Props) {
+export default function HomepageHero({ section, icons = {} }: Props) {
   const s = section.settings;
   const eyebrow = section.eyebrow || "Hochwertige Outdoor-Textilien";
   const headline = section.title || "Design trifft\nPerformance.";
@@ -76,16 +79,12 @@ export default function HomepageHero({ section }: Props) {
             <div className="flex flex-wrap items-center gap-4">
               <Link href={ctaHref} className="btn-primary">
                 {ctaLabel}
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
               </Link>
               {secondaryLabel && secondaryHref && (
                 <Link href={secondaryHref} className="btn-outline-white">
                   {secondaryLabel}
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                  </svg>
+                  <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
                 </Link>
               )}
             </div>
@@ -93,10 +92,8 @@ export default function HomepageHero({ section }: Props) {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <svg width="16" height="24" fill="none" stroke="white" strokeWidth="1.5" viewBox="0 0 16 24" className="opacity-50 motion-safe:animate-bounce" aria-hidden="true">
-          <path d="M8 3v14m0 0l-5-5m5 5l5-5" />
-        </svg>
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50 motion-safe:animate-bounce text-white">
+        <CmsIcon icon={icons["scroll-down"]} width={16} height={24} />
       </div>
     </section>
   );

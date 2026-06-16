@@ -1,5 +1,7 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import ProductImageFrame from "./products/ProductImageFrame";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface ProductCardProps {
   slug: string;
@@ -39,7 +41,7 @@ const collectionNames: Record<string, string> = {
   basic: "Basic",
 };
 
-export default function ProductCard({ product }: { product: ProductCardProps }) {
+export default function ProductCard({ product, icons = {} }: { product: ProductCardProps; icons?: Record<string, ResolvedIcon> }) {
   const displayCollection =
     product.collectionName || collectionNames[product.collectionSlug] || product.collectionSlug;
   const displayCategory =
@@ -99,17 +101,7 @@ export default function ProductCard({ product }: { product: ProductCardProps }) 
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Produkt ansehen
           </span>
-          <svg
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-            className="group-hover:translate-x-1 transition-transform duration-300"
-          >
-            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-          </svg>
+          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="group-hover:translate-x-1 transition-transform duration-300" />
         </span>
       </div>
     </Link>

@@ -1,4 +1,6 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface CategoryCardProps {
   title: string;
@@ -7,6 +9,7 @@ interface CategoryCardProps {
   size?: "large" | "medium" | "wide";
   description?: string;
   href?: string;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function CategoryCard({
@@ -16,6 +19,7 @@ export default function CategoryCard({
   size = "large",
   description,
   href = "#",
+  icons = {},
 }: CategoryCardProps) {
   const aspectClass = {
     large: "aspect-[3/4]",
@@ -55,18 +59,7 @@ export default function CategoryCard({
             <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
               Mehr erfahren
             </span>
-            <svg
-              width="12"
-              height="12"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              viewBox="0 0 24 24"
-              className="motion-safe:group-hover:translate-x-1 transition-transform duration-300"
-              aria-hidden="true"
-            >
-              <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-            </svg>
+            <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
           </span>
         )}
       </div>

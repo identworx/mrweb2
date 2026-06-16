@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface Props {
   swatches: Array<{
@@ -13,9 +15,10 @@ interface Props {
     swatchImageUrl: string;
     colorHex: string;
   }>;
+  icons?: Record<string, ResolvedIcon>;
 }
 
-export default function FabricLibraryPreview({ swatches }: Props) {
+export default function FabricLibraryPreview({ swatches, icons = {} }: Props) {
   const visible = swatches.slice(0, 6);
 
   return (
@@ -69,18 +72,7 @@ export default function FabricLibraryPreview({ swatches }: Props) {
           className="inline-flex items-center gap-2 font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] hover:text-anthracite transition-colors duration-300"
         >
           <span>Alle Stoffe & Muster ansehen</span>
-          <svg
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-            className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300"
-            aria-hidden="true"
-          >
-            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-          </svg>
+          <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
         </Link>
       </div>
     </div>

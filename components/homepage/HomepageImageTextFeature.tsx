@@ -1,15 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Props {
   section: HomepageSection;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 const FALLBACK_IMAGE = "/images/news/mackintosh-technologie.jpg";
 
-export default function HomepageImageTextFeature({ section }: Props) {
+export default function HomepageImageTextFeature({ section, icons = {} }: Props) {
   const bullets = (section.settings.bullets as string[]) || [];
   const eyebrow = section.eyebrow || "Material & Technologie";
   const title = section.title || "Mackintosh® Technology.";
@@ -62,9 +65,7 @@ export default function HomepageImageTextFeature({ section }: Props) {
               <div className="mt-10">
                 <Link href={ctaHref} className="btn-outline">
                   {ctaLabel}
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                  </svg>
+                  <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
                 </Link>
               </div>
             )}

@@ -88,3 +88,7 @@ export function revalidateNews(slug?: string) {
 export function revalidateContactForm() {
   safeRevalidate("/kontakt");
 }
+
+export function revalidateIcons() {
+  revalidateAllPublicPages();
+}

@@ -1,9 +1,13 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
+
 interface DownloadCardProps {
   title: string;
   description: string;
   type: string;
   languages: string[];
   href: string;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function DownloadCard({
@@ -12,23 +16,13 @@ export default function DownloadCard({
   type,
   languages,
   href,
+  icons = {},
 }: DownloadCardProps) {
   return (
     <div className="group flex items-start gap-5 p-6 bg-light-gray hover:bg-anthracite transition-all duration-500">
       {/* PDF icon */}
       <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center bg-pumpkin/10 text-pumpkin group-hover:bg-pumpkin group-hover:text-white transition-all duration-500">
-        <svg
-          width="22"
-          height="22"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-        >
-          <path d="M7 21h10a2 2 0 002-2V9l-5-5H7a2 2 0 00-2 2v13a2 2 0 002 2z" />
-          <path d="M14 4v5h5" />
-          <path d="M9 13h6m-6 3h4" />
-        </svg>
+        <CmsIcon icon={icons["download-pdf"]} width={22} height={22} />
       </div>
 
       {/* Content */}

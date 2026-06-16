@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 interface Stat {
@@ -10,9 +12,10 @@ interface Stat {
 
 interface Props {
   section: HomepageSection;
+  icons?: Record<string, ResolvedIcon>;
 }
 
-export default function HomepageSustainability({ section }: Props) {
+export default function HomepageSustainability({ section, icons = {} }: Props) {
   const stats = (section.settings.stats as Stat[]) || [];
   const eyebrow = section.eyebrow || "Nachhaltigkeit";
   const title = section.title || "Grün gewebt. Vom Tropfen an.";
@@ -65,9 +68,7 @@ export default function HomepageSustainability({ section }: Props) {
           <div className="mt-12 md:mt-16 text-center">
             <Link href={ctaHref} className="btn-outline-white">
               {ctaLabel}
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-              </svg>
+              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
             </Link>
           </div>
         )}

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export interface BreadcrumbItem {
   label: string;
@@ -8,30 +10,13 @@ export interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   variant?: "dark" | "light";
-}
-
-function ChevronIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      aria-hidden="true"
-    >
-      <path d="M9 18l6-6-6-6" />
-    </svg>
-  );
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function Breadcrumbs({
   items,
   variant = "dark",
+  icons = {},
 }: BreadcrumbsProps) {
   const isLight = variant === "light";
 
@@ -54,7 +39,10 @@ export default function Breadcrumbs({
         </li>
         {items.map((item, i) => (
           <li key={i} className="flex items-center gap-1">
-            <ChevronIcon
+            <CmsIcon
+              icon={icons["chevron-right"]}
+              width={12}
+              height={12}
               className={isLight ? "text-white/25" : "text-text-gray/25"}
             />
             {item.href ? (

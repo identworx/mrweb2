@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface SectionTeaserProps {
   accent: string;
@@ -10,6 +12,7 @@ interface SectionTeaserProps {
   ctaHref?: string;
   bgColor?: "white" | "cream" | "anthracite";
   centered?: boolean;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function SectionTeaser({
@@ -21,6 +24,7 @@ export default function SectionTeaser({
   ctaHref,
   bgColor = "white",
   centered = false,
+  icons = {},
 }: SectionTeaserProps) {
   const bgClass = {
     white: "bg-white",
@@ -86,16 +90,7 @@ export default function SectionTeaser({
               className={isDark ? "btn-outline-white" : "btn-primary"}
             >
               {ctaLabel}
-              <svg
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-              </svg>
+              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
             </Link>
           </div>
         )}

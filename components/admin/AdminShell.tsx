@@ -42,6 +42,7 @@ const navGroups = [
     items: [
       { label: "Navigation", href: "/admin/navigation", icon: "menu" },
       { label: "Footer", href: "/admin/footer", icon: "layout" },
+      { label: "Icons", href: "/admin/icons", icon: "image" },
       { label: "Medien", href: "/admin/media", icon: "image" },
     ],
   },
