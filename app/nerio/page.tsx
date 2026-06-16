@@ -16,6 +16,9 @@ import {
   oceanCycleProcess,
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getIconSlots } from "@/lib/cms/icons";
+import { NERIO_PROMISE_KEY_MAP } from "@/lib/cms/icon-key-map";
+import CmsIcon from "@/components/cms/CmsIcon";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import {
   getServicePageBySlug,
@@ -46,40 +49,6 @@ const NERIO_PRODUCT_TYPES = [
   { slug: "bankauflagen", name: "Bankauflagen", image: "/images/placeholders/categories/bankauflagen.svg" },
 ];
 
-const PROMISE_ICONS: Record<string, React.ReactNode> = {
-  recycle: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7.5 7.5l4-4 4 4" />
-      <path d="M11.5 3.5v10" />
-      <path d="M19.4 15l-1.7 3H6.3l-1.7-3" />
-      <path d="M3.5 12l2 3.5" />
-      <path d="M20.5 12l-2 3.5" />
-    </svg>
-  ),
-  droplet: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z" />
-    </svg>
-  ),
-  sun: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" />
-      <line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" />
-      <line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-  ),
-  shield: (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  ),
-};
 
 export default async function NerioPage() {
   const [
@@ -95,6 +64,7 @@ export default async function NerioPage() {
     productsData,
     ctaData,
     nerioSwatches,
+    icons,
   ] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("nerio", "nerio"),
@@ -108,6 +78,7 @@ export default async function NerioPage() {
     getSectionData("nerio", "nerio-products-preview"),
     getSectionData("nerio", "nerio-final-cta"),
     getNerioFabricSwatches(),
+    getIconSlots(["nerio-recycle", "nerio-droplet", "nerio-sun", "nerio-shield", "nerio-fabric-grid", "nerio-collection-box", "checkmark", "arrow-right"]),
   ]);
 
   const story = {
@@ -262,6 +233,7 @@ export default async function NerioPage() {
               key={section.id}
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
+              icons={icons}
             />
           ))
         ) : (
@@ -391,19 +363,7 @@ export default async function NerioPage() {
                   <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {ocean.highlights.map((hl) => (
                       <div key={hl} className="flex items-start gap-3">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-pumpkin flex-shrink-0 mt-0.5"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
+                        <CmsIcon icon={icons["checkmark"]} width={16} height={16} className="text-pumpkin flex-shrink-0 mt-0.5" />
                         <span className="font-body text-anthracite text-sm leading-relaxed">
                           {hl}
                         </span>
@@ -440,7 +400,7 @@ export default async function NerioPage() {
                     <ScrollReveal key={item.title} delay={i * 80}>
                       <div className="p-7 bg-cream h-full">
                         <div className="w-10 h-10 flex items-center justify-center text-pumpkin mb-5">
-                          {PROMISE_ICONS[item.iconKey] || PROMISE_ICONS.shield}
+                          <CmsIcon icon={icons[NERIO_PROMISE_KEY_MAP[item.iconKey] ?? "nerio-shield"]} width={24} height={24} />
                         </div>
                         <h3 className="font-heading text-anthracite text-base font-bold mb-2">
                           {item.title}
@@ -589,7 +549,7 @@ export default async function NerioPage() {
                     <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
                       Aktuelle NERIO-Stoffe
                     </h3>
-                    <FabricLibraryPreview swatches={nerioSwatches} />
+                    <FabricLibraryPreview swatches={nerioSwatches} icons={icons} />
                   </div>
                 )}
 
@@ -620,13 +580,7 @@ export default async function NerioPage() {
                     className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
                   >
                     <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <rect x="3" y="3" width="18" height="18" />
-                        <line x1="3" y1="9" x2="21" y2="9" />
-                        <line x1="3" y1="15" x2="21" y2="15" />
-                        <line x1="9" y1="3" x2="9" y2="21" />
-                        <line x1="15" y1="3" x2="15" y2="21" />
-                      </svg>
+                      <CmsIcon icon={icons["nerio-fabric-grid"]} width={28} height={28} />
                     </div>
                     <h3 className="font-heading text-white text-lg font-bold mb-2">
                       NERIO Stoffe
@@ -644,11 +598,7 @@ export default async function NerioPage() {
                     className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
                   >
                     <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                        <line x1="12" y1="22.08" x2="12" y2="12" />
-                      </svg>
+                      <CmsIcon icon={icons["nerio-collection-box"]} width={28} height={28} />
                     </div>
                     <h3 className="font-heading text-white text-lg font-bold mb-2">
                       NERIO Collection

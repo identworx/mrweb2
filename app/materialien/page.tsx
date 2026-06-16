@@ -19,6 +19,8 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug, getSectionImage, getSectionData } from "@/lib/cms/service-pages";
 import { getFabricPreviewSwatches, getFabricFamiliesForHub } from "@/lib/cms/fabric-library";
 import Image from "next/image";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
 
@@ -33,7 +35,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
-  const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData] = await Promise.all([
+  const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),
     getServicePageBySlug("materialien"),
@@ -44,6 +46,7 @@ export default async function MaterialienPage() {
     getSectionData("materialien", "materials-technology"),
     getSectionData("materialien", "materials-olefin"),
     getSectionData("materialien", "materials-oceancycle"),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   const tech = {
@@ -113,6 +116,7 @@ export default async function MaterialienPage() {
               key={section.id}
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
+              icons={icons}
             />
           ))
         ) : (
@@ -180,19 +184,7 @@ export default async function MaterialienPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {tech.benefits.map((benefit) => (
                         <div key={benefit} className="flex items-start gap-3">
-                          <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="text-pumpkin flex-shrink-0 mt-0.5"
-                          >
-                            <polyline points="20 6 9 17 4 12" />
-                          </svg>
+                          <CmsIcon icon={icons["checkmark"]} width={18} height={18} className="text-pumpkin flex-shrink-0 mt-0.5" />
                           <span className="font-body text-anthracite text-sm leading-relaxed">
                             {benefit}
                           </span>
@@ -347,9 +339,7 @@ export default async function MaterialienPage() {
                               <ul className="space-y-2">
                                 {family.highlights.slice(0, 3).map((hl) => (
                                   <li key={hl} className="flex items-start gap-2 text-sm">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-pumpkin flex-shrink-0 mt-0.5">
-                                      <polyline points="20 6 9 17 4 12" />
-                                    </svg>
+                                    <CmsIcon icon={icons["checkmark"]} width={14} height={14} className="text-pumpkin flex-shrink-0 mt-0.5" />
                                     <span className={`font-body leading-relaxed ${isDark ? "text-white/70" : "text-text-gray"}`}>
                                       {hl}
                                     </span>
@@ -361,9 +351,7 @@ export default async function MaterialienPage() {
 
                           <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin">
                             <span>Stoffe ansehen</span>
-                            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" className="group-hover:translate-x-1 transition-transform duration-300">
-                              <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                            </svg>
+                            <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="group-hover:translate-x-1 transition-transform duration-300" />
                           </div>
                         </Link>
                       </ScrollReveal>
@@ -408,17 +396,7 @@ export default async function MaterialienPage() {
                             {i + 1}
                           </span>
                           {i < ocean.steps.length - 1 && (
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block"
-                            >
-                              <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                            </svg>
+                            <CmsIcon icon={icons["arrow-right"]} width={20} height={20} className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block" />
                           )}
                         </div>
                         <h3 className="font-heading text-anthracite text-base font-bold mb-2">
@@ -436,19 +414,7 @@ export default async function MaterialienPage() {
                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {ocean.highlights.map((hl) => (
                       <div key={hl} className="flex items-start gap-3">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-pumpkin flex-shrink-0 mt-0.5"
-                        >
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
+                        <CmsIcon icon={icons["checkmark"]} width={16} height={16} className="text-pumpkin flex-shrink-0 mt-0.5" />
                         <span className="font-body text-anthracite text-sm leading-relaxed">
                           {hl}
                         </span>
@@ -477,7 +443,7 @@ export default async function MaterialienPage() {
                   Durchsuchen Sie unsere komplette Stoffbibliothek — filtern Sie nach Materialfamilie, Produktart oder suchen Sie gezielt nach Stoffname und Artikelnummer.
                 </p>
 
-                <FabricLibraryPreview swatches={previewSwatches} />
+                <FabricLibraryPreview swatches={previewSwatches} icons={icons} />
               </div>
             </section>
 

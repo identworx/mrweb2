@@ -1,3 +1,4 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import CareListSection from "./CareListSection";
@@ -18,37 +19,38 @@ import CollectionCtaSection from "./CollectionCtaSection";
 interface Props {
   section: FrontendServiceSection;
   background?: "white" | "cream";
+  icons?: Record<string, ResolvedIcon>;
 }
 
-export default function ServiceSectionRenderer({ section, background = "white" }: Props) {
+export default function ServiceSectionRenderer({ section, background = "white", icons = {} }: Props) {
   const style = (section.settings.style as string) || "";
   const bg = background === "cream" ? "bg-cream" : "bg-white";
 
   switch (style) {
     case "care-list":
-      return <CareListSection section={section} className={bg} />;
+      return <CareListSection section={section} className={bg} icons={icons} />;
     case "fabric-cards":
       return <FabricCardsSection section={section} className={bg} />;
     case "comparison-table":
       return <ComparisonTableSection section={section} className={bg} />;
     case "highlight-cards":
-      return <HighlightCardsSection section={section} className={bg} />;
+      return <HighlightCardsSection section={section} className={bg} icons={icons} />;
     case "cross-link":
-      return <CrossLinkSection section={section} className={bg} />;
+      return <CrossLinkSection section={section} className={bg} icons={icons} />;
     case "intro-columns":
       return <IntroColumnsSection section={section} className={bg} />;
     case "numbered-steps":
       return <NumberedStepsSection section={section} className={bg} />;
     case "care-symbols":
-      return <CareSymbolsSection section={section} className={bg} />;
+      return <CareSymbolsSection section={section} className={bg} icons={icons} />;
     case "guarantee-hero":
       return <GuaranteeHeroSection section={section} />;
     case "process-chain":
-      return <ProcessChainSection section={section} className={bg} />;
+      return <ProcessChainSection section={section} className={bg} icons={icons} />;
     case "fabric-pattern-overview":
       return <FabricPatternOverviewSection section={section} className={bg} />;
     case "collection-benefits":
-      return <CollectionBenefitsSection section={section} className={bg} />;
+      return <CollectionBenefitsSection section={section} className={bg} icons={icons} />;
     case "collection-cta":
       return <CollectionCtaSection section={section} />;
     case "cta":

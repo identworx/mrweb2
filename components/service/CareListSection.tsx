@@ -1,30 +1,16 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
-
-function CheckIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="text-pumpkin flex-shrink-0 mt-0.5"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export default function CareListSection({
   section,
   className = "bg-white",
+  icons = {},
 }: {
   section: FrontendServiceSection;
   className?: string;
+  icons?: Record<string, ResolvedIcon>;
 }) {
   const items = Array.isArray(section.settings.items)
     ? (section.settings.items as string[]).filter((s) => typeof s === "string" && s.trim())
@@ -56,7 +42,7 @@ export default function CareListSection({
                 key={i}
                 className="flex items-start gap-4 p-5 bg-cream rounded"
               >
-                <CheckIcon />
+                <CmsIcon icon={icons["checkmark"]} width={18} height={18} className="text-pumpkin flex-shrink-0 mt-0.5" />
                 <RichTextRenderer
                   html={item}
                   className="font-body text-anthracite text-sm md:text-base leading-relaxed prose prose-sm prose-neutral max-w-none"

@@ -8,6 +8,7 @@ import FabricLibrary from "@/components/materials/FabricLibrary";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getFabricLibraryData } from "@/lib/cms/fabric-library";
+import { getIconSlots } from "@/lib/cms/icons";
 
 export const revalidate = 60;
 
@@ -28,10 +29,11 @@ export default async function StoffeMusterPage({
   searchParams: Promise<{ family?: string }>;
 }) {
   const { family } = await searchParams;
-  const [layout, hero, fabricData] = await Promise.all([
+  const [layout, hero, fabricData, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("stoffe-muster", "stoffeMuster"),
     getFabricLibraryData(),
+    getIconSlots(["ui-search", "ui-grid", "ui-matrix", "ui-close", "arrow-right", "image-placeholder", "checkmark"]),
   ]);
 
   return (
@@ -56,7 +58,7 @@ export default async function StoffeMusterPage({
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <FabricLibrary data={fabricData} initialFamily={family} />
+            <FabricLibrary data={fabricData} initialFamily={family} icons={icons} />
           </div>
         </section>
       </main>

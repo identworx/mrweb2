@@ -1,5 +1,7 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import ScrollReveal from "@/components/ScrollReveal";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface Step {
   title: string;
@@ -9,9 +11,11 @@ interface Step {
 export default function ProcessChainSection({
   section,
   className = "bg-cream",
+  icons = {},
 }: {
   section: FrontendServiceSection;
   className?: string;
+  icons?: Record<string, ResolvedIcon>;
 }) {
   const steps = Array.isArray(section.settings.steps)
     ? (section.settings.steps as Step[])
@@ -55,17 +59,7 @@ export default function ProcessChainSection({
                     {i + 1}
                   </span>
                   {i < steps.length - 1 && (
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block"
-                    >
-                      <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                    </svg>
+                    <CmsIcon icon={icons["arrow-right"]} width={20} height={20} className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block" />
                   )}
                 </div>
                 <h3 className="font-heading text-anthracite text-base font-bold mb-2">
@@ -84,19 +78,7 @@ export default function ProcessChainSection({
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
               {highlights.map((hl) => (
                 <div key={hl} className="flex items-start gap-3">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-pumpkin flex-shrink-0 mt-0.5"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
+                  <CmsIcon icon={icons["checkmark"]} width={16} height={16} className="text-pumpkin flex-shrink-0 mt-0.5" />
                   <span className="font-body text-anthracite text-sm leading-relaxed">
                     {hl}
                   </span>

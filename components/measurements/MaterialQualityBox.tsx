@@ -1,4 +1,6 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
+import CmsIcon from "@/components/cms/CmsIcon";
 import { fabricQualities } from "@/lib/mosaroma/materials";
 
 const colorDots: Record<string, string> = {
@@ -8,7 +10,7 @@ const colorDots: Record<string, string> = {
   basic: "#888888",
 };
 
-export default function MaterialQualityBox() {
+export default function MaterialQualityBox({ icons = {} }: { icons?: Record<string, ResolvedIcon> }) {
   return (
     <div className="bg-white border border-light-gray p-6 md:p-8">
       <div className="flex items-center gap-4 mb-5">
@@ -48,17 +50,7 @@ export default function MaterialQualityBox() {
         <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
           Alle Qualitäten im Detail
         </span>
-        <svg
-          width="14"
-          height="14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-          className="group-hover:translate-x-1 transition-transform duration-300"
-        >
-          <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-        </svg>
+        <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
       </Link>
     </div>
   );

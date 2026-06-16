@@ -8,6 +8,8 @@ import PublicContactForm from "@/components/public/PublicContactForm";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
 
@@ -38,10 +40,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KontaktPage() {
-  const [layout, hero, { form, status }] = await Promise.all([
+  const [layout, hero, { form, status }, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kontakt", "kontakt"),
     getPublicFormBySlug("contact"),
+    getIconSlots(["contact-email", "contact-globe", "contact-clock"]),
   ]);
 
   const isInactive = status === "inactive";
@@ -88,20 +91,7 @@ export default async function KontaktPage() {
 
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-3">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-pumpkin flex-shrink-0"
-                    >
-                      <rect width="20" height="16" x="2" y="4" rx="2" />
-                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                    </svg>
+                    <CmsIcon icon={icons["contact-email"]} width={16} height={16} className="text-pumpkin flex-shrink-0" />
                     <a
                       href="mailto:info@mosaroma.de"
                       className="font-body text-anthracite text-sm hover:text-pumpkin transition-colors duration-300"
@@ -110,20 +100,7 @@ export default async function KontaktPage() {
                     </a>
                   </div>
                   <div className="flex items-center gap-3">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-pumpkin flex-shrink-0"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                    </svg>
+                    <CmsIcon icon={icons["contact-globe"]} width={16} height={16} className="text-pumpkin flex-shrink-0" />
                     <a
                       href="https://www.mosaroma.de"
                       target="_blank"
@@ -137,20 +114,7 @@ export default async function KontaktPage() {
 
                 <div className="bg-cream p-5">
                   <div className="flex items-center gap-3">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-pumpkin flex-shrink-0"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
+                    <CmsIcon icon={icons["contact-clock"]} width={16} height={16} className="text-pumpkin flex-shrink-0" />
                     <p className="font-body text-anthracite text-sm">
                       Mo–Fr &middot; 9–17 Uhr
                     </p>

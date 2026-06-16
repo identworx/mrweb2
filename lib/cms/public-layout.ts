@@ -3,6 +3,7 @@ import { getSiteSettings } from "./settings";
 import { getHeaderNavigation, getFooterNavigation } from "./navigation";
 import { getFooterSettings } from "./footer";
 import { resolveNavigationLink } from "./link-resolver";
+import { getIconSlots, type ResolvedIcon } from "./icons";
 import type { HeaderNavItem } from "@/components/Header";
 import type { FooterNavColumn, FooterProps } from "@/components/Footer";
 
@@ -11,6 +12,7 @@ interface LayoutData {
     navItems: HeaderNavItem[];
     logoUrl: string | null;
     siteName: string | null;
+    icons: Record<string, ResolvedIcon>;
   };
   footer: FooterProps;
   siteSettings: {
@@ -24,11 +26,21 @@ interface LayoutData {
 }
 
 export async function getPublicLayoutData(): Promise<LayoutData> {
-  const [settings, headerNav, footerMenus, footerSettings] = await Promise.all([
+  const [settings, headerNav, footerMenus, footerSettings, layoutIcons] = await Promise.all([
     getSiteSettings(),
     getHeaderNavigation(),
     getFooterNavigation(),
     getFooterSettings(),
+    getIconSlots([
+      "chevron-right",
+      "arrow-right",
+      "social-facebook",
+      "social-instagram",
+      "social-pinterest",
+      "social-youtube",
+      "social-linkedin",
+      "social-houzz",
+    ]),
   ]);
 
   const headerItems: HeaderNavItem[] = headerNav?.items
@@ -87,6 +99,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
       navItems: headerItems,
       logoUrl,
       siteName: settings?.siteName ?? null,
+      icons: layoutIcons,
     },
     footer: {
       description: footerSettings?.description ?? null,
@@ -115,6 +128,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
       contactButtonLabel: footerSettings?.contactButtonLabel ?? null,
       contactButtonHref: footerSettings?.contactButtonHref ?? null,
       bottomNote: footerSettings?.bottomNote ?? null,
+      icons: layoutIcons,
     },
     siteSettings: {
       siteName: settings?.siteName ?? null,

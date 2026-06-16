@@ -1,6 +1,8 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
+import CmsIcon from "@/components/cms/CmsIcon";
 
-export default function CustomSizeCta() {
+export default function CustomSizeCta({ icons = {} }: { icons?: Record<string, ResolvedIcon> }) {
   return (
     <div className="bg-pumpkin p-8 md:p-10 text-white">
       <div className="flex items-center gap-4 mb-4">
@@ -27,16 +29,7 @@ export default function CustomSizeCta() {
         className="inline-flex items-center gap-3 font-heading text-[12px] font-semibold uppercase tracking-[0.12em] px-6 py-3 bg-white text-pumpkin hover:bg-white/90 transition-colors duration-300"
       >
         Kontakt aufnehmen
-        <svg
-          width="14"
-          height="14"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-        >
-          <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-        </svg>
+        <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
       </Link>
     </div>
   );

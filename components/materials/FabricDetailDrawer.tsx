@@ -4,13 +4,16 @@ import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { FrontendFabricSwatch } from "@/lib/cms/fabric-library";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface Props {
   swatch: FrontendFabricSwatch | null;
   onClose: () => void;
+  icons?: Record<string, ResolvedIcon>;
 }
 
-export default function FabricDetailDrawer({ swatch, onClose }: Props) {
+export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,9 +57,7 @@ export default function FabricDetailDrawer({ swatch, onClose }: Props) {
           className="sticky top-0 right-0 z-10 float-right m-4 w-10 h-10 flex items-center justify-center bg-anthracite/5 hover:bg-anthracite/10 text-anthracite/60 transition-colors"
           aria-label="Schließen"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M18 6L6 18M6 6l12 12" />
-          </svg>
+          <CmsIcon icon={icons["ui-close"]} width={18} height={18} />
         </button>
 
         <div className="aspect-square bg-[#FAF8F5] overflow-hidden">

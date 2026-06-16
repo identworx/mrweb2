@@ -1,4 +1,6 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import ScrollReveal from "@/components/ScrollReveal";
 
 interface BenefitItem {
@@ -7,46 +9,21 @@ interface BenefitItem {
   text: string;
 }
 
-const BENEFIT_ICONS: Record<string, React.ReactNode> = {
-  sun: (
-    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-6 h-6">
-      <circle cx="16" cy="16" r="5.5" />
-      <path d="M16 5v3M16 24v3M5 16h3M24 16h3M8.5 8.5l2 2M21.5 21.5l2 2M8.5 23.5l2-2M21.5 10.5l2-2" />
-    </svg>
-  ),
-  droplet: (
-    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-6 h-6">
-      <path d="M16 5C16 5 7 14.5 7 20a9 9 0 0018 0C25 14.5 16 5 16 5z" />
-    </svg>
-  ),
-  shield: (
-    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-6 h-6">
-      <path d="M16 3L5 8v7c0 7.5 4.7 14.5 11 17 6.3-2.5 11-9.5 11-17V8L16 3z" />
-      <path d="M11 16l3.5 3.5L21 13" />
-    </svg>
-  ),
-  star: (
-    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-6 h-6">
-      <path d="M16 4l3.2 6.5 7.1.9-5.15 4.9 1.25 7-6.4-3.5-6.4 3.5 1.25-7L5.7 11.4l7.1-.9z" />
-    </svg>
-  ),
+const ICON_KEY_MAP: Record<string, string> = {
+  sun: "benefit-sun",
+  droplet: "benefit-droplet",
+  shield: "benefit-shield",
+  star: "benefit-star",
 };
-
-function getFallbackIcon() {
-  return (
-    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-6 h-6">
-      <circle cx="16" cy="16" r="10" />
-      <path d="M12 16l3 3 5-5" />
-    </svg>
-  );
-}
 
 export default function CollectionBenefitsSection({
   section,
   className = "bg-cream",
+  icons = {},
 }: {
   section: FrontendServiceSection;
   className?: string;
+  icons?: Record<string, ResolvedIcon>;
 }) {
   const items = Array.isArray(section.settings.items)
     ? (section.settings.items as BenefitItem[])
@@ -79,7 +56,11 @@ export default function CollectionBenefitsSection({
             <ScrollReveal key={item.title || i} delay={i * 80}>
               <div className="bg-white p-7 md:p-8 h-full">
                 <div className="text-anthracite/30 mb-5">
-                  {BENEFIT_ICONS[item.iconKey] || getFallbackIcon()}
+                  <CmsIcon
+                    icon={icons[ICON_KEY_MAP[item.iconKey] ?? item.iconKey] ?? icons["benefit-fallback"]}
+                    width={24}
+                    height={24}
+                  />
                 </div>
                 <h3 className="font-heading text-anthracite text-sm font-bold tracking-tight mb-2">
                   {item.title}

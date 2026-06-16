@@ -1,14 +1,17 @@
 "use client";
 
 import Image from "next/image";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import type { FrontendFabricSwatch } from "@/lib/cms/fabric-library";
 
 interface Props {
   swatch: FrontendFabricSwatch;
   onSelect?: (swatch: FrontendFabricSwatch) => void;
+  icons?: Record<string, ResolvedIcon>;
 }
 
-export default function FabricSwatchCard({ swatch, onSelect }: Props) {
+export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props) {
   return (
     <button
       type="button"
@@ -31,19 +34,7 @@ export default function FabricSwatchCard({ swatch, onSelect }: Props) {
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-anthracite/10 to-anthracite/5 flex items-center justify-center">
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1"
-              className="text-anthracite/20"
-            >
-              <rect x="3" y="3" width="18" height="18" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" />
-            </svg>
+            <CmsIcon icon={icons["image-placeholder"]} width={32} height={32} className="text-anthracite/20" />
           </div>
         )}
       </div>
@@ -83,18 +74,7 @@ export default function FabricSwatchCard({ swatch, onSelect }: Props) {
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Details
           </span>
-          <svg
-            width="12"
-            height="12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
-            className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300"
-            aria-hidden="true"
-          >
-            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-          </svg>
+          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
         </span>
       </div>
     </button>

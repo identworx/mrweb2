@@ -1,6 +1,12 @@
 import Link from "next/link";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  icons?: Record<string, ResolvedIcon>;
+}
+
+export default function HeroSection({ icons = {} }: HeroSectionProps) {
   return (
     <section className="relative w-full h-screen min-h-[700px] max-h-[1100px] overflow-hidden">
       {/* Background Image */}
@@ -68,15 +74,11 @@ export default function HeroSection() {
             <div className="flex flex-wrap items-center gap-4">
               <Link href="/kollektionen" className="btn-primary">
                 Kollektionen entdecken
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
               </Link>
               <Link href="/kataloge" className="btn-outline-white">
                 Katalog ansehen
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
               </Link>
             </div>
           </div>

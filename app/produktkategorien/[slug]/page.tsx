@@ -18,6 +18,8 @@ import {
 } from "@/lib/cms/products";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -91,10 +93,11 @@ function groupProductsByCollection(products: FrontendProduct[]) {
 
 export default async function KategoriePage({ params }: PageProps) {
   const { slug } = await params;
-  const [layout, group, products] = await Promise.all([
+  const [layout, group, products, icons] = await Promise.all([
     getPublicLayoutData(),
     resolveGroup(slug),
     getProductsByProductGroupSlug(slug),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   if (!group) {
@@ -164,19 +167,7 @@ export default async function KategoriePage({ params }: PageProps) {
                     key={feature}
                     className="flex items-start gap-4 p-6 bg-cream"
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-pumpkin flex-shrink-0 mt-0.5"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
+                    <CmsIcon icon={icons["checkmark"]} width={20} height={20} className="text-pumpkin flex-shrink-0 mt-0.5" />
                     <span className="font-body text-anthracite text-base leading-relaxed">
                       {feature}
                     </span>
@@ -239,17 +230,7 @@ export default async function KategoriePage({ params }: PageProps) {
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Alle Materialien entdecken
                 </span>
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="group-hover:translate-x-1 transition-transform duration-300"
-                >
-                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </section>
@@ -277,17 +258,7 @@ export default async function KategoriePage({ params }: PageProps) {
                         <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                           Kollektion ansehen
                         </span>
-                        <svg
-                          width="14"
-                          height="14"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          viewBox="0 0 24 24"
-                          className="group-hover:translate-x-1 transition-transform duration-300"
-                        >
-                          <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                        </svg>
+                        <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                       </Link>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">

@@ -10,6 +10,7 @@ import BenchMeasurementCard from "@/components/measurements/BenchMeasurementCard
 import MaterialQualityBox from "@/components/measurements/MaterialQualityBox";
 import CustomSizeCta from "@/components/measurements/CustomSizeCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { getIconSlots } from "@/lib/cms/icons";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicMeasurements, measurementGroups } from "@/lib/cms/measurements";
 
@@ -26,10 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProduktmassePage() {
-  const [layout, hero, allMeasurements] = await Promise.all([
+  const [layout, hero, allMeasurements, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("produktmasse", "produktmasse"),
     getPublicMeasurements(),
+    getIconSlots(["arrow-right"]),
   ]);
 
   const kissenItems = allMeasurements.filter((m) => m.group === "kissen-auflagen");
@@ -159,8 +161,8 @@ export default async function ProduktmassePage() {
               id="massanfertigung"
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              <MaterialQualityBox />
-              <CustomSizeCta />
+              <MaterialQualityBox icons={icons} />
+              <CustomSizeCta icons={icons} />
             </div>
           </div>
         </section>

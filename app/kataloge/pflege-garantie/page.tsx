@@ -7,11 +7,12 @@ import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import BoldText from "@/components/service/BoldText";
-import { CARE_ICONS } from "@/components/service/CareSymbolsSection";
 import CareCardPrint from "@/components/service/CareCardPrint";
+import CmsIcon from "@/components/cms/CmsIcon";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
+import { getIconSlots } from "@/lib/cms/icons";
 
 export const revalidate = 60;
 
@@ -52,10 +53,14 @@ const staticCareSymbols = [
 ];
 
 export default async function PflegeGarantiePage() {
-  const [layout, hero, result] = await Promise.all([
+  const [layout, hero, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("pflege-garantie", "pflegeGarantie"),
     getServicePageBySlug("pflege-garantie"),
+    getIconSlots([
+      "care-wash-30", "care-bleach-dilute", "care-no-dryer",
+      "care-line-dry", "care-no-heat",
+    ]),
   ]);
 
   if (result.state === "not-public") {
@@ -90,6 +95,7 @@ export default async function PflegeGarantiePage() {
               key={section.id}
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
+              icons={icons}
             />
           ))
         ) : (
@@ -185,7 +191,7 @@ export default async function PflegeGarantiePage() {
                   {staticCareSymbols.map((symbol) => (
                     <figure key={symbol.key} className="text-center">
                       <div className="w-16 h-16 mx-auto flex items-center justify-center border border-anthracite/15 text-anthracite mb-4" aria-hidden="true">
-                        {CARE_ICONS[symbol.key] || null}
+                        <CmsIcon icon={icons[`care-${symbol.key}`]} width={32} height={32} />
                       </div>
                       <figcaption className="font-body text-text-gray text-xs leading-snug">
                         {symbol.label}

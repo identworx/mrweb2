@@ -10,6 +10,7 @@ import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getPublishedPages } from "@/lib/cms/pages";
 import { pageSlugToPublicPath } from "@/lib/cms/page-paths";
 import { prisma } from "@/lib/db/prisma";
+import { getIconSlots } from "@/lib/cms/icons";
 
 export const revalidate = 60;
 
@@ -58,9 +59,10 @@ export default async function CmsPage({
     notFound();
   }
 
-  const [layout, result] = await Promise.all([
+  const [layout, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getServicePageBySlug(slug),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   if (result.state !== "published") {
@@ -87,6 +89,7 @@ export default async function CmsPage({
               key={section.id}
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
+              icons={icons}
             />
           ))
         ) : (

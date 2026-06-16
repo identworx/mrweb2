@@ -24,6 +24,8 @@ import {
 import { getProductsByCollectionSlug, type FrontendProduct } from "@/lib/cms/products";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -138,10 +140,11 @@ const SERVICE_LINKS = [
 
 export default async function KollektionPage({ params }: PageProps) {
   const { slug } = await params;
-  const [layout, collection, products] = await Promise.all([
+  const [layout, collection, products, icons] = await Promise.all([
     getPublicLayoutData(),
     resolveCollection(slug),
     getProductsByCollectionSlug(slug),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   if (!collection) {
@@ -459,9 +462,7 @@ export default async function KollektionPage({ params }: PageProps) {
                           <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                             Materialien entdecken
                           </span>
-                          <svg width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="group-hover:translate-x-0.5 transition-transform duration-300" aria-hidden="true">
-                            <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                          </svg>
+                          <CmsIcon icon={icons["arrow-right"]} width={13} height={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
                         </Link>
                       </div>
                     </div>
@@ -474,33 +475,25 @@ export default async function KollektionPage({ params }: PageProps) {
                         <ul className="space-y-3">
                           {fabricData.dyeing && (
                             <li className="flex items-start gap-3">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-pumpkin/60 mt-0.5 flex-shrink-0" aria-hidden="true">
-                                <path d="M5 13l4 4L19 7" />
-                              </svg>
+                              <CmsIcon icon={icons["checkmark"]} width={14} height={14} className="text-pumpkin/60 mt-0.5 flex-shrink-0" />
                               <span className="font-body text-text-gray text-[13px]">{fabricData.dyeing}</span>
                             </li>
                           )}
                           {fabricData.comfort && (
                             <li className="flex items-start gap-3">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-pumpkin/60 mt-0.5 flex-shrink-0" aria-hidden="true">
-                                <path d="M5 13l4 4L19 7" />
-                              </svg>
+                              <CmsIcon icon={icons["checkmark"]} width={14} height={14} className="text-pumpkin/60 mt-0.5 flex-shrink-0" />
                               <span className="font-body text-text-gray text-[13px]">{fabricData.comfort}</span>
                             </li>
                           )}
                           {fabricData.cushionThickness && (
                             <li className="flex items-start gap-3">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-pumpkin/60 mt-0.5 flex-shrink-0" aria-hidden="true">
-                                <path d="M5 13l4 4L19 7" />
-                              </svg>
+                              <CmsIcon icon={icons["checkmark"]} width={14} height={14} className="text-pumpkin/60 mt-0.5 flex-shrink-0" />
                               <span className="font-body text-text-gray text-[13px]">{fabricData.cushionThickness}</span>
                             </li>
                           )}
                           {fabricData.highlights?.map((h) => (
                             <li key={h} className="flex items-start gap-3">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-pumpkin/60 mt-0.5 flex-shrink-0" aria-hidden="true">
-                                <path d="M5 13l4 4L19 7" />
-                              </svg>
+                              <CmsIcon icon={icons["checkmark"]} width={14} height={14} className="text-pumpkin/60 mt-0.5 flex-shrink-0" />
                               <span className="font-body text-text-gray text-[13px]">{h}</span>
                             </li>
                           ))}
@@ -546,9 +539,7 @@ export default async function KollektionPage({ params }: PageProps) {
                       <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
                         Ansehen
                       </span>
-                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" aria-hidden="true">
-                        <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                      </svg>
+                      <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
                     </span>
                   </Link>
                 </ScrollReveal>

@@ -10,6 +10,8 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicDownloadsByType } from "@/lib/cms/downloads";
 import type { FrontendDownload } from "@/lib/cms/downloads";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
 
@@ -23,40 +25,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-function ServiceIcon({ icon }: { icon: string }) {
-  if (icon === "ruler") {
-    return (
-      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-        <path d="M5.636 18.364L18.364 5.636a1 1 0 011.414 0l0 0a1 1 0 010 1.414L7.05 19.778a1 1 0 01-1.414 0l0 0a1 1 0 010-1.414z" />
-        <path d="M8.464 15.536l2-2M11.293 12.707l2-2M14.121 9.879l2-2" />
-      </svg>
-    );
-  }
-  if (icon === "shield") {
-    return (
-      <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-        <path d="M12 2l7 4v5c0 5.25-3.5 9.74-7 11-3.5-1.26-7-5.75-7-11V6l7-4z" />
-        <path d="M9 12l2 2 4-4" />
-      </svg>
-    );
-  }
-  return (
-    <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-      <path d="M4 6h16M4 10h16M4 14h10M4 18h6" />
-      <circle cx="18" cy="16" r="3" />
-    </svg>
-  );
-}
+const SERVICE_ICON_MAP: Record<string, string> = {
+  ruler: "service-ruler",
+  shield: "service-shield",
+  default: "service-fabric",
+};
 
-function ExternalLinkIcon() {
-  return (
-    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-      <path d="M7 17L17 7M17 7H7M17 7v10" />
-    </svg>
-  );
-}
-
-function CatalogCard({ download }: { download: FrontendDownload }) {
+function CatalogCard({ download, icons }: { download: FrontendDownload; icons: Record<string, import("@/lib/cms/icons").ResolvedIcon> }) {
   const href = download.externalUrl || download.fileUrl || "#";
   const isExternal = download.opensInNewTab || href.startsWith("http");
 
@@ -68,16 +43,17 @@ function CatalogCard({ download }: { download: FrontendDownload }) {
       className="btn-outline-white"
     >
       {download.buttonLabel}
-      {isExternal && <ExternalLinkIcon />}
+      {isExternal && <CmsIcon icon={icons["external-link"]} width={14} height={14} />}
     </a>
   );
 }
 
 export default async function KatalogePage() {
-  const [layout, hero, catalogs] = await Promise.all([
+  const [layout, hero, catalogs, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kataloge", "kataloge"),
     getPublicDownloadsByType("catalog"),
+    getIconSlots(["service-ruler", "service-shield", "service-fabric", "external-link", "arrow-right"]),
   ]);
 
   const catalogDe = catalogs.find((d) => d.language === "de");
@@ -132,17 +108,17 @@ export default async function KatalogePage() {
 
                 <div className="flex flex-wrap items-center gap-4">
                   {catalogDe ? (
-                    <CatalogCard download={catalogDe} />
+                    <CatalogCard download={catalogDe} icons={icons} />
                   ) : (
                     <a href={catalogLinks.de} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
-                      Deutsch ansehen <ExternalLinkIcon />
+                      Deutsch ansehen <CmsIcon icon={icons["external-link"]} width={14} height={14} />
                     </a>
                   )}
                   {catalogEn ? (
-                    <CatalogCard download={catalogEn} />
+                    <CatalogCard download={catalogEn} icons={icons} />
                   ) : (
                     <a href={catalogLinks.en} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
-                      English ansehen <ExternalLinkIcon />
+                      English ansehen <CmsIcon icon={icons["external-link"]} width={14} height={14} />
                     </a>
                   )}
                 </div>
@@ -170,7 +146,7 @@ export default async function KatalogePage() {
                   className="group block bg-white p-8 border border-light-gray transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]"
                 >
                   <div className="w-12 h-12 flex items-center justify-center bg-pumpkin/10 text-pumpkin group-hover:bg-pumpkin group-hover:text-white transition-all duration-500 mb-6">
-                    <ServiceIcon icon={page.icon} />
+                    <CmsIcon icon={icons[SERVICE_ICON_MAP[page.icon] || SERVICE_ICON_MAP.default]} width={24} height={24} />
                   </div>
 
                   <h3 className="font-heading text-anthracite text-lg font-bold group-hover:text-pumpkin transition-colors duration-300 mb-2">
@@ -185,17 +161,7 @@ export default async function KatalogePage() {
                     <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                       Ansehen
                     </span>
-                    <svg
-                      width="14"
-                      height="14"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      className="group-hover:translate-x-1 transition-transform duration-300"
-                    >
-                      <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                    </svg>
+                    <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
                 </Link>
                 </ScrollReveal>

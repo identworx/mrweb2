@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 import type {
   FrontendFabricSwatch,
   FrontendFabricProductType,
@@ -10,12 +12,14 @@ interface Props {
   swatches: FrontendFabricSwatch[];
   productTypes: FrontendFabricProductType[];
   onSelectSwatch?: (swatch: FrontendFabricSwatch) => void;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function FabricMatrixView({
   swatches,
   productTypes,
   onSelectSwatch,
+  icons = {},
 }: Props) {
   if (swatches.length === 0) return null;
 
@@ -88,19 +92,7 @@ export default function FabricMatrixView({
                       <td key={pt.slug} className="text-center py-3 px-2">
                         {avail ? (
                           <div className="flex flex-col items-center gap-0.5">
-                            <svg
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="text-pumpkin"
-                            >
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
+                            <CmsIcon icon={icons["checkmark"]} width={16} height={16} className="text-pumpkin" />
                             {avail.note && (
                               <span className="font-accent text-[8px] text-text-gray/40 tracking-wide uppercase leading-tight">
                                 {avail.note}

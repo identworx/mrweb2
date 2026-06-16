@@ -1,13 +1,17 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export default function CrossLinkSection({
   section,
   className = "bg-cream",
+  icons = {},
 }: {
   section: FrontendServiceSection;
   className?: string;
+  icons?: Record<string, ResolvedIcon>;
 }) {
   return (
     <section className={`section-padding ${className}`}>
@@ -32,17 +36,7 @@ export default function CrossLinkSection({
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                 {section.buttonLabel}
               </span>
-              <svg
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                className="group-hover:translate-x-1 transition-transform duration-300"
-              >
-                <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-              </svg>
+              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           )}
         </div>

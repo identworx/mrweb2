@@ -13,6 +13,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import { getIconSlots } from "@/lib/cms/icons";
 
 export const revalidate = 60;
 
@@ -89,11 +90,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KollektionenPage() {
-  const [layout, hero, collections, pageResult] = await Promise.all([
+  const [layout, hero, collections, pageResult, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kollektionen", "kollektionen"),
     getPublishedCollections(),
     getServicePageBySlug("kollektionen"),
+    getIconSlots(["benefit-sun", "benefit-droplet", "benefit-shield", "benefit-star", "benefit-fallback", "arrow-right", "checkmark"]),
   ]);
 
   const sections =
@@ -184,7 +186,7 @@ export default async function KollektionenPage() {
         </section>
 
         {/* Benefits */}
-        <CollectionBenefitsSection section={benefitsSection} />
+        <CollectionBenefitsSection section={benefitsSection} icons={icons} />
 
         {/* CTA */}
         <CollectionCtaSection section={ctaSection} />

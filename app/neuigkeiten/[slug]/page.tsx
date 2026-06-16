@@ -12,6 +12,8 @@ import {
   getNewsStaticParams,
 } from "@/lib/cms/news";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export async function generateStaticParams() {
   return getNewsStaticParams();
@@ -53,8 +55,11 @@ export default async function NeuigkeitDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const layout = await getPublicLayoutData();
-  const result = await getNewsArticleBySlugWithStatus(slug);
+  const [layout, result, icons] = await Promise.all([
+    getPublicLayoutData(),
+    getNewsArticleBySlugWithStatus(slug),
+    getIconSlots(["arrow-left"]),
+  ]);
 
   if (result.state === "published") {
     const article = result.article;
@@ -125,9 +130,7 @@ export default async function NeuigkeitDetailPage({
                   href="/neuigkeiten"
                   className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin hover:text-burnt-orange transition-colors duration-300"
                 >
-                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path d="M19.5 12h-15m0 0l5.5 5.5M4.5 12l5.5-5.5" />
-                  </svg>
+                  <CmsIcon icon={icons["arrow-left"]} width={14} height={14} />
                   Zurück zu Neuigkeiten
                 </Link>
               </div>
@@ -208,9 +211,7 @@ export default async function NeuigkeitDetailPage({
                 href="/neuigkeiten"
                 className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin hover:text-burnt-orange transition-colors duration-300"
               >
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path d="M19.5 12h-15m0 0l5.5 5.5M4.5 12l5.5-5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-left"]} width={14} height={14} />
                 Zurück zu Neuigkeiten
               </Link>
             </div>

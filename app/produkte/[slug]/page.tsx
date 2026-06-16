@@ -20,6 +20,8 @@ import { getCollectionBySlug as getStaticCollectionBySlug } from "@/lib/mosaroma
 import { fabricQualities } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -73,9 +75,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProduktPage({ params }: PageProps) {
   const { slug } = await params;
-  const [layout, product] = await Promise.all([
+  const [layout, product, icons] = await Promise.all([
     getPublicLayoutData(),
     resolveProduct(slug),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   if (!product) {
@@ -279,16 +282,7 @@ export default async function ProduktPage({ params }: PageProps) {
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Link href="/kontakt" className="btn-primary flex-1 justify-center">
                       Anfrage senden
-                      <svg
-                        width="14"
-                        height="14"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                      </svg>
+                      <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
                     </Link>
                     <Link href="/kataloge" className="btn-outline flex-1 justify-center">
                       Katalog ansehen
@@ -326,17 +320,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Mehr über {fabric.name} erfahren
                 </span>
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  className="group-hover:translate-x-1 transition-transform duration-300"
-                >
-                  <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                </svg>
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </section>
@@ -371,17 +355,7 @@ export default async function ProduktPage({ params }: PageProps) {
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                     Zur {displayCollection} Collection
                   </span>
-                  <svg
-                    width="14"
-                    height="14"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 24 24"
-                    className="group-hover:translate-x-1 transition-transform duration-300"
-                  >
-                    <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                  </svg>
+                  <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </div>
             </div>

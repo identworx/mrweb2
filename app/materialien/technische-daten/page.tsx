@@ -10,6 +10,8 @@ import TechnicalDataTable from "@/components/materials/TechnicalDataTable";
 import { fabricQualities } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getIconSlots } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
 
@@ -36,9 +38,10 @@ function DataRow({ label, value }: { label: string; value: string }) {
 }
 
 export default async function TechnischeDatenPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("technische-daten", "technischeDaten"),
+    getIconSlots(["arrow-right", "checkmark"]),
   ]);
 
   return (
@@ -136,19 +139,7 @@ export default async function TechnischeDatenPage() {
                       key={highlight}
                       className="flex items-start gap-3 p-4 bg-cream"
                     >
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-pumpkin flex-shrink-0 mt-0.5"
-                      >
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
+                      <CmsIcon icon={icons["checkmark"]} width={18} height={18} className="text-pumpkin flex-shrink-0 mt-0.5" />
                       <span className="font-body text-anthracite text-sm leading-relaxed">
                         {highlight}
                       </span>
@@ -165,17 +156,7 @@ export default async function TechnischeDatenPage() {
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                 Alle Materialien entdecken
               </span>
-              <svg
-                width="14"
-                height="14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                viewBox="0 0 24 24"
-                className="group-hover:translate-x-1 transition-transform duration-300"
-              >
-                <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-              </svg>
+              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>
         </section>

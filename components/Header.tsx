@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { mainNavLinks } from "@/lib/mosaroma/navigation";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 export interface HeaderNavItem {
   label: string;
@@ -17,6 +19,7 @@ interface HeaderProps {
   navItems?: HeaderNavItem[];
   logoUrl?: string | null;
   siteName?: string | null;
+  icons?: Record<string, ResolvedIcon>;
 }
 
 const BADGE_VARIANTS: Record<string, string> = {
@@ -30,7 +33,7 @@ function badgeClasses(variant?: string): string {
   return BADGE_VARIANTS[variant || "blue"] || BADGE_VARIANTS.blue;
 }
 
-export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
+export default function Header({ navItems, logoUrl, siteName, icons = {} }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -186,9 +189,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
             className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
           >
             Startseite
-            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300">
-              <path d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
+            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
           </Link>
           {links.map((link, i) => (
             <Link
@@ -209,9 +210,7 @@ export default function Header({ navItems, logoUrl, siteName }: HeaderProps) {
                   </span>
                 )}
               </span>
-              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300">
-                <path d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-              </svg>
+              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
             </Link>
           ))}
           <div className="mt-8 pt-6">
