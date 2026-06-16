@@ -238,16 +238,16 @@ export default async function NerioPage() {
 
               <div className="flex flex-wrap gap-4 mt-8">
                 <Link
-                  href="/materialien/stoffe-muster?family=nerio"
+                  href="/kollektionen/nerio-oceana"
                   className="btn-primary"
                 >
-                  Stoffe ansehen
+                  Collection ansehen
                 </Link>
                 <Link
-                  href="/kollektionen/nerio-oceana"
+                  href="/materialien/stoffe-muster?family=nerio"
                   className="btn-outline-white"
                 >
-                  Collection ansehen
+                  Stoffe ansehen
                 </Link>
               </div>
             </div>
