@@ -33,7 +33,7 @@ export default async function StoffeMusterPage({
     getPublicLayoutData(),
     getPageHeroData("stoffe-muster", "stoffeMuster"),
     getFabricLibraryData(),
-    getIconSlots(["ui-search", "ui-grid", "ui-matrix", "ui-close", "arrow-right", "image-placeholder", "checkmark"]),
+    getIconSlots(["ui-search", "ui-grid", "ui-matrix", "ui-close", "ui-image-placeholder", "arrow-right", "checkmark"]),
   ]);
 
   return (

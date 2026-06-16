@@ -25,6 +25,35 @@ export const SERVICE_KEY_MAP: Record<string, string> = {
   fabric: "service-fabric",
 };
 
+export const SERVICE_SECTION_ICON_KEYS = [
+  "arrow-right",
+  "checkmark",
+  "care-wash-30",
+  "care-bleach-dilute",
+  "care-no-dryer",
+  "care-line-dry",
+  "care-no-heat",
+  "care-print",
+  "benefit-sun",
+  "benefit-droplet",
+  "benefit-shield",
+  "benefit-star",
+  "benefit-fallback",
+  "ui-flip",
+  "ui-image-placeholder",
+  "ui-close",
+  "category-dekokissen",
+  "category-hochlehner",
+  "category-niedriglehner",
+  "category-sitzkissen",
+  "category-sitzpolster",
+  "category-bankauflagen",
+  "category-poufs",
+  "category-tischsets",
+  "category-decken",
+  "category-default",
+] as const;
+
 export const CATEGORY_KEY_MAP: Record<string, string> = {
   dekokissen: "category-dekokissen",
   hochlehner: "category-hochlehner",

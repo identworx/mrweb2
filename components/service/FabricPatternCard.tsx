@@ -3,6 +3,8 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import type { ResolvedIcon } from "@/lib/cms/icons";
+import CmsIcon from "@/components/cms/CmsIcon";
 
 interface PatternColor {
   name: string;
@@ -21,6 +23,7 @@ interface Props {
   colors: PatternColor[];
   availableCategories?: string[];
   categoryIcons: CategoryIcon[];
+  icons?: Record<string, ResolvedIcon>;
 }
 
 export default function FabricPatternCard({
@@ -29,6 +32,7 @@ export default function FabricPatternCard({
   colors,
   availableCategories = [],
   categoryIcons,
+  icons = {},
 }: Props) {
   const [isFlipped, setIsFlipped] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -59,19 +63,7 @@ export default function FabricPatternCard({
                 className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-pumpkin hover:text-white text-anthracite/40 transition-all duration-300"
                 aria-label="Verfügbare Produkte anzeigen"
               >
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M17 1l4 4-4 4" />
-                  <path d="M3 11V9a4 4 0 014-4h14" />
-                  <path d="M7 23l-4-4 4-4" />
-                  <path d="M21 13v2a4 4 0 01-4 4H3" />
-                </svg>
+                <CmsIcon icon={icons["ui-flip"]} width={14} height={14} />
               </button>
             )}
 
@@ -90,19 +82,7 @@ export default function FabricPatternCard({
               </button>
             ) : (
               <div className="w-full aspect-[4/3] bg-light-gray flex items-center justify-center">
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  className="text-anthracite/20"
-                >
-                  <rect x="3" y="3" width="18" height="18" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <path d="M21 15l-5-5L5 21" />
-                </svg>
+                <CmsIcon icon={icons["ui-image-placeholder"]} width={32} height={32} className="text-anthracite/20" />
               </div>
             )}
 
@@ -150,16 +130,7 @@ export default function FabricPatternCard({
               className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white/60 transition-all duration-300"
               aria-label="Zurück zur Vorderseite"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
+              <CmsIcon icon={icons["ui-close"]} width={14} height={14} />
             </button>
 
             <div className="p-5 flex flex-col h-full">
@@ -187,7 +158,7 @@ export default function FabricPatternCard({
                         className="w-8 h-8 object-contain invert opacity-70"
                       />
                     ) : (
-                      <CategoryPlaceholder slug={cat.categorySlug} />
+                      <CmsIcon icon={icons[`category-${cat.categorySlug}`] ?? icons["category-default"]} width={32} height={32} className="w-8 h-8 text-white/50" />
                     )}
                     <span className="font-accent text-white/70 text-[9px] tracking-[0.05em] uppercase text-center leading-tight">
                       {cat.categoryName}
@@ -211,9 +182,7 @@ export default function FabricPatternCard({
             className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white transition-colors"
             aria-label="Schließen"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <CmsIcon icon={icons["ui-close"]} width={16} height={16} />
           </button>
           <Image
             src={thumbnailUrl}
@@ -228,78 +197,3 @@ export default function FabricPatternCard({
   );
 }
 
-function CategoryPlaceholder({ slug }: { slug: string }) {
-  const cn = "w-8 h-8 text-white/50";
-
-  switch (slug) {
-    case "dekokissen":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="4" y="8" width="24" height="16" rx="2" />
-          <path d="M4 12c4-2 8-2 12 0s8 2 12 0" />
-        </svg>
-      );
-    case "hochlehner":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="8" y="2" width="16" height="28" rx="1" />
-          <line x1="8" y1="20" x2="24" y2="20" />
-        </svg>
-      );
-    case "niedriglehner":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="8" y="8" width="16" height="22" rx="1" />
-          <line x1="8" y1="20" x2="24" y2="20" />
-        </svg>
-      );
-    case "sitzkissen":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="4" y="12" width="24" height="10" rx="1" />
-          <path d="M6 12v-2h20v2" />
-        </svg>
-      );
-    case "sitzpolster":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="4" y="14" width="24" height="6" rx="1" />
-        </svg>
-      );
-    case "bankauflagen":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="2" y="12" width="28" height="10" rx="1" />
-          <path d="M8 12v-2M24 12v-2" />
-        </svg>
-      );
-    case "poufs":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <ellipse cx="16" cy="22" rx="12" ry="5" />
-          <path d="M4 22V14c0-4 5.4-8 12-8s12 4 12 8v8" />
-        </svg>
-      );
-    case "tischsets-tischlaeufer":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="2" y="10" width="28" height="12" />
-          <line x1="10" y1="10" x2="10" y2="22" strokeDasharray="2" />
-          <line x1="22" y1="10" x2="22" y2="22" strokeDasharray="2" />
-        </svg>
-      );
-    case "decken":
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <path d="M6 6h20v20H6z" />
-          <path d="M6 6l4 4M26 6l-4 4M6 26l4-4M26 26l-4-4" />
-        </svg>
-      );
-    default:
-      return (
-        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.2" className={cn}>
-          <rect x="4" y="4" width="24" height="24" />
-        </svg>
-      );
-  }
-}

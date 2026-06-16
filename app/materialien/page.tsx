@@ -20,6 +20,7 @@ import { getServicePageBySlug, getSectionImage, getSectionData } from "@/lib/cms
 import { getFabricPreviewSwatches, getFabricFamiliesForHub } from "@/lib/cms/fabric-library";
 import Image from "next/image";
 import { getIconSlots } from "@/lib/cms/icons";
+import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
@@ -46,7 +47,7 @@ export default async function MaterialienPage() {
     getSectionData("materialien", "materials-technology"),
     getSectionData("materialien", "materials-olefin"),
     getSectionData("materialien", "materials-oceancycle"),
-    getIconSlots(["arrow-right", "checkmark"]),
+    getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
 
   const tech = {

@@ -14,6 +14,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
+import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 
 export const revalidate = 60;
@@ -44,7 +45,7 @@ export default async function StoffTechnischeDatenPage() {
     getPublicLayoutData(),
     getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten"),
     getServicePageBySlug("stoff-technische-daten"),
-    getIconSlots(["arrow-right", "checkmark"]),
+    getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
 
   if (result.state === "not-public") {

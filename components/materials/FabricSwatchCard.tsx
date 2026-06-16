@@ -34,7 +34,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-anthracite/10 to-anthracite/5 flex items-center justify-center">
-            <CmsIcon icon={icons["image-placeholder"]} width={32} height={32} className="text-anthracite/20" />
+            <CmsIcon icon={icons["ui-image-placeholder"]} width={32} height={32} className="text-anthracite/20" />
           </div>
         )}
       </div>

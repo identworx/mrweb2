@@ -13,6 +13,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
+import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 
 export const revalidate = 60;
 
@@ -57,10 +58,7 @@ export default async function PflegeGarantiePage() {
     getPublicLayoutData(),
     getPageHeroData("pflege-garantie", "pflegeGarantie"),
     getServicePageBySlug("pflege-garantie"),
-    getIconSlots([
-      "care-wash-30", "care-bleach-dilute", "care-no-dryer",
-      "care-line-dry", "care-no-heat",
-    ]),
+    getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
 
   if (result.state === "not-public") {
@@ -199,7 +197,7 @@ export default async function PflegeGarantiePage() {
                     </figure>
                   ))}
                 </div>
-                <CareCardPrint />
+                <CareCardPrint icons={icons} />
               </div>
             </section>
 

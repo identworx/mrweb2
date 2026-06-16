@@ -17,7 +17,7 @@ import {
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getIconSlots } from "@/lib/cms/icons";
-import { NERIO_PROMISE_KEY_MAP } from "@/lib/cms/icon-key-map";
+import { NERIO_PROMISE_KEY_MAP, SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import {
@@ -78,7 +78,7 @@ export default async function NerioPage() {
     getSectionData("nerio", "nerio-products-preview"),
     getSectionData("nerio", "nerio-final-cta"),
     getNerioFabricSwatches(),
-    getIconSlots(["nerio-recycle", "nerio-droplet", "nerio-sun", "nerio-shield", "nerio-fabric-grid", "nerio-collection-box", "checkmark", "arrow-right"]),
+    getIconSlots([...SERVICE_SECTION_ICON_KEYS, "nerio-recycle", "nerio-droplet", "nerio-sun", "nerio-shield", "nerio-fabric-grid", "nerio-collection-box"]),
   ]);
 
   const story = {

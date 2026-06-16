@@ -1,3 +1,4 @@
+import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import ScrollReveal from "@/components/ScrollReveal";
 import FabricPatternCard from "./FabricPatternCard";
@@ -30,9 +31,11 @@ interface CategoryIcon {
 export default function FabricPatternOverviewSection({
   section,
   className = "bg-white",
+  icons = {},
 }: {
   section: FrontendServiceSection;
   className?: string;
+  icons?: Record<string, ResolvedIcon>;
 }) {
   const groups = Array.isArray(section.settings.groups)
     ? (section.settings.groups as PatternGroup[])
@@ -92,6 +95,7 @@ export default function FabricPatternOverviewSection({
                       colors={pattern.colors}
                       availableCategories={pattern.availableCategories}
                       categoryIcons={categoryIcons}
+                      icons={icons}
                     />
                   ))}
                 </div>

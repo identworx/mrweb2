@@ -48,7 +48,7 @@ export default function ServiceSectionRenderer({ section, background = "white", 
     case "process-chain":
       return <ProcessChainSection section={section} className={bg} icons={icons} />;
     case "fabric-pattern-overview":
-      return <FabricPatternOverviewSection section={section} className={bg} />;
+      return <FabricPatternOverviewSection section={section} className={bg} icons={icons} />;
     case "collection-benefits":
       return <CollectionBenefitsSection section={section} className={bg} icons={icons} />;
     case "collection-cta":

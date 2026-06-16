@@ -44,7 +44,7 @@ export default function CareSymbolsSection({
             </figure>
           ))}
         </div>
-        <CareCardPrint />
+        <CareCardPrint icons={icons} />
       </div>
     </section>
   );

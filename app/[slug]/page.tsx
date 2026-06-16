@@ -11,6 +11,7 @@ import { getPublishedPages } from "@/lib/cms/pages";
 import { pageSlugToPublicPath } from "@/lib/cms/page-paths";
 import { prisma } from "@/lib/db/prisma";
 import { getIconSlots } from "@/lib/cms/icons";
+import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 
 export const revalidate = 60;
 
@@ -62,7 +63,7 @@ export default async function CmsPage({
   const [layout, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getServicePageBySlug(slug),
-    getIconSlots(["arrow-right", "checkmark"]),
+    getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
 
   if (result.state !== "published") {
