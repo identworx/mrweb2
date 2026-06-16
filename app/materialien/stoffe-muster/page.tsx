@@ -22,7 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function StoffeMusterPage() {
+export default async function StoffeMusterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ family?: string }>;
+}) {
+  const { family } = await searchParams;
   const [layout, hero, fabricData] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("stoffe-muster", "stoffeMuster"),
@@ -51,7 +56,7 @@ export default async function StoffeMusterPage() {
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <FabricLibrary data={fabricData} />
+            <FabricLibrary data={fabricData} initialFamily={family} />
           </div>
         </section>
       </main>

@@ -258,6 +258,56 @@ export const oceanCycleProcess = {
 };
 
 /* -------------------------------------------------------------------------- */
+/*  NERIO Landing Page – fallback content                                     */
+/* -------------------------------------------------------------------------- */
+
+export const nerioStory = {
+  eyebrow: "Die Geschichte",
+  title: "Aus dem Ozean geboren. Für die Zukunft gemacht.",
+  paragraphs: [
+    "NERIO verbindet hochwertige Outdoor-Performance mit echter Nachhaltigkeit. Jeder Stoff der NERIO-Linie enthält mindestens 50 % recyceltes Polypropylen, gewonnen aus ozeangebundenem Plastik.",
+    "Die Faser wird spinndüsengefärbt — Farbe und UV-Schutz sind im Kern verankert. Kein nachträgliches Färben, kein Wasserverbrauch, keine chemischen Bäder. Das Ergebnis: langlebige Stoffe mit exzellenter Farbechtheit und messbarer CO₂-Einsparung.",
+  ],
+};
+
+export const nerioPromise = {
+  eyebrow: "Unser Versprechen",
+  title: "Nachhaltigkeit ohne Kompromisse",
+  items: [
+    { iconKey: "recycle", title: "50 % recycelt", text: "Mindestens die Hälfte des Materials stammt aus OceanCycle® zertifiziertem, recyceltem Ozean-Polypropylen." },
+    { iconKey: "droplet", title: "PFAS-frei", text: "Komplett frei von Per- und Polyfluoralkylsubstanzen — sicherer für Mensch, Tier und Umwelt." },
+    { iconKey: "sun", title: "Solution-Dyed", text: "Spinndüsengefärbt für exzellente Farbechtheit bei drastisch reduziertem Wasser- und Energieverbrauch." },
+    { iconKey: "shield", title: "Langlebig", text: "Auf lange Produktlebensdauer ausgelegt — weniger Abfall, mehr Nutzungsjahre." },
+  ],
+};
+
+export const nerioHighlights = {
+  eyebrow: "Auf einen Blick",
+  title: "NERIO Highlights",
+  stats: [
+    { value: "50 %", label: "recyceltes Ozean-PP", detail: "OceanCycle® zertifiziert" },
+    { value: "0", label: "PFAS", detail: "Komplett fluorfreie Produktion" },
+    { value: "7–8", label: "Lichtechtheit", detail: "Höchste Stufe der Bewertungsskala" },
+    { value: "< 0,1 %", label: "Wasseraufnahme", detail: "Praktisch wasserabweisend" },
+  ],
+};
+
+export const nerioTechnicalFacts = {
+  eyebrow: "Technische Daten",
+  title: "NERIO im Detail",
+  facts: [
+    { label: "Material", value: "100 % Olefin (50 % recycelt)" },
+    { label: "Gewicht", value: "ca. 200–230 g/m²" },
+    { label: "Färbung", value: "spinndüsengefärbt" },
+    { label: "Zertifizierung", value: "OceanCycle®" },
+    { label: "Lichtechtheit", value: "7–8 (BS EN ISO 105-B02)" },
+    { label: "UV-Beständigkeit", value: "5/5" },
+    { label: "PFAS", value: "Nicht nachgewiesen" },
+    { label: "Schimmelbeständigkeit", value: "Bestanden (AATCC 147)" },
+  ],
+};
+
+/* -------------------------------------------------------------------------- */
 /*  Fabric Patterns overview (catalog pp. 14–16)                              */
 /* -------------------------------------------------------------------------- */
 

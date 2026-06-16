@@ -137,7 +137,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || style === "nerio-story" || style === "nerio-oceancycle" || style === "nerio-promise" || style === "nerio-highlights" || style === "nerio-technical-facts" || style === "nerio-products-preview" || style === "nerio-final-cta" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -148,7 +148,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || style === "materials-catalog-cta" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || style === "materials-catalog-cta" || style === "nerio-final-cta" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -171,7 +171,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin") && (
+      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story") && (
         <MediaPickerField
           label="Bild"
           value={form.imageId || ""}
@@ -230,6 +230,10 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "materials-technology" && <MaterialsTechnologyFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "materials-olefin" && <MaterialsOlefinFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "materials-oceancycle" && <MaterialsOceanCycleFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-oceancycle" && <NerioOceanCycleFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-promise" && <NerioPromiseFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-highlights" && <NerioHighlightsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-technical-facts" && <NerioTechnicalFactsFields settings={form.settings} updateSettings={updateSettings} />}
 
       {helper && (
         <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1714,6 +1718,225 @@ function MaterialsOceanCycleFields({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function NerioOceanCycleFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const steps = Array.isArray(settings.steps) ? (settings.steps as ProcessStep[]) : [];
+  const highlights = Array.isArray(settings.highlights) ? (settings.highlights as string[]) : [];
+
+  function updateStep(index: number, field: keyof ProcessStep, value: string) {
+    const next = steps.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("steps", next);
+  }
+  function addStep() { updateSettings("steps", [...steps, { title: "", description: "" }]); }
+  function removeStep(index: number) { updateSettings("steps", steps.filter((_, i) => i !== index)); }
+  function updateHighlight(index: number, value: string) {
+    const next = [...highlights]; next[index] = value; updateSettings("highlights", next);
+  }
+  function addHighlight() { updateSettings("highlights", [...highlights, ""]); }
+  function removeHighlight(index: number) { updateSettings("highlights", highlights.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">OceanCycle Schritte ({steps.length})</p>
+          <button type="button" onClick={addStep} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Schritt</button>
+        </div>
+        {steps.map((step, i) => (
+          <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-700">{step.title || `Schritt ${i + 1}`}</span>
+              <button type="button" onClick={() => removeStep(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+                <input type="text" value={step.title} onChange={(e) => updateStep(i, "title", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+                <textarea rows={2} value={step.description} onChange={(e) => updateStep(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Highlights ({highlights.length})</p>
+          <button type="button" onClick={addHighlight} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Highlight</button>
+        </div>
+        {highlights.map((hl, i) => (
+          <div key={i} className="flex items-start gap-2">
+            <input type="text" value={hl} onChange={(e) => updateHighlight(i, e.target.value)} className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <button type="button" onClick={() => removeHighlight(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+interface NerioPromiseItem {
+  iconKey: string;
+  title: string;
+  text: string;
+}
+
+const NERIO_ICON_OPTIONS = [
+  { value: "recycle", label: "Recycling" },
+  { value: "droplet", label: "Tropfen (PFAS-frei)" },
+  { value: "sun", label: "Sonne (Solution-Dyed)" },
+  { value: "shield", label: "Schild (Langlebig)" },
+];
+
+function NerioPromiseFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const items = Array.isArray(settings.items) ? (settings.items as NerioPromiseItem[]) : [];
+
+  function updateItem(index: number, field: keyof NerioPromiseItem, value: string) {
+    const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+    updateSettings("items", next);
+  }
+  function addItem() { updateSettings("items", [...items, { iconKey: "shield", title: "", text: "" }]); }
+  function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Versprechen ({items.length})</p>
+        <button type="button" onClick={addItem} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Versprechen</button>
+      </div>
+      {items.map((item, i) => (
+        <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{item.title || `Versprechen ${i + 1}`}</span>
+            <button type="button" onClick={() => removeItem(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Icon</label>
+              <select value={item.iconKey} onChange={(e) => updateItem(i, "iconKey", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                {NERIO_ICON_OPTIONS.map((opt) => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+              <input type="text" value={item.title} onChange={(e) => updateItem(i, "title", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Text</label>
+              <textarea rows={2} value={item.text} onChange={(e) => updateItem(i, "text", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface NerioStat {
+  value: string;
+  label: string;
+  detail: string;
+}
+
+function NerioHighlightsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const stats = Array.isArray(settings.stats) ? (settings.stats as NerioStat[]) : [];
+
+  function updateStat(index: number, field: keyof NerioStat, value: string) {
+    const next = stats.map((s, i) => (i === index ? { ...s, [field]: value } : s));
+    updateSettings("stats", next);
+  }
+  function addStat() { updateSettings("stats", [...stats, { value: "", label: "", detail: "" }]); }
+  function removeStat(index: number) { updateSettings("stats", stats.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Statistiken ({stats.length})</p>
+        <button type="button" onClick={addStat} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Statistik</button>
+      </div>
+      {stats.map((stat, si) => (
+        <div key={si} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{stat.value || `Statistik ${si + 1}`}</span>
+            <button type="button" onClick={() => removeStat(si)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Wert</label>
+              <input type="text" value={stat.value} onChange={(e) => updateStat(si, "value", e.target.value)} placeholder="z.B. 50 %" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Label</label>
+              <input type="text" value={stat.label} onChange={(e) => updateStat(si, "label", e.target.value)} placeholder="z.B. recyceltes Ozean-PP" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Detail</label>
+              <input type="text" value={stat.detail} onChange={(e) => updateStat(si, "detail", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface TechFact {
+  label: string;
+  value: string;
+}
+
+function NerioTechnicalFactsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const facts = Array.isArray(settings.facts) ? (settings.facts as TechFact[]) : [];
+
+  function updateFact(index: number, field: keyof TechFact, value: string) {
+    const next = facts.map((f, i) => (i === index ? { ...f, [field]: value } : f));
+    updateSettings("facts", next);
+  }
+  function addFact() { updateSettings("facts", [...facts, { label: "", value: "" }]); }
+  function removeFact(index: number) { updateSettings("facts", facts.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Technische Fakten ({facts.length})</p>
+        <button type="button" onClick={addFact} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Fakt</button>
+      </div>
+      {facts.map((fact, i) => (
+        <div key={i} className="flex items-start gap-2">
+          <input type="text" value={fact.label} onChange={(e) => updateFact(i, "label", e.target.value)} placeholder="Eigenschaft" className="w-1/3 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          <input type="text" value={fact.value} onChange={(e) => updateFact(i, "value", e.target.value)} placeholder="Wert" className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          <button type="button" onClick={() => removeFact(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+        </div>
+      ))}
     </div>
   );
 }

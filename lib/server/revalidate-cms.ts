@@ -69,6 +69,7 @@ export function revalidateMaterials() {
   safeRevalidate("/materialien");
   safeRevalidate("/materialien/stoffe-muster");
   safeRevalidate("/materialien/technische-daten");
+  safeRevalidate("/nerio");
 }
 
 export function revalidateDownloads() {

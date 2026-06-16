@@ -95,4 +95,12 @@ export const pageHeroes: Record<string, PageHeroData> = {
     image: "/images/placeholders/page-heroes/stoff-technische-daten-hero.svg",
     alt: "Mosaroma Stoff und technische Daten Hero Platzhalter",
   },
+  nerio: {
+    eyebrow: "Nachhaltigkeit · OceanCycle®",
+    title: "NERIO — Aus dem Ozean geboren.",
+    description:
+      "Performance-Stoffe aus recyceltem Ozean-Polypropylen. OceanCycle® zertifiziert, PFAS-frei und spinndüsengefärbt.",
+    image: "/images/placeholders/page-heroes/materialien-hero.svg",
+    alt: "Mosaroma NERIO Nachhaltigkeits-Kollektion Hero",
+  },
 };

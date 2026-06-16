@@ -13,12 +13,17 @@ type ViewMode = "grid" | "matrix";
 
 interface Props {
   data: FabricLibraryData;
+  initialFamily?: string;
 }
 
-export default function FabricLibrary({ data }: Props) {
+export default function FabricLibrary({ data, initialFamily }: Props) {
   const { families, swatches, productTypes } = data;
 
-  const [activeFamily, setActiveFamily] = useState<string>("all");
+  const resolvedInitial =
+    initialFamily && families.some((f) => f.slug === initialFamily)
+      ? initialFamily
+      : "all";
+  const [activeFamily, setActiveFamily] = useState<string>(resolvedInitial);
   const [activeProductFilter, setActiveProductFilter] = useState<string>("");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");

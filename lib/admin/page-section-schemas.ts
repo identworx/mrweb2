@@ -267,6 +267,81 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       helper: true,
     },
   },
+  {
+    style: "nerio-story",
+    label: "NERIO Story",
+    description: "Helper-Section: Einleitung und Geschichte der NERIO-Linie.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-story",
+      helper: true,
+    },
+  },
+  {
+    style: "nerio-oceancycle",
+    label: "NERIO OceanCycle Kreislauf",
+    description: "Helper-Section: OceanCycle-Prozesskette mit Schritten und Highlights für NERIO.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-oceancycle",
+      helper: true,
+      steps: [{ title: "Schritt 1", description: "" }],
+      highlights: ["Erster Highlight"],
+    },
+  },
+  {
+    style: "nerio-promise",
+    label: "NERIO Versprechen",
+    description: "Helper-Section: Nachhaltigkeitsversprechen mit Icon-Karten.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-promise",
+      helper: true,
+      items: [{ iconKey: "recycle", title: "Titel", text: "Beschreibung" }],
+    },
+  },
+  {
+    style: "nerio-highlights",
+    label: "NERIO Highlights",
+    description: "Helper-Section: Statistiken und Kennzahlen der NERIO-Linie.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-highlights",
+      helper: true,
+      stats: [{ value: "50 %", label: "recycelt", detail: "" }],
+    },
+  },
+  {
+    style: "nerio-technical-facts",
+    label: "NERIO Technische Fakten",
+    description: "Helper-Section: Technische Daten und Materialspezifikationen.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-technical-facts",
+      helper: true,
+      facts: [{ label: "Material", value: "" }],
+    },
+  },
+  {
+    style: "nerio-products-preview",
+    label: "NERIO Stoffe Preview",
+    description: "Helper-Section: Vorschau der NERIO-Stoffe aus der Stoffbibliothek.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-products-preview",
+      helper: true,
+    },
+  },
+  {
+    style: "nerio-final-cta",
+    label: "NERIO CTA",
+    description: "Helper-Section: Abschließender CTA-Block der NERIO-Seite.",
+    sectionType: "CTA",
+    defaultSettings: {
+      style: "nerio-final-cta",
+      helper: true,
+    },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {
@@ -278,8 +353,10 @@ export function getStyleLabel(style: string): string {
 }
 
 export function isHelperSection(settings: Record<string, unknown>): boolean {
+  const style = String(settings.style ?? "");
   return (
     settings.helper === true ||
-    String(settings.style ?? "").startsWith("materials-")
+    style.startsWith("materials-") ||
+    style.startsWith("nerio-")
   );
 }

@@ -1,6 +1,6 @@
 # Admin CMS — Dokumentation
 
-Stand: 2026-06-15 (Phase 3: Core Sections CMS-pflegbar) | Branch: `claude/add-logo-i2yFH`
+Stand: 2026-06-16 (Phase 4: NERIO Sustainability Landing Page) | Branch: `claude/add-logo-i2yFH`
 
 ## 1. Technologie-Stack
 
@@ -2158,3 +2158,40 @@ Alle vorausgefuellt mit den bisherigen Hardcoded-Daten aus `materials.ts`. Idemp
 - [x] Stoffe-&-Muster-Vorschau steuerbar via `featuredOnMaterials`
 - [x] Katalog-CTA CMS-pflegbar via Helper-Section
 - [x] OceanCycle / Mackintosh-Technologie-Texte in CMS ueberfuehren (Phase 3: Helper-Sections)
+- [x] NERIO Sustainability Landing Page mit 7 Helper-Sections (Phase 4)
+- [x] FabricLibrary `?family=nerio` Query-Parameter-Support
+- [x] NERIO in Hauptnavigation aufgenommen
+
+### Phase 4: NERIO Sustainability Landing Page
+
+**Route:** `/nerio`
+
+**Neue Helper-Sections (7 Stueck):**
+
+| Style | Label | Zweck |
+|---|---|---|
+| `nerio-story` | NERIO Story | Einleitungstext + optionales Bild (MediaPicker) |
+| `nerio-oceancycle` | NERIO OceanCycle Kreislauf | Prozesskette mit Schritten und Highlights |
+| `nerio-promise` | NERIO Versprechen | Nachhaltigkeitsversprechen mit Icon-Karten |
+| `nerio-highlights` | NERIO Highlights | Statistiken und Kennzahlen (dunkler Bereich) |
+| `nerio-technical-facts` | NERIO Technische Fakten | Technische Daten-Tabelle |
+| `nerio-products-preview` | NERIO Stoffe Preview | Vorschau NERIO-Stoffe aus Stoffbibliothek |
+| `nerio-final-cta` | NERIO CTA | Abschliessender CTA-Block |
+
+**Admin-Pflege:** Alle Sections ueber Admin → Seiten → nerio bearbeitbar. Jede Section hat eigene Admin-Felder (Schritte, Highlights, Statistiken, Fakten etc.).
+
+**Backfill-Script:**
+```bash
+npx tsx scripts/backfill-nerio-sections.ts          # Dry-Run
+npx tsx scripts/backfill-nerio-sections.ts --apply   # Anwenden
+```
+Erstellt Page "nerio" (PUBLISHED) und alle 7 Helper-Sections mit Fallback-Daten. Idempotent.
+
+**FabricLibrary Query-Parameter:**
+`/materialien/stoffe-muster?family=nerio` oeffnet die Stoffbibliothek mit vorausgewaehltem NERIO-Filter.
+
+**Navigation:**
+NERIO-Link in `lib/mosaroma/navigation.ts` zwischen "Kollektionen" und "Materialien" eingefuegt.
+
+**Revalidation:**
+`/nerio` wird bei Material-Aenderungen automatisch revalidiert via `revalidateMaterials()`.

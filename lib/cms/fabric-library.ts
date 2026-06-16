@@ -197,6 +197,37 @@ export async function getFabricPreviewSwatches(
   }
 }
 
+export async function getNerioFabricSwatches(): Promise<FabricPreviewSwatch[]> {
+  try {
+    const nerioFamily = await prisma.fabricFamily.findFirst({
+      where: { slug: "nerio", isActive: true },
+    });
+    if (!nerioFamily) return [];
+
+    const swatches = await prisma.fabricSwatch.findMany({
+      where: { familyId: nerioFamily.id, isActive: true },
+      orderBy: [{ order: "asc" }, { name: "asc" }],
+      include: {
+        family: { select: { name: true } },
+        swatchImage: { select: { url: true, normalizedUrl: true } },
+      },
+    });
+
+    return swatches.map((s) => ({
+      id: s.id,
+      slug: s.slug || "",
+      name: s.name || "",
+      articleNumber: s.articleNumber || "",
+      familyName: s.family?.name || "",
+      swatchImageUrl: getMediaUrl(s.swatchImage, ""),
+      colorHex: s.colorHex || "",
+    }));
+  } catch (error) {
+    console.error("CMS: getNerioFabricSwatches failed", error);
+    return [];
+  }
+}
+
 type DbFamily = NonNullable<Awaited<ReturnType<typeof prisma.fabricFamily.findFirst>>>;
 
 type DbSwatch = NonNullable<
