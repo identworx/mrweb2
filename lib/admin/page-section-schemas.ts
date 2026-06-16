@@ -285,7 +285,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     defaultSettings: {
       style: "nerio-oceancycle",
       helper: true,
-      steps: [{ title: "Schritt 1", description: "", imageId: null }],
+      steps: [{ title: "Schritt 1", description: "", imageId: null, imageFit: "contain" }],
       highlights: ["Erster Highlight"],
     },
   },

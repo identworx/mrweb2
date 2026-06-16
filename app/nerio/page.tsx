@@ -93,7 +93,7 @@ export default async function NerioPage() {
     fallbackParagraphs: nerioStory.paragraphs,
   };
 
-  type OceanStep = { title: string; description: string; imageId?: string | null };
+  type OceanStep = { title: string; description: string; imageId?: string | null; imageFit?: "contain" | "cover" };
   const oceanSteps: OceanStep[] =
     Array.isArray(oceanData?.settings?.steps) &&
     (oceanData.settings.steps as OceanStep[]).length > 0
@@ -111,6 +111,7 @@ export default async function NerioPage() {
     fallbackDescription: oceanCycleProcess.description,
     steps: oceanSteps.map((s) => ({
       ...s,
+      imageFit: s.imageFit || "contain",
       image: s.imageId ? oceanStepImages[s.imageId] ?? null : null,
     })),
     highlights:
@@ -411,7 +412,7 @@ export default async function NerioPage() {
                               src={step.image.url}
                               alt={step.image.alt || step.title}
                               fill
-                              className="object-cover"
+                              className={step.imageFit === "cover" ? "object-cover" : "object-contain p-4"}
                               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                           ) : (

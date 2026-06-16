@@ -994,6 +994,7 @@ interface ProcessStep {
   title: string;
   description: string;
   imageId?: string | null;
+  imageFit?: "contain" | "cover";
 }
 
 function ProcessChainFields({
@@ -1775,6 +1776,20 @@ function NerioOceanCycleFields({
               onChange={(id) => updateStep(i, "imageId", id || null)}
               placeholder="Kein Bild — Teal-Platzhalter wird angezeigt"
             />
+            {step.imageId && (
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Bilddarstellung</label>
+                <select
+                  value={step.imageFit || "contain"}
+                  onChange={(e) => updateStep(i, "imageFit", e.target.value as "contain" | "cover")}
+                  className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="contain">Einpassen (contain) — für Icons & Lineart</option>
+                  <option value="cover">Füllen (cover) — für Fotos</option>
+                </select>
+                <p className="text-xs text-gray-400 mt-1">Icons/Lineart: „Einpassen" wählen. Fotos: „Füllen" wählen.</p>
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -2257,9 +2257,15 @@ Jedes Video hat folgende Felder:
 - Titel
 - Beschreibung
 - Bild per MediaPicker (optional)
+- Bilddarstellung: „Einpassen" (contain) oder „Füllen" (cover)
+
+**Bilddarstellung (imageFit):**
+- **Einpassen (contain)** — Standard. Bild wird komplett angezeigt mit Padding. Ideal für Icons, Lineart und Grafiken.
+- **Füllen (cover)** — Bild füllt den gesamten Bereich aus, wird ggf. beschnitten. Ideal für Fotos.
+- Das Dropdown erscheint nur, wenn ein Bild gesetzt ist.
 
 **Verhalten:**
-- Wenn ein Bild gesetzt ist: CMS-Bild wird in 4:3-Format mit `object-fit: cover` angezeigt
+- Wenn ein Bild gesetzt ist: CMS-Bild wird in 4:3-Format angezeigt (Darstellungsmodus per `imageFit`)
 - Wenn kein Bild gesetzt ist: hochwertiger Teal-Gradient-Platzhalter mit Nummer wird angezeigt
 - Alt-Text aus MediaAsset
 - Upload-Limit bleibt 15 MB
