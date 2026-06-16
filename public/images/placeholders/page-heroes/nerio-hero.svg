@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 720" width="1920" height="720">
+<defs>
+    <linearGradient id="bg-nrhero" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#0C3D40"/>
+      <stop offset="50%" stop-color="#1B6B6D"/>
+      <stop offset="100%" stop-color="#1A5C5E"/>
+    </linearGradient>
+    <pattern id="weave-nrhero" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+      <line x1="10" y1="0" x2="10" y2="20" stroke="rgba(0,0,0,0.03)" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="weave-nrhero-h" patternUnits="userSpaceOnUse" width="24" height="24" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="24" stroke="rgba(255,255,255,0.04)" stroke-width="0.6"/>
+      <line x1="12" y1="0" x2="12" y2="24" stroke="rgba(0,0,0,0.03)" stroke-width="0.4"/>
+    </pattern>
+</defs>
+
+  <rect width="1920" height="720" fill="url(#bg-nrhero)"/>
+  <rect width="1920" height="720" fill="url(#weave-nrhero)"/>
+  <rect width="1920" height="720" fill="url(#weave-nrhero-h)" opacity="0.7"/>
+
+  <!-- Ocean depth layers -->
+  <path d="M0,480 Q320,440 640,470 Q960,500 1280,460 Q1600,420 1920,450 L1920,720 L0,720 Z" fill="rgba(0,0,0,0.08)"/>
+  <path d="M0,540 Q400,500 800,530 Q1200,560 1600,510 Q1760,500 1920,510 L1920,720 L0,720 Z" fill="rgba(0,0,0,0.06)"/>
+  <path d="M0,600 Q480,570 960,590 Q1440,610 1920,580 L1920,720 L0,720 Z" fill="rgba(0,0,0,0.05)"/>
+
+  <!-- OceanCycle circle motif -->
+  <circle cx="1480" cy="280" r="110" fill="none" stroke="rgba(255,255,255,0.035)" stroke-width="1.5"/>
+  <circle cx="1480" cy="280" r="90" fill="none" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+  <circle cx="1480" cy="280" r="70" fill="none" stroke="rgba(255,255,255,0.015)" stroke-width="0.8"/>
+
+  <!-- Fabric thread detail -->
+  <line x1="300" y1="200" x2="900" y2="200" stroke="rgba(255,255,255,0.03)" stroke-width="0.6"/>
+  <line x1="280" y1="220" x2="880" y2="220" stroke="rgba(255,255,255,0.025)" stroke-width="0.6"/>
+  <line x1="320" y1="240" x2="920" y2="240" stroke="rgba(255,255,255,0.03)" stroke-width="0.6"/>
+  <line x1="290" y1="260" x2="890" y2="260" stroke="rgba(255,255,255,0.02)" stroke-width="0.6"/>
+
+  <text x="960" y="702" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11" letter-spacing="4" fill="rgba(255,255,255,0.15)" text-anchor="middle" font-variant="small-caps">MOSAROMA</text>
+</svg>

@@ -100,7 +100,7 @@ export const pageHeroes: Record<string, PageHeroData> = {
     title: "NERIO — Aus dem Ozean geboren.",
     description:
       "Performance-Stoffe aus recyceltem Ozean-Polypropylen. OceanCycle® zertifiziert, PFAS-frei und spinndüsengefärbt.",
-    image: "/images/placeholders/page-heroes/materialien-hero.svg",
+    image: "/images/placeholders/page-heroes/nerio-hero.svg",
     alt: "Mosaroma NERIO Nachhaltigkeits-Kollektion Hero",
   },
 };

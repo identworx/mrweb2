@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ScrollReveal from "@/components/ScrollReveal";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
@@ -38,6 +37,14 @@ export async function generateMetadata(): Promise<Metadata> {
       "NERIO: Performance-Stoffe aus 50 % recyceltem Ozean-Polypropylen. OceanCycle® zertifiziert, PFAS-frei und spinndüsengefärbt für höchste Farbechtheit.",
   };
 }
+
+const NERIO_PRODUCT_TYPES = [
+  { slug: "dekokissen", name: "Deko-Kissen", image: "/images/placeholders/categories/dekokissen.svg" },
+  { slug: "hochlehner", name: "Hochlehner", image: "/images/placeholders/categories/hochlehner.svg" },
+  { slug: "niedriglehner", name: "Niedriglehner", image: "/images/placeholders/categories/niedriglehner.svg" },
+  { slug: "sitzkissen", name: "Sitzkissen", image: "/images/placeholders/categories/sitzkissen.svg" },
+  { slug: "bankauflagen", name: "Bankauflagen", image: "/images/placeholders/categories/bankauflagen.svg" },
+];
 
 const PROMISE_ICONS: Record<string, React.ReactNode> = {
   recycle: (
@@ -160,11 +167,11 @@ export default async function NerioPage() {
   };
 
   const productsPreview = {
-    eyebrow: productsData?.eyebrow || "Stoffbibliothek",
+    eyebrow: productsData?.eyebrow || "Produkte & Stoffe",
     title: productsData?.title || "NERIO Stoffe entdecken",
     content: productsData?.content?.trim() || null,
     fallbackDescription:
-      "Alle NERIO-Stoffe aus recyceltem Ozean-Polypropylen auf einen Blick. Filtern Sie nach Muster, Farbe und Produktverfügbarkeit.",
+      "Alle NERIO-Stoffe aus recyceltem Ozean-Polypropylen auf einen Blick — verfügbar als Auflagen, Kissen und Accessoires.",
   };
 
   const cta = {
@@ -191,13 +198,62 @@ export default async function NerioPage() {
     <>
       <Header {...layout.header} />
       <main>
-        <PageHero
-          eyebrow={hero.eyebrow}
-          title={hero.title}
-          description={hero.description}
-          image={hero.image}
-          alt={hero.alt}
-        />
+        {/* NERIO Hero */}
+        <section className="relative overflow-hidden h-[400px] md:h-[480px] flex items-end">
+          <Image
+            src={hero.image}
+            alt={hero.alt}
+            fill
+            className="object-cover"
+            sizes="100vw"
+            priority
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(12,61,64,0.92) 0%, rgba(12,61,64,0.7) 30%, rgba(12,61,64,0.45) 55%, rgba(12,61,64,0.2) 80%, rgba(12,61,64,0.1) 100%)",
+            }}
+          />
+          <div className="relative w-full pb-10 md:pb-14">
+            <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+              {hero.eyebrow && (
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-px bg-pumpkin" />
+                  <p className="font-accent text-pumpkin text-[11px] tracking-[0.3em] uppercase">
+                    {hero.eyebrow}
+                  </p>
+                </div>
+              )}
+
+              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[3rem] font-bold tracking-tight leading-[1.08] max-w-3xl">
+                {hero.title}
+              </h1>
+
+              {hero.description && (
+                <p className="font-body text-white/70 text-sm md:text-base leading-[1.7] mt-3 max-w-2xl">
+                  {hero.description}
+                </p>
+              )}
+
+              <div className="flex flex-wrap gap-4 mt-8">
+                <Link
+                  href="/materialien/stoffe-muster?family=nerio"
+                  className="btn-primary"
+                >
+                  Stoffe ansehen
+                </Link>
+                <Link
+                  href="/kollektionen/nerio-oceana"
+                  className="btn-outline-white"
+                >
+                  Collection ansehen
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <BreadcrumbBar items={[{ label: "NERIO" }]} />
 
         {hasCmsSections ? (
@@ -213,9 +269,7 @@ export default async function NerioPage() {
             {/* Story */}
             <section className="pt-12 md:pt-16 pb-24 md:pb-32 bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div
-                  className={`grid grid-cols-1 items-start gap-10 lg:gap-16 ${storyImage ? "lg:grid-cols-[5fr_4fr]" : ""}`}
-                >
+                <div className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] items-start gap-10 lg:gap-16">
                   <div>
                     <div className="flex items-center gap-4 mb-5">
                       <div className="accent-line" />
@@ -244,23 +298,26 @@ export default async function NerioPage() {
                             {p}
                           </p>
                         ))}
+                        <div className="mt-3 bg-[#1B6B6D]/[0.06] p-5 md:p-6">
+                          <p className="font-heading text-anthracite text-base md:text-lg font-semibold leading-snug">
+                            50 % recyceltes Ozean-Polypropylen — keine Kompromisse bei Performance.
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
 
-                  {storyImage && (
-                    <ScrollReveal>
-                      <div className="lg:mt-16">
-                        <Image
-                          src={storyImage.url}
-                          alt={storyImage.alt}
-                          width={600}
-                          height={460}
-                          className="w-full aspect-[5/4] object-cover shadow-[0_6px_28px_rgba(45,45,45,0.06)]"
-                        />
-                      </div>
-                    </ScrollReveal>
-                  )}
+                  <ScrollReveal>
+                    <div className="lg:mt-16">
+                      <Image
+                        src={storyImage?.url || "/images/placeholders/nerio/story.svg"}
+                        alt={storyImage?.alt || "NERIO Stoffnahaufnahme"}
+                        width={600}
+                        height={480}
+                        className="w-full aspect-[5/4] object-cover shadow-[0_6px_28px_rgba(45,45,45,0.06)]"
+                      />
+                    </div>
+                  </ScrollReveal>
                 </div>
               </div>
             </section>
@@ -290,41 +347,48 @@ export default async function NerioPage() {
                   </p>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-light-gray">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {ocean.steps.map((step, i) => (
                     <ScrollReveal key={step.title} delay={i * 100}>
-                      <div className="bg-white p-6 md:p-8 h-full relative">
-                        <div className="flex items-center gap-3 mb-4">
-                          <span className="flex items-center justify-center w-8 h-8 bg-pumpkin/10 text-pumpkin font-heading text-sm font-bold">
-                            {i + 1}
-                          </span>
-                          {i < ocean.steps.length - 1 && (
-                            <svg
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              className="text-pumpkin/40 absolute right-4 top-8 hidden lg:block"
-                            >
-                              <path d="M4.5 12h15m0 0l-5.5-5.5m5.5 5.5l-5.5 5.5" />
-                            </svg>
-                          )}
+                      <div className="bg-white h-full">
+                        <div
+                          className="aspect-[4/3] relative overflow-hidden"
+                          style={{
+                            background: `linear-gradient(135deg, ${
+                              ["#0C3D40", "#145A5C", "#1B6B6D", "#1A5C5E"][i] || "#1B6B6D"
+                            }, ${
+                              ["#145A5C", "#1B6B6D", "#2E8B8B", "#1B6B6D"][i] || "#165858"
+                            })`,
+                          }}
+                        >
+                          <div
+                            className="absolute inset-0"
+                            style={{
+                              backgroundImage:
+                                "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.03) 10px, rgba(255,255,255,0.03) 11px)",
+                            }}
+                          />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="w-12 h-12 flex items-center justify-center bg-white/10 text-white/60 font-heading text-lg font-bold">
+                              {i + 1}
+                            </span>
+                          </div>
                         </div>
-                        <h3 className="font-heading text-anthracite text-base font-bold mb-2">
-                          {step.title}
-                        </h3>
-                        <p className="font-body text-text-gray text-sm leading-[1.8]">
-                          {step.description}
-                        </p>
+                        <div className="p-6 md:p-8">
+                          <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
+                            {step.title}
+                          </h3>
+                          <p className="font-body text-text-gray text-sm leading-[1.8]">
+                            {step.description}
+                          </p>
+                        </div>
                       </div>
                     </ScrollReveal>
                   ))}
                 </div>
 
                 <ScrollReveal>
-                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {ocean.highlights.map((hl) => (
                       <div key={hl} className="flex items-start gap-3">
                         <svg
@@ -472,61 +536,137 @@ export default async function NerioPage() {
               </div>
             </section>
 
-            {/* NERIO Stoffe Preview */}
-            {nerioSwatches.length > 0 && (
-              <section className="section-padding bg-white">
-                <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                  <div className="flex items-center gap-4 mb-5">
-                    <div className="accent-line" />
-                    <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                      {productsPreview.eyebrow}
-                    </p>
-                  </div>
-
-                  <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                    {productsPreview.title}
-                  </h2>
-
-                  {productsPreview.content ? (
-                    <RichTextRenderer
-                      html={productsPreview.content}
-                      className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10 [&_p+p]:mt-5"
-                    />
-                  ) : (
-                    <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10">
-                      {productsPreview.fallbackDescription}
-                    </p>
-                  )}
-
-                  <FabricLibraryPreview swatches={nerioSwatches} />
-
-                  <div className="mt-10 flex items-center gap-4">
-                    <Link
-                      href="/materialien/stoffe-muster?family=nerio"
-                      className="btn-primary"
-                    >
-                      Alle NERIO-Stoffe ansehen
-                    </Link>
-                  </div>
+            {/* Produkte & Stoffe */}
+            <section className="section-padding bg-white">
+              <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+                <div className="flex items-center gap-4 mb-5">
+                  <div className="accent-line" />
+                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                    {productsPreview.eyebrow}
+                  </p>
                 </div>
-              </section>
-            )}
 
-            {/* CTA */}
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+                  {productsPreview.title}
+                </h2>
+
+                {productsPreview.content ? (
+                  <RichTextRenderer
+                    html={productsPreview.content}
+                    className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10 [&_p+p]:mt-5"
+                  />
+                ) : (
+                  <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10">
+                    {productsPreview.fallbackDescription}
+                  </p>
+                )}
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                  {NERIO_PRODUCT_TYPES.map((type) => (
+                    <Link
+                      key={type.slug}
+                      href="/materialien/stoffe-muster?family=nerio"
+                      className="group"
+                    >
+                      <div className="aspect-square overflow-hidden bg-cream relative">
+                        <Image
+                          src={type.image}
+                          alt={type.name}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        />
+                      </div>
+                      <p className="font-heading text-anthracite text-sm font-semibold mt-3 group-hover:text-pumpkin transition-colors duration-300">
+                        {type.name}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+
+                {nerioSwatches.length > 0 && (
+                  <div className="mt-16">
+                    <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
+                      Aktuelle NERIO-Stoffe
+                    </h3>
+                    <FabricLibraryPreview swatches={nerioSwatches} />
+                  </div>
+                )}
+
+                <div className="mt-10">
+                  <Link
+                    href="/materialien/stoffe-muster?family=nerio"
+                    className="btn-primary"
+                  >
+                    Alle NERIO-Stoffe ansehen
+                  </Link>
+                </div>
+              </div>
+            </section>
+
+            {/* Final CTA */}
             <section className="section-padding bg-anthracite">
-              <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+              <div className="mx-auto max-w-[1400px] px-5 md:px-10">
+                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-center">
                   {cta.title}
                 </h2>
-                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
+                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-12 text-center">
                   {cta.content}
                 </p>
-                <Link
-                  href={cta.buttonHref}
-                  className="btn-outline-white"
-                >
-                  {cta.buttonLabel}
-                </Link>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                  <Link
+                    href="/materialien/stoffe-muster?family=nerio"
+                    className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
+                  >
+                    <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="3" width="18" height="18" />
+                        <line x1="3" y1="9" x2="21" y2="9" />
+                        <line x1="3" y1="15" x2="21" y2="15" />
+                        <line x1="9" y1="3" x2="9" y2="21" />
+                        <line x1="15" y1="3" x2="15" y2="21" />
+                      </svg>
+                    </div>
+                    <h3 className="font-heading text-white text-lg font-bold mb-2">
+                      NERIO Stoffe
+                    </h3>
+                    <p className="font-body text-white/50 text-sm leading-relaxed mb-6">
+                      Alle Stoffe, Muster und Farben der NERIO-Linie entdecken.
+                    </p>
+                    <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
+                      Stoffe ansehen
+                    </span>
+                  </Link>
+
+                  <Link
+                    href="/kollektionen/nerio-oceana"
+                    className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
+                  >
+                    <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                      </svg>
+                    </div>
+                    <h3 className="font-heading text-white text-lg font-bold mb-2">
+                      NERIO Collection
+                    </h3>
+                    <p className="font-body text-white/50 text-sm leading-relaxed mb-6">
+                      Die NERIO Oceana Kollektion mit allen Produkten.
+                    </p>
+                    <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
+                      Collection ansehen
+                    </span>
+                  </Link>
+                </div>
+
+                <div className="text-center mt-10">
+                  <Link href={cta.buttonHref} className="btn-outline-white">
+                    {cta.buttonLabel}
+                  </Link>
+                </div>
               </div>
             </section>
           </>
