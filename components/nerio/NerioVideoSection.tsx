@@ -30,6 +30,10 @@ interface NerioVideoSectionProps {
 /*  Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
+function isHtml(text: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(text);
+}
+
 function parseYouTubeId(url: string): string | null {
   try {
     const u = new URL(url);
@@ -48,12 +52,12 @@ function parseYouTubeId(url: string): string | null {
 function PlayIcon({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center ${className}`}
+      className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#FAF8F5]/90 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.15)] flex items-center justify-center ${className}`}
     >
       <svg
         viewBox="0 0 24 24"
         fill="currentColor"
-        className="w-6 h-6 text-white ml-0.5"
+        className="w-6 h-6 md:w-7 md:h-7 text-[#0C3D40] ml-0.5"
         aria-hidden="true"
       >
         <path d="M8 5v14l11-7z" />
@@ -227,9 +231,12 @@ function VideoCard({
           </div>
         )}
 
+        {/* Scrim for contrast on thumbnails */}
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors duration-300" />
+
         {/* Play button overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <PlayIcon className="transition-transform duration-300 motion-safe:group-hover:scale-110 opacity-80 group-hover:opacity-100" />
+          <PlayIcon className="transition-transform duration-300 motion-safe:group-hover:scale-105" />
         </div>
 
         {/* Label badge */}
@@ -300,9 +307,16 @@ export default function NerioVideoSection({
         </h2>
 
         {/* Intro */}
-        <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-          {intro}
-        </p>
+        {intro && (isHtml(intro) ? (
+          <div
+            className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12 [&_p+p]:mt-4"
+            dangerouslySetInnerHTML={{ __html: intro }}
+          />
+        ) : (
+          <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
+            {intro}
+          </p>
+        ))}
 
         {/* Video grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
