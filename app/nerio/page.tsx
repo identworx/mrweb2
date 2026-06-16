@@ -24,8 +24,10 @@ import {
   getServicePageBySlug,
   getSectionData,
   getSectionImage,
+  resolveVideoThumbnails,
 } from "@/lib/cms/service-pages";
 import { getNerioFabricSwatches } from "@/lib/cms/fabric-library";
+import NerioVideoSection from "@/components/nerio/NerioVideoSection";
 
 export const revalidate = 60;
 
@@ -60,6 +62,7 @@ export default async function NerioPage() {
     oceanData,
     promiseData,
     highlightsData,
+    videosData,
     techFactsData,
     productsData,
     ctaData,
@@ -74,6 +77,7 @@ export default async function NerioPage() {
     getSectionData("nerio", "nerio-oceancycle"),
     getSectionData("nerio", "nerio-promise"),
     getSectionData("nerio", "nerio-highlights"),
+    getSectionData("nerio", "nerio-videos"),
     getSectionData("nerio", "nerio-technical-facts"),
     getSectionData("nerio", "nerio-products-preview"),
     getSectionData("nerio", "nerio-final-cta"),
@@ -124,6 +128,73 @@ export default async function NerioPage() {
       (highlightsData.settings.stats as Array<{ value: string; label: string; detail: string }>).length > 0
         ? (highlightsData.settings.stats as Array<{ value: string; label: string; detail: string }>)
         : nerioHighlights.stats,
+  };
+
+  const fallbackVideos = [
+    {
+      enabled: true,
+      youtubeUrl: "https://www.youtube.com/watch?v=DzLeef6Mxak",
+      title: "Vom Fischernetz zum neuen Rohstoff",
+      description: "Der Film zeigt, wie recycelte Fischernetze zu Kunststoffgranulat verarbeitet werden. Dieser Schritt macht aus gesammeltem Material wieder einen nutzbaren Rohstoff für neue Anwendungen.",
+      startSeconds: null,
+      thumbnailMediaId: null,
+      label: "Prozessvideo",
+      order: 1,
+    },
+    {
+      enabled: true,
+      youtubeUrl: "https://www.youtube.com/watch?v=OwGfs0qwIlE&t=26s",
+      title: "Textilkreisläufe neu gedacht",
+      description: "Ein Einblick in neue Recyclingprozesse, bei denen textile Materialien effizienter wiederverwertet und für neue Produktkreisläufe vorbereitet werden.",
+      startSeconds: 26,
+      thumbnailMediaId: null,
+      label: "Recycling",
+      order: 2,
+    },
+    {
+      enabled: true,
+      youtubeUrl: "https://www.youtube.com/watch?v=xP6PFrg9IHY",
+      title: "Ein Material. Ein klarerer Kreislauf.",
+      description: "Das Video zeigt den Ansatz eines sortenreinen Polypropylen-Systems. Der Fokus liegt auf einfacherer Wiederverwertung, reduzierter Materialkomplexität und zukunftsfähigen Kreisläufen.",
+      startSeconds: null,
+      thumbnailMediaId: null,
+      label: "Materialkreislauf",
+      order: 3,
+    },
+  ];
+
+  const rawVideos =
+    Array.isArray(videosData?.settings?.videos) &&
+    (videosData.settings.videos as typeof fallbackVideos).length > 0
+      ? (videosData.settings.videos as typeof fallbackVideos)
+      : fallbackVideos;
+
+  const videoThumbnails = await resolveVideoThumbnails(
+    videosData?.settings ?? { videos: rawVideos },
+  );
+
+  const nerioVideos = {
+    eyebrow: videosData?.eyebrow || "Prozesse & Kreisläufe",
+    title: videosData?.title || "Wie aus Verantwortung neues Material entsteht",
+    intro:
+      videosData?.content?.trim() ||
+      "Die NERIO Materialstory wird greifbarer, wenn man die einzelnen Schritte sieht: vom gesammelten Rohstoff über Aufbereitung und Recycling bis hin zu neuen Anwendungen im Textilbereich.",
+    videos: rawVideos
+      .filter((v) => v.enabled)
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+      .map((v) => {
+        const thumb = v.thumbnailMediaId ? videoThumbnails[v.thumbnailMediaId] : null;
+        return {
+          enabled: v.enabled,
+          youtubeUrl: v.youtubeUrl,
+          title: v.title,
+          description: v.description,
+          startSeconds: v.startSeconds ?? null,
+          thumbnailUrl: thumb?.url ?? null,
+          thumbnailAlt: thumb?.alt ?? null,
+          label: v.label ?? null,
+        };
+      }),
   };
 
   const techFacts = {
@@ -450,6 +521,14 @@ export default async function NerioPage() {
                 </div>
               </div>
             </section>
+
+            {/* Videos */}
+            <NerioVideoSection
+              eyebrow={nerioVideos.eyebrow}
+              title={nerioVideos.title}
+              intro={nerioVideos.intro}
+              videos={nerioVideos.videos}
+            />
 
             {/* Technische Fakten */}
             <section className="section-padding bg-cream">

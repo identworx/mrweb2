@@ -2195,3 +2195,54 @@ NERIO-Link in `lib/mosaroma/navigation.ts` zwischen "Kollektionen" und "Material
 
 **Revalidation:**
 `/nerio` wird bei Material-Aenderungen automatisch revalidiert via `revalidateMaterials()`.
+
+### Section: nerio-videos
+
+**Position auf `/nerio`:** Zwischen "NERIO Highlights" und "NERIO im Detail" (Technische Fakten)
+
+**Pflegepfad:** `/admin/pages` → NERIO → Seitenbereiche → `nerio-videos`
+
+**Section-Felder:**
+- **Eyebrow** — Oberer Akzent-Text (Standard: „Prozesse & Kreisläufe")
+- **Titel** — Überschrift (Standard: „Wie aus Verantwortung neues Material entsteht")
+- **Inhalt** — Einleitungstext (Rich Text)
+
+**Video-Felder (3 Slots):**
+
+Jedes Video hat folgende Felder:
+- **Aktiv** — Checkbox, steuert ob das Video angezeigt wird
+- **Reihenfolge** — Numerische Sortierung
+- **YouTube URL** — Vollständige YouTube-URL (z.B. `https://www.youtube.com/watch?v=...`)
+- **Titel** — Deutscher Videotitel
+- **Beschreibung** — Deutsche Kurzbeschreibung
+- **Startzeit (Sekunden)** — Optional, z.B. `26` für Start bei 0:26
+- **Vorschaubild** — Optional per MediaPicker; wenn leer, wird ein hochwertiger Placeholder angezeigt
+- **Label** — Optionaler Tag, z.B. „Prozessvideo", „Recycling", „Materialkreislauf"
+
+**YouTube Datenschutz / Lazy Load:**
+- YouTube-iframe wird erst nach Klick geladen (kein initialer Seitenaufruf)
+- Embed über `youtube-nocookie.com`
+- Hinweis auf jeder Karte: „Mit Klick wird ein YouTube-Video geladen."
+- Autoplay nach Klick (`autoplay=1`)
+
+**Thumbnail / Vorschaubild:**
+- Optional per MediaPicker pro Video
+- Wenn gesetzt: Bild wird in 16:9 Format mit `object-fit: cover` angezeigt
+- Wenn leer: hochwertiger Ocean-Teal Placeholder mit Play-Button
+- Alt-Text aus MediaAsset
+- Upload-Limit bleibt 15 MB
+
+**Backfill-Script:** `scripts/backfill-nerio-videos-section.ts`
+- Dry-run: `npx tsx scripts/backfill-nerio-videos-section.ts`
+- Apply: `npx tsx scripts/backfill-nerio-videos-section.ts --apply`
+- Idempotent — überschreibt keine manuell gepflegten Inhalte
+
+**Production-Hinweis:**
+1. DB Backup erstellen
+2. Code aktualisieren
+3. Backfill ausführen (dry-run → apply)
+4. Build + Restart
+
+**Rollback:**
+- Section `nerio-videos` im CMS deaktivieren oder löschen
+- Seite zeigt dann nur Fallback-Videos (keine kaputte Darstellung)

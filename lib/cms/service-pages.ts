@@ -160,6 +160,39 @@ export async function getSectionData(
   }
 }
 
+export interface VideoThumbnail {
+  url: string;
+  alt: string;
+}
+
+export async function resolveVideoThumbnails(
+  settings: Record<string, unknown>,
+): Promise<Record<string, VideoThumbnail>> {
+  const videos = Array.isArray(settings.videos) ? settings.videos : [];
+  const mediaIds = videos
+    .map((v: any) => v?.thumbnailMediaId)
+    .filter((id: unknown): id is string => typeof id === "string" && id.length > 0);
+
+  if (mediaIds.length === 0) return {};
+
+  try {
+    const assets = await prisma.mediaAsset.findMany({
+      where: { id: { in: mediaIds } },
+    });
+
+    const result: Record<string, VideoThumbnail> = {};
+    for (const asset of assets) {
+      const url = getMediaUrl(asset, "");
+      if (url) {
+        result[asset.id] = { url, alt: asset.alt || "" };
+      }
+    }
+    return result;
+  } catch {
+    return {};
+  }
+}
+
 function parseSettings(raw: unknown): Record<string, unknown> {
   if (typeof raw === "object" && raw !== null && !Array.isArray(raw)) {
     return raw as Record<string, unknown>;

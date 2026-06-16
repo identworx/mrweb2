@@ -137,7 +137,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || style === "nerio-story" || style === "nerio-oceancycle" || style === "nerio-promise" || style === "nerio-highlights" || style === "nerio-technical-facts" || style === "nerio-products-preview" || style === "nerio-final-cta" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || style === "nerio-story" || style === "nerio-oceancycle" || style === "nerio-promise" || style === "nerio-highlights" || style === "nerio-technical-facts" || style === "nerio-products-preview" || style === "nerio-videos" || style === "nerio-final-cta" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -234,6 +234,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "nerio-promise" && <NerioPromiseFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-highlights" && <NerioHighlightsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-technical-facts" && <NerioTechnicalFactsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-videos" && <NerioVideosFields settings={form.settings} updateSettings={updateSettings} />}
 
       {helper && (
         <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1987,6 +1988,198 @@ function JsonFallbackField({
         }`}
       />
       {error && <p className="text-xs text-red-600">{error}</p>}
+    </div>
+  );
+}
+
+interface NerioVideoEntry {
+  enabled: boolean;
+  order: number;
+  youtubeUrl: string;
+  title: string;
+  description: string;
+  startSeconds: number | null;
+  thumbnailMediaId: string | null;
+  label: string;
+}
+
+const EMPTY_VIDEO: NerioVideoEntry = {
+  enabled: true,
+  order: 1,
+  youtubeUrl: "",
+  title: "",
+  description: "",
+  startSeconds: null,
+  thumbnailMediaId: null,
+  label: "",
+};
+
+function NerioVideosFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const videos = Array.isArray(settings.videos)
+    ? (settings.videos as NerioVideoEntry[])
+    : [{ ...EMPTY_VIDEO }, { ...EMPTY_VIDEO, order: 2 }, { ...EMPTY_VIDEO, order: 3 }];
+
+  function updateVideo(index: number, field: keyof NerioVideoEntry, value: unknown) {
+    const next = videos.map((v, i) =>
+      i === index ? { ...v, [field]: value } : v,
+    );
+    updateSettings("videos", next);
+  }
+
+  function addVideo() {
+    const maxOrder = videos.reduce((m, v) => Math.max(m, v.order), 0);
+    updateSettings("videos", [...videos, { ...EMPTY_VIDEO, order: maxOrder + 1 }]);
+  }
+
+  function removeVideo(index: number) {
+    if (videos.length <= 1) return;
+    updateSettings(
+      "videos",
+      videos.filter((_, i) => i !== index),
+    );
+  }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+          Videos ({videos.length})
+        </p>
+        <button
+          type="button"
+          onClick={addVideo}
+          className="text-xs text-orange-600 hover:text-orange-700 font-medium"
+        >
+          + Video
+        </button>
+      </div>
+
+      {videos.map((video, i) => (
+        <div
+          key={i}
+          className={`p-4 rounded-lg border space-y-3 ${video.enabled ? "bg-white border-gray-200" : "bg-gray-100 border-gray-200 opacity-60"}`}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-1.5 text-sm">
+                <input
+                  type="checkbox"
+                  checked={video.enabled}
+                  onChange={(e) => updateVideo(i, "enabled", e.target.checked)}
+                  className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                />
+                <span className="font-medium text-gray-700">
+                  {video.title || `Video ${i + 1}`}
+                </span>
+              </label>
+              {video.label && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-teal-50 text-teal-700 border border-teal-200">
+                  {video.label}
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => removeVideo(i)}
+              className="text-gray-400 hover:text-red-500 text-xs"
+              title="Entfernen"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">YouTube URL</label>
+              <input
+                type="text"
+                value={video.youtubeUrl}
+                onChange={(e) => updateVideo(i, "youtubeUrl", e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Startzeit (Sek.)</label>
+                <input
+                  type="number"
+                  min={0}
+                  value={video.startSeconds ?? ""}
+                  onChange={(e) =>
+                    updateVideo(
+                      i,
+                      "startSeconds",
+                      e.target.value ? parseInt(e.target.value, 10) : null,
+                    )
+                  }
+                  placeholder="0"
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-gray-500 mb-0.5">Reihenfolge</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={video.order}
+                  onChange={(e) =>
+                    updateVideo(i, "order", parseInt(e.target.value, 10) || 1)
+                  }
+                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+            <input
+              type="text"
+              value={video.title}
+              onChange={(e) => updateVideo(i, "title", e.target.value)}
+              placeholder="Deutscher Videotitel"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+            <textarea
+              rows={2}
+              value={video.description}
+              onChange={(e) => updateVideo(i, "description", e.target.value)}
+              placeholder="Kurze Beschreibung des Videos"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Label (optional)</label>
+              <input
+                type="text"
+                value={video.label}
+                onChange={(e) => updateVideo(i, "label", e.target.value)}
+                placeholder="z.B. Prozessvideo, Recycling"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <MediaPickerField
+              label="Vorschaubild (optional)"
+              value={video.thumbnailMediaId || ""}
+              onChange={(id) => updateVideo(i, "thumbnailMediaId", id || null)}
+              placeholder="Kein Vorschaubild"
+            />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

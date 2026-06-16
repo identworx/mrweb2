@@ -333,6 +333,28 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
+    style: "nerio-videos",
+    label: "NERIO Videos",
+    description: "Helper-Section: Video-Galerie mit YouTube-Videos zum Thema Recycling & Kreisläufe.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "nerio-videos",
+      helper: true,
+      videos: [
+        {
+          enabled: true,
+          order: 1,
+          youtubeUrl: "",
+          title: "",
+          description: "",
+          startSeconds: null,
+          thumbnailMediaId: null,
+          label: "",
+        },
+      ],
+    },
+  },
+  {
     style: "nerio-final-cta",
     label: "NERIO CTA",
     description: "Helper-Section: Abschließender CTA-Block der NERIO-Seite.",
