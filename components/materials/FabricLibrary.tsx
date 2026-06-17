@@ -74,7 +74,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
       );
     }
 
-    return result;
+    return [...result].sort((a, b) => a.name.localeCompare(b.name, "de"));
   }, [swatches, activeFamily, activeProductFilter, search]);
 
   const visibleSwatches = useMemo(

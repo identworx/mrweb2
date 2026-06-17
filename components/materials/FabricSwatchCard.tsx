@@ -16,7 +16,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
     <button
       type="button"
       onClick={() => onSelect?.(swatch)}
-      className="group text-left bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10] w-full"
+      className="group text-left bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10] w-full h-full flex flex-col"
     >
       <div className="aspect-[4/3] overflow-hidden bg-[#FAF8F5] relative">
         {swatch.swatchImageUrl ? (
@@ -39,7 +39,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
         )}
       </div>
 
-      <div className="p-3">
+      <div className="p-3 flex flex-col flex-1">
         <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-0.5">
           {swatch.familyName}
         </p>
@@ -52,25 +52,27 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
           </p>
         )}
 
-        {swatch.availableProductTypes.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {swatch.availableProductTypes.slice(0, 5).map((pt) => (
-              <span
-                key={pt.slug}
-                className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-gray/60 border border-black/[0.04]"
-              >
-                {pt.name}
-              </span>
-            ))}
-            {swatch.availableProductTypes.length > 5 && (
-              <span className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 text-pumpkin/60">
-                +{swatch.availableProductTypes.length - 5}
-              </span>
-            )}
-          </div>
-        )}
+        <div className="min-h-[36px] mt-2">
+          {swatch.availableProductTypes.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {swatch.availableProductTypes.slice(0, 5).map((pt) => (
+                <span
+                  key={pt.slug}
+                  className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-gray/60 border border-black/[0.04]"
+                >
+                  {pt.name}
+                </span>
+              ))}
+              {swatch.availableProductTypes.length > 5 && (
+                <span className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 text-pumpkin/60">
+                  +{swatch.availableProductTypes.length - 5}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
 
-        <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-2 pt-2 border-t border-black/[0.04]">
+        <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-auto pt-2 border-t border-black/[0.04]">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Details
           </span>
