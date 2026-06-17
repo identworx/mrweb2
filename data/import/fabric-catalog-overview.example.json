@@ -38,10 +38,10 @@
   ],
   "swatches": [
     {
-      "_section": "Mackintosh® Lite",
+      "_section": "Mackintosh® (aus Mackintosh® & Lite Katalogseite)",
       "name": "Rocky Mountain Olive",
       "slug": "rocky-mountain-olive",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "405.813",
       "colorHex": "#6B7C3F",
       "patternType": "TODO",
@@ -50,12 +50,11 @@
         { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
         { "productTypeSlug": "hochlehner", "note": "mit Keder" },
         { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
-        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
-        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
-        { "productTypeSlug": "tischsets-tischlaeufer" }
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
       ]
     },
     {
+      "_section": "Mackintosh® Lite (aus Mackintosh® & Lite Katalogseite)",
       "name": "St. Tropez Olive",
       "slug": "st-tropez-olive",
       "familySlug": "mackintosh-lite",
@@ -94,7 +93,7 @@
     {
       "name": "Rocky Mountain Mist Gray",
       "slug": "rocky-mountain-mist-gray",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "703.813",
       "colorHex": "#8C9088",
       "patternType": "TODO",
@@ -111,7 +110,7 @@
     {
       "name": "Rocky Mountain Crimson Red",
       "slug": "rocky-mountain-crimson-red",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "101.813",
       "colorHex": "#8B2E2E",
       "patternType": "TODO",
@@ -128,7 +127,7 @@
     {
       "name": "Rocky Mountain Rosebloom",
       "slug": "rocky-mountain-rosebloom",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "104.813",
       "colorHex": "#C48B8B",
       "patternType": "TODO",
@@ -145,7 +144,7 @@
     {
       "name": "Rocky Mountain Yellow Jasmine",
       "slug": "rocky-mountain-yellow-jasmine",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "802.813",
       "colorHex": "#C4A83A",
       "patternType": "TODO",
@@ -217,7 +216,7 @@
     {
       "name": "Rocky Mountain Navajo White",
       "slug": "rocky-mountain-navajo-white",
-      "familySlug": "mackintosh-lite",
+      "familySlug": "mackintosh",
       "articleNumber": "603.813",
       "colorHex": "#D4C9B5",
       "patternType": "TODO",
@@ -753,8 +752,7 @@
       "patternType": "Uni",
       "order": 2,
       "availabilities": [
-        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" },
-        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "deko-kissen", "note": "mit & ohne Keder" },
         { "productTypeSlug": "hochlehner", "note": "ohne Keder" },
         { "productTypeSlug": "niedriglehner", "note": "ohne Keder" },
         { "productTypeSlug": "sitzkissen", "note": "mit Keder" }

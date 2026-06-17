@@ -1907,13 +1907,36 @@ Zeigt die vollstaendige interaktive Stoffbibliothek mit Katalogstruktur:
 | Poufs | poufs | M&L |
 | Tischsets & Tischlaeufer | tischsets-tischlaeufer | M&L |
 
-**Katalogdaten-Import:**
+**Katalogdaten-Import (Phase 2 — erledigt):**
 
-Die Katalogdaten aus dem PDF „Stoffe & Muster" sind als Importvorlage vorbereitet:
+Alle 66 Stoffe aus dem PDF „Stoffe & Muster" wurden importiert:
 
-- `data/import/fabric-catalog-overview.example.json` — vollstaendige Vorlage mit allen Stoffen aus dem Katalog
-- Felder mit `TODO` muessen manuell gepflegt werden (colorHex, patternType fuer einige Stoffe)
-- Import ueber `scripts/import-fabric-library.ts --file data/import/fabric-catalog-overview.example.json`
+| Familie | Stoffe | Besonderheit |
+|---------|--------|-------------|
+| Mackintosh® | 36 | 6 aus M&L-Matrixseite (volle Produktpalette) + 30 nur Deko-Kissen ohne Keder |
+| Mackintosh® Lite | 6 | Alle aus M&L-Matrixseite, breite Verfuegbarkeit |
+| Mackintosh® Nerio | 8 | 6 mit voller Palette + 2 Streifen nur Deko-Kissen |
+| Basic | 16 | 4 Uni-Stoffe mit breiter Palette + 12 nur Deko-Kissen |
+
+**Import-Script:**
+
+```bash
+npx tsx scripts/import-fabric-catalog-overview.ts              # Dry-Run
+npx tsx scripts/import-fabric-catalog-overview.ts --apply       # Import ausfuehren
+npx tsx scripts/import-fabric-catalog-overview.ts --file <pfad> # Alternative Datei
+```
+
+- Idempotent: sicher mehrfach ausfuehrbar
+- Erstellt nur fehlende Swatches/Availabilities
+- Ueberschreibt keine bestehenden Daten (Bilder, Texte, Artikelnummern)
+- `colorHex: "TODO"` wird als `null` gespeichert (sauberer Platzhalter)
+- Importvorlage: `data/import/fabric-catalog-overview.example.json`
+
+**Keder-Hinweise:** Werden als `note`-Feld in `FabricAvailability` gespeichert. Bei Stoffen die sowohl mit als auch ohne Keder verfuegbar sind (z.B. Boletus Brown Deko-Kissen): `"mit & ohne Keder"`.
+
+**Fehlende Swatch-Bilder:** 66 Stoffe ohne Bilder. Im Frontend wird ein Farbplatzhalter (colorHex) oder ein neutraler Gradient angezeigt. Bilder koennen ueber `/admin/fabrics` → Stoff bearbeiten → MediaPicker nachgepflegt werden.
+
+**41 Stoffe mit fehlendem colorHex:** Vorwiegend Mackintosh® Deko-Kissen-Muster und einige Basic-Muster. Zeigen neutralen Gradient-Platzhalter bis manuell gepflegt.
 
 **Backfill-Script fuer Produktarten:**
 
@@ -1922,7 +1945,11 @@ npx tsx scripts/backfill-fabric-product-types.ts          # Dry-Run
 npx tsx scripts/backfill-fabric-product-types.ts --apply   # Produktarten anlegen
 ```
 
-Erstellt fehlende Produktarten (Sitzpolster, Bankauflagen, Poufs, Tischsets & Tischlaeufer). Idempotent.
+**Phase 3 TODOs (Admin-Pflege):**
+- Swatch-Bilder fuer alle 66 Stoffe hochladen
+- colorHex fuer 41 Stoffe ergaenzen
+- Verfuegbarkeitsmatrix in Admin schneller pflegbar machen
+- Rocky Mountain Olive in DB: Familie ist `mackintosh-lite`, laut Katalog `mackintosh` — ggf. manuell korrigieren
 
 **Upload-Limit bleibt 15 MB.**
 
