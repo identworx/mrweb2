@@ -1,0 +1,4 @@
+# Reports are committed for review
+!*.json
+!*.csv
+!.gitignore

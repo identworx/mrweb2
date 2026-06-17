@@ -2019,7 +2019,53 @@ Idempotent, matcht ueber Artikelnummer, aendert nur `familyId`. Keine Bilder, Te
 
 **Upload-Limit bleibt 15 MB.**
 
-**Axroma Fabric Image Scraper (v2 — Deep Crawl):**
+**Swatch Image Importer (ZIP/Ordner):**
+
+Script zum Batch-Import von Stoffbildern aus einem lokalen Ordner oder ZIP-Archiv.
+Matching ueber Artikelnummer im Dateinamen.
+
+```bash
+npx tsx scripts/import-swatch-images.ts <ordner-oder-zip>                  # Dry-Run
+npx tsx scripts/import-swatch-images.ts <ordner-oder-zip> --apply          # Import ins CMS
+npx tsx scripts/import-swatch-images.ts <ordner-oder-zip> --replace-existing --apply
+```
+
+Dateinamen-Konventionen (Artikelnummer am Anfang):
+- `401.233.jpg` oder `401-233-olive.png` → Artikelnummer `401.233`
+- `999-234-06-name.webp` → Artikelnummer `999.234.06`
+- `15815809.jpg` → 8-stellige Artikelnummer
+- `B15815826.png` → Prefixed Artikelnummer
+
+Workflow:
+1. **Dry-Run** (Standard): Dateien scannen, Artikelnummern erkennen, gegen DB matchen, Report schreiben
+2. **Apply** (`--apply`): Bilder optimieren (WebP, max 2000px, Q84), MediaAsset anlegen, FabricSwatch.swatchImageId setzen
+
+Report-Status:
+- `MATCHED` — Artikelnummer passt exakt zu DB-Swatch, `importCandidate: true`
+- `NO_MATCH` — Keine Artikelnummer im Dateinamen oder kein DB-Match
+- `DUPLICATE` — Anderes Bild wurde bereits fuer diesen Swatch gematcht
+- `ALREADY_HAS_IMAGE` — Swatch hat bereits ein Bild (ohne `--replace-existing`)
+- `UNCERTAIN` — Match mit niedriger Confidence (< 0.85)
+- `IMPORTED` — Erfolgreich importiert (nur mit `--apply`)
+
+Report-Dateien:
+- `data/import/swatch-images/import-report.json` — Detaillierter JSON-Report
+- `data/import/swatch-images/import-report.csv` — CSV fuer Excel/Review
+
+Sicherheitsregeln:
+- Dry-Run macht keine DB-Aenderung
+- Vorhandene Swatch-Bilder werden NICHT ueberschrieben (es sei denn `--replace-existing`)
+- Keine Families/ProductTypes/Availabilities/Navigation geaendert
+- Upload-Limit bleibt 15 MB pro Datei
+- Bildoptimierung: Sharp, WebP Q84, max 2000px, EXIF entfernt, keine Hochskalierung
+- ZIP: `__MACOSX`-Ordner und versteckte Dateien werden uebersprungen
+- Idempotent: Mehrfach ausfuehren ist sicher
+
+**Axroma Fabric Image Scraper (v2 — Deep Crawl, DEPRECATED):**
+
+> **Hinweis:** Axroma-Scraper wird nicht mehr fuer automatischen Bildimport verwendet,
+> da die Quelle keine zuverlaessigen Swatchbilder liefert. Stattdessen den
+> Swatch Image Importer (oben) mit manuell vorbereiteten Bildern verwenden.
 
 Script zum automatisierten Abgleich und Import von Stoffbildern von `axroma.com.cn` (eigene Webseite).
 Crawlt Uebersichtsseiten, Kategorie-Seiten, Paginierung UND Detailseiten (z.B. `product_100000333439843.html`).

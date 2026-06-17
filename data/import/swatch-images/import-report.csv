@@ -1,0 +1,5 @@
+status,confidence,importCandidate,filename,detectedArticleNumbers,matchedSwatchName,matchedArticleNumber,matchedFamily,matchedSwatchId,fileSize,mediaAssetId,notes
+MATCHED,1.00,YES,"401-233-olive.jpg","401.233","Monaco Olive","401.233","Mackintosh® (mackintosh)",cmqhrdycy002b8q7dujsn6vrm,0,,"Matched via 401.233"
+DUPLICATE,1.00,,"401.233-detail.webp","401.233","Monaco Olive","401.233","Mackintosh® (mackintosh)",cmqhrdycy002b8q7dujsn6vrm,0,,"Another file already matched this swatch"
+DUPLICATE,1.00,,"401.233.png","401.233","Monaco Olive","401.233","Mackintosh® (mackintosh)",cmqhrdycy002b8q7dujsn6vrm,0,,"Another file already matched this swatch"
+NO_MATCH,0.00,,"999-999-unknown.png","999.999","","","",,0,,"Detected [999.999] — no DB match"

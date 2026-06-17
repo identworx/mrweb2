@@ -1,0 +1,91 @@
+{
+  "summary": {
+    "timestamp": "2026-06-17T09:18:49.254Z",
+    "sourcePath": "/tmp/test-swatch-images",
+    "sourceType": "folder",
+    "filesScanned": 4,
+    "imagesFound": 4,
+    "matched": 1,
+    "noMatch": 1,
+    "duplicate": 2,
+    "alreadyHasImage": 0,
+    "uncertain": 0,
+    "importCandidates": 1,
+    "imported": 0,
+    "errors": []
+  },
+  "entries": [
+    {
+      "filename": "401-233-olive.jpg",
+      "filePath": "/tmp/test-swatch-images/401-233-olive.jpg",
+      "fileSize": 0,
+      "detectedArticleNumbers": [
+        "401.233"
+      ],
+      "matchedSwatchId": "cmqhrdycy002b8q7dujsn6vrm",
+      "matchedSwatchName": "Monaco Olive",
+      "matchedArticleNumber": "401.233",
+      "matchedFamily": "Mackintosh® (mackintosh)",
+      "confidence": 1,
+      "status": "MATCHED",
+      "importCandidate": true,
+      "optimizedPath": null,
+      "mediaAssetId": null,
+      "notes": "Matched via 401.233"
+    },
+    {
+      "filename": "401.233-detail.webp",
+      "filePath": "/tmp/test-swatch-images/401.233-detail.webp",
+      "fileSize": 0,
+      "detectedArticleNumbers": [
+        "401.233"
+      ],
+      "matchedSwatchId": "cmqhrdycy002b8q7dujsn6vrm",
+      "matchedSwatchName": "Monaco Olive",
+      "matchedArticleNumber": "401.233",
+      "matchedFamily": "Mackintosh® (mackintosh)",
+      "confidence": 1,
+      "status": "DUPLICATE",
+      "importCandidate": false,
+      "optimizedPath": null,
+      "mediaAssetId": null,
+      "notes": "Another file already matched this swatch"
+    },
+    {
+      "filename": "401.233.png",
+      "filePath": "/tmp/test-swatch-images/401.233.png",
+      "fileSize": 0,
+      "detectedArticleNumbers": [
+        "401.233"
+      ],
+      "matchedSwatchId": "cmqhrdycy002b8q7dujsn6vrm",
+      "matchedSwatchName": "Monaco Olive",
+      "matchedArticleNumber": "401.233",
+      "matchedFamily": "Mackintosh® (mackintosh)",
+      "confidence": 1,
+      "status": "DUPLICATE",
+      "importCandidate": false,
+      "optimizedPath": null,
+      "mediaAssetId": null,
+      "notes": "Another file already matched this swatch"
+    },
+    {
+      "filename": "999-999-unknown.png",
+      "filePath": "/tmp/test-swatch-images/999-999-unknown.png",
+      "fileSize": 0,
+      "detectedArticleNumbers": [
+        "999.999"
+      ],
+      "matchedSwatchId": null,
+      "matchedSwatchName": null,
+      "matchedArticleNumber": null,
+      "matchedFamily": null,
+      "confidence": 0,
+      "status": "NO_MATCH",
+      "importCandidate": false,
+      "optimizedPath": null,
+      "mediaAssetId": null,
+      "notes": "Detected [999.999] — no DB match"
+    }
+  ]
+}
