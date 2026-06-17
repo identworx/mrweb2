@@ -2019,40 +2019,87 @@ Idempotent, matcht ueber Artikelnummer, aendert nur `familyId`. Keine Bilder, Te
 
 **Upload-Limit bleibt 15 MB.**
 
-**Axroma Fabric Image Scraper:**
+**Axroma Fabric Image Scraper (v2 — Deep Crawl):**
 
 Script zum automatisierten Abgleich und Import von Stoffbildern von `axroma.com.cn` (eigene Webseite).
+Crawlt Uebersichtsseiten, Kategorie-Seiten, Paginierung UND Detailseiten (z.B. `product_100000333439843.html`).
 
 ```bash
-npx tsx scripts/scrape-axroma-fabric-images.ts                    # Dry-Run: Scrape + Match, kein Download
+# Basis-Kommandos (Drei-Phasen-Workflow)
+npx tsx scripts/scrape-axroma-fabric-images.ts                    # Dry-Run: Deep Crawl + Match, kein Download
 npx tsx scripts/scrape-axroma-fabric-images.ts --download          # + Bilder ins Staging herunterladen
 npx tsx scripts/scrape-axroma-fabric-images.ts --download --apply  # + gepruefte Bilder ins CMS importieren
-npx tsx scripts/scrape-axroma-fabric-images.ts --replace-existing  # bestehende Swatch-Bilder ueberschreiben
+
+# Crawl-Steuerung
+npx tsx scripts/scrape-axroma-fabric-images.ts --url "http://axroma.com.cn/en/product/product_100000333439843.html"  # Start von spezifischer URL
+npx tsx scripts/scrape-axroma-fabric-images.ts --url "http://axroma.com.cn/en/product/product_100000333439843.html" --detail-only  # Nur diese eine Seite
+npx tsx scripts/scrape-axroma-fabric-images.ts --max-pages 200 --max-depth 4  # Crawl-Limits anpassen
+
+# Erweiterte Optionen
+npx tsx scripts/scrape-axroma-fabric-images.ts --download-uncertain     # Auch UNCERTAIN-Matches herunterladen
+npx tsx scripts/scrape-axroma-fabric-images.ts --replace-existing       # Bestehende Swatch-Bilder ueberschreiben
 npx tsx scripts/scrape-axroma-fabric-images.ts --resume-report data/import/axroma-images/axroma-images-report.json --download
 ```
 
+CLI-Flags:
+
+| Flag | Default | Beschreibung |
+|------|---------|--------------|
+| `--url <url>` | `http://axroma.com.cn/en/product/product.html` | Start-URL fuer den Crawl |
+| `--detail-only` | off | Nur die via `--url` angegebene Seite scrapen (kein Crawl) |
+| `--max-pages <n>` | 100 | Maximale Anzahl zu crawlender Seiten |
+| `--max-depth <n>` | 3 | Maximale Link-Tiefe ab Start-URL |
+| `--download` | off | Bilder ins Staging herunterladen + WebP-Optimierung |
+| `--download-uncertain` | off | Auch `UNCERTAIN`-Matches herunterladen (nicht nur `READY_FOR_IMPORT`) |
+| `--apply` | off | `READY_FOR_IMPORT`-Eintraege ins CMS importieren |
+| `--replace-existing` | off | Vorhandene Swatch-Bilder ueberschreiben |
+| `--resume-report <path>` | — | Von vorherigem Report fortsetzen |
+
 Drei-Phasen-Workflow:
-1. **Dry-Run** (Standard): Webseite scrapen, Bilder erkennen, gegen DB-Swatches matchen, Report schreiben
+1. **Dry-Run** (Standard): BFS-Deep-Crawl, Bilder erkennen, gegen DB-Swatches matchen, Report schreiben
 2. **Download** (`--download`): Bilder in Staging herunterladen + WebP-Optimierung
 3. **Apply** (`--apply`): Nur `READY_FOR_IMPORT`-Eintraege ins CMS uebernehmen (MediaAsset anlegen + FabricSwatch verknuepfen)
+
+> **Hinweis:** Erst Report pruefen, dann Download, dann niemals blind Apply.
+
+Deep-Crawl-Verhalten:
+- BFS-Queue mit `[url, depth]`-Tupeln, startet bei `--url` mit Tiefe 0
+- Erkennt Detail-Links (`product_*.html`), Paginierung (`?page=`, `?p=`), Kategorie-Links
+- Detailseiten werden geparst: Titel, Headings, Artikelnummern, Stoffnamen aus Tabellen/Spans
+- Pro Seite: Deduplizierung (bester Match pro Swatch gewinnt, andere → `ALTERNATIVE_IMAGE`)
+
+Image-Klassifizierung:
+- Rollen: `swatch`, `product`, `detail`, `gallery`, `unknown`, `ignored`
+- Ignore-Patterns: Icons, Logos, Thumbnails, UI-Elemente, Platzhalter (< 50px)
+- Lazy-Load-Erkennung: `data-src`, `data-original`, `data-lazy`, `data-url`, `srcset`
+
+Matching-Prioritaet (6-stufig):
+1. Bild-Kontext Artikelnummer (umgebender Text/Tabelle) → confidence 0.95
+2. Alt/Title Artikelnummer → confidence 0.90
+3. Seite hat genau eine Artikelnummer → confidence 0.85
+4. Alt/Title Stoffname (exakt) → confidence 0.80
+5. Heading Stoffname → confidence 0.75
+6. Seitentitel Stoffname → confidence 0.70
+
+Artikelnummer-Formate (alle erkannt):
+- Standard: `15815809`
+- Punktiert: `405.813`, `999.234.06`
+- Prefixed: `B15815826`
+- In Alt-Text, Dateinamen, Tabellenzellen, umgebendem Text
 
 Staging-Verzeichnis: `data/import/axroma-images/`
 - `original/` — Originalbilder vom Server
 - `optimized/` — WebP-optimierte Versionen (max 2000px, Q84)
 
 Report-Dateien:
-- `data/import/axroma-images/axroma-images-report.json` — Detaillierter JSON-Report
+- `data/import/axroma-images/axroma-images-report.json` — Detaillierter JSON-Report (inkl. PageReports)
 - `data/import/axroma-images/axroma-images-report.csv` — CSV fuer Excel/Review
-
-Matching-Prioritaet:
-1. Artikelnummer exakt → `MATCHED` (confidence ≥ 0.9)
-2. Normalisierter Stoffname → `MATCHED` (confidence ≥ 0.85) oder `UNCERTAIN` (< 0.85)
-3. Kein Match → `NO_MATCH`
 
 Sicherheitsregeln:
 - Nur Domain `axroma.com.cn` erlaubt (Allowlist)
 - Rate Limit: 800ms Pause zwischen Requests
 - Timeout: 15s pro Request
+- Max-Pages und Max-Depth Limits
 - Eigener User-Agent gesetzt
 - Redirects werden validiert (Zieldomain muss erlaubt sein)
 - Dry-Run macht keine DB-Aenderung
