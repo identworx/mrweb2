@@ -1,0 +1,952 @@
+{
+  "_comment": "Katalogdaten basierend auf Stoffe & Muster PDF. Felder mit TODO muessen manuell gepflegt werden.",
+  "productTypes": [
+    { "name": "Deko-Kissen", "slug": "deko-kissen", "iconKey": "dekokissen", "order": 1 },
+    { "name": "Hochlehner", "slug": "hochlehner", "iconKey": "hochlehner", "order": 2 },
+    { "name": "Niedriglehner", "slug": "niedriglehner", "iconKey": "niedriglehner", "order": 3 },
+    { "name": "Sitzkissen", "slug": "sitzkissen", "iconKey": "sitzkissen", "order": 4 },
+    { "name": "Sitzpolster", "slug": "sitzpolster", "iconKey": "sitzpolster", "order": 5 },
+    { "name": "Bankauflagen", "slug": "bankauflagen", "iconKey": "bankauflagen", "order": 6 },
+    { "name": "Poufs", "slug": "poufs", "iconKey": "poufs", "order": 7 },
+    { "name": "Tischsets & Tischläufer", "slug": "tischsets-tischlaeufer", "iconKey": "tischsets", "order": 8 }
+  ],
+  "families": [
+    {
+      "name": "Mackintosh® & Lite",
+      "slug": "mackintosh-lite",
+      "description": "Hochleistungsgewebe aus Solution-Dyed Olefin – UV-beständig, wasserabweisend und pflegeleicht.",
+      "order": 1
+    },
+    {
+      "name": "Mackintosh®",
+      "slug": "mackintosh",
+      "description": "Premium-Outdoor-Stoffe für Deko-Kissen ohne Keder – vielfältige Muster und Farben.",
+      "order": 2
+    },
+    {
+      "name": "Mackintosh® Nerio",
+      "slug": "nerio",
+      "description": "Die nachhaltige NERIO Oceana Collection – aus recyceltem Meeresplastik.",
+      "order": 3
+    },
+    {
+      "name": "Basic",
+      "slug": "basic",
+      "description": "Bewährte Standardstoffe für den Outdoor-Einsatz.",
+      "order": 4
+    }
+  ],
+  "swatches": [
+    {
+      "_section": "Mackintosh® & Lite",
+      "name": "Rocky Mountain Olive",
+      "slug": "rocky-mountain-olive",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "405.813",
+      "colorHex": "#6B7C3F",
+      "patternType": "TODO",
+      "order": 1,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "St. Tropez Olive",
+      "slug": "st-tropez-olive",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "403.804",
+      "colorHex": "#7A8B52",
+      "patternType": "TODO",
+      "order": 2,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "poufs" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "Midnight Marcie",
+      "slug": "midnight-marcie",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "505.801",
+      "colorHex": "#2D3A4A",
+      "patternType": "TODO",
+      "order": 3,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "poufs" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "Rocky Mountain Mist Gray",
+      "slug": "rocky-mountain-mist-gray",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "703.813",
+      "colorHex": "#8C9088",
+      "patternType": "TODO",
+      "order": 4,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "sitzpolster", "note": "ohne Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Rocky Mountain Crimson Red",
+      "slug": "rocky-mountain-crimson-red",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "101.813",
+      "colorHex": "#8B2E2E",
+      "patternType": "TODO",
+      "order": 5,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "sitzpolster", "note": "ohne Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Rocky Mountain Rosebloom",
+      "slug": "rocky-mountain-rosebloom",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "104.813",
+      "colorHex": "#C48B8B",
+      "patternType": "TODO",
+      "order": 6,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "sitzpolster", "note": "ohne Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Rocky Mountain Yellow Jasmine",
+      "slug": "rocky-mountain-yellow-jasmine",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "802.813",
+      "colorHex": "#C4A83A",
+      "patternType": "TODO",
+      "order": 7,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "sitzpolster", "note": "ohne Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "St. Tropez Citron",
+      "slug": "st-tropez-citron",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "201.804",
+      "colorHex": "#D4C040",
+      "patternType": "TODO",
+      "order": 8,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "poufs" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "Canvas Wheat",
+      "slug": "canvas-wheat",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "603.800",
+      "colorHex": "#C4B48A",
+      "patternType": "TODO",
+      "order": 9,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "poufs" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "St. Tropez Mushroom",
+      "slug": "st-tropez-mushroom",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "605.804",
+      "colorHex": "#9E9080",
+      "patternType": "TODO",
+      "order": 10,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "poufs" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+    {
+      "name": "Rocky Mountain Navajo White",
+      "slug": "rocky-mountain-navajo-white",
+      "familySlug": "mackintosh-lite",
+      "articleNumber": "603.813",
+      "colorHex": "#D4C9B5",
+      "patternType": "TODO",
+      "order": 11,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" },
+        { "productTypeSlug": "tischsets-tischlaeufer" }
+      ]
+    },
+
+    {
+      "_section": "Mackintosh® (Deko-Kissen ohne Keder)",
+      "name": "Longitude Olive",
+      "slug": "longitude-olive",
+      "familySlug": "mackintosh",
+      "articleNumber": "401.226",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 1,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Palmway Olive",
+      "slug": "palmway-olive",
+      "familySlug": "mackintosh",
+      "articleNumber": "401.223",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 2,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bean Citron",
+      "slug": "bean-citron",
+      "familySlug": "mackintosh",
+      "articleNumber": "302.203",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 3,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Rain Stripe Moss & Ivory",
+      "slug": "rain-stripe-moss-ivory",
+      "familySlug": "mackintosh",
+      "articleNumber": "401.816",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 4,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Caravan Lake",
+      "slug": "caravan-lake",
+      "familySlug": "mackintosh",
+      "articleNumber": "402.225",
+      "colorHex": "TODO",
+      "patternType": "Ikat",
+      "order": 5,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Monaco Olive",
+      "slug": "monaco-olive",
+      "familySlug": "mackintosh",
+      "articleNumber": "401.233",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 6,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Outpost Autumn Green",
+      "slug": "outpost-autumn-green",
+      "familySlug": "mackintosh",
+      "articleNumber": "403.222",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 7,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Longitude Warm Pigments",
+      "slug": "longitude-warm-pigments",
+      "familySlug": "mackintosh",
+      "articleNumber": "101.226",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 8,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Palmway Warm Pigments",
+      "slug": "palmway-warm-pigments",
+      "familySlug": "mackintosh",
+      "articleNumber": "101.223",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 9,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bean Tuscan",
+      "slug": "bean-tuscan",
+      "familySlug": "mackintosh",
+      "articleNumber": "202.203",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 10,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Rain Stripe Brick & Ivory",
+      "slug": "rain-stripe-brick-ivory",
+      "familySlug": "mackintosh",
+      "articleNumber": "101.816",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 11,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Caravan Warm Pigments",
+      "slug": "caravan-warm-pigments",
+      "familySlug": "mackintosh",
+      "articleNumber": "101.225",
+      "colorHex": "TODO",
+      "patternType": "Ikat",
+      "order": 12,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Tartan Tuscan",
+      "slug": "tartan-tuscan",
+      "familySlug": "mackintosh",
+      "articleNumber": "201.208",
+      "colorHex": "TODO",
+      "patternType": "Karo",
+      "order": 13,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Parker Stripe Tuscan",
+      "slug": "parker-stripe-tuscan",
+      "familySlug": "mackintosh",
+      "articleNumber": "202.201",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 14,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Longitude Dazzling Blue",
+      "slug": "longitude-dazzling-blue",
+      "familySlug": "mackintosh",
+      "articleNumber": "501.226",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 15,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Swazi Stripe Hills",
+      "slug": "swazi-stripe-hills",
+      "familySlug": "mackintosh",
+      "articleNumber": "802.303",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 16,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bean Azure",
+      "slug": "bean-azure",
+      "familySlug": "mackintosh",
+      "articleNumber": "504.203",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 17,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Rain Stripe Navy",
+      "slug": "rain-stripe-navy",
+      "familySlug": "mackintosh",
+      "articleNumber": "501.816",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 18,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Caribbean Midnight",
+      "slug": "caribbean-midnight",
+      "familySlug": "mackintosh",
+      "articleNumber": "502.209",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 19,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Caravan Retro Warmth",
+      "slug": "caravan-retro-warmth",
+      "familySlug": "mackintosh",
+      "articleNumber": "201.225.13",
+      "colorHex": "TODO",
+      "patternType": "Ikat",
+      "order": 20,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Cypress Candlelight",
+      "slug": "cypress-candlelight",
+      "familySlug": "mackintosh",
+      "articleNumber": "201.220",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 21,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Longitude Honey",
+      "slug": "longitude-honey",
+      "familySlug": "mackintosh",
+      "articleNumber": "301.226",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 22,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Palmway Peat",
+      "slug": "palmway-peat",
+      "familySlug": "mackintosh",
+      "articleNumber": "701.223",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 23,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Palmway Neutrals",
+      "slug": "palmway-neutrals",
+      "familySlug": "mackintosh",
+      "articleNumber": "601.223",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 24,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Tartan Hemp",
+      "slug": "tartan-hemp",
+      "familySlug": "mackintosh",
+      "articleNumber": "601.208.13",
+      "colorHex": "TODO",
+      "patternType": "Karo",
+      "order": 25,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Vanity Charcoal",
+      "slug": "vanity-charcoal",
+      "familySlug": "mackintosh",
+      "articleNumber": "702.204.13",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 26,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Monaco Peat",
+      "slug": "monaco-peat",
+      "familySlug": "mackintosh",
+      "articleNumber": "701.233",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 27,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bean Charcoal",
+      "slug": "bean-charcoal",
+      "familySlug": "mackintosh",
+      "articleNumber": "702.203",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 28,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bouclé Glacial Mosaic",
+      "slug": "boucle-glacial-mosaic",
+      "familySlug": "mackintosh",
+      "articleNumber": "601.812",
+      "colorHex": "TODO",
+      "patternType": "Bouclé",
+      "order": 29,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bouclé Nordic Fjord",
+      "slug": "boucle-nordic-fjord",
+      "familySlug": "mackintosh",
+      "articleNumber": "401.812",
+      "colorHex": "TODO",
+      "patternType": "Bouclé",
+      "order": 30,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Bouclé Nordic Icebound",
+      "slug": "boucle-nordic-icebound",
+      "familySlug": "mackintosh",
+      "articleNumber": "701.812",
+      "colorHex": "TODO",
+      "patternType": "Bouclé",
+      "order": 31,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+
+    {
+      "_section": "NERIO Oceana Collection",
+      "name": "Birdeye Moss",
+      "slug": "birdeye-moss",
+      "familySlug": "nerio",
+      "articleNumber": "401.815",
+      "colorHex": "#6B7D5A",
+      "patternType": "Birdeye",
+      "order": 1,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Basket Midnight",
+      "slug": "basket-midnight",
+      "familySlug": "nerio",
+      "articleNumber": "501.818",
+      "colorHex": "#2A3040",
+      "patternType": "Basket",
+      "order": 2,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Basket Chili",
+      "slug": "basket-chili",
+      "familySlug": "nerio",
+      "articleNumber": "101.818",
+      "colorHex": "#A0382A",
+      "patternType": "Basket",
+      "order": 3,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Birdeye Terracotta",
+      "slug": "birdeye-terracotta",
+      "familySlug": "nerio",
+      "articleNumber": "101.815",
+      "colorHex": "#B05A3A",
+      "patternType": "Birdeye",
+      "order": 4,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Basket Hemp",
+      "slug": "basket-hemp",
+      "familySlug": "nerio",
+      "articleNumber": "601.818",
+      "colorHex": "#C4B090",
+      "patternType": "Basket",
+      "order": 5,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Basket Stone",
+      "slug": "basket-stone",
+      "familySlug": "nerio",
+      "articleNumber": "702.818",
+      "colorHex": "#9A9590",
+      "patternType": "Basket",
+      "order": 6,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "mit Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "mit Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" },
+        { "productTypeSlug": "bankauflagen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Stripe Sailor Blue",
+      "slug": "stripe-sailor-blue",
+      "familySlug": "nerio",
+      "articleNumber": "501.819",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 7,
+      "_note": "nur Deko-Kissen ohne Keder im PDF",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Stripe Rockstone",
+      "slug": "stripe-rockstone",
+      "familySlug": "nerio",
+      "articleNumber": "701.819",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 8,
+      "_note": "nur Deko-Kissen ohne Keder im PDF",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+
+    {
+      "_section": "Basic",
+      "name": "Earthy Chevron",
+      "slug": "earthy-chevron",
+      "familySlug": "basic",
+      "articleNumber": "999.234.06",
+      "colorHex": "TODO",
+      "patternType": "Chevron",
+      "order": 1,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Boletus Brown",
+      "slug": "boletus-brown",
+      "familySlug": "basic",
+      "articleNumber": "15815530",
+      "colorHex": "#6B4226",
+      "patternType": "Uni",
+      "order": 2,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" },
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "ohne Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "ohne Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Striato Ink",
+      "slug": "striato-ink",
+      "familySlug": "basic",
+      "articleNumber": "999.234.05",
+      "colorHex": "TODO",
+      "patternType": "Textur",
+      "order": 3,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Creme au Lait",
+      "slug": "creme-au-lait",
+      "familySlug": "basic",
+      "articleNumber": "15815809",
+      "colorHex": "#D4C9A8",
+      "patternType": "Uni",
+      "order": 4,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "ohne Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "ohne Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Midnight Ogee",
+      "slug": "midnight-ogee",
+      "familySlug": "basic",
+      "articleNumber": "999.234.07",
+      "colorHex": "TODO",
+      "patternType": "Geometrisch",
+      "order": 5,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Stone Blue",
+      "slug": "stone-blue",
+      "familySlug": "basic",
+      "articleNumber": "15815834",
+      "colorHex": "#8A9CAA",
+      "patternType": "Uni",
+      "order": 6,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "ohne Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "ohne Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Jungle Canopy",
+      "slug": "jungle-canopy",
+      "familySlug": "basic",
+      "articleNumber": "999.234.02",
+      "colorHex": "TODO",
+      "patternType": "Botanisch",
+      "order": 7,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Elder Purple",
+      "slug": "elder-purple",
+      "familySlug": "basic",
+      "articleNumber": "15815805",
+      "colorHex": "#6A4A6A",
+      "patternType": "Uni",
+      "order": 8,
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "mit Keder" },
+        { "productTypeSlug": "hochlehner", "note": "ohne Keder" },
+        { "productTypeSlug": "niedriglehner", "note": "ohne Keder" },
+        { "productTypeSlug": "sitzkissen", "note": "mit Keder" }
+      ]
+    },
+    {
+      "name": "Meadow Bloom",
+      "slug": "meadow-bloom",
+      "familySlug": "basic",
+      "articleNumber": "999.234.01",
+      "colorHex": "TODO",
+      "patternType": "Floral",
+      "order": 9,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Blue",
+      "slug": "basic-blue",
+      "familySlug": "basic",
+      "articleNumber": "B15815826",
+      "colorHex": "#00B4D8",
+      "patternType": "Uni",
+      "order": 10,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Red Bloom",
+      "slug": "red-bloom",
+      "familySlug": "basic",
+      "articleNumber": "999.233.09",
+      "colorHex": "TODO",
+      "patternType": "Floral",
+      "order": 11,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Green",
+      "slug": "basic-green",
+      "familySlug": "basic",
+      "articleNumber": "15815819",
+      "colorHex": "#4A8B5A",
+      "patternType": "Uni",
+      "order": 12,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Timeless Stripe",
+      "slug": "timeless-stripe",
+      "familySlug": "basic",
+      "articleNumber": "999.234.04",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 13,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Pink",
+      "slug": "basic-pink",
+      "familySlug": "basic",
+      "articleNumber": "15815735",
+      "colorHex": "#E87090",
+      "patternType": "Uni",
+      "order": 14,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Field Stripe",
+      "slug": "field-stripe",
+      "familySlug": "basic",
+      "articleNumber": "999.234.03",
+      "colorHex": "TODO",
+      "patternType": "Streifen",
+      "order": 15,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    },
+    {
+      "name": "Yellow",
+      "slug": "basic-yellow",
+      "familySlug": "basic",
+      "articleNumber": "15815850",
+      "colorHex": "#E8C820",
+      "patternType": "Uni",
+      "order": 16,
+      "_note": "nur Deko-Kissen ohne Keder",
+      "availabilities": [
+        { "productTypeSlug": "deko-kissen", "note": "ohne Keder" }
+      ]
+    }
+  ]
+}

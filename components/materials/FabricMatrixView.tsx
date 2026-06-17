@@ -15,6 +15,34 @@ interface Props {
   icons?: Record<string, ResolvedIcon>;
 }
 
+function SwatchThumb({
+  swatch,
+  size,
+}: {
+  swatch: FrontendFabricSwatch;
+  size: number;
+}) {
+  if (swatch.swatchImageUrl) {
+    return (
+      <Image
+        src={swatch.swatchImageUrl}
+        alt={swatch.name}
+        width={size}
+        height={size}
+        className="w-full h-full object-cover"
+      />
+    );
+  }
+  if (swatch.colorHex) {
+    return (
+      <div className="w-full h-full" style={{ backgroundColor: swatch.colorHex }} />
+    );
+  }
+  return (
+    <div className="w-full h-full bg-gradient-to-br from-anthracite/10 to-anthracite/5" />
+  );
+}
+
 export default function FabricMatrixView({
   swatches,
   productTypes,
@@ -26,11 +54,11 @@ export default function FabricMatrixView({
   return (
     <>
       {/* Desktop matrix */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full min-w-[700px]">
+      <div className="hidden md:block overflow-x-auto border border-black/[0.06]">
+        <table className="w-full min-w-[700px] border-collapse">
           <thead>
-            <tr>
-              <th className="text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-3 px-4 w-[280px]">
+            <tr className="bg-[#FAF8F5]">
+              <th className="sticky left-0 z-20 bg-[#FAF8F5] text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-3 px-4 w-[280px] border-r border-black/[0.06]">
                 Stoff
               </th>
               {productTypes.map((pt) => (
@@ -48,37 +76,23 @@ export default function FabricMatrixView({
               const availableSet = new Map(
                 swatch.availableProductTypes.map((a) => [a.slug, a]),
               );
+              const rowBg = i % 2 === 0 ? "bg-white" : "bg-[#FDFCFB]";
               return (
                 <tr
                   key={swatch.id}
-                  className={`${i % 2 === 0 ? "bg-white" : "bg-[#FAF8F5]"} hover:bg-pumpkin/[0.03] transition-colors duration-200 cursor-pointer`}
+                  className={`${rowBg} hover:bg-pumpkin/[0.03] transition-colors duration-200 cursor-pointer`}
                   onClick={() => onSelectSwatch?.(swatch)}
                 >
-                  <td className="py-3 px-4">
+                  <td className={`sticky left-0 z-10 ${rowBg} py-3 px-4 border-r border-black/[0.06]`}>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 flex-shrink-0 overflow-hidden border border-black/[0.06]">
-                        {swatch.swatchImageUrl ? (
-                          <Image
-                            src={swatch.swatchImageUrl}
-                            alt={swatch.name}
-                            width={40}
-                            height={40}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : swatch.colorHex ? (
-                          <div
-                            className="w-full h-full"
-                            style={{ backgroundColor: swatch.colorHex }}
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-anthracite/10 to-anthracite/5" />
-                        )}
+                        <SwatchThumb swatch={swatch} size={40} />
                       </div>
-                      <div>
-                        <p className="font-heading text-anthracite text-sm font-semibold leading-tight">
+                      <div className="min-w-0">
+                        <p className="font-heading text-anthracite text-sm font-semibold leading-tight truncate">
                           {swatch.name}
                         </p>
-                        <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase">
+                        <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase truncate">
                           {swatch.articleNumber && `Art. ${swatch.articleNumber}`}
                           {swatch.articleNumber && swatch.familyName && " · "}
                           {swatch.familyName}
@@ -123,22 +137,7 @@ export default function FabricMatrixView({
           >
             <div className="flex items-start gap-3">
               <div className="w-14 h-14 flex-shrink-0 overflow-hidden border border-black/[0.06]">
-                {swatch.swatchImageUrl ? (
-                  <Image
-                    src={swatch.swatchImageUrl}
-                    alt={swatch.name}
-                    width={56}
-                    height={56}
-                    className="w-full h-full object-cover"
-                  />
-                ) : swatch.colorHex ? (
-                  <div
-                    className="w-full h-full"
-                    style={{ backgroundColor: swatch.colorHex }}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-anthracite/10 to-anthracite/5" />
-                )}
+                <SwatchThumb swatch={swatch} size={56} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-heading text-anthracite text-sm font-semibold leading-tight">
@@ -156,6 +155,9 @@ export default function FabricMatrixView({
                         className="font-accent text-[8px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-gray/60 border border-black/[0.04]"
                       >
                         {pt.name}
+                        {pt.note && (
+                          <span className="text-text-gray/30 ml-0.5">({pt.note})</span>
+                        )}
                       </span>
                     ))}
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import Link from "next/link";
 import type {
   FabricLibraryData,
   FrontendFabricSwatch,
@@ -12,6 +13,7 @@ import FabricMatrixView from "./FabricMatrixView";
 import FabricDetailDrawer from "./FabricDetailDrawer";
 
 type ViewMode = "grid" | "matrix";
+const PAGE_SIZE = 24;
 
 interface Props {
   data: FabricLibraryData;
@@ -30,8 +32,23 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
   const [activeProductFilter, setActiveProductFilter] = useState<string>("");
   const [search, setSearch] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [selectedSwatch, setSelectedSwatch] =
     useState<FrontendFabricSwatch | null>(null);
+
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const el = controlsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsSticky(!entry.isIntersecting),
+      { threshold: 0, rootMargin: "-1px 0px 0px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const filtered = useMemo(() => {
     let result = swatches;
@@ -60,14 +77,32 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
     return result;
   }, [swatches, activeFamily, activeProductFilter, search]);
 
+  const visibleSwatches = useMemo(
+    () => (viewMode === "grid" ? filtered.slice(0, visibleCount) : filtered),
+    [filtered, visibleCount, viewMode],
+  );
+
+  const hasMore = viewMode === "grid" && visibleCount < filtered.length;
+
+  const handleFamilyChange = useCallback((slug: string) => {
+    setActiveFamily(slug);
+    setVisibleCount(PAGE_SIZE);
+  }, []);
+
   const clearFilters = useCallback(() => {
     setActiveFamily("all");
     setActiveProductFilter("");
     setSearch("");
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const hasActiveFilters =
     activeFamily !== "all" || activeProductFilter !== "" || search.trim() !== "";
+
+  const activeDesc = useMemo(() => {
+    if (activeFamily === "all") return null;
+    return families.find((f) => f.slug === activeFamily);
+  }, [activeFamily, families]);
 
   if (swatches.length === 0) {
     return (
@@ -81,95 +116,138 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
 
   return (
     <div>
-      {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        <button
-          type="button"
-          onClick={() => setActiveFamily("all")}
-          className={`font-heading text-xs font-semibold uppercase tracking-[0.1em] px-4 py-2 border transition-colors duration-200 ${
-            activeFamily === "all"
-              ? "bg-anthracite text-white border-anthracite"
-              : "bg-white text-anthracite border-anthracite/15 hover:border-anthracite/30"
-          }`}
-        >
-          Alle
-        </button>
-        {families.map((f) => (
+      {/* Sentinel for sticky detection */}
+      <div ref={controlsRef} className="h-0" aria-hidden="true" />
+
+      {/* Sticky controls */}
+      <div
+        className={`sticky top-0 z-30 transition-shadow duration-300 -mx-5 md:-mx-10 px-5 md:px-10 pb-4 pt-2 ${
+          isSticky
+            ? "bg-white/95 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+            : "bg-white"
+        }`}
+      >
+        {/* Tabs */}
+        <div className="flex flex-wrap gap-2 mb-4">
           <button
-            key={f.slug}
             type="button"
-            onClick={() => setActiveFamily(f.slug)}
+            onClick={() => handleFamilyChange("all")}
             className={`font-heading text-xs font-semibold uppercase tracking-[0.1em] px-4 py-2 border transition-colors duration-200 ${
-              activeFamily === f.slug
+              activeFamily === "all"
                 ? "bg-anthracite text-white border-anthracite"
                 : "bg-white text-anthracite border-anthracite/15 hover:border-anthracite/30"
             }`}
           >
-            {f.name}
+            Alle
           </button>
-        ))}
-      </div>
-
-      {/* Search + Filter + View Toggle */}
-      <div className="flex flex-col sm:flex-row gap-3 mb-6">
-        <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-anthracite/30">
-            <CmsIcon icon={icons["ui-search"]} width={16} height={16} />
-          </span>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Stoff suchen (Name, Artikelnummer…)"
-            className="w-full pl-10 pr-4 py-2.5 border border-anthracite/15 bg-white font-body text-sm text-anthracite placeholder:text-anthracite/30 focus:outline-none focus:border-anthracite/30 transition-colors"
-          />
-        </div>
-
-        <select
-          value={activeProductFilter}
-          onChange={(e) => setActiveProductFilter(e.target.value)}
-          className="border border-anthracite/15 bg-white px-3 py-2.5 font-body text-sm text-anthracite focus:outline-none focus:border-anthracite/30 transition-colors"
-        >
-          <option value="">Alle Produktarten</option>
-          {productTypes.map((pt) => (
-            <option key={pt.slug} value={pt.slug}>
-              {pt.name}
-            </option>
+          {families.map((f) => (
+            <button
+              key={f.slug}
+              type="button"
+              onClick={() => handleFamilyChange(f.slug)}
+              className={`font-heading text-xs font-semibold uppercase tracking-[0.1em] px-4 py-2 border transition-colors duration-200 ${
+                activeFamily === f.slug
+                  ? "bg-anthracite text-white border-anthracite"
+                  : "bg-white text-anthracite border-anthracite/15 hover:border-anthracite/30"
+              }`}
+            >
+              {f.name}
+            </button>
           ))}
-        </select>
+        </div>
 
-        <div className="flex border border-anthracite/15">
-          <button
-            type="button"
-            onClick={() => setViewMode("grid")}
-            className={`px-3 py-2 transition-colors duration-200 ${
-              viewMode === "grid"
-                ? "bg-anthracite text-white"
-                : "bg-white text-anthracite/50 hover:text-anthracite"
-            }`}
-            aria-label="Kachelansicht"
+        {/* Search + Filter + View Toggle */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-anthracite/30">
+              <CmsIcon icon={icons["ui-search"]} width={16} height={16} />
+            </span>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setVisibleCount(PAGE_SIZE);
+              }}
+              placeholder="Stoff suchen (Name, Artikelnummer…)"
+              className="w-full pl-10 pr-4 py-2.5 border border-anthracite/15 bg-white font-body text-sm text-anthracite placeholder:text-anthracite/30 focus:outline-none focus:border-anthracite/30 transition-colors"
+            />
+          </div>
+
+          <select
+            value={activeProductFilter}
+            onChange={(e) => {
+              setActiveProductFilter(e.target.value);
+              setVisibleCount(PAGE_SIZE);
+            }}
+            className="border border-anthracite/15 bg-white px-3 py-2.5 font-body text-sm text-anthracite focus:outline-none focus:border-anthracite/30 transition-colors"
           >
-            <CmsIcon icon={icons["ui-grid"]} width={18} height={18} />
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode("matrix")}
-            className={`px-3 py-2 border-l border-anthracite/15 transition-colors duration-200 ${
-              viewMode === "matrix"
-                ? "bg-anthracite text-white"
-                : "bg-white text-anthracite/50 hover:text-anthracite"
-            }`}
-            aria-label="Matrixansicht"
-          >
-            <CmsIcon icon={icons["ui-matrix"]} width={18} height={18} />
-          </button>
+            <option value="">Alle Produktarten</option>
+            {productTypes.map((pt) => (
+              <option key={pt.slug} value={pt.slug}>
+                {pt.name}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex border border-anthracite/15">
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-2 transition-colors duration-200 ${
+                viewMode === "grid"
+                  ? "bg-anthracite text-white"
+                  : "bg-white text-anthracite/50 hover:text-anthracite"
+              }`}
+              aria-label="Kachelansicht"
+            >
+              <CmsIcon icon={icons["ui-grid"]} width={18} height={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("matrix")}
+              className={`px-3 py-2 border-l border-anthracite/15 transition-colors duration-200 ${
+                viewMode === "matrix"
+                  ? "bg-anthracite text-white"
+                  : "bg-white text-anthracite/50 hover:text-anthracite"
+              }`}
+              aria-label="Matrixansicht"
+            >
+              <CmsIcon icon={icons["ui-matrix"]} width={18} height={18} />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Family context */}
+      {activeDesc && (
+        <div className="mb-6 mt-2">
+          {activeDesc.description && (
+            <p className="font-body text-text-gray/70 text-sm leading-relaxed max-w-2xl">
+              {activeDesc.description}
+            </p>
+          )}
+          {activeFamily === "nerio" && (
+            <Link
+              href="/nerio"
+              className="inline-flex items-center gap-1.5 mt-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-pumpkin hover:text-pumpkin/80 transition-colors duration-200"
+            >
+              Mehr zur NERIO Materialstory
+              <CmsIcon icon={icons["arrow-right"]} width={12} height={12} />
+            </Link>
+          )}
+        </div>
+      )}
 
       {/* Status bar */}
       <div className="flex items-center justify-between mb-6">
         <p className="font-accent text-text-gray/50 text-[11px] tracking-[0.1em] uppercase">
           {filtered.length} {filtered.length === 1 ? "Stoff" : "Stoffe"}
+          {viewMode === "grid" && filtered.length > visibleCount && (
+            <span className="text-text-gray/30">
+              {" "}· {visibleCount} angezeigt
+            </span>
+          )}
         </p>
         {hasActiveFilters && (
           <button
@@ -197,16 +275,29 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
           </button>
         </div>
       ) : viewMode === "grid" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((swatch) => (
-            <FabricSwatchCard
-              key={swatch.id}
-              swatch={swatch}
-              onSelect={setSelectedSwatch}
-              icons={icons}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {visibleSwatches.map((swatch) => (
+              <FabricSwatchCard
+                key={swatch.id}
+                swatch={swatch}
+                onSelect={setSelectedSwatch}
+                icons={icons}
+              />
+            ))}
+          </div>
+          {hasMore && (
+            <div className="flex justify-center mt-8">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                className="font-heading text-sm font-semibold uppercase tracking-[0.08em] px-8 py-3 border border-anthracite/20 text-anthracite hover:border-anthracite/40 transition-colors duration-300"
+              >
+                Mehr anzeigen ({Math.min(PAGE_SIZE, filtered.length - visibleCount)} weitere)
+              </button>
+            </div>
+          )}
+        </>
       ) : (
         <FabricMatrixView
           swatches={filtered}

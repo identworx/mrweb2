@@ -1861,20 +1861,70 @@ Die Hub-Seite zeigt:
 
 ### /materialien/stoffe-muster
 
-Zeigt die vollstaendige interaktive Stoffbibliothek:
+Zeigt die vollstaendige interaktive Stoffbibliothek mit Katalogstruktur:
 
-- **Tabs** nach Materialfamilie
+**Sticky Kontrollbereich** (haftet am oberen Rand beim Scrollen):
+
+- **Stofffamilien-Tabs:** Alle, Mackintosh® & Lite, Mackintosh®, Mackintosh® Nerio, Basic
 - **Suche** nach Name, Artikelnummer, Familie, Mustertyp
-- **Produktart-Filter** per Dropdown
-- **Kachelansicht** und **Matrixansicht**
-- **Detail-Drawer** von rechts (Slide-in bei Klick auf Stoffkarte)
+- **Produktart-Filter** per Dropdown (alle 8 Produktarten inkl. Sitzpolster, Bankauflagen, Poufs, Tischsets)
+- **Ansicht-Umschalter:** Kachelansicht / Matrixansicht
 
-Der Detail-Drawer ist Pflicht und bleibt auf dieser Seite vollstaendig erhalten:
+**Galerieansicht (Grid):**
+- 4-Spalten-Grid (responsive: 1 → 2 → 3 → 4 Spalten)
+- Maximal 24 Stoffe initial sichtbar
+- „Mehr anzeigen"-Button laedt weitere 24 Stoffe nach
+- Keine endlose Scrollwand
 
-- Oeffnet beim Klick auf eine Stoffkarte
+**Produktmatrix:**
+- Tabellenansicht mit sticky erster Spalte (Stoffname + Thumbnail)
+- Produktarten als Spaltenkoepfe
+- Verfuegbarkeit mit Haekchen + optionalem Keder-Hinweis
+- Horizontales Scrollen bei vielen Produktarten
+- Mobile: Karten-Layout statt Tabelle
+
+**Familien-Kontext:**
+- Bei Auswahl einer Familie: Beschreibungstext unter den Tabs
+- NERIO-Tab zeigt zusaetzlich „Mehr zur NERIO Materialstory" → `/nerio`
+
+**Detail-Drawer** (unveraendert):
+- Oeffnet beim Klick auf eine Stoffkarte/Matrixzeile
 - Slide-in Animation von rechts (300ms ease-out)
 - Backdrop-Close + Escape-Taste
 - Body-Scroll wird blockiert
+- Zeigt: Stoffbild, Name, Artikelnummer, Familie, Mustertyp, verfuegbare Produktarten, CTAs
+
+**Produktarten (8 Stueck, sortiert nach order):**
+
+| Name | Slug | Katalog-Referenz |
+|------|------|-----------------|
+| Deko-Kissen | deko-kissen | Alle Familien |
+| Hochlehner | hochlehner | M&L, NERIO, Basic |
+| Niedriglehner | niedriglehner | M&L, NERIO, Basic |
+| Sitzkissen | sitzkissen | M&L, NERIO, Basic |
+| Sitzpolster | sitzpolster | M&L (ohne Keder) |
+| Bankauflagen | bankauflagen | M&L, NERIO |
+| Poufs | poufs | M&L |
+| Tischsets & Tischlaeufer | tischsets-tischlaeufer | M&L |
+
+**Katalogdaten-Import:**
+
+Die Katalogdaten aus dem PDF „Stoffe & Muster" sind als Importvorlage vorbereitet:
+
+- `data/import/fabric-catalog-overview.example.json` — vollstaendige Vorlage mit allen Stoffen aus dem Katalog
+- Felder mit `TODO` muessen manuell gepflegt werden (colorHex, patternType fuer einige Stoffe)
+- Import ueber `scripts/import-fabric-library.ts --file data/import/fabric-catalog-overview.example.json`
+
+**Backfill-Script fuer Produktarten:**
+
+```bash
+npx tsx scripts/backfill-fabric-product-types.ts          # Dry-Run
+npx tsx scripts/backfill-fabric-product-types.ts --apply   # Produktarten anlegen
+```
+
+Erstellt fehlende Produktarten (Sitzpolster, Bankauflagen, Poufs, Tischsets & Tischlaeufer). Idempotent.
+
+**Upload-Limit bleibt 15 MB.**
 
 Datenquelle: `getFabricLibraryData()` aus `lib/cms/fabric-library.ts`
 
