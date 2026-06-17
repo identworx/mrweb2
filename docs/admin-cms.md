@@ -2019,6 +2019,50 @@ Idempotent, matcht ueber Artikelnummer, aendert nur `familyId`. Keine Bilder, Te
 
 **Upload-Limit bleibt 15 MB.**
 
+**Axroma Fabric Image Scraper:**
+
+Script zum automatisierten Abgleich und Import von Stoffbildern von `axroma.com.cn` (eigene Webseite).
+
+```bash
+npx tsx scripts/scrape-axroma-fabric-images.ts                    # Dry-Run: Scrape + Match, kein Download
+npx tsx scripts/scrape-axroma-fabric-images.ts --download          # + Bilder ins Staging herunterladen
+npx tsx scripts/scrape-axroma-fabric-images.ts --download --apply  # + gepruefte Bilder ins CMS importieren
+npx tsx scripts/scrape-axroma-fabric-images.ts --replace-existing  # bestehende Swatch-Bilder ueberschreiben
+npx tsx scripts/scrape-axroma-fabric-images.ts --resume-report data/import/axroma-images/axroma-images-report.json --download
+```
+
+Drei-Phasen-Workflow:
+1. **Dry-Run** (Standard): Webseite scrapen, Bilder erkennen, gegen DB-Swatches matchen, Report schreiben
+2. **Download** (`--download`): Bilder in Staging herunterladen + WebP-Optimierung
+3. **Apply** (`--apply`): Nur `READY_FOR_IMPORT`-Eintraege ins CMS uebernehmen (MediaAsset anlegen + FabricSwatch verknuepfen)
+
+Staging-Verzeichnis: `data/import/axroma-images/`
+- `original/` — Originalbilder vom Server
+- `optimized/` — WebP-optimierte Versionen (max 2000px, Q84)
+
+Report-Dateien:
+- `data/import/axroma-images/axroma-images-report.json` — Detaillierter JSON-Report
+- `data/import/axroma-images/axroma-images-report.csv` — CSV fuer Excel/Review
+
+Matching-Prioritaet:
+1. Artikelnummer exakt → `MATCHED` (confidence ≥ 0.9)
+2. Normalisierter Stoffname → `MATCHED` (confidence ≥ 0.85) oder `UNCERTAIN` (< 0.85)
+3. Kein Match → `NO_MATCH`
+
+Sicherheitsregeln:
+- Nur Domain `axroma.com.cn` erlaubt (Allowlist)
+- Rate Limit: 800ms Pause zwischen Requests
+- Timeout: 15s pro Request
+- Eigener User-Agent gesetzt
+- Redirects werden validiert (Zieldomain muss erlaubt sein)
+- Dry-Run macht keine DB-Aenderung
+- Download macht keine DB-Aenderung
+- Apply ist idempotent
+- Vorhandene Swatch-Bilder werden NICHT ueberschrieben (es sei denn `--replace-existing`)
+- Keine Families/ProductTypes/Availabilities/Navigation geaendert
+- Upload-Limit bleibt 15 MB
+- Bildoptimierung: Sharp, WebP Q84, max 2000px, EXIF entfernt, keine Hochskalierung
+
 Datenquelle: `getFabricLibraryData()` aus `lib/cms/fabric-library.ts`
 
 ### /materialien/technische-daten

@@ -1,0 +1,8 @@
+# Downloaded and optimized images (staging only, not committed)
+original/
+optimized/
+
+# Reports are committed for review
+!*.json
+!*.csv
+!.gitignore
