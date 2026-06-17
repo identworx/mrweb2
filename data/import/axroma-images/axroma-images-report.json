@@ -1,0 +1,19 @@
+{
+  "summary": {
+    "timestamp": "2026-06-17T08:16:07.774Z",
+    "sourceUrl": "http://axroma.com.cn/en/product/product.html",
+    "pagesScraped": 0,
+    "imagesFound": 0,
+    "imagesDownloaded": 0,
+    "exactMatches": 0,
+    "uncertainMatches": 0,
+    "noMatches": 0,
+    "alreadyHasImage": 0,
+    "readyForImport": 0,
+    "imported": 0,
+    "errors": [
+      "HTTP 403 for http://axroma.com.cn/en/product/product.html"
+    ]
+  },
+  "images": []
+}
