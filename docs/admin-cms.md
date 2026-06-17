@@ -1593,7 +1593,7 @@ Am Ende des Collection-Grids erscheint eine CMS-editierbare Service-Karte "Welch
 
 ### Ueberblick
 
-Die Stoffbibliothek auf `/materialien` ersetzt den früheren statischen „Stoffe & Muster"-Bereich durch eine interaktive, CMS-gesteuerte Premium-Stoffbibliothek. Sie bildet die Katalog-Doppelseiten (Mackintosh® & Lite, Mackintosh®, NERIO/Oceana, Basic) webseitentauglich ab: Stoffname, Artikelnummer, Stofffamilie, Stoffbild und verfuegbare Produktarten.
+Die Stoffbibliothek auf `/materialien` ersetzt den früheren statischen „Stoffe & Muster"-Bereich durch eine interaktive, CMS-gesteuerte Premium-Stoffbibliothek. Sie bildet die Katalog-Doppelseiten (Mackintosh® Lite, Mackintosh®, NERIO/Oceana, Basic) webseitentauglich ab: Stoffname, Artikelnummer, Stofffamilie, Stoffbild und verfuegbare Produktarten.
 
 ### Datenmodell
 
@@ -1783,7 +1783,7 @@ npx tsx scripts/import-fabric-library.ts --apply --file data/import/meine-daten.
 
 **Beispiel-JSON:** `data/import/fabric-library.example.json`
 - 4 Produktarten (Deko-Kissen, Hochlehner, Niedriglehner, Sitzkissen)
-- 2 Familien (Mackintosh® & Lite, Basic)
+- 2 Familien (Mackintosh® Lite, Basic)
 - 3 Stoffe (Rocky Mountain Olive, St. Tropez Citron, Boletus Brown)
 
 ### Revalidation
@@ -1865,7 +1865,7 @@ Zeigt die vollstaendige interaktive Stoffbibliothek mit Katalogstruktur:
 
 **Sticky Kontrollbereich** (haftet am oberen Rand beim Scrollen):
 
-- **Stofffamilien-Tabs:** Alle, Mackintosh® & Lite, Mackintosh®, Mackintosh® Nerio, Basic
+- **Stofffamilien-Tabs:** Alle, Mackintosh® Lite, Mackintosh®, Mackintosh® Nerio, Basic
 - **Suche** nach Name, Artikelnummer, Familie, Mustertyp
 - **Produktart-Filter** per Dropdown (alle 8 Produktarten inkl. Sitzpolster, Bankauflagen, Poufs, Tischsets)
 - **Ansicht-Umschalter:** Kachelansicht / Matrixansicht
