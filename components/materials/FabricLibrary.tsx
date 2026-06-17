@@ -13,7 +13,7 @@ import FabricMatrixView from "./FabricMatrixView";
 import FabricDetailDrawer from "./FabricDetailDrawer";
 
 type ViewMode = "grid" | "matrix";
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 30;
 
 interface Props {
   data: FabricLibraryData;
@@ -276,7 +276,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
         </div>
       ) : viewMode === "grid" ? (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3">
             {visibleSwatches.map((swatch) => (
               <FabricSwatchCard
                 key={swatch.id}
@@ -287,7 +287,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
             ))}
           </div>
           {hasMore && (
-            <div className="flex justify-center mt-8">
+            <div className="flex justify-center mt-6">
               <button
                 type="button"
                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}

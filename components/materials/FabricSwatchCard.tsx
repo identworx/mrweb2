@@ -18,14 +18,14 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
       onClick={() => onSelect?.(swatch)}
       className="group text-left bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10] w-full"
     >
-      <div className="aspect-square overflow-hidden bg-[#FAF8F5] relative">
+      <div className="aspect-[4/3] overflow-hidden bg-[#FAF8F5] relative">
         {swatch.swatchImageUrl ? (
           <Image
             src={swatch.swatchImageUrl}
             alt={`${swatch.name} Stoffmuster`}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
           />
         ) : swatch.colorHex ? (
           <div
@@ -34,16 +34,16 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-anthracite/10 to-anthracite/5 flex items-center justify-center">
-            <CmsIcon icon={icons["ui-image-placeholder"]} width={32} height={32} className="text-anthracite/20" />
+            <CmsIcon icon={icons["ui-image-placeholder"]} width={28} height={28} className="text-anthracite/20" />
           </div>
         )}
       </div>
 
-      <div className="p-4">
-        <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-1">
+      <div className="p-3">
+        <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-0.5">
           {swatch.familyName}
         </p>
-        <h3 className="font-heading text-anthracite text-sm font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">
+        <h3 className="font-heading text-anthracite text-[13px] font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">
           {swatch.name}
         </h3>
         {swatch.articleNumber && (
@@ -53,7 +53,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
         )}
 
         {swatch.availableProductTypes.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
+          <div className="flex flex-wrap gap-1 mt-2">
             {swatch.availableProductTypes.slice(0, 5).map((pt) => (
               <span
                 key={pt.slug}
@@ -70,7 +70,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
           </div>
         )}
 
-        <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-3 pt-3 border-t border-black/[0.04]">
+        <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-2 pt-2 border-t border-black/[0.04]">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Details
           </span>
