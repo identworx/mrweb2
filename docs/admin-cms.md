@@ -42,6 +42,62 @@ npm run build
 pm2 restart mosaroma
 ```
 
+### Stoffkatalog-Import auf Production (einmalig)
+
+Vollstaendige Checkliste fuer den Katalogdaten-Import:
+
+```bash
+# 1. DB Backup
+cp /var/www/web.mosaroma.de/shared/mosaroma.db /var/www/web.mosaroma.de/shared/mosaroma.db.bak-$(date +%Y%m%d)
+
+# 2. Build Backup (optional)
+cp -r .next .next.bak
+
+# 3. Git Pull
+git pull origin claude/add-logo-i2yFH
+
+# 4. Prisma Check
+npx prisma validate
+npx prisma migrate status
+
+# 5. ProductType Backfill (falls 4 Produktarten fehlen: Sitzpolster, Bankauflagen, Poufs, Tischsets)
+npx tsx scripts/backfill-fabric-product-types.ts
+npx tsx scripts/backfill-fabric-product-types.ts --apply
+
+# 6. Family Name Fix (nur falls Production noch "Mackintosh® & Lite" statt "Mackintosh® Lite" hat)
+#    Pruefen im Admin unter Stoffbibliothek → Familien. Wenn Name korrekt: ueberspringen.
+
+# 7. Import Dry-Run
+npx tsx scripts/import-fabric-catalog-overview.ts
+
+# 8. Import Apply
+npx tsx scripts/import-fabric-catalog-overview.ts --apply
+
+# 9. Import Idempotency (Kontrolle: 0 neue Eintraege erwartet)
+npx tsx scripts/import-fabric-catalog-overview.ts
+
+# 10. Rocky Mountain Family Fix Dry-Run
+npx tsx scripts/fix-rocky-mountain-family.ts
+
+# 11. Rocky Mountain Family Fix Apply
+npx tsx scripts/fix-rocky-mountain-family.ts --apply
+
+# 12. Rocky Mountain Family Fix Idempotency (Kontrolle: alle ALREADY_CORRECT)
+npx tsx scripts/fix-rocky-mountain-family.ts
+
+# 13. Build
+npm run build
+
+# 14. PM2 Restart
+pm2 restart mosaroma
+```
+
+**Wichtig:**
+- Keine Migration noetig (Schema ist bereits aktuell)
+- Kein Full Seed ausfuehren
+- Upload-Limit bleibt 15 MB
+- Alle Scripts sind idempotent und sicher mehrfach ausfuehrbar
+
 ## 3. Umgebungsvariablen (.env)
 
 | Variable           | Beschreibung                                         | Beispiel                           |
@@ -1945,11 +2001,21 @@ npx tsx scripts/backfill-fabric-product-types.ts          # Dry-Run
 npx tsx scripts/backfill-fabric-product-types.ts --apply   # Produktarten anlegen
 ```
 
+**Rocky Mountain Family Fix:**
+
+Rocky Mountain Olive war vor dem Katalogimport der Familie `mackintosh-lite` zugeordnet. Laut PDF gehoert die gesamte Rocky-Mountain-Serie zu `mackintosh`. Fix-Script:
+
+```bash
+npx tsx scripts/fix-rocky-mountain-family.ts          # Dry-Run
+npx tsx scripts/fix-rocky-mountain-family.ts --apply   # Fix ausfuehren
+```
+
+Idempotent, matcht ueber Artikelnummer, aendert nur `familyId`. Keine Bilder, Texte oder Verfuegbarkeiten betroffen.
+
 **Phase 3 TODOs (Admin-Pflege):**
 - Swatch-Bilder fuer alle 66 Stoffe hochladen
 - colorHex fuer 41 Stoffe ergaenzen
 - Verfuegbarkeitsmatrix in Admin schneller pflegbar machen
-- Rocky Mountain Olive in DB: Familie ist `mackintosh-lite`, laut Katalog `mackintosh` — ggf. manuell korrigieren
 
 **Upload-Limit bleibt 15 MB.**
 
