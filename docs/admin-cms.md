@@ -2069,23 +2069,45 @@ Deep-Crawl-Verhalten:
 - Pro Seite: Deduplizierung (bester Match pro Swatch gewinnt, andere → `ALTERNATIVE_IMAGE`)
 
 Image-Klassifizierung:
-- Rollen: `swatch`, `product`, `detail`, `gallery`, `unknown`, `ignored`
-- Ignore-Patterns: Icons, Logos, Thumbnails, UI-Elemente, Platzhalter (< 50px)
+- Rollen: `swatch`, `product`, `detail`, `gallery`, `layout`, `unknown`, `ignored`
+- `layout`: Website-Bedienelemente (Icons, Navigation, Back-Buttons)
+- `product`/`detail`: Bilder aus `/vancheerfile/Images/` (Axroma CDN)
+- `ignored`: Tracking-Pixel, Spacer, zu kleine Bilder (< 50px)
+- Ignore-Rules mit `urlOnly`-Flag: URL-Pfad-basiert (z.B. `/images/ico*`, `/images/back.png`) oder Combined (URL + Alt + Title)
 - Lazy-Load-Erkennung: `data-src`, `data-original`, `data-lazy`, `data-url`, `srcset`
 
-Matching-Prioritaet (6-stufig):
+Artikelnummer-Erkennung (Whitelist-basiert):
+- `rawDetectedArticleNumbers`: Alle Zahlen, die syntaktisch wie Artikelnummern aussehen (inkl. interne IDs)
+- `candidateArticleNumbers`: Nur validierte Kandidaten:
+  - Punktierte Nummern (z.B. `401.233`) sind immer Kandidaten (strukturiertes Format)
+  - 8-stellige Zahlen und Prefixed-Nummern nur wenn sie einer DB-Artikelnummer entsprechen
+  - Verhindert False Positives durch interne Seiten-IDs, Bildnummern, JS-Werte
+- `matchedArticleNumber`: Die tatsaechlich gematchte Artikelnummer des zugewiesenen Swatches
+
+Matching-Prioritaet (6-stufig, nur mit Kandidaten-Artikelnummern):
 1. Bild-Kontext Artikelnummer (umgebender Text/Tabelle) → confidence 0.95
 2. Alt/Title Artikelnummer → confidence 0.90
-3. Seite hat genau eine Artikelnummer → confidence 0.85
+3. Seite hat genau eine Kandidaten-Artikelnummer → confidence 0.85
 4. Alt/Title Stoffname (exakt) → confidence 0.80
 5. Heading Stoffname → confidence 0.75
 6. Seitentitel Stoffname → confidence 0.70
 
-Artikelnummer-Formate (alle erkannt):
-- Standard: `15815809`
-- Punktiert: `405.813`, `999.234.06`
-- Prefixed: `B15815826`
-- In Alt-Text, Dateinamen, Tabellenzellen, umgebendem Text
+Import-Workflow:
+- `importCandidate: true` im Dry-Run: Bild ist importfaehig (confidence >= 0.85, Rolle swatch/product/detail, Swatch ohne Bild, bester Kandidat)
+- `READY_FOR_IMPORT`: Status nach erfolgreichem Download + Optimierung
+- `--apply` erst nach visueller Pruefung des Reports und der heruntergeladenen Bilder
+
+> **WICHTIG:** `--apply` NIE blind ausfuehren. Immer zuerst:
+> 1. Dry-Run → Report pruefen (Matches, Confidence, Artikelnummern)
+> 2. `--download` → Bilder visuell pruefen (Staging-Verzeichnis)
+> 3. Erst dann `--apply` mit Bedacht
+
+Detailseiten-Test (Production):
+```bash
+DATABASE_URL="file:./data/mosaroma.db" npx tsx scripts/scrape-axroma-fabric-images.ts \
+  --url "http://axroma.com.cn/en/product/product_100000333439843.html" \
+  --detail-only
+```
 
 Staging-Verzeichnis: `data/import/axroma-images/`
 - `original/` — Originalbilder vom Server
@@ -2094,6 +2116,9 @@ Staging-Verzeichnis: `data/import/axroma-images/`
 Report-Dateien:
 - `data/import/axroma-images/axroma-images-report.json` — Detaillierter JSON-Report (inkl. PageReports)
 - `data/import/axroma-images/axroma-images-report.csv` — CSV fuer Excel/Review
+- Pro Bild: `status`, `confidence`, `imageRole`, `importCandidate`, `matchedArticleNumber`, `ignoredReason`
+- Pro Seite: `rawDetectedArticleNumbers`, `candidateArticleNumbers`
+- Summary: `importCandidates`, `rawArticleNumbersDetected`, `candidateArticleNumbersDetected`
 
 Sicherheitsregeln:
 - Nur Domain `axroma.com.cn` erlaubt (Allowlist)

@@ -1,1 +1,1 @@
-status,confidence,imageRole,detectedName,detectedArticleNumber,matchedSwatchName,matchedArticleNumber,matchedFamily,matchedSwatchId,imageUrl,sourcePageUrl,alt,title,localOriginalPath,localOptimizedPath,ignoredReason,notes
+status,confidence,imageRole,importCandidate,detectedName,detectedArticleNumber,matchedSwatchName,matchedArticleNumber,matchedFamily,matchedSwatchId,imageUrl,sourcePageUrl,alt,title,localOriginalPath,localOptimizedPath,ignoredReason,notes

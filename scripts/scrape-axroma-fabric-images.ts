@@ -118,7 +118,7 @@ type MatchStatus =
   | "IGNORED"
   | "ERROR";
 
-type ImageRole = "swatch" | "product" | "detail" | "gallery" | "unknown" | "ignored";
+type ImageRole = "swatch" | "product" | "detail" | "gallery" | "layout" | "unknown" | "ignored";
 
 interface ScrapedImage {
   sourcePageUrl: string;
@@ -135,6 +135,7 @@ interface ScrapedImage {
   confidence: number;
   status: MatchStatus;
   imageRole: ImageRole;
+  importCandidate: boolean;
   ignoredReason: string;
   localOriginalPath: string | null;
   localOptimizedPath: string | null;
@@ -147,7 +148,8 @@ interface PageReport {
   linksFound: number;
   detailLinksFound: number;
   imagesFound: number;
-  detectedArticleNumbers: string[];
+  rawDetectedArticleNumbers: string[];
+  candidateArticleNumbers: string[];
   detectedNames: string[];
 }
 
@@ -165,8 +167,11 @@ interface ReportSummary {
   imagesNoMatch: number;
   alreadyHasImage: number;
   readyForImport: number;
+  importCandidates: number;
   downloaded: number;
   imported: number;
+  rawArticleNumbersDetected: number;
+  candidateArticleNumbersDetected: number;
   errors: string[];
 }
 
@@ -267,6 +272,9 @@ const ART_8DIGIT = /\b(\d{8})\b/g;
 // Matches: B15815826 (letter prefix + digits)
 const ART_PREFIXED = /\b([A-Z]\d{7,8})\b/g;
 
+// Non-global version for testing format
+const IS_DOTTED_FORMAT = /^\d{2,4}\.\d{2,4}(?:\.\d{1,4})?$/;
+
 function extractAllArticleNumbers(text: string): string[] {
   const results = new Set<string>();
   let m;
@@ -279,9 +287,23 @@ function extractAllArticleNumbers(text: string): string[] {
   return [...results];
 }
 
-function extractFirstArticleNumber(text: string): string {
-  const all = extractAllArticleNumbers(text);
-  return all[0] ?? "";
+function filterCandidateArticleNumbers(
+  rawNumbers: string[],
+  dbArticleNumberSet: Set<string>,
+): string[] {
+  return rawNumbers.filter((num) => {
+    // Dotted article numbers (e.g. 401.233) are always candidates — structured format
+    if (IS_DOTTED_FORMAT.test(num)) return true;
+    // Exact DB match
+    if (dbArticleNumberSet.has(num)) return true;
+    // Normalized DB match (strip separators)
+    const stripped = num.replace(/[.\-]/g, "");
+    for (const dbArt of dbArticleNumberSet) {
+      if (dbArt.replace(/[.\-]/g, "") === stripped) return true;
+    }
+    // 8-digit and prefixed numbers not matching DB → reject
+    return false;
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -297,7 +319,7 @@ function resolveHref(href: string, baseUrl: URL): string | null {
     if (!isAllowedUrl(abs)) return null;
     const ext = extname(new URL(abs).pathname).toLowerCase();
     if (SKIP_EXTENSIONS.has(ext)) return null;
-    return abs.split("#")[0]; // remove fragment
+    return abs.split("#")[0];
   } catch {
     return null;
   }
@@ -354,13 +376,32 @@ function extractLinks(html: string, pageUrl: string): ExtractedLinks {
 // Image extraction & classification
 // ---------------------------------------------------------------------------
 
-const IGNORE_PATTERNS = [
-  /logo/i, /icon/i, /banner/i, /favicon/i, /sprite/i,
-  /social/i, /wechat/i, /weibo/i, /qq\./i, /share/i,
-  /arrow/i, /close/i, /search/i, /menu/i, /nav/i,
-  /header[-_]?bg/i, /footer[-_]?bg/i, /bg[-_]?img/i,
-  /loading/i, /spinner/i, /placeholder\.(gif|png)/i,
-  /\b1x1\b/i, /pixel\./i, /blank\./i, /spacer/i,
+interface IgnoreRule {
+  pattern: RegExp;
+  urlOnly: boolean;
+  reason: string;
+}
+
+const IGNORE_RULES: IgnoreRule[] = [
+  // Axroma site-specific layout images (URL path only)
+  { pattern: /\/images\/back\b/i, urlOnly: true, reason: "navigation image (back button)" },
+  { pattern: /\/images\/ico\d/i, urlOnly: true, reason: "layout/icon image" },
+  { pattern: /\/images\/ico[_-]/i, urlOnly: true, reason: "layout/icon image" },
+  { pattern: /\/images\/(search|logo|nav|close|menu)[._-]?/i, urlOnly: true, reason: "layout/icon image" },
+  { pattern: /\/images\/(header|footer)\b/i, urlOnly: true, reason: "layout background image" },
+
+  // Generic patterns (URL + alt + title)
+  { pattern: /logo/i, urlOnly: false, reason: "logo image" },
+  { pattern: /\bicon\b/i, urlOnly: false, reason: "icon image" },
+  { pattern: /favicon/i, urlOnly: false, reason: "favicon" },
+  { pattern: /sprite/i, urlOnly: false, reason: "sprite sheet" },
+  { pattern: /banner/i, urlOnly: false, reason: "banner image" },
+  { pattern: /social|wechat|weibo|qq\.|share/i, urlOnly: false, reason: "social media icon" },
+  { pattern: /\barrow\b/i, urlOnly: false, reason: "UI element (arrow)" },
+  { pattern: /header[-_]?bg|footer[-_]?bg|bg[-_]?img/i, urlOnly: false, reason: "layout background" },
+  { pattern: /loading|spinner/i, urlOnly: false, reason: "loading indicator" },
+  { pattern: /placeholder\.(gif|png)/i, urlOnly: false, reason: "placeholder image" },
+  { pattern: /\b1x1\b|pixel\.|blank\.|spacer/i, urlOnly: false, reason: "tracking pixel/spacer" },
 ];
 
 interface ExtractedImage {
@@ -377,14 +418,11 @@ function extractImages(html: string, pageUrl: string): ExtractedImage[] {
   const results: ExtractedImage[] = [];
   const seen = new Set<string>();
 
-  // Match all img tags including lazy-load attributes
-  const imgRe =
-    /<img\b[^>]*>/gi;
+  const imgRe = /<img\b[^>]*>/gi;
   let m;
   while ((m = imgRe.exec(html)) !== null) {
     const tag = m[0];
 
-    // Extract image URL from multiple possible attributes
     const srcAttrs = ["data-src", "data-original", "data-lazy", "data-url", "src"];
     let imgUrl = "";
     for (const attr of srcAttrs) {
@@ -395,7 +433,6 @@ function extractImages(html: string, pageUrl: string): ExtractedImage[] {
       }
     }
 
-    // Also check srcset for high-res
     if (!imgUrl) {
       const srcsetMatch = tag.match(/srcset\s*=\s*["']([^"']+)["']/i);
       if (srcsetMatch) {
@@ -414,35 +451,33 @@ function extractImages(html: string, pageUrl: string): ExtractedImage[] {
     if (seen.has(absoluteUrl)) continue;
     seen.add(absoluteUrl);
 
-    // Extract alt and title
     const altMatch = tag.match(/alt\s*=\s*["']([^"']*)["']/i);
     const titleMatch = tag.match(/title\s*=\s*["']([^"']*)["']/i);
     const alt = altMatch?.[1]?.trim() ?? "";
     const title = titleMatch?.[1]?.trim() ?? "";
 
-    // Get surrounding context (800 chars before and after)
     const start = Math.max(0, m.index - 800);
     const end = Math.min(html.length, m.index + tag.length + 800);
     const context = html.slice(start, end);
 
-    // Classify image
     let role: ImageRole = "unknown";
     let ignoredReason = "";
 
     const urlLower = absoluteUrl.toLowerCase();
     const combinedText = `${urlLower} ${alt.toLowerCase()} ${title.toLowerCase()}`;
 
-    // Check ignore patterns
-    for (const pat of IGNORE_PATTERNS) {
-      if (pat.test(combinedText)) {
-        role = "ignored";
-        ignoredReason = `matches pattern: ${pat.source}`;
+    // Check ignore rules (two-tier: URL-only first, then combined)
+    for (const rule of IGNORE_RULES) {
+      const testText = rule.urlOnly ? urlLower : combinedText;
+      if (rule.pattern.test(testText)) {
+        role = "layout";
+        ignoredReason = rule.reason;
         break;
       }
     }
 
     // Check for very small images (width/height in attributes)
-    if (role !== "ignored") {
+    if (role !== "layout") {
       const widthMatch = tag.match(/width\s*=\s*["']?(\d+)["']?/i);
       const heightMatch = tag.match(/height\s*=\s*["']?(\d+)["']?/i);
       const w = widthMatch ? parseInt(widthMatch[1]) : 0;
@@ -453,12 +488,12 @@ function extractImages(html: string, pageUrl: string): ExtractedImage[] {
       }
     }
 
-    // Positive classification
+    // Positive classification for non-ignored images
     if (role === "unknown") {
-      if (/swatch|fabric|textile|pattern|cloth/i.test(combinedText)) {
-        role = "swatch";
-      } else if (/product/i.test(combinedText)) {
+      if (/\/vancheerfile\/Images\//i.test(urlLower) && /\.(jpe?g|png|webp|gif)(\?|$)/i.test(urlLower)) {
         role = "product";
+      } else if (/swatch|fabric|textile|pattern|cloth/i.test(combinedText)) {
+        role = "swatch";
       } else if (/detail|zoom|large|big|full/i.test(combinedText)) {
         role = "detail";
       } else if (/gallery|slide|carousel/i.test(combinedText)) {
@@ -486,18 +521,16 @@ function extractImages(html: string, pageUrl: string): ExtractedImage[] {
 interface PageData {
   pageTitle: string;
   headings: string[];
-  allArticleNumbers: string[];
+  rawArticleNumbers: string[];
   allNames: string[];
   images: ExtractedImage[];
   links: ExtractedLinks;
 }
 
 function parsePage(html: string, pageUrl: string): PageData {
-  // Page title
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
   const pageTitle = titleMatch ? titleMatch[1].trim() : "";
 
-  // Headings
   const headings: string[] = [];
   const hRe = /<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi;
   let hm;
@@ -506,16 +539,21 @@ function parsePage(html: string, pageUrl: string): PageData {
     if (text.length > 1 && text.length < 200) headings.push(text);
   }
 
-  // Article numbers from full page text
-  const plainText = stripHtml(html);
-  const allArticleNumbers = extractAllArticleNumbers(plainText);
+  // Extract raw article numbers from visible text content only
+  // Strip <script> and <style> blocks first to avoid false positives
+  const cleanHtml = html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<!--[\s\S]*?-->/g, " ");
+  const plainText = stripHtml(cleanHtml);
+  const rawArticleNumbers = extractAllArticleNumbers(plainText);
 
   // Also extract from alt/title attributes
   const attrTextRe = /(?:alt|title)\s*=\s*["']([^"']+)["']/gi;
   let attrM;
   while ((attrM = attrTextRe.exec(html)) !== null) {
     for (const a of extractAllArticleNumbers(attrM[1])) {
-      if (!allArticleNumbers.includes(a)) allArticleNumbers.push(a);
+      if (!rawArticleNumbers.includes(a)) rawArticleNumbers.push(a);
     }
   }
 
@@ -524,7 +562,7 @@ function parsePage(html: string, pageUrl: string): PageData {
   let tdM;
   while ((tdM = tdRe.exec(html)) !== null) {
     for (const a of extractAllArticleNumbers(stripHtml(tdM[1]))) {
-      if (!allArticleNumbers.includes(a)) allArticleNumbers.push(a);
+      if (!rawArticleNumbers.includes(a)) rawArticleNumbers.push(a);
     }
   }
 
@@ -544,13 +582,10 @@ function parsePage(html: string, pageUrl: string): PageData {
     }
   }
 
-  // Images
   const images = extractImages(html, pageUrl);
-
-  // Links
   const links = extractLinks(html, pageUrl);
 
-  return { pageTitle, headings, allArticleNumbers, allNames, images, links };
+  return { pageTitle, headings, rawArticleNumbers, allNames, images, links };
 }
 
 // ---------------------------------------------------------------------------
@@ -582,6 +617,17 @@ async function loadDbSwatches(): Promise<DbSwatch[]> {
   }));
 }
 
+function buildDbArticleNumberSet(dbSwatches: DbSwatch[]): Set<string> {
+  const set = new Set<string>();
+  for (const s of dbSwatches) {
+    if (s.articleNumber) {
+      set.add(s.articleNumber);
+      set.add(s.articleNumber.replace(/[.\-]/g, ""));
+    }
+  }
+  return set;
+}
+
 // ---------------------------------------------------------------------------
 // Matching
 // ---------------------------------------------------------------------------
@@ -604,7 +650,6 @@ function matchArticleNumber(
   );
   if (exact) return { swatch: exact, confidence: 1.0, method: "article-exact" };
 
-  // Without dots/separators
   const stripped = normalized.replace(/[.\-]/g, "");
   const loose = dbSwatches.find(
     (s) =>
@@ -646,25 +691,29 @@ function matchName(name: string, dbSwatches: DbSwatch[]): MatchResult {
 function matchImageToSwatch(
   img: ExtractedImage,
   pageData: PageData,
+  candidateArticleNumbers: string[],
   dbSwatches: DbSwatch[],
+  dbArticleNumberSet: Set<string>,
 ): MatchResult {
-  // 1. Article number from image's surrounding context
-  const contextArt = extractFirstArticleNumber(stripHtml(img.context));
-  if (contextArt) {
-    const r = matchArticleNumber(contextArt, dbSwatches);
+  // 1. Article number from image's surrounding context (filtered to candidates)
+  const contextArts = extractAllArticleNumbers(stripHtml(img.context));
+  const contextCandidates = filterCandidateArticleNumbers(contextArts, dbArticleNumberSet);
+  if (contextCandidates.length > 0) {
+    const r = matchArticleNumber(contextCandidates[0], dbSwatches);
     if (r.swatch) return { ...r, method: `context-${r.method}` };
   }
 
-  // 2. Article number from alt/title
-  const altArt = extractFirstArticleNumber(`${img.alt} ${img.title}`);
-  if (altArt) {
-    const r = matchArticleNumber(altArt, dbSwatches);
+  // 2. Article number from alt/title (filtered to candidates)
+  const altArts = extractAllArticleNumbers(`${img.alt} ${img.title}`);
+  const altCandidates = filterCandidateArticleNumbers(altArts, dbArticleNumberSet);
+  if (altCandidates.length > 0) {
+    const r = matchArticleNumber(altCandidates[0], dbSwatches);
     if (r.swatch) return { ...r, method: `alt-${r.method}` };
   }
 
-  // 3. Page-level article number (only if page has exactly one)
-  if (pageData.allArticleNumbers.length === 1) {
-    const r = matchArticleNumber(pageData.allArticleNumbers[0], dbSwatches);
+  // 3. Page-level article number (only if page has exactly one candidate)
+  if (candidateArticleNumbers.length === 1) {
+    const r = matchArticleNumber(candidateArticleNumbers[0], dbSwatches);
     if (r.swatch)
       return {
         swatch: r.swatch,
@@ -704,7 +753,7 @@ function matchImageToSwatch(
 }
 
 // ---------------------------------------------------------------------------
-// Download & Optimize (unchanged logic)
+// Download & Optimize
 // ---------------------------------------------------------------------------
 
 async function downloadImage(
@@ -795,7 +844,7 @@ async function optimizeImage(
 }
 
 // ---------------------------------------------------------------------------
-// CMS Import (unchanged logic)
+// CMS Import
 // ---------------------------------------------------------------------------
 
 async function importToCms(
@@ -869,6 +918,7 @@ function writeReports(
     "status",
     "confidence",
     "imageRole",
+    "importCandidate",
     "detectedName",
     "detectedArticleNumber",
     "matchedSwatchName",
@@ -892,6 +942,7 @@ function writeReports(
       img.status,
       img.confidence.toFixed(2),
       img.imageRole,
+      img.importCandidate ? "YES" : "",
       esc(img.detectedName),
       esc(img.detectedArticleNumber),
       esc(img.matchedSwatchName || ""),
@@ -917,6 +968,8 @@ function writeReports(
 // Main
 // ---------------------------------------------------------------------------
 
+const IMPORTABLE_ROLES: Set<ImageRole> = new Set(["swatch", "product", "detail"]);
+
 async function main() {
   console.log("╔═══════════════════════════════════════════════════════════╗");
   console.log("║  Axroma Fabric Image Scraper v2 (Deep Crawl)            ║");
@@ -935,7 +988,6 @@ async function main() {
   console.log(`Staging:    ${STAGING_DIR}`);
   console.log();
 
-  // Ensure staging dirs exist upfront
   ensureDir(ORIGINAL_DIR);
   ensureDir(OPTIMIZED_DIR);
 
@@ -943,12 +995,16 @@ async function main() {
   // Load DB swatches
   // -------------------------------------------------------------------------
   const dbSwatches = await loadDbSwatches();
+  const dbArticleNumberSet = buildDbArticleNumberSet(dbSwatches);
   console.log(`DB swatches loaded: ${dbSwatches.length}`);
   console.log(
     `  With image: ${dbSwatches.filter((s) => s.hasImage).length}`,
   );
   console.log(
     `  Without image: ${dbSwatches.filter((s) => !s.hasImage).length}`,
+  );
+  console.log(
+    `  Known article numbers: ${dbArticleNumberSet.size}`,
   );
   console.log();
 
@@ -962,6 +1018,8 @@ async function main() {
   let pagesSkipped = 0;
   let detailPagesScraped = 0;
   let totalQueued = 0;
+  const allRawArticleNumbers = new Set<string>();
+  const allCandidateArticleNumbers = new Set<string>();
 
   if (resumeFrom && existsSync(resumeFrom)) {
     console.log(`Resuming from report: ${resumeFrom}`);
@@ -976,7 +1034,6 @@ async function main() {
     console.log("--- Phase 1: Deep Crawl & Parse ---");
 
     const visitedPages = new Set<string>();
-    // Queue: [url, depth]
     const queue: Array<[string, number]> = [[startUrl, 0]];
     totalQueued = 1;
     const globalSeenImages = new Set<string>();
@@ -1018,8 +1075,17 @@ async function main() {
         pagesScraped++;
         if (isDetail) detailPagesScraped++;
 
-        // Parse the page
         const pageData = parsePage(html, pageUrl);
+
+        // Filter raw article numbers to candidates
+        const candidateArticleNumbers = filterCandidateArticleNumbers(
+          pageData.rawArticleNumbers,
+          dbArticleNumberSet,
+        );
+
+        // Track for summary
+        for (const a of pageData.rawArticleNumbers) allRawArticleNumbers.add(a);
+        for (const a of candidateArticleNumbers) allCandidateArticleNumbers.add(a);
 
         const pageReport: PageReport = {
           pageUrl,
@@ -1030,29 +1096,41 @@ async function main() {
             pageData.links.categoryLinks.length,
           detailLinksFound: pageData.links.detailLinks.length,
           imagesFound: pageData.images.length,
-          detectedArticleNumbers: pageData.allArticleNumbers,
+          rawDetectedArticleNumbers: pageData.rawArticleNumbers,
+          candidateArticleNumbers,
           detectedNames: pageData.allNames.slice(0, 10),
         };
         pageReports.push(pageReport);
 
-        const nonIgnored = pageData.images.filter((i) => i.role !== "ignored");
-        const ignored = pageData.images.filter((i) => i.role === "ignored");
-
-        console.log(
-          `${depthLabel}  imgs: ${nonIgnored.length} relevant, ${ignored.length} ignored | ` +
-            `arts: [${pageData.allArticleNumbers.join(", ")}] | ` +
-            `detail links: ${pageData.links.detailLinks.length}`,
+        const layoutOrIgnored = pageData.images.filter(
+          (i) => i.role === "layout" || i.role === "ignored",
+        );
+        const relevant = pageData.images.filter(
+          (i) => i.role !== "layout" && i.role !== "ignored",
         );
 
-        // Determine the best image per matched swatch on this page
-        // (to avoid multiple images mapping to the same swatch)
+        console.log(
+          `${depthLabel}  imgs: ${relevant.length} relevant, ${layoutOrIgnored.length} ignored`,
+        );
+        console.log(
+          `${depthLabel}  arts: ${candidateArticleNumbers.length}/${pageData.rawArticleNumbers.length} candidates ` +
+            `[${candidateArticleNumbers.join(", ")}]`,
+        );
+        if (pageData.links.detailLinks.length > 0) {
+          console.log(
+            `${depthLabel}  detail links: ${pageData.links.detailLinks.length}`,
+          );
+        }
+
+        // Per-page best match per swatch (to avoid duplicates)
         const pageMatchedSwatches = new Map<
           string,
           { img: ScrapedImage; confidence: number }
         >();
 
         for (const img of pageData.images) {
-          if (img.role === "ignored") {
+          // Layout and ignored images → IGNORED status
+          if (img.role === "layout" || img.role === "ignored") {
             images.push({
               sourcePageUrl: pageUrl,
               imageUrl: img.url,
@@ -1068,6 +1146,7 @@ async function main() {
               confidence: 0,
               status: "IGNORED",
               imageRole: img.role,
+              importCandidate: false,
               ignoredReason: img.ignoredReason,
               localOriginalPath: null,
               localOptimizedPath: null,
@@ -1081,9 +1160,7 @@ async function main() {
               sourcePageUrl: pageUrl,
               imageUrl: img.url,
               detectedName: img.alt || img.title || "",
-              detectedArticleNumber: extractFirstArticleNumber(
-                stripHtml(img.context),
-              ),
+              detectedArticleNumber: "",
               surroundingText: stripHtml(img.context).slice(0, 200),
               alt: img.alt,
               title: img.title,
@@ -1094,6 +1171,7 @@ async function main() {
               confidence: 0,
               status: "DUPLICATE",
               imageRole: img.role,
+              importCandidate: false,
               ignoredReason: "",
               localOriginalPath: null,
               localOptimizedPath: null,
@@ -1103,11 +1181,13 @@ async function main() {
           }
           globalSeenImages.add(img.url);
 
-          // Match
+          // Match using candidate-filtered article numbers
           const { swatch, confidence, method } = matchImageToSwatch(
             img,
             pageData,
+            candidateArticleNumbers,
             dbSwatches,
+            dbArticleNumberSet,
           );
 
           let status: MatchStatus;
@@ -1121,13 +1201,15 @@ async function main() {
             status = "UNCERTAIN";
           }
 
+          // Determine detected article number (use only candidates from context)
+          const ctxArts = extractAllArticleNumbers(stripHtml(img.context));
+          const ctxCandidates = filterCandidateArticleNumbers(ctxArts, dbArticleNumberSet);
+
           const entry: ScrapedImage = {
             sourcePageUrl: pageUrl,
             imageUrl: img.url,
             detectedName: img.alt || img.title || "",
-            detectedArticleNumber: extractFirstArticleNumber(
-              stripHtml(img.context),
-            ),
+            detectedArticleNumber: ctxCandidates[0] ?? "",
             surroundingText: stripHtml(img.context).slice(0, 200),
             alt: img.alt,
             title: img.title,
@@ -1138,6 +1220,7 @@ async function main() {
             confidence,
             status,
             imageRole: img.role,
+            importCandidate: false,
             ignoredReason: "",
             localOriginalPath: null,
             localOptimizedPath: null,
@@ -1150,6 +1233,7 @@ async function main() {
             if (existing) {
               if (confidence > existing.confidence) {
                 existing.img.status = "ALTERNATIVE_IMAGE";
+                existing.img.importCandidate = false;
                 existing.img.notes += "; superseded by higher-confidence match";
                 pageMatchedSwatches.set(swatch.id, {
                   img: entry,
@@ -1167,24 +1251,32 @@ async function main() {
           images.push(entry);
         }
 
+        // Set importCandidate on qualifying MATCHED entries
+        for (const { img } of pageMatchedSwatches.values()) {
+          if (
+            img.status === "MATCHED" &&
+            img.confidence >= 0.85 &&
+            IMPORTABLE_ROLES.has(img.imageRole)
+          ) {
+            img.importCandidate = true;
+          }
+        }
+
         // Queue child links (unless detail-only)
         if (!detailOnly) {
           const nextDepth = depth + 1;
-          // Detail pages are highest priority
           for (const link of pageData.links.detailLinks) {
             if (!visitedPages.has(link)) {
               queue.push([link, nextDepth]);
               totalQueued++;
             }
           }
-          // Then pagination
           for (const link of pageData.links.paginationLinks) {
             if (!visitedPages.has(link)) {
               queue.push([link, nextDepth]);
               totalQueued++;
             }
           }
-          // Then category links (lower priority)
           for (const link of pageData.links.categoryLinks) {
             if (!visitedPages.has(link)) {
               queue.push([link, nextDepth]);
@@ -1203,8 +1295,13 @@ async function main() {
     }
   }
 
-  const nonIgnored = images.filter((i) => i.status !== "IGNORED");
-  console.log(`\n  Total images: ${images.length} (${nonIgnored.length} relevant, ${images.length - nonIgnored.length} ignored)`);
+  const relevantImages = images.filter(
+    (i) => i.status !== "IGNORED",
+  );
+  const ignoredImages = images.filter((i) => i.status === "IGNORED");
+  console.log(
+    `\n  Total images: ${images.length} (${relevantImages.length} relevant, ${ignoredImages.length} ignored)`,
+  );
 
   // -------------------------------------------------------------------------
   // Phase 2: Download (if --download)
@@ -1213,7 +1310,8 @@ async function main() {
     console.log("\n--- Phase 2: Download & Optimize ---");
 
     const downloadable = images.filter((i) => {
-      if (i.status === "MATCHED") return true;
+      if (i.status === "IGNORED" || i.imageRole === "layout" || i.imageRole === "ignored") return false;
+      if (i.status === "MATCHED" && i.importCandidate) return true;
       if (i.status === "READY_FOR_IMPORT") return true;
       if (i.status === "UNCERTAIN" && downloadUncertain) return true;
       if (i.status === "ALREADY_HAS_IMAGE" && replaceExisting) return true;
@@ -1324,8 +1422,11 @@ async function main() {
       .length,
     readyForImport: images.filter((i) => i.status === "READY_FOR_IMPORT")
       .length,
+    importCandidates: images.filter((i) => i.importCandidate).length,
     downloaded: images.filter((i) => i.localOriginalPath).length,
     imported: images.filter((i) => i.status === "IMPORTED").length,
+    rawArticleNumbersDetected: allRawArticleNumbers.size,
+    candidateArticleNumbersDetected: allCandidateArticleNumbers.size,
     errors,
   };
 
@@ -1343,8 +1444,10 @@ async function main() {
   console.log(`Images no match:     ${summary.imagesNoMatch}`);
   console.log(`Already has image:   ${summary.alreadyHasImage}`);
   console.log(`Ready for import:    ${summary.readyForImport}`);
+  console.log(`Import candidates:   ${summary.importCandidates}`);
   console.log(`Downloaded:          ${summary.downloaded}`);
   console.log(`Imported:            ${summary.imported}`);
+  console.log(`Article numbers:     ${summary.candidateArticleNumbersDetected} candidates / ${summary.rawArticleNumbersDetected} raw`);
   if (errors.length > 0) {
     console.log(`Errors:              ${errors.length}`);
     for (const e of errors) console.log(`  - ${e}`);
