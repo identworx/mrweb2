@@ -288,7 +288,7 @@ Die Seed-Datei (`prisma/seed.ts`) erstellt:
 
 - **Erlaubte Typen:** JPEG, PNG, GIF, WebP, AVIF
 - **Maximale Groesse:** 15 MB
-- **Speicherort:** `public/uploads/general/`
+- **Speicherort:** `public/uploads/<ordner-slug>/` (Standard: `general/`)
 - **Dateiname:** Sanitized + Timestamp (z.B. `mein-bild-1717505432123.webp`)
 - **Nicht erlaubt:** SVG (XSS-Risiko durch eingebettetes JavaScript), PDF
 - **Sicherheit:** Magic-Byte-Validierung (prueft Datei-Header, nicht nur MIME-Type)
@@ -376,29 +376,78 @@ Alle Admin-Formulare nutzen den **MediaPickerField** statt einfacher `<select>`-
 
 | Komponente           | Datei                                              | Funktion                                    |
 | -------------------- | -------------------------------------------------- | ------------------------------------------- |
-| `MediaBrowser`       | `components/admin/media/MediaBrowser.tsx`           | Haupt-Browser mit Grid, Filter, Pagination  |
-| `MediaDetailsPanel`  | `components/admin/media/MediaDetailsPanel.tsx`      | Seitenpanel: Vorschau, Metadaten, Verwendung, Loeschen |
+| `MediaBrowser`       | `components/admin/media/MediaBrowser.tsx`           | Haupt-Browser mit Grid, Filter, Pagination, Ordner-Sidebar, Multi-Upload  |
+| `MediaDetailsPanel`  | `components/admin/media/MediaDetailsPanel.tsx`      | Seitenpanel: Vorschau, Metadaten, Ordner-Zuweisung, Verwendung, Loeschen |
 | `MediaUsageList`     | `components/admin/media/MediaUsageList.tsx`         | Anzeige wo ein Medium verwendet wird        |
 
 **Features:**
 - Paginated Grid (24 pro Seite)
 - Suche (filename, originalName, alt, title, caption)
-- Filter: Typ (Bilder), Ordner
-- Drag-and-Drop + Button Upload
-- Details-Panel rechts mit Inline-Metadaten-Bearbeitung (alt, title, caption, folder)
+- Ordner-Sidebar links mit Asset-Zaehler pro Ordner
+- Filter: Typ (Bilder), Ordner (per Sidebar-Klick)
+- Multi-Upload: Mehrere Dateien gleichzeitig, max. 3 parallel, Per-Datei-Status
+- Drag-and-Drop (auch mehrere Dateien) + Button Upload
+- Ordner erstellen direkt in der Sidebar (EDITOR+)
+- Details-Panel rechts mit Inline-Metadaten-Bearbeitung (alt, title, caption, Ordner-Dropdown)
 - URL-Kopierfunktion
 - Verwendungs-Anzeige (13 Relationen)
 - Delete mit Usage-Guard (nur ADMIN, nur wenn nicht verwendet)
 - Rollenpruefung: VIEWER sieht nur, EDITOR kann editieren, ADMIN kann loeschen
 
+### Medienordner (MediaFolder)
+
+**Datenmodell:**
+```prisma
+model MediaFolder {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  path      String   @unique
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  assets    MediaAsset[]
+}
+```
+
+`MediaAsset.folderId` (optional) verweist auf einen `MediaFolder`. Neue Uploads landen physisch unter `public/uploads/<folder.slug>/`. Bestehende Dateien behalten ihre URLs.
+
+**Standard-Ordner (via Backfill):**
+
+| Name | Slug | Upload-Pfad |
+| ---- | ---- | ----------- |
+| Allgemein | `general` | `/uploads/general/` |
+| Produkte | `produkte` | `/uploads/produkte/` |
+| Stoffe & Muster | `stoffe-muster` | `/uploads/stoffe-muster/` |
+| News | `news` | `/uploads/news/` |
+| Downloads | `downloads` | `/uploads/downloads/` |
+| Icons | `icons` | `/uploads/icons/` |
+| Seiten | `seiten` | `/uploads/seiten/` |
+
+**Backfill:**
+```bash
+npx tsx scripts/backfill-media-folders.ts
+```
+Erstellt Standard-Ordner und weist bestehende Assets ohne Ordner dem Ordner "Allgemein" zu. Idempotent.
+
+**Ordner-API (`/api/admin/media/folders`):**
+- GET: Liste aller Ordner mit Asset-Zaehler + Gesamt-/Unzugeordnet-Zaehler
+- POST: Neuen Ordner erstellen (Name → Slug wird generiert, Duplikate verhindert)
+- PATCH `?id=`: Ordner umbenennen (Slug bleibt stabil)
+- DELETE `?id=`: Ordner loeschen (nur ADMIN, nur wenn leer)
+
 **Medien-API (`/api/admin/media`):**
 - GET ohne `page`: Flaches Array (Rueckwaertskompatibilitaet fuer MediaPickerModal)
 - GET mit `page`: Paginiert `{items, total, page, limit, totalPages, folders, mimeTypes}`
 - GET mit `id`: Einzelnes Asset + Usage-Array
-- GET Filter: `?q=`, `?type=image`, `?folder=`
-- POST: FormData-Upload oder JSON-Metadaten-Update (VIEWER blockiert)
-- PATCH: Metadaten aktualisieren (alt, caption, title, folder) per `?id=`
+- GET Filter: `?q=`, `?type=image`, `?folder=<folderId>`
+- POST: FormData-Upload mit optionalem `folderId` (VIEWER blockiert)
+- PATCH: Metadaten aktualisieren (alt, caption, title, folderId) per `?id=`
 - DELETE: ADMIN only, Usage Guard, loescht Datei + DB-Eintrag
+
+**MediaPickerModal:**
+- Ordner-Filter-Dropdown in der Toolbar
+- Pagination (100 pro Seite)
 
 ### TODOs (nicht in Phase 2F)
 

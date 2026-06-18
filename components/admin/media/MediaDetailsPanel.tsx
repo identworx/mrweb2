@@ -8,6 +8,13 @@ interface UsageEntry {
   count: number;
 }
 
+interface MediaFolder {
+  id: string;
+  name: string;
+  slug: string;
+  assetCount: number;
+}
+
 interface MediaAsset {
   id: string;
   filename: string;
@@ -21,6 +28,7 @@ interface MediaAsset {
   title: string | null;
   caption: string | null;
   folder: string | null;
+  folderId: string | null;
   createdAt: string;
   usage?: UsageEntry[];
 }
@@ -54,7 +62,7 @@ export default function MediaDetailsPanel({
   onDeleted?: () => void;
   onUpdated?: () => void;
   userRole?: string;
-  folders?: string[];
+  folders?: MediaFolder[];
 }) {
   const [asset, setAsset] = useState<MediaAsset | null>(null);
   const [usage, setUsage] = useState<UsageEntry[]>([]);
@@ -67,7 +75,7 @@ export default function MediaDetailsPanel({
   const [alt, setAlt] = useState("");
   const [title, setTitle] = useState("");
   const [caption, setCaption] = useState("");
-  const [folder, setFolder] = useState("");
+  const [folderId, setFolderId] = useState("");
 
   const loadAsset = useCallback(async () => {
     setLoading(true);
@@ -82,7 +90,7 @@ export default function MediaDetailsPanel({
       setAlt(data.alt ?? "");
       setTitle(data.title ?? "");
       setCaption(data.caption ?? "");
-      setFolder(data.folder ?? "");
+      setFolderId(data.folderId ?? "");
     } catch {
       setMessage({ type: "error", text: "Fehler beim Laden." });
     } finally {
@@ -105,7 +113,7 @@ export default function MediaDetailsPanel({
           alt: alt || null,
           title: title || null,
           caption: caption || null,
-          folder: folder || null,
+          folderId: folderId || null,
         }),
       });
       if (!res.ok) {
@@ -267,21 +275,16 @@ export default function MediaDetailsPanel({
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">Ordner</label>
-                  <input
-                    type="text"
-                    value={folder}
-                    onChange={(e) => setFolder(e.target.value)}
-                    list="folder-suggestions"
-                    placeholder="z.B. produkte, news"
+                  <select
+                    value={folderId}
+                    onChange={(e) => setFolderId(e.target.value)}
                     className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                  />
-                  {folders.length > 0 && (
-                    <datalist id="folder-suggestions">
-                      {folders.map((f) => (
-                        <option key={f} value={f} />
-                      ))}
-                    </datalist>
-                  )}
+                  >
+                    <option value="">Kein Ordner</option>
+                    {folders.map((f) => (
+                      <option key={f.id} value={f.id}>{f.name}</option>
+                    ))}
+                  </select>
                 </div>
                 <button
                   onClick={handleSave}

@@ -114,6 +114,18 @@ model SiteSettings {
   updatedAt             DateTime    @updatedAt
 }
 
+model MediaFolder {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  path      String   @unique
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assets MediaAsset[]
+}
+
 model MediaAsset {
   id            String   @id @default(cuid())
   filename      String
@@ -128,6 +140,8 @@ model MediaAsset {
   title         String?
   caption       String?
   folder        String?
+  folderId      String?
+  mediaFolder   MediaFolder? @relation(fields: [folderId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

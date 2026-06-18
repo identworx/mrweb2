@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
       conditions.push({ mimeType: { startsWith: "image/" } });
     }
     if (folder) {
-      conditions.push({ folder });
+      conditions.push({ folderId: folder });
     }
 
     const where = conditions.length > 0 ? { AND: conditions } : {};
@@ -105,14 +105,18 @@ export async function GET(request: NextRequest) {
       const limit = Math.min(100, Math.max(1, parseInt(limitParam || "24") || 24));
       const skip = (page - 1) * limit;
 
-      const [items, total, folderResults, mimeResults] = await Promise.all([
-        prisma.mediaAsset.findMany({ where, orderBy: { createdAt: "desc" }, skip, take: limit }),
-        prisma.mediaAsset.count({ where }),
+      const [items, total, mediaFolders, mimeResults] = await Promise.all([
         prisma.mediaAsset.findMany({
-          where: { folder: { not: null } },
-          select: { folder: true },
-          distinct: ["folder"],
-          orderBy: { folder: "asc" },
+          where,
+          orderBy: { createdAt: "desc" },
+          skip,
+          take: limit,
+          include: { mediaFolder: { select: { id: true, name: true, slug: true } } },
+        }),
+        prisma.mediaAsset.count({ where }),
+        prisma.mediaFolder.findMany({
+          orderBy: { order: "asc" },
+          include: { _count: { select: { assets: true } } },
         }),
         prisma.mediaAsset.findMany({
           select: { mimeType: true },
@@ -127,7 +131,12 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         totalPages: Math.ceil(total / limit),
-        folders: folderResults.map((f) => f.folder).filter(Boolean),
+        folders: mediaFolders.map((f) => ({
+          id: f.id,
+          name: f.name,
+          slug: f.slug,
+          assetCount: f._count.assets,
+        })),
         mimeTypes: mimeResults.map((m) => m.mimeType),
       });
     }
@@ -180,6 +189,7 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File | null;
     const alt = (formData.get("alt") as string) || null;
     const caption = (formData.get("caption") as string) || null;
+    const folderId = (formData.get("folderId") as string) || null;
 
     if (!file) {
       return NextResponse.json(
@@ -203,7 +213,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "general");
+    let folderSlug = "general";
+    let resolvedFolderId = folderId;
+    if (folderId) {
+      const folder = await prisma.mediaFolder.findUnique({ where: { id: folderId } });
+      if (folder) {
+        folderSlug = folder.slug;
+      } else {
+        resolvedFolderId = null;
+      }
+    }
+
+    const uploadDir = path.join(process.cwd(), "public", "uploads", folderSlug);
     await mkdir(uploadDir, { recursive: true });
 
     const rawBuffer = Buffer.from(await file.arrayBuffer());
@@ -263,7 +284,7 @@ export async function POST(request: NextRequest) {
     const filePath = path.join(uploadDir, finalFilename);
     await writeFile(filePath, finalBuffer);
 
-    const url = `/uploads/general/${finalFilename}`;
+    const url = `/uploads/${folderSlug}/${finalFilename}`;
 
     const asset = await prisma.mediaAsset.create({
       data: {
@@ -276,6 +297,7 @@ export async function POST(request: NextRequest) {
         size: finalBuffer.length,
         width,
         height,
+        folderId: resolvedFolderId,
       },
     });
 
@@ -305,6 +327,7 @@ export async function PATCH(request: NextRequest) {
     if ("caption" in body) data.caption = sanitizeString(body.caption, MAX_CAPTION_LENGTH);
     if ("title" in body) data.title = sanitizeString(body.title, MAX_TITLE_LENGTH);
     if ("folder" in body) data.folder = sanitizeString(body.folder, MAX_FOLDER_LENGTH);
+    if ("folderId" in body) data.folderId = body.folderId || null;
 
     const asset = await prisma.mediaAsset.update({ where: { id }, data });
     revalidateAllPublicPages();

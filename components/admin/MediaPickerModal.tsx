@@ -2,6 +2,13 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+interface MediaFolder {
+  id: string;
+  name: string;
+  slug: string;
+  assetCount: number;
+}
+
 interface MediaAsset {
   id: string;
   filename: string;
@@ -35,8 +42,10 @@ export default function MediaPickerModal({
   currentId,
 }: Props) {
   const [assets, setAssets] = useState<MediaAsset[]>([]);
+  const [folders, setFolders] = useState<MediaFolder[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [folderFilter, setFolderFilter] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(
     currentId || null,
   );
@@ -44,15 +53,20 @@ export default function MediaPickerModal({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadAssets = useCallback(async (q?: string) => {
+  const loadAssets = useCallback(async (q?: string, folder?: string) => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
+      params.set("page", "1");
+      params.set("limit", "100");
       if (q) params.set("q", q);
-      const url = `/api/admin/media${params.toString() ? `?${params}` : ""}`;
+      if (folder) params.set("folder", folder);
+      const url = `/api/admin/media?${params}`;
       const res = await fetch(url);
       if (res.ok) {
-        setAssets(await res.json());
+        const data = await res.json();
+        setAssets(data.items ?? data);
+        if (data.folders) setFolders(data.folders);
       }
     } catch {
       /* ignore */
@@ -64,12 +78,12 @@ export default function MediaPickerModal({
   useEffect(() => {
     const timer = setTimeout(
       () => {
-        loadAssets(search || undefined);
+        loadAssets(search || undefined, folderFilter || undefined);
       },
       search ? 300 : 0,
     );
     return () => clearTimeout(timer);
-  }, [search, loadAssets]);
+  }, [search, folderFilter, loadAssets]);
 
   async function handleUpload(file: File) {
     if (file.size > 15 * 1024 * 1024) {
@@ -169,6 +183,18 @@ export default function MediaPickerModal({
               autoFocus
             />
           </div>
+          {folders.length > 0 && (
+            <select
+              value={folderFilter}
+              onChange={(e) => setFolderFilter(e.target.value)}
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="">Alle Ordner</option>
+              {folders.map((f) => (
+                <option key={f.id} value={f.id}>{f.name}</option>
+              ))}
+            </select>
+          )}
           <input
             ref={fileInputRef}
             type="file"
