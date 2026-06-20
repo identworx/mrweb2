@@ -163,8 +163,8 @@ function LowBack() {
 }
 
 function BenchPad() {
-  const w = 440, h = 120;
-  const ox = 30, oy = 30;
+  const w = 440, h = 90;
+  const ox = 30, oy = 26;
   const pw = 370, ph = 36;
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">

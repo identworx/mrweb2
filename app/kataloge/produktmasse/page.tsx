@@ -105,7 +105,7 @@ export default async function ProduktmassePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {lehnerItems.map((item) => (
-                <MeasurementImageCard key={item.slug} item={item} />
+                <MeasurementImageCard key={item.slug} item={item} mediaSize="tall" />
               ))}
             </div>
           </div>
@@ -148,7 +148,7 @@ export default async function ProduktmassePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {tischItems.map((item) => (
-                <MeasurementImageCard key={item.slug} item={item} />
+                <MeasurementImageCard key={item.slug} item={item} mediaSize="wide" />
               ))}
             </div>
           </div>

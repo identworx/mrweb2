@@ -9,8 +9,8 @@ export default function BenchMeasurementCard({ item }: { item: FrontendMeasureme
 
   return (
     <div className="bg-white border border-black/[0.06]">
-      <div className="flex items-center justify-center bg-[#FAF8F5] min-h-[200px] md:min-h-[260px] px-8 py-10 md:px-16 md:py-14">
-        <div className="w-full max-w-3xl">
+      <div className="flex items-center justify-center bg-[#FAF8F5] min-h-[320px] md:min-h-[400px] px-8 py-10 md:px-16 md:py-14">
+        <div className="w-full max-w-[560px] md:max-w-[720px]">
           {item.imageUrl ? (
             <div className="relative w-full aspect-[4/1]">
               <Image

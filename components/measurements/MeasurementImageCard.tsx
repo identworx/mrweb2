@@ -3,12 +3,38 @@ import type { FrontendMeasurement } from "@/lib/cms/measurements";
 import MeasurementDrawing from "./MeasurementDrawing";
 import type { DrawingType } from "@/lib/mosaroma/measurements";
 
-export default function MeasurementImageCard({ item }: { item: FrontendMeasurement }) {
+type MediaSize = "default" | "tall" | "wide";
+
+const stageClasses: Record<MediaSize, string> = {
+  default: "min-h-[280px] md:min-h-[320px]",
+  tall: "min-h-[320px] md:min-h-[380px]",
+  wide: "min-h-[260px] md:min-h-[300px]",
+};
+
+const drawingClasses: Record<MediaSize, string> = {
+  default: "max-w-[300px] md:max-w-[340px]",
+  tall: "max-w-[280px] md:max-w-[320px]",
+  wide: "max-w-[380px] md:max-w-[420px]",
+};
+
+const imageClasses: Record<MediaSize, string> = {
+  default: "max-w-[320px]",
+  tall: "max-w-[340px]",
+  wide: "max-w-[400px]",
+};
+
+export default function MeasurementImageCard({
+  item,
+  mediaSize = "default",
+}: {
+  item: FrontendMeasurement;
+  mediaSize?: MediaSize;
+}) {
   return (
     <div className="bg-white border border-black/[0.06] h-full flex flex-col">
-      <div className="flex items-center justify-center bg-[#FAF8F5] min-h-[220px] md:min-h-[260px] p-6 md:p-8">
+      <div className={`flex items-center justify-center bg-[#FAF8F5] p-6 md:p-8 ${stageClasses[mediaSize]}`}>
         {item.imageUrl ? (
-          <div className="relative w-full max-w-[220px] aspect-[4/3]">
+          <div className={`relative w-full aspect-[4/3] ${imageClasses[mediaSize]}`}>
             <Image
               src={item.imageUrl}
               alt={item.imageAlt || item.title}
@@ -18,7 +44,7 @@ export default function MeasurementImageCard({ item }: { item: FrontendMeasureme
             />
           </div>
         ) : (
-          <div className="w-full max-w-[200px]">
+          <div className={`w-full ${drawingClasses[mediaSize]}`}>
             <MeasurementDrawing type={item.drawingType as DrawingType} />
           </div>
         )}
