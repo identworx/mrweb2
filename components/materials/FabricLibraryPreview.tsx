@@ -19,11 +19,11 @@ interface Props {
 }
 
 export default function FabricLibraryPreview({ swatches, icons = {} }: Props) {
-  const visible = swatches.slice(0, 6);
+  const visible = swatches.slice(0, 10);
 
   return (
     <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
         {visible.map((swatch) => (
           <Link
             key={swatch.id}
@@ -37,7 +37,7 @@ export default function FabricLibraryPreview({ swatches, icons = {} }: Props) {
                   alt={`${swatch.name} Stoffmuster`}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
                 />
               ) : swatch.colorHex ? (
                 <div
@@ -49,11 +49,11 @@ export default function FabricLibraryPreview({ swatches, icons = {} }: Props) {
               )}
             </div>
 
-            <div className="p-4">
-              <p className="font-accent text-pumpkin text-[10px] tracking-[0.15em] uppercase mb-1">
+            <div className="p-3">
+              <p className="font-accent text-pumpkin text-[10px] tracking-[0.15em] uppercase mb-0.5">
                 {swatch.familyName}
               </p>
-              <h3 className="font-heading text-anthracite text-sm font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">
+              <h3 className="font-heading text-anthracite text-[13px] font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">
                 {swatch.name}
               </h3>
               {swatch.articleNumber && (
