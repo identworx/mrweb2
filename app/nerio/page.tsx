@@ -44,12 +44,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const NERIO_PRODUCT_TYPES = [
-  { slug: "dekokissen", name: "Deko-Kissen", image: "/images/placeholders/categories/dekokissen.svg" },
-  { slug: "hochlehner", name: "Hochlehner", image: "/images/placeholders/categories/hochlehner.svg" },
-  { slug: "niedriglehner", name: "Niedriglehner", image: "/images/placeholders/categories/niedriglehner.svg" },
-  { slug: "sitzkissen", name: "Sitzkissen", image: "/images/placeholders/categories/sitzkissen.svg" },
-  { slug: "bankauflagen", name: "Bankauflagen", image: "/images/placeholders/categories/bankauflagen.svg" },
+const NERIO_PRODUCT_CARDS_FALLBACK = [
+  { id: "dekokissen", title: "Deko-Kissen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 1, fallbackImage: "/images/placeholders/categories/dekokissen.svg" },
+  { id: "hochlehner", title: "Hochlehner", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 2, fallbackImage: "/images/placeholders/categories/hochlehner.svg" },
+  { id: "niedriglehner", title: "Niedriglehner", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 3, fallbackImage: "/images/placeholders/categories/niedriglehner.svg" },
+  { id: "sitzkissen", title: "Sitzkissen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 4, fallbackImage: "/images/placeholders/categories/sitzkissen.svg" },
+  { id: "bankauflagen", title: "Bankauflagen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 5, fallbackImage: "/images/placeholders/categories/bankauflagen.svg" },
 ];
 
 
@@ -222,12 +222,37 @@ export default async function NerioPage() {
         : nerioTechnicalFacts.facts,
   };
 
+  type ProductCard = { id: string; title: string; href: string; imageId: string | null; isActive: boolean; order: number; fallbackImage?: string };
+  const rawCards: ProductCard[] =
+    Array.isArray(productsData?.settings?.cards) &&
+    (productsData.settings.cards as ProductCard[]).length > 0
+      ? (productsData.settings.cards as ProductCard[])
+      : NERIO_PRODUCT_CARDS_FALLBACK;
+
+  const productCardImages = await resolveMediaIds(
+    rawCards.map((c) => c.imageId),
+  );
+
+  const activeCards = rawCards
+    .filter((c) => c.isActive !== false)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((c) => {
+      const resolved = c.imageId ? productCardImages[c.imageId] : null;
+      const fallback = NERIO_PRODUCT_CARDS_FALLBACK.find((f) => f.id === c.id);
+      return {
+        ...c,
+        imageUrl: resolved?.url || fallback?.fallbackImage || "/images/placeholders/categories/dekokissen.svg",
+        imageAlt: resolved?.alt || c.title,
+      };
+    });
+
   const productsPreview = {
     eyebrow: productsData?.eyebrow || "Produkte & Stoffe",
     title: productsData?.title || "NERIO Stoffe entdecken",
     content: productsData?.content?.trim() || null,
     fallbackDescription:
       "Alle NERIO-Stoffe aus recyceltem Ozean-Polypropylen auf einen Blick — verfügbar als Auflagen, Kissen und Accessoires.",
+    cards: activeCards,
   };
 
   const cta = {
@@ -645,23 +670,23 @@ export default async function NerioPage() {
                 )}
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {NERIO_PRODUCT_TYPES.map((type) => (
+                  {productsPreview.cards.map((card) => (
                     <Link
-                      key={type.slug}
-                      href="/materialien/stoffe-muster?family=nerio"
+                      key={card.id}
+                      href={card.href || "/kollektionen/nerio-oceana"}
                       className="group"
                     >
                       <div className="aspect-square overflow-hidden bg-cream relative">
                         <Image
-                          src={type.image}
-                          alt={type.name}
+                          src={card.imageUrl}
+                          alt={card.imageAlt}
                           fill
                           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         />
                       </div>
                       <p className="font-heading text-anthracite text-sm font-semibold mt-3 group-hover:text-pumpkin transition-colors duration-300">
-                        {type.name}
+                        {card.title}
                       </p>
                     </Link>
                   ))}

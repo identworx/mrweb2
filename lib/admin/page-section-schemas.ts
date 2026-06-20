@@ -330,6 +330,13 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     defaultSettings: {
       style: "nerio-products-preview",
       helper: true,
+      cards: [
+        { id: "dekokissen", title: "Deko-Kissen", href: "/kollektionen/nerio-oceana", imageId: null, isActive: true, order: 1 },
+        { id: "hochlehner", title: "Hochlehner", href: "/kollektionen/nerio-oceana", imageId: null, isActive: true, order: 2 },
+        { id: "niedriglehner", title: "Niedriglehner", href: "/kollektionen/nerio-oceana", imageId: null, isActive: true, order: 3 },
+        { id: "sitzkissen", title: "Sitzkissen", href: "/kollektionen/nerio-oceana", imageId: null, isActive: true, order: 4 },
+        { id: "bankauflagen", title: "Bankauflagen", href: "/kollektionen/nerio-oceana", imageId: null, isActive: true, order: 5 },
+      ],
     },
   },
   {

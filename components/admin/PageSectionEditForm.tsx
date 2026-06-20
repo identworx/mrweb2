@@ -235,6 +235,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "nerio-highlights" && <NerioHighlightsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-technical-facts" && <NerioTechnicalFactsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-videos" && <NerioVideosFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "nerio-products-preview" && <NerioProductsPreviewFields settings={form.settings} updateSettings={updateSettings} />}
 
       {helper && (
         <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -1958,6 +1959,96 @@ function NerioTechnicalFactsFields({
           <input type="text" value={fact.label} onChange={(e) => updateFact(i, "label", e.target.value)} placeholder="Eigenschaft" className="w-1/3 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
           <input type="text" value={fact.value} onChange={(e) => updateFact(i, "value", e.target.value)} placeholder="Wert" className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
           <button type="button" onClick={() => removeFact(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface NerioProductCard {
+  id: string;
+  title: string;
+  href: string;
+  imageId: string | null;
+  isActive: boolean;
+  order: number;
+}
+
+const EMPTY_PRODUCT_CARD: NerioProductCard = {
+  id: "",
+  title: "",
+  href: "/kollektionen/nerio-oceana",
+  imageId: null,
+  isActive: true,
+  order: 1,
+};
+
+function NerioProductsPreviewFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const cards = Array.isArray(settings.cards) ? (settings.cards as NerioProductCard[]) : [];
+
+  function updateCard(index: number, field: keyof NerioProductCard, value: unknown) {
+    const next = cards.map((c, i) => (i === index ? { ...c, [field]: value } : c));
+    updateSettings("cards", next);
+  }
+
+  function addCard() {
+    updateSettings("cards", [...cards, { ...EMPTY_PRODUCT_CARD, order: cards.length + 1, id: `card-${Date.now()}` }]);
+  }
+
+  function removeCard(index: number) {
+    updateSettings("cards", cards.filter((_, i) => i !== index));
+  }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Produkt-Karten ({cards.length})</p>
+        <button type="button" onClick={addCard} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Karte</button>
+      </div>
+      {cards.map((card, i) => (
+        <div key={card.id || i} className="p-3 bg-white rounded-lg border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-gray-500">Karte {i + 1}</span>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-1.5 text-xs text-gray-500">
+                <input
+                  type="checkbox"
+                  checked={card.isActive}
+                  onChange={(e) => updateCard(i, "isActive", e.target.checked)}
+                  className="rounded border-gray-300"
+                />
+                Aktiv
+              </label>
+              <button type="button" onClick={() => removeCard(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Titel</label>
+              <input type="text" value={card.title} onChange={(e) => updateCard(i, "title", e.target.value)} placeholder="z. B. Deko-Kissen" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Link</label>
+              <input type="text" value={card.href} onChange={(e) => updateCard(i, "href", e.target.value)} placeholder="/kollektionen/nerio-oceana" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Reihenfolge</label>
+              <input type="number" value={card.order} onChange={(e) => updateCard(i, "order", parseInt(e.target.value, 10) || 0)} min={1} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+          <MediaPickerField
+            label="Bild (optional)"
+            value={card.imageId || ""}
+            onChange={(id) => updateCard(i, "imageId", id || null)}
+          />
         </div>
       ))}
     </div>
