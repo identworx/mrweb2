@@ -65,6 +65,7 @@ export default async function NerioPage() {
     highlightsData,
     videosData,
     techFactsData,
+    techFactsImage,
     productsData,
     ctaData,
     nerioSwatches,
@@ -80,6 +81,7 @@ export default async function NerioPage() {
     getSectionData("nerio", "nerio-highlights"),
     getSectionData("nerio", "nerio-videos"),
     getSectionData("nerio", "nerio-technical-facts"),
+    getSectionImage("nerio", "nerio-technical-facts"),
     getSectionData("nerio", "nerio-products-preview"),
     getSectionData("nerio", "nerio-final-cta"),
     getNerioFabricSwatches(),
@@ -577,27 +579,43 @@ export default async function NerioPage() {
                   />
                 )}
 
-                <ScrollReveal>
-                  <div className="bg-white overflow-hidden mt-8">
-                    <table className="w-full">
-                      <tbody>
-                        {techFacts.facts.map((fact, i) => (
-                          <tr
-                            key={fact.label}
-                            className={i < techFacts.facts.length - 1 ? "border-b border-light-gray" : ""}
-                          >
-                            <td className="py-4 px-5 md:px-8 font-heading text-anthracite text-sm font-semibold uppercase tracking-[0.06em] w-1/3">
-                              {fact.label}
-                            </td>
-                            <td className="py-4 px-5 md:px-8 font-body text-text-gray text-sm leading-relaxed">
-                              {fact.value}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </ScrollReveal>
+                <div className={`mt-8 grid grid-cols-1 ${techFactsImage ? "lg:grid-cols-[minmax(0,0.58fr)_minmax(320px,0.42fr)] gap-8 lg:gap-12" : ""}`}>
+                  <ScrollReveal>
+                    <div className="bg-white overflow-hidden">
+                      <table className="w-full">
+                        <tbody>
+                          {techFacts.facts.map((fact, i) => (
+                            <tr
+                              key={fact.label}
+                              className={i < techFacts.facts.length - 1 ? "border-b border-light-gray" : ""}
+                            >
+                              <td className="py-4 px-5 md:px-8 font-heading text-anthracite text-sm font-semibold uppercase tracking-[0.06em] w-2/5">
+                                {fact.label}
+                              </td>
+                              <td className="py-4 px-5 md:px-8 font-body text-text-gray text-sm leading-relaxed">
+                                {fact.value}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </ScrollReveal>
+
+                  {techFactsImage && (
+                    <ScrollReveal>
+                      <div className="relative aspect-[4/3] overflow-hidden bg-white border border-black/[0.06] shadow-[0_4px_20px_rgba(45,45,45,0.04)]">
+                        <Image
+                          src={techFactsImage.url}
+                          alt={techFactsImage.alt || techFacts.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 1024px) 100vw, 42vw"
+                        />
+                      </div>
+                    </ScrollReveal>
+                  )}
+                </div>
               </div>
             </section>
 

@@ -171,7 +171,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story") && (
+      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story" || style === "nerio-technical-facts") && (
         <MediaPickerField
           label="Bild"
           value={form.imageId || ""}
