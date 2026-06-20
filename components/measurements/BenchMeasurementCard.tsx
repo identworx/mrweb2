@@ -4,12 +4,15 @@ import MeasurementDrawing from "./MeasurementDrawing";
 import type { DrawingType } from "@/lib/mosaroma/measurements";
 
 export default function BenchMeasurementCard({ item }: { item: FrontendMeasurement }) {
+  const sizeRows = item.rows.filter((r) => ["S", "M", "L", "XL"].includes(r.label));
+  const otherRows = item.rows.filter((r) => !["S", "M", "L", "XL"].includes(r.label));
+
   return (
-    <div className="bg-white border border-light-gray p-6 md:p-10">
-      <div className="bg-cream/50 p-6 md:p-8 mb-8">
-        <div className="max-w-2xl mx-auto">
+    <div className="bg-white border border-black/[0.06]">
+      <div className="flex items-center justify-center bg-[#FAF8F5] min-h-[200px] md:min-h-[260px] px-8 py-10 md:px-16 md:py-14">
+        <div className="w-full max-w-3xl">
           {item.imageUrl ? (
-            <div className="relative w-full aspect-[5/1]">
+            <div className="relative w-full aspect-[4/1]">
               <Image
                 src={item.imageUrl}
                 alt={item.imageAlt || item.title}
@@ -24,43 +27,38 @@ export default function BenchMeasurementCard({ item }: { item: FrontendMeasureme
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 mb-6">
-        {item.rows
-          .filter((r) => ["S", "M", "L", "XL"].includes(r.label))
-          .map((row) => (
+      <div className="p-6 md:p-10">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+          {sizeRows.map((row) => (
             <div
               key={row.label}
-              className="text-center p-4 border border-light-gray"
+              className="text-center py-5 px-4 border border-black/[0.06] bg-[#FDFCFB]"
             >
-              <span className="block font-heading text-pumpkin text-lg md:text-xl font-bold mb-1">
+              <span className="block font-heading text-pumpkin text-xl md:text-2xl font-bold mb-1.5 tracking-tight">
                 {row.label}
               </span>
-              <span className="block font-body text-anthracite text-sm font-medium">
+              <span className="block font-body text-anthracite text-sm md:text-base font-medium">
                 {row.value}
               </span>
             </div>
           ))}
-      </div>
+        </div>
 
-      {item.notes.length > 0 && (
-        <p className="font-body text-text-gray text-sm text-center">
-          {item.notes.join(" · ")}
-        </p>
-      )}
-
-      {item.rows
-        .filter((r) => !["S", "M", "L", "XL"].includes(r.label))
-        .length > 0 && (
-        <div className="mt-4 space-y-1 text-center">
-          {item.rows
-            .filter((r) => !["S", "M", "L", "XL"].includes(r.label))
-            .map((row) => (
-              <p key={row.label} className="font-body text-text-gray text-sm">
+        {(item.notes.length > 0 || otherRows.length > 0) && (
+          <div className="mt-6 pt-5 border-t border-black/[0.04] flex flex-col sm:flex-row sm:items-center sm:justify-center gap-x-8 gap-y-2 text-center">
+            {item.notes.map((note) => (
+              <p key={note} className="font-body text-text-gray/70 text-sm">
+                {note}
+              </p>
+            ))}
+            {otherRows.map((row) => (
+              <p key={row.label} className="font-body text-text-gray/70 text-sm">
                 {row.label}: {row.value}
               </p>
             ))}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
