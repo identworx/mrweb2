@@ -579,9 +579,9 @@ export default async function NerioPage() {
                   />
                 )}
 
-                <div className={`mt-8 grid grid-cols-1 ${techFactsImage ? "lg:grid-cols-[minmax(0,0.58fr)_minmax(320px,0.42fr)] gap-8 lg:gap-12" : ""}`}>
-                  <ScrollReveal>
-                    <div className="bg-white overflow-hidden">
+                <div className={`mt-8 grid grid-cols-1 ${techFactsImage ? "lg:grid-cols-[minmax(0,0.58fr)_minmax(320px,0.42fr)] gap-8 lg:gap-12 lg:items-stretch" : ""}`}>
+                  <ScrollReveal className="h-full">
+                    <div className="bg-white overflow-hidden h-full">
                       <table className="w-full">
                         <tbody>
                           {techFacts.facts.map((fact, i) => (
@@ -603,13 +603,13 @@ export default async function NerioPage() {
                   </ScrollReveal>
 
                   {techFactsImage && (
-                    <ScrollReveal>
-                      <div className="relative aspect-[4/3] overflow-hidden bg-white border border-black/[0.06] shadow-[0_4px_20px_rgba(45,45,45,0.04)]">
+                    <ScrollReveal className="h-full">
+                      <div className="relative h-full min-h-[280px] lg:min-h-0 overflow-hidden bg-white border border-black/[0.06] shadow-[0_4px_20px_rgba(45,45,45,0.04)] flex items-center justify-center p-6 md:p-8">
                         <Image
                           src={techFactsImage.url}
                           alt={techFactsImage.alt || techFacts.title}
                           fill
-                          className="object-cover"
+                          className="object-contain p-6 md:p-8"
                           sizes="(max-width: 1024px) 100vw, 42vw"
                         />
                       </div>
