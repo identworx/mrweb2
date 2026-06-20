@@ -6,21 +6,21 @@ import type { DrawingType } from "@/lib/mosaroma/measurements";
 type MediaSize = "default" | "tall" | "wide";
 
 const stageClasses: Record<MediaSize, string> = {
-  default: "min-h-[280px] md:min-h-[320px]",
-  tall: "min-h-[320px] md:min-h-[380px]",
-  wide: "min-h-[260px] md:min-h-[300px]",
+  default: "min-h-[340px] md:min-h-[400px]",
+  tall: "min-h-[400px] md:min-h-[480px]",
+  wide: "min-h-[300px] md:min-h-[360px]",
 };
 
 const drawingClasses: Record<MediaSize, string> = {
-  default: "max-w-[300px] md:max-w-[340px]",
-  tall: "max-w-[280px] md:max-w-[320px]",
-  wide: "max-w-[380px] md:max-w-[420px]",
+  default: "max-w-[380px] md:max-w-[440px]",
+  tall: "max-w-[360px] md:max-w-[420px]",
+  wide: "max-w-[480px] md:max-w-[540px]",
 };
 
 const imageClasses: Record<MediaSize, string> = {
-  default: "max-w-[320px]",
-  tall: "max-w-[340px]",
-  wide: "max-w-[400px]",
+  default: "max-w-[400px]",
+  tall: "max-w-[440px]",
+  wide: "max-w-[500px]",
 };
 
 export default function MeasurementImageCard({

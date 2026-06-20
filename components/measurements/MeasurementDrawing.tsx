@@ -163,15 +163,15 @@ function LowBack() {
 }
 
 function BenchPad() {
-  const w = 440, h = 90;
-  const ox = 30, oy = 26;
-  const pw = 370, ph = 36;
+  const w = 440, h = 105;
+  const ox = 30, oy = 22;
+  const pw = 370, ph = 54;
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto">
-      <rect x={ox} y={oy} width={pw} height={ph} rx="3" fill="none" stroke={STROKE} strokeWidth="1.2" />
-      <DimLine x1={ox} y1={oy - 14} x2={ox + pw} y2={oy - 14} label="50 cm – 170 cm" side="top" />
+      <rect x={ox} y={oy} width={pw} height={ph} rx="3" fill="none" stroke={STROKE} strokeWidth="1.5" />
+      <DimLine x1={ox} y1={oy - 12} x2={ox + pw} y2={oy - 12} label="50 cm – 170 cm" side="top" />
       <DimLine x1={ox + pw + 16} y1={oy} x2={ox + pw + 16} y2={oy + ph} label="6 cm" side="right" />
-      <text x={ox - 6} y={oy + ph / 2 + 4} textAnchor="end" fill={DIM_COLOR} fontSize="10" fontFamily="sans-serif" fontWeight="600">
+      <text x={ox - 6} y={oy + ph / 2 + 4} textAnchor="end" fill={DIM_COLOR} fontSize="11" fontFamily="sans-serif" fontWeight="600">
         49 cm
       </text>
     </svg>
