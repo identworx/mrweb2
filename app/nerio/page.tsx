@@ -697,7 +697,7 @@ export default async function NerioPage() {
                     <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
                       Aktuelle NERIO-Stoffe
                     </h3>
-                    <FabricLibraryPreview swatches={nerioSwatches} icons={icons} />
+                    <FabricLibraryPreview swatches={nerioSwatches} icons={icons} limit={5} />
                   </div>
                 )}
 

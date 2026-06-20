@@ -16,10 +16,11 @@ interface Props {
     colorHex: string;
   }>;
   icons?: Record<string, ResolvedIcon>;
+  limit?: number;
 }
 
-export default function FabricLibraryPreview({ swatches, icons = {} }: Props) {
-  const visible = swatches.slice(0, 10);
+export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 }: Props) {
+  const visible = swatches.slice(0, limit);
 
   return (
     <div>
