@@ -1,10 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { HomepageSection } from "@/lib/cms/homepage";
 import type { FrontendCollection } from "@/lib/cms/collections";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import CollectionCard from "@/components/CollectionCard";
 
 interface Props {
   section: HomepageSection;
@@ -40,58 +40,19 @@ export default function HomepageCollections({ section, collections, icons = {} }
           )}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
           {collections.map((col) => (
-            <Link
+            <CollectionCard
               key={col.slug}
-              href={`/kollektionen/${col.slug}`}
-              className="group block relative overflow-hidden bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
-            >
-              <div className="relative aspect-[3/2] overflow-hidden bg-cream">
-                {col.cardImage ? (
-                  <Image
-                    src={col.cardImage}
-                    alt={col.cardAlt || `${col.name} Collection`}
-                    fill
-                    className="object-cover transition-transform duration-700 motion-safe:group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
-                ) : (
-                  <div
-                    className="absolute inset-0 transition-transform duration-700 motion-safe:group-hover:scale-105"
-                    style={{
-                      background: col.moodColors.length >= 2
-                        ? `linear-gradient(135deg, ${col.moodColors[0]} 0%, ${col.moodColors[col.moodColors.length - 1]} 100%)`
-                        : col.moodColors[0] || "#E5E1DC",
-                    }}
-                  />
-                )}
-              </div>
-
-              <div className="flex">
-                {col.moodColors.map((color, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 h-1.5 transition-all duration-500 group-hover:h-2"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-
-              <div className="p-4 md:p-5">
-                <span className="font-accent text-text-gray/60 text-[10px] tracking-[0.2em] uppercase">
-                  {col.number ? `0${col.number}` : col.slug}
-                </span>
-                <h3 className="font-heading text-anthracite text-sm md:text-base font-bold mt-1 group-hover:text-pumpkin transition-colors duration-300">
-                  {col.name}
-                </h3>
-                {col.fabric && (
-                  <p className="font-body text-text-gray/60 text-xs mt-1 truncate">
-                    {col.fabric}
-                  </p>
-                )}
-              </div>
-            </Link>
+              name={col.name}
+              slug={col.slug}
+              description={col.shortDescription}
+              moodColors={col.moodColors}
+              fabric={col.fabric}
+              image={col.cardImage}
+              alt={col.cardAlt}
+              icons={icons}
+            />
           ))}
         </div>
 
