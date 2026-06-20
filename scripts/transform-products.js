@@ -137,10 +137,10 @@ function splitBankauflagen(product) {
   }
   
   const sizes = [
-    { label: 'S', size: 'S: 50 × 49 × 7 cm' },
-    { label: 'M', size: 'M: 110 × 49 × 7 cm' },
-    { label: 'L', size: 'L: 140 × 49 × 7 cm' },
-    { label: 'XL', size: 'XL: 170 × 49 × 7 cm' },
+    { label: 'S', size: 'S: 50 × 49 × 6 cm' },
+    { label: 'M', size: 'M: 110 × 49 × 6 cm' },
+    { label: 'L', size: 'L: 140 × 49 × 6 cm' },
+    { label: 'XL', size: 'XL: 170 × 49 × 6 cm' },
   ];
   
   return sizes.map(s => ({

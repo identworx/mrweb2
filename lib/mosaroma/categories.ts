@@ -156,8 +156,8 @@ export const categories: Category[] = [
       {
         width: 45,
         height: 46,
-        thickness: 7,
-        label: "46 × 45 × 7 cm",
+        thickness: 6,
+        label: "46 × 45 × 6 cm",
         fabric: "Mackintosh® / Lite / Nerio",
       },
       {
