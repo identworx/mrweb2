@@ -67,7 +67,7 @@ export default function HomepageHero({ section, icons = {} }: Props) {
 
             <h1
               className="font-heading text-white font-extrabold leading-[1.02] tracking-[-0.02em] mb-5 md:mb-7 whitespace-pre-line"
-              style={{ fontSize: "clamp(2.75rem, 0.75rem + 5.25vw, 5.5rem)" }}
+              style={{ fontSize: "clamp(2.75rem, 0.25rem + 5.25vw, 5rem)" }}
             >
               {headline}
             </h1>
