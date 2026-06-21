@@ -19,6 +19,16 @@
   --font-accent: "Josefin Sans", system-ui, sans-serif;
 }
 
+/* Header height reference for hero centering */
+:root {
+  --header-h: 88px;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 108px;
+  }
+}
+
 /* Base styles */
 body {
   background: var(--color-cream);
