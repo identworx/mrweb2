@@ -98,7 +98,8 @@ export default function AmbienteTeaser({
 
   const hasFiveSlots = hero && portrait && wide && smallA && smallB;
   const isHomepage = variant === "homepage";
-  const sectionPadding = isHomepage ? "py-12 md:py-16" : "py-16 md:py-24";
+  const sectionPadding = isHomepage ? "pt-10 md:pt-14 pb-6 md:pb-8" : "py-16 md:py-24";
+  const sectionBg = isHomepage ? "bg-white" : "bg-cream";
 
   const ctaLink = ctaLabel && ctaHref ? (
     <Link
@@ -111,7 +112,7 @@ export default function AmbienteTeaser({
   ) : null;
 
   return (
-    <section className={`${sectionPadding} bg-cream ${className ?? ""}`}>
+    <section className={`${sectionPadding} ${sectionBg} ${className ?? ""}`}>
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
         {showHeader && (
           <ScrollReveal>
