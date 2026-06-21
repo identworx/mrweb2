@@ -31,16 +31,20 @@ function worldLabel(worlds: string[]): string {
 function TeaserTile({
   image,
   area,
+  href,
   priority = false,
 }: {
   image: FrontendAmbienteImage;
   area: string;
+  href: string;
   priority?: boolean;
 }) {
   return (
-    <div
-      className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] group"
+    <Link
+      href={href}
+      className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
       style={{ gridArea: area }}
+      aria-label={`Ambiente-Galerie: ${image.caption || image.title}`}
     >
       <Image
         src={image.imageUrl}
@@ -73,7 +77,7 @@ function TeaserTile({
           {image.caption || image.title}
         </p>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -100,6 +104,7 @@ export default function AmbienteTeaser({
   const isHomepage = variant === "homepage";
   const sectionPadding = isHomepage ? "pt-10 md:pt-14 pb-6 md:pb-8" : "py-16 md:py-24";
   const sectionBg = isHomepage ? "bg-white" : "bg-cream";
+  const tileHref = ctaHref || "/kollektionen/ambiente";
 
   const ctaLink = ctaLabel && ctaHref ? (
     <Link
@@ -150,11 +155,11 @@ export default function AmbienteTeaser({
                 height: "clamp(420px, 42vw, 620px)",
               }}
             >
-              <TeaserTile image={hero} area="hero" priority />
-              <TeaserTile image={portrait} area="portrait" />
-              <TeaserTile image={wide} area="wide" />
-              <TeaserTile image={smallA} area="smallA" />
-              <TeaserTile image={smallB} area="smallB" />
+              <TeaserTile image={hero} area="hero" href={tileHref} priority />
+              <TeaserTile image={portrait} area="portrait" href={tileHref} />
+              <TeaserTile image={wide} area="wide" href={tileHref} />
+              <TeaserTile image={smallA} area="smallA" href={tileHref} />
+              <TeaserTile image={smallB} area="smallB" href={tileHref} />
             </div>
           )}
 
@@ -162,11 +167,13 @@ export default function AmbienteTeaser({
           {hasFiveSlots && (
             <div className="hidden sm:grid lg:hidden grid-cols-2 gap-3">
               {filled.map((img, i) => (
-                <div
+                <Link
                   key={img.id}
-                  className={`relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] ${
+                  href={tileHref}
+                  className={`relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin ${
                     i === 0 ? "col-span-2 aspect-[16/9]" : "aspect-[4/3]"
                   }`}
+                  aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
                 >
                   <Image
                     src={img.imageUrl}
@@ -176,7 +183,7 @@ export default function AmbienteTeaser({
                     sizes={i === 0 ? "100vw" : "50vw"}
                     priority={i === 0}
                   />
-                </div>
+                </Link>
               ))}
             </div>
           )}
@@ -196,6 +203,7 @@ export default function AmbienteTeaser({
                   key={img.id}
                   image={img}
                   area="auto"
+                  href={tileHref}
                   priority={i === 0}
                 />
               ))}
@@ -216,6 +224,7 @@ export default function AmbienteTeaser({
                   key={img.id}
                   image={img}
                   area="auto"
+                  href={tileHref}
                   priority={i === 0}
                 />
               ))}
@@ -225,10 +234,12 @@ export default function AmbienteTeaser({
           {/* Mobile: stacked */}
           <div className="flex flex-col gap-3 sm:hidden">
             {filled.slice(0, 3).map((img, i) => (
-              <div
+              <Link
                 key={img.id}
-                className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5]"
+                href={tileHref}
+                className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
                 style={{ height: i === 0 ? "280px" : "200px" }}
+                aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
               >
                 <Image
                   src={img.imageUrl}
@@ -238,15 +249,17 @@ export default function AmbienteTeaser({
                   sizes="100vw"
                   priority={i === 0}
                 />
-              </div>
+              </Link>
             ))}
             {filled.length > 3 && (
               <div className="grid grid-cols-2 gap-3">
                 {filled.slice(3).map((img) => (
-                  <div
+                  <Link
                     key={img.id}
-                    className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5]"
+                    href={tileHref}
+                    className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
                     style={{ height: "160px" }}
+                    aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
                   >
                     <Image
                       src={img.imageUrl}
@@ -255,7 +268,7 @@ export default function AmbienteTeaser({
                       className="object-cover"
                       sizes="50vw"
                     />
-                  </div>
+                  </Link>
                 ))}
               </div>
             )}
