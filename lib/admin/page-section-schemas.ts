@@ -184,6 +184,15 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
+    style: "collections-ambiente-teaser",
+    label: "Ambiente-Mosaik (Kollektionen)",
+    description: "Mosaik-Teaser mit Ambiente-Bildern. Bilder werden unter /admin/ambiente gepflegt. Hier nur Texte und Position.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "collections-ambiente-teaser",
+    },
+  },
+  {
     style: "collection-consultation-card",
     label: "Beratungskarte (Kollektionen)",
     description: "Service-Karte im Collection Grid mit Beratungsangebot und Musterset-CTA",

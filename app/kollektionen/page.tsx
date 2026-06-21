@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -104,6 +105,7 @@ export default async function KollektionenPage() {
   const sections =
     pageResult.state === "published" ? pageResult.page.sections : [];
 
+  const ambienteSection = findSection(sections, "collections-ambiente-teaser");
   const consultationSection =
     findSection(sections, "collection-consultation-card") ?? FALLBACK_CONSULTATION;
   const benefitsSection =
@@ -118,6 +120,106 @@ export default async function KollektionenPage() {
 
   const allMoodColors = collections.flatMap((c) => c.moodColors);
 
+  // Ambiente teaser visibility: shown unless explicitly deactivated via CMS
+  const showAmbiente = ambienteSection ? true : true;
+
+  // Build ordered content blocks
+  const ambienteOrder = ambienteSection?.order ?? 10;
+
+  const ambienteBlock = showAmbiente ? (
+    <AmbienteTeaser
+      key="ambiente"
+      slots={ambienteSlots}
+      eyebrow={ambienteSection?.eyebrow || undefined}
+      title={ambienteSection?.title || undefined}
+      intro={ambienteSection?.content || undefined}
+      ctaLabel={ambienteSection?.buttonLabel || undefined}
+      ctaHref={ambienteSection?.buttonHref || undefined}
+    />
+  ) : null;
+
+  const introBlock = (
+    <section key="intro" className="pt-14 md:pt-20 pb-10 md:pb-14 bg-white">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+        {allMoodColors.length > 0 && (
+          <div className="flex mb-10 md:mb-14" aria-hidden="true">
+            {allMoodColors.map((color, i) => (
+              <div
+                key={i}
+                className="flex-1 h-1.5"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+        )}
+
+        <ScrollReveal>
+          <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch]">
+            {introText}
+          </p>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+
+  const gridBlock = (
+    <section key="grid" className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
+      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+        {collections.length === 0 ? (
+          <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
+            Aktuell sind keine Kollektionen verfügbar. Bitte schauen Sie
+            später wieder vorbei.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
+            {collections.map((collection, i) => (
+              <ScrollReveal key={collection.slug} delay={i * 60}>
+                <CollectionCard
+                  name={collection.name}
+                  slug={collection.slug}
+                  description={collection.shortDescription}
+                  moodColors={collection.moodColors}
+                  fabric={collection.fabric}
+                  image={collection.cardImage}
+                  alt={collection.cardAlt}
+                />
+              </ScrollReveal>
+            ))}
+            <ScrollReveal delay={collections.length * 60}>
+              <ConsultationCard
+                title={consultationSection.title ?? undefined}
+                content={consultationSection.content ?? undefined}
+                primaryLabel={consultationSection.buttonLabel ?? undefined}
+                primaryHref={consultationSection.buttonHref ?? undefined}
+                secondaryLabel={(consultationSection.settings.secondaryLabel as string) || undefined}
+                secondaryHref={(consultationSection.settings.secondaryHref as string) || undefined}
+              />
+            </ScrollReveal>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+
+  const benefitsBlock = (
+    <CollectionBenefitsSection key="benefits" section={benefitsSection} icons={icons} />
+  );
+
+  const ctaBlock = (
+    <CollectionCtaSection key="cta" section={ctaSection} />
+  );
+
+  // Sort content blocks by order (ambiente from CMS, others at fixed positions)
+  const contentBlocks: { order: number; node: ReactNode }[] = [
+    { order: ambienteOrder, node: ambienteBlock },
+    { order: 20, node: introBlock },
+    { order: 30, node: gridBlock },
+    { order: 40, node: benefitsBlock },
+    { order: 50, node: ctaBlock },
+  ].filter((b) => b.node !== null);
+
+  contentBlocks.sort((a, b) => a.order - b.order);
+
   return (
     <>
       <Header {...layout.header} />
@@ -131,75 +233,7 @@ export default async function KollektionenPage() {
         />
         <BreadcrumbBar items={[{ label: "Kollektionen" }]} />
 
-        {/* Mood color bar + intro */}
-        <section className="pt-14 md:pt-20 pb-10 md:pb-14 bg-white">
-          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-            {allMoodColors.length > 0 && (
-              <div className="flex mb-10 md:mb-14" aria-hidden="true">
-                {allMoodColors.map((color, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 h-1.5"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
-              </div>
-            )}
-
-            <ScrollReveal>
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch]">
-                {introText}
-              </p>
-            </ScrollReveal>
-          </div>
-        </section>
-
-        {/* Ambiente teaser */}
-        <AmbienteTeaser slots={ambienteSlots} />
-
-        {/* Collection grid */}
-        <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
-          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-            {collections.length === 0 ? (
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
-                Aktuell sind keine Kollektionen verfügbar. Bitte schauen Sie
-                später wieder vorbei.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                {collections.map((collection, i) => (
-                  <ScrollReveal key={collection.slug} delay={i * 60}>
-                    <CollectionCard
-                      name={collection.name}
-                      slug={collection.slug}
-                      description={collection.shortDescription}
-                      moodColors={collection.moodColors}
-                      fabric={collection.fabric}
-                      image={collection.cardImage}
-                      alt={collection.cardAlt}
-                    />
-                  </ScrollReveal>
-                ))}
-                <ScrollReveal delay={collections.length * 60}>
-                  <ConsultationCard
-                    title={consultationSection.title ?? undefined}
-                    content={consultationSection.content ?? undefined}
-                    primaryLabel={consultationSection.buttonLabel ?? undefined}
-                    primaryHref={consultationSection.buttonHref ?? undefined}
-                    secondaryLabel={(consultationSection.settings.secondaryLabel as string) || undefined}
-                    secondaryHref={(consultationSection.settings.secondaryHref as string) || undefined}
-                  />
-                </ScrollReveal>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Benefits */}
-        <CollectionBenefitsSection section={benefitsSection} icons={icons} />
-
-        {/* CTA */}
-        <CollectionCtaSection section={ctaSection} />
+        {contentBlocks.map((b) => b.node)}
       </main>
       <Footer {...layout.footer} />
     </>

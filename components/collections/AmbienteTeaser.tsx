@@ -5,6 +5,11 @@ import ScrollReveal from "@/components/ScrollReveal";
 
 interface Props {
   slots: Record<TeaserSlot, FrontendAmbienteImage | null>;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 
 const COLOR_WORLD_LABELS: Record<string, string> = {
@@ -68,7 +73,14 @@ function TeaserTile({
   );
 }
 
-export default function AmbienteTeaser({ slots }: Props) {
+export default function AmbienteTeaser({
+  slots,
+  eyebrow = "Ambiente",
+  title = "Mosaroma im Einsatz.",
+  intro,
+  ctaLabel = "Alle Ambiente-Bilder",
+  ctaHref = "/kollektionen/ambiente",
+}: Props) {
   const { hero, portrait, wide, smallA, smallB } = slots;
 
   const filled = [hero, portrait, wide, smallA, smallB].filter(
@@ -86,21 +98,28 @@ export default function AmbienteTeaser({ slots }: Props) {
             <div className="flex items-center gap-4 mb-4">
               <div className="accent-line" />
               <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                Ambiente
+                {eyebrow}
               </p>
             </div>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
-                Mosaroma im Einsatz.
+                {title}
               </h2>
-              <Link
-                href="/kollektionen/ambiente"
-                className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
-              >
-                Alle Ambiente-Bilder
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
+              {ctaLabel && ctaHref && (
+                <Link
+                  href={ctaHref}
+                  className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
+                >
+                  {ctaLabel}
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+              )}
             </div>
+            {intro && (
+              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mt-4">
+                {intro}
+              </p>
+            )}
           </div>
         </ScrollReveal>
 
