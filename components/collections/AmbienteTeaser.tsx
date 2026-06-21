@@ -30,7 +30,7 @@ function TeaserTile({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-lg group"
+      className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] group"
       style={{ gridArea: area }}
     >
       <Image
@@ -40,10 +40,10 @@ function TeaserTile({
         className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.04]"
         sizes={
           area === "hero"
-            ? "(max-width: 640px) 100vw, 50vw"
+            ? "(max-width: 1024px) 100vw, 50vw"
             : area === "portrait"
-              ? "(max-width: 640px) 100vw, 25vw"
-              : "(max-width: 640px) 50vw, 20vw"
+              ? "(max-width: 1024px) 50vw, 22vw"
+              : "(max-width: 1024px) 50vw, 25vw"
         }
         priority={priority}
       />
@@ -71,8 +71,12 @@ function TeaserTile({
 export default function AmbienteTeaser({ slots }: Props) {
   const { hero, portrait, wide, smallA, smallB } = slots;
 
-  const filled = [hero, portrait, wide, smallA, smallB].filter(Boolean);
+  const filled = [hero, portrait, wide, smallA, smallB].filter(
+    (img): img is FrontendAmbienteImage => img !== null,
+  );
   if (filled.length === 0) return null;
+
+  const hasFiveSlots = hero && portrait && wide && smallA && smallB;
 
   return (
     <section className="py-16 md:py-24 bg-cream">
@@ -101,25 +105,52 @@ export default function AmbienteTeaser({ slots }: Props) {
         </ScrollReveal>
 
         <ScrollReveal>
-          {filled.length >= 5 ? (
+          {/* Desktop mosaic (lg+): 5-slot curated grid */}
+          {hasFiveSlots && (
             <div
-              className="hidden sm:grid gap-2.5 md:gap-3"
+              className="hidden lg:grid gap-3 md:gap-4"
               style={{
-                gridTemplateColumns: "2fr 0.9fr 0.55fr 0.55fr",
-                gridTemplateRows: "1fr 1fr",
+                gridTemplateColumns: "2.2fr 0.95fr 1fr 1fr",
+                gridTemplateRows: "repeat(2, minmax(190px, 1fr))",
                 gridTemplateAreas: `"hero portrait wide wide" "hero portrait smallA smallB"`,
                 height: "clamp(420px, 42vw, 620px)",
               }}
             >
-              {hero && <TeaserTile image={hero} area="hero" priority />}
-              {portrait && <TeaserTile image={portrait} area="portrait" />}
-              {wide && <TeaserTile image={wide} area="wide" />}
-              {smallA && <TeaserTile image={smallA} area="smallA" />}
-              {smallB && <TeaserTile image={smallB} area="smallB" />}
+              <TeaserTile image={hero} area="hero" priority />
+              <TeaserTile image={portrait} area="portrait" />
+              <TeaserTile image={wide} area="wide" />
+              <TeaserTile image={smallA} area="smallA" />
+              <TeaserTile image={smallB} area="smallB" />
             </div>
-          ) : filled.length >= 3 ? (
+          )}
+
+          {/* Tablet fallback (sm–lg): simple grid when we have 5 slots */}
+          {hasFiveSlots && (
+            <div className="hidden sm:grid lg:hidden grid-cols-2 gap-3">
+              {filled.map((img, i) => (
+                <div
+                  key={img.id}
+                  className={`relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] ${
+                    i === 0 ? "col-span-2 aspect-[16/9]" : "aspect-[4/3]"
+                  }`}
+                >
+                  <Image
+                    src={img.imageUrl}
+                    alt={img.alt || img.title}
+                    fill
+                    className="object-cover"
+                    sizes={i === 0 ? "100vw" : "50vw"}
+                    priority={i === 0}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Fewer than 5 images: simple responsive grid for sm+ */}
+          {!hasFiveSlots && filled.length >= 3 && (
             <div
-              className="hidden sm:grid gap-2.5 md:gap-3"
+              className="hidden sm:grid gap-3"
               style={{
                 gridTemplateColumns: "2fr 1fr 1fr",
                 gridTemplateRows: "1fr",
@@ -128,16 +159,18 @@ export default function AmbienteTeaser({ slots }: Props) {
             >
               {filled.slice(0, 3).map((img, i) => (
                 <TeaserTile
-                  key={img!.id}
-                  image={img!}
+                  key={img.id}
+                  image={img}
                   area="auto"
                   priority={i === 0}
                 />
               ))}
             </div>
-          ) : (
+          )}
+
+          {!hasFiveSlots && filled.length > 0 && filled.length < 3 && (
             <div
-              className="hidden sm:grid gap-2.5 md:gap-3"
+              className="hidden sm:grid gap-3"
               style={{
                 gridTemplateColumns: filled.length === 1 ? "1fr" : "1fr 1fr",
                 gridTemplateRows: "1fr",
@@ -146,8 +179,8 @@ export default function AmbienteTeaser({ slots }: Props) {
             >
               {filled.map((img, i) => (
                 <TeaserTile
-                  key={img!.id}
-                  image={img!}
+                  key={img.id}
+                  image={img}
                   area="auto"
                   priority={i === 0}
                 />
@@ -155,17 +188,17 @@ export default function AmbienteTeaser({ slots }: Props) {
             </div>
           )}
 
-          {/* Mobile: stack */}
-          <div className="flex flex-col gap-2.5 sm:hidden">
+          {/* Mobile: stacked */}
+          <div className={hasFiveSlots ? "flex flex-col gap-3 sm:hidden" : "flex flex-col gap-3 sm:hidden"}>
             {filled.slice(0, 3).map((img, i) => (
               <div
-                key={img!.id}
-                className="relative overflow-hidden rounded-lg"
+                key={img.id}
+                className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5]"
                 style={{ height: i === 0 ? "280px" : "200px" }}
               >
                 <Image
-                  src={img!.imageUrl}
-                  alt={img!.alt || img!.title}
+                  src={img.imageUrl}
+                  alt={img.alt || img.title}
                   fill
                   className="object-cover"
                   sizes="100vw"
@@ -174,16 +207,16 @@ export default function AmbienteTeaser({ slots }: Props) {
               </div>
             ))}
             {filled.length > 3 && (
-              <div className="grid grid-cols-2 gap-2.5">
+              <div className="grid grid-cols-2 gap-3">
                 {filled.slice(3).map((img) => (
                   <div
-                    key={img!.id}
-                    className="relative overflow-hidden rounded-lg"
+                    key={img.id}
+                    className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5]"
                     style={{ height: "160px" }}
                   >
                     <Image
-                      src={img!.imageUrl}
-                      alt={img!.alt || img!.title}
+                      src={img.imageUrl}
+                      alt={img.alt || img.title}
                       fill
                       className="object-cover"
                       sizes="50vw"

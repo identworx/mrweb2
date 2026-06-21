@@ -11,6 +11,14 @@ const COLOR_WORLD_LABELS: Record<string, string> = {
   golden: "Golden",
 };
 
+const SLOT_LABELS: Record<string, string> = {
+  hero: "Großes Hauptbild",
+  portrait: "Hochformat",
+  wide: "Querformat oben",
+  smallA: "Klein unten links",
+  smallB: "Klein unten rechts",
+};
+
 export default async function AmbienteListPage() {
   const [images, sessionUser] = await Promise.all([
     prisma.ambienteImage.findMany({
@@ -117,7 +125,7 @@ export default async function AmbienteListPage() {
                     <td className="px-4 py-3 hidden md:table-cell">
                       {img.teaserSlot ? (
                         <span className="inline-block px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded bg-orange-50 text-orange-700">
-                          {img.teaserSlot}
+                          {SLOT_LABELS[img.teaserSlot] || img.teaserSlot}
                         </span>
                       ) : (
                         <span className="text-gray-300 text-xs">—</span>

@@ -106,32 +106,25 @@ export default function AmbienteGalleryClient({ images }: Props) {
           Keine Bilder in dieser Farbwelt vorhanden.
         </p>
       ) : (
-        <div
-          style={{
-            columns: "1",
-            columnGap: "0.75rem",
-          }}
-          className="sm:[columns:2] lg:[columns:3]"
-        >
+        <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
           {filtered.map((img, i) => (
             <button
               key={img.id}
               type="button"
               onClick={(e) => openLightbox(i, e.currentTarget)}
-              className="group relative w-full mb-3 block rounded-lg overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
-              style={{ breakInside: "avoid" }}
+              className="group relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-lg border border-black/[0.04] bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
             >
               <Image
                 src={img.imageUrl}
                 alt={img.alt || img.title}
-                width={img.width || 800}
-                height={img.height || 600}
-                className="w-full h-auto object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.03]"
+                width={img.width || 1200}
+                height={img.height || 800}
+                className="h-auto w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.03]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 loading={i < 3 ? "eager" : "lazy"}
               />
               <div
-                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{
                   background:
                     "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.10) 40%, transparent 100%)",
