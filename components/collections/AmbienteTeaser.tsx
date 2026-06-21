@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { FrontendAmbienteImage } from "@/lib/cms/ambiente";
+import type { FrontendAmbienteImage, TeaserSlot } from "@/lib/cms/ambiente";
 import ScrollReveal from "@/components/ScrollReveal";
 
 interface Props {
-  images: FrontendAmbienteImage[];
+  slots: Record<TeaserSlot, FrontendAmbienteImage | null>;
 }
 
 const COLOR_WORLD_LABELS: Record<string, string> = {
@@ -19,26 +19,39 @@ function worldLabel(worlds: string[]): string {
   return worlds.map((w) => COLOR_WORLD_LABELS[w] || w).join(" · ");
 }
 
-function TeaserTile({ image, priority = false, className = "" }: { image: FrontendAmbienteImage; priority?: boolean; className?: string }) {
+function TeaserTile({
+  image,
+  area,
+  priority = false,
+}: {
+  image: FrontendAmbienteImage;
+  area: string;
+  priority?: boolean;
+}) {
   return (
-    <button
-      type="button"
-      className={`group relative overflow-hidden block w-full h-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin ${className}`}
-      aria-label={`${image.title} – ${image.caption || ""}`}
-      tabIndex={0}
+    <div
+      className="relative overflow-hidden rounded-lg group"
+      style={{ gridArea: area }}
     >
       <Image
         src={image.imageUrl}
         alt={image.alt || image.title}
         fill
         className="object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.04]"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        sizes={
+          area === "hero"
+            ? "(max-width: 640px) 100vw, 50vw"
+            : area === "portrait"
+              ? "(max-width: 640px) 100vw, 25vw"
+              : "(max-width: 640px) 50vw, 20vw"
+        }
         priority={priority}
       />
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.15) 50%, transparent 100%)",
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.12) 50%, transparent 100%)",
         }}
       />
       <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 motion-reduce:translate-y-0 motion-reduce:opacity-100">
@@ -51,14 +64,15 @@ function TeaserTile({ image, priority = false, className = "" }: { image: Fronte
           {image.caption || image.title}
         </p>
       </div>
-    </button>
+    </div>
   );
 }
 
-export default function AmbienteTeaser({ images }: Props) {
-  if (images.length === 0) return null;
+export default function AmbienteTeaser({ slots }: Props) {
+  const { hero, portrait, wide, smallA, smallB } = slots;
 
-  const [a, b, c, d, e] = images;
+  const filled = [hero, portrait, wide, smallA, smallB].filter(Boolean);
+  if (filled.length === 0) return null;
 
   return (
     <section className="py-16 md:py-24 bg-cream">
@@ -87,45 +101,98 @@ export default function AmbienteTeaser({ images }: Props) {
         </ScrollReveal>
 
         <ScrollReveal>
-          {images.length >= 5 ? (
-            <div className="grid grid-cols-6 grid-rows-[minmax(0,1fr)_minmax(0,1fr)] gap-2 md:gap-3 h-[500px] md:h-[560px] lg:h-[620px]">
-              <div className="col-span-6 sm:col-span-3 row-span-2">
-                <TeaserTile image={a} priority />
-              </div>
-              <div className="col-span-3 sm:col-span-2 row-span-2 hidden sm:block">
-                <TeaserTile image={b} />
-              </div>
-              <div className="col-span-6 sm:col-span-1 row-span-1 hidden sm:block">
-                <TeaserTile image={c} />
-              </div>
-              <div className="col-span-3 sm:col-span-1 row-span-1 hidden sm:block">
-                {d && <TeaserTile image={d} />}
-              </div>
+          {filled.length >= 5 ? (
+            <div
+              className="hidden sm:grid gap-2.5 md:gap-3"
+              style={{
+                gridTemplateColumns: "2fr 0.9fr 0.55fr 0.55fr",
+                gridTemplateRows: "1fr 1fr",
+                gridTemplateAreas: `"hero portrait wide wide" "hero portrait smallA smallB"`,
+                height: "clamp(420px, 42vw, 620px)",
+              }}
+            >
+              {hero && <TeaserTile image={hero} area="hero" priority />}
+              {portrait && <TeaserTile image={portrait} area="portrait" />}
+              {wide && <TeaserTile image={wide} area="wide" />}
+              {smallA && <TeaserTile image={smallA} area="smallA" />}
+              {smallB && <TeaserTile image={smallB} area="smallB" />}
             </div>
-          ) : images.length >= 3 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 h-[300px] md:h-[400px] lg:h-[480px]">
-              {images.slice(0, 3).map((img, i) => (
-                <div key={img.id} className={i === 0 ? "col-span-2 sm:col-span-1" : ""}>
-                  <TeaserTile image={img} priority={i === 0} />
-                </div>
+          ) : filled.length >= 3 ? (
+            <div
+              className="hidden sm:grid gap-2.5 md:gap-3"
+              style={{
+                gridTemplateColumns: "2fr 1fr 1fr",
+                gridTemplateRows: "1fr",
+                height: "clamp(320px, 34vw, 480px)",
+              }}
+            >
+              {filled.slice(0, 3).map((img, i) => (
+                <TeaserTile
+                  key={img!.id}
+                  image={img!}
+                  area="auto"
+                  priority={i === 0}
+                />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-3 h-[300px] md:h-[400px]">
-              {images.map((img, i) => (
-                <div key={img.id}>
-                  <TeaserTile image={img} priority={i === 0} />
-                </div>
+            <div
+              className="hidden sm:grid gap-2.5 md:gap-3"
+              style={{
+                gridTemplateColumns: filled.length === 1 ? "1fr" : "1fr 1fr",
+                gridTemplateRows: "1fr",
+                height: "clamp(280px, 30vw, 420px)",
+              }}
+            >
+              {filled.map((img, i) => (
+                <TeaserTile
+                  key={img!.id}
+                  image={img!}
+                  area="auto"
+                  priority={i === 0}
+                />
               ))}
             </div>
           )}
 
-          {/* Show 5th image in a separate row on mobile when we have 5 */}
-          {images.length >= 5 && e && (
-            <div className="mt-2 md:mt-3 sm:hidden h-[200px]">
-              <TeaserTile image={e} />
-            </div>
-          )}
+          {/* Mobile: stack */}
+          <div className="flex flex-col gap-2.5 sm:hidden">
+            {filled.slice(0, 3).map((img, i) => (
+              <div
+                key={img!.id}
+                className="relative overflow-hidden rounded-lg"
+                style={{ height: i === 0 ? "280px" : "200px" }}
+              >
+                <Image
+                  src={img!.imageUrl}
+                  alt={img!.alt || img!.title}
+                  fill
+                  className="object-cover"
+                  sizes="100vw"
+                  priority={i === 0}
+                />
+              </div>
+            ))}
+            {filled.length > 3 && (
+              <div className="grid grid-cols-2 gap-2.5">
+                {filled.slice(3).map((img) => (
+                  <div
+                    key={img!.id}
+                    className="relative overflow-hidden rounded-lg"
+                    style={{ height: "160px" }}
+                  >
+                    <Image
+                      src={img!.imageUrl}
+                      alt={img!.alt || img!.title}
+                      fill
+                      className="object-cover"
+                      sizes="50vw"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </ScrollReveal>
       </div>
     </section>

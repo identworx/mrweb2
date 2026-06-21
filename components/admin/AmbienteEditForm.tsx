@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import DangerZone from "./DangerZone";
@@ -13,6 +13,15 @@ const AVAILABLE_WORLDS = [
   { value: "golden", label: "Golden" },
 ];
 
+const TEASER_SLOTS = [
+  { value: "", label: "Nicht im Mosaik" },
+  { value: "hero", label: "Großes Hauptbild" },
+  { value: "portrait", label: "Hochformat" },
+  { value: "wide", label: "Querformat oben" },
+  { value: "smallA", label: "Klein unten links" },
+  { value: "smallB", label: "Klein unten rechts" },
+];
+
 interface AmbienteFormData {
   id: string;
   title: string;
@@ -20,6 +29,7 @@ interface AmbienteFormData {
   alt: string;
   colorWorlds: string[];
   featured: boolean;
+  teaserSlot: string;
   isActive: boolean;
   order: number;
   mediaAssetId: string;
@@ -32,16 +42,24 @@ interface MediaOption {
   alt: string | null;
 }
 
+interface SlotUsage {
+  slot: string;
+  title: string;
+  id: string;
+}
+
 export default function AmbienteEditForm({
   image,
   mediaAssets,
   imagePreview,
   userRole = "VIEWER",
+  existingSlots = [],
 }: {
   image: AmbienteFormData;
   mediaAssets: MediaOption[];
   imagePreview: { url: string; alt: string | null } | null;
   userRole?: string;
+  existingSlots?: SlotUsage[];
 }) {
   const router = useRouter();
   const [form, setForm] = useState<AmbienteFormData>(image);
@@ -61,6 +79,12 @@ export default function AmbienteEditForm({
     }));
   }
 
+  const slotConflict = form.teaserSlot
+    ? existingSlots.find(
+        (s) => s.slot === form.teaserSlot && s.id !== form.id,
+      )
+    : null;
+
   async function handleSave() {
     setSaving(true);
     setMessage(null);
@@ -71,6 +95,7 @@ export default function AmbienteEditForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          teaserSlot: form.teaserSlot || null,
           colorWorlds: JSON.stringify(form.colorWorlds),
         }),
       });
@@ -165,7 +190,34 @@ export default function AmbienteEditForm({
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
-        <h2 className="text-lg font-semibold text-gray-900">Farbwelten &amp; Einstellungen</h2>
+        <h2 className="text-lg font-semibold text-gray-900">Mosaik &amp; Einstellungen</h2>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Mosaik-Position
+          </label>
+          <select
+            value={form.teaserSlot}
+            onChange={(e) => updateString("teaserSlot", e.target.value)}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          >
+            {TEASER_SLOTS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-400 mt-1">
+            Für das Mosaik auf /kollektionen sollten idealerweise genau 5 Bilder
+            mit unterschiedlichen Positionen gepflegt werden.
+          </p>
+          {slotConflict && (
+            <p className="text-xs text-orange-600 mt-1">
+              Hinweis: Dieser Slot ist bereits von „{slotConflict.title}" belegt.
+              Nur das erste Bild je Slot wird im Mosaik angezeigt.
+            </p>
+          )}
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -212,7 +264,7 @@ export default function AmbienteEditForm({
               className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
             />
             <label htmlFor="featured" className="text-sm font-medium text-gray-700">
-              Featured (Teaser auf /kollektionen)
+              Featured
             </label>
           </div>
           <div className="flex items-center gap-2 pt-6">

@@ -9,7 +9,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import CollectionBenefitsSection from "@/components/service/CollectionBenefitsSection";
 import CollectionCtaSection from "@/components/service/CollectionCtaSection";
 import { getPublishedCollections } from "@/lib/cms/collections";
-import { getFeaturedAmbienteImages } from "@/lib/cms/ambiente";
+import { getTeaserAmbienteImages } from "@/lib/cms/ambiente";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
@@ -92,11 +92,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KollektionenPage() {
-  const [layout, hero, collections, ambienteImages, pageResult, icons] = await Promise.all([
+  const [layout, hero, collections, ambienteSlots, pageResult, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kollektionen", "kollektionen"),
     getPublishedCollections(),
-    getFeaturedAmbienteImages(5),
+    getTeaserAmbienteImages(),
     getServicePageBySlug("kollektionen"),
     getIconSlots(["benefit-sun", "benefit-droplet", "benefit-shield", "benefit-star", "benefit-fallback", "arrow-right", "checkmark"]),
   ]);
@@ -155,7 +155,7 @@ export default async function KollektionenPage() {
         </section>
 
         {/* Ambiente teaser */}
-        <AmbienteTeaser images={ambienteImages} />
+        <AmbienteTeaser slots={ambienteSlots} />
 
         {/* Collection grid */}
         <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">

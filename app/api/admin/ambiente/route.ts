@@ -41,12 +41,18 @@ export async function POST(request: NextRequest) {
     }
     if (!Array.isArray(colorWorlds)) colorWorlds = [];
 
+    const validSlots = new Set(["hero", "portrait", "wide", "smallA", "smallB"]);
+    const teaserSlot = data.teaserSlot && validSlots.has(data.teaserSlot)
+      ? data.teaserSlot
+      : null;
+
     const fields = {
       title: data.title,
       caption: data.caption || null,
       alt: data.alt || null,
       colorWorlds,
       featured: Boolean(data.featured),
+      teaserSlot,
       isActive: data.isActive !== undefined ? Boolean(data.isActive) : true,
       order: typeof data.order === "number" ? data.order : 0,
       mediaAssetId: data.mediaAssetId,

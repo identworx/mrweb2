@@ -34,10 +34,13 @@ export default function AmbienteGalleryClient({ images }: Props) {
         : images.filter((img) => img.colorWorlds.includes(opt.value)).length,
   }));
 
-  const openLightbox = useCallback((index: number, trigger: HTMLButtonElement) => {
-    triggerRef.current = trigger;
-    setLightboxIndex(index);
-  }, []);
+  const openLightbox = useCallback(
+    (index: number, trigger: HTMLButtonElement) => {
+      triggerRef.current = trigger;
+      setLightboxIndex(index);
+    },
+    [],
+  );
 
   const closeLightbox = useCallback(() => {
     setLightboxIndex(null);
@@ -71,7 +74,8 @@ export default function AmbienteGalleryClient({ images }: Props) {
     };
   }, [lightboxIndex, closeLightbox, goNext, goPrev]);
 
-  const currentImage = lightboxIndex !== null ? filtered[lightboxIndex] : null;
+  const currentImage =
+    lightboxIndex !== null ? filtered[lightboxIndex] : null;
 
   return (
     <>
@@ -80,8 +84,11 @@ export default function AmbienteGalleryClient({ images }: Props) {
         {counts.map((opt) => (
           <button
             key={opt.value}
-            onClick={() => setFilter(opt.value)}
-            className={`px-4 py-2 text-sm font-heading font-semibold tracking-wide transition-colors duration-200 ${
+            onClick={() => {
+              setFilter(opt.value);
+              setLightboxIndex(null);
+            }}
+            className={`px-4 py-2 text-sm font-heading font-semibold tracking-wide rounded-lg transition-colors duration-200 ${
               filter === opt.value
                 ? "bg-anthracite text-white"
                 : "bg-white text-anthracite border border-black/10 hover:border-anthracite/30"
@@ -100,56 +107,54 @@ export default function AmbienteGalleryClient({ images }: Props) {
         </p>
       ) : (
         <div
-          className="gap-3 md:gap-4"
           style={{
             columns: "1",
-            columnGap: "1rem",
+            columnGap: "0.75rem",
           }}
+          className="sm:[columns:2] lg:[columns:3]"
         >
-          <style>{`
-            @media (min-width: 640px) { .amb-masonry { columns: 2 !important; } }
-            @media (min-width: 1024px) { .amb-masonry { columns: 3 !important; } }
-          `}</style>
-          <div className="amb-masonry" style={{ columns: "1" }}>
-            {filtered.map((img, i) => (
-              <button
-                key={img.id}
-                type="button"
-                onClick={(e) => openLightbox(i, e.currentTarget)}
-                className="group relative w-full mb-3 md:mb-4 break-inside-avoid block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin overflow-hidden"
-                style={{ breakInside: "avoid" }}
-              >
-                <Image
-                  src={img.imageUrl}
-                  alt={img.alt || img.title}
-                  width={img.width || 800}
-                  height={img.height || 600}
-                  className="w-full h-auto object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.03]"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  loading={i < 3 ? "eager" : "lazy"}
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background:
-                      "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.10) 40%, transparent 100%)",
-                  }}
-                />
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 motion-reduce:translate-y-0 motion-reduce:opacity-100">
-                  {img.colorWorlds.length > 0 && (
-                    <p className="font-accent text-pumpkin text-[10px] tracking-[0.2em] uppercase mb-1">
-                      {img.colorWorlds
-                        .map((w) => FILTER_OPTIONS.find((f) => f.value === w)?.label || w)
-                        .join(" · ")}
-                    </p>
-                  )}
-                  <p className="font-heading text-white text-sm font-semibold">
-                    {img.caption || img.title}
+          {filtered.map((img, i) => (
+            <button
+              key={img.id}
+              type="button"
+              onClick={(e) => openLightbox(i, e.currentTarget)}
+              className="group relative w-full mb-3 block rounded-lg overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
+              style={{ breakInside: "avoid" }}
+            >
+              <Image
+                src={img.imageUrl}
+                alt={img.alt || img.title}
+                width={img.width || 800}
+                height={img.height || 600}
+                className="w-full h-auto object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-safe:group-hover:scale-[1.03]"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                loading={i < 3 ? "eager" : "lazy"}
+              />
+              <div
+                className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.10) 40%, transparent 100%)",
+                }}
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 motion-reduce:translate-y-0 motion-reduce:opacity-100">
+                {img.colorWorlds.length > 0 && (
+                  <p className="font-accent text-pumpkin text-[10px] tracking-[0.2em] uppercase mb-1">
+                    {img.colorWorlds
+                      .map(
+                        (w) =>
+                          FILTER_OPTIONS.find((f) => f.value === w)?.label ||
+                          w,
+                      )
+                      .join(" · ")}
                   </p>
-                </div>
-              </button>
-            ))}
-          </div>
+                )}
+                <p className="font-heading text-white text-sm font-semibold">
+                  {img.caption || img.title}
+                </p>
+              </div>
+            </button>
+          ))}
         </div>
       )}
 
@@ -164,62 +169,82 @@ export default function AmbienteGalleryClient({ images }: Props) {
             if (e.target === e.currentTarget) closeLightbox();
           }}
         >
-          {/* Close */}
           <button
             onClick={closeLightbox}
             className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-white/70 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-pumpkin"
             aria-label="Schließen"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
 
-          {/* Counter */}
           <div className="absolute top-5 left-1/2 -translate-x-1/2 font-accent text-white/50 text-xs tracking-wider">
             {lightboxIndex + 1} / {filtered.length}
           </div>
 
-          {/* Prev */}
           {filtered.length > 1 && (
             <button
               onClick={goPrev}
               className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-pumpkin"
               aria-label="Vorheriges Bild"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M15 18l-6-6 6-6" />
               </svg>
             </button>
           )}
 
-          {/* Image */}
           <div className="relative max-w-[90vw] max-h-[80vh] flex items-center justify-center">
             <Image
               src={currentImage.imageUrl}
               alt={currentImage.alt || currentImage.title}
               width={currentImage.width || 1500}
               height={currentImage.height || 1000}
-              className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
+              className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-lg"
               sizes="90vw"
               priority
             />
           </div>
 
-          {/* Next */}
           {filtered.length > 1 && (
             <button
               onClick={goNext}
               className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-pumpkin"
               aria-label="Nächstes Bild"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 18l6-6-6-6" />
               </svg>
             </button>
           )}
 
-          {/* Caption */}
           {(currentImage.caption || currentImage.title) && (
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-center max-w-lg px-4">
               <p className="font-heading text-white text-sm md:text-base font-medium">
@@ -228,7 +253,10 @@ export default function AmbienteGalleryClient({ images }: Props) {
               {currentImage.colorWorlds.length > 0 && (
                 <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.2em] uppercase mt-1">
                   {currentImage.colorWorlds
-                    .map((w) => FILTER_OPTIONS.find((f) => f.value === w)?.label || w)
+                    .map(
+                      (w) =>
+                        FILTER_OPTIONS.find((f) => f.value === w)?.label || w,
+                    )
                     .join(" · ")}
                 </p>
               )}

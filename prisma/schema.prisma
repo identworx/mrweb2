@@ -581,6 +581,7 @@ model AmbienteImage {
   alt          String?
   colorWorlds  Json?
   featured     Boolean    @default(false)
+  teaserSlot   String?
   isActive     Boolean    @default(true)
   order        Int        @default(0)
 

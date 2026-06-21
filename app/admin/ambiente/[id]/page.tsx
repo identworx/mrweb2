@@ -13,7 +13,7 @@ export default async function AmbienteEditPage({
 
   const sessionUser = await getSessionUser();
   const isNew = id === "new";
-  const [image, mediaAssets] = await Promise.all([
+  const [image, mediaAssets, slotRows] = await Promise.all([
     isNew
       ? Promise.resolve(null)
       : prisma.ambienteImage.findUnique({
@@ -23,6 +23,10 @@ export default async function AmbienteEditPage({
     prisma.mediaAsset.findMany({
       orderBy: { filename: "asc" },
       select: { id: true, filename: true, url: true, alt: true },
+    }),
+    prisma.ambienteImage.findMany({
+      where: { teaserSlot: { not: null } },
+      select: { id: true, title: true, teaserSlot: true },
     }),
   ]);
 
@@ -40,6 +44,7 @@ export default async function AmbienteEditPage({
           ? (image.colorWorlds as string[])
           : [],
         featured: image.featured,
+        teaserSlot: image.teaserSlot ?? "",
         isActive: image.isActive,
         order: image.order,
         mediaAssetId: image.mediaAssetId,
@@ -51,12 +56,17 @@ export default async function AmbienteEditPage({
         alt: "",
         colorWorlds: [] as string[],
         featured: false,
+        teaserSlot: "",
         isActive: true,
         order: 0,
         mediaAssetId: "",
       };
 
   const imagePreview = image?.mediaAsset ?? null;
+
+  const existingSlots = slotRows
+    .filter((r) => r.teaserSlot)
+    .map((r) => ({ slot: r.teaserSlot!, title: r.title, id: r.id }));
 
   return (
     <div className="space-y-6">
@@ -82,6 +92,7 @@ export default async function AmbienteEditPage({
         mediaAssets={mediaAssets}
         imagePreview={imagePreview}
         userRole={sessionUser?.role ?? "VIEWER"}
+        existingSlots={existingSlots}
       />
     </div>
   );

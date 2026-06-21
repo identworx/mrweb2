@@ -1,6 +1,8 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 
+export type TeaserSlot = "hero" | "portrait" | "wide" | "smallA" | "smallB";
+
 export interface FrontendAmbienteImage {
   id: string;
   title: string;
@@ -8,6 +10,7 @@ export interface FrontendAmbienteImage {
   alt: string | null;
   colorWorlds: string[];
   featured: boolean;
+  teaserSlot: TeaserSlot | null;
   imageUrl: string;
   width: number | null;
   height: number | null;
@@ -19,24 +22,76 @@ function parseColorWorlds(raw: unknown): string[] {
   return [];
 }
 
-export async function getActiveAmbienteImages(): Promise<FrontendAmbienteImage[]> {
-  const rows = await prisma.ambienteImage.findMany({
-    where: { isActive: true },
-    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-    include: { mediaAsset: { select: { url: true, alt: true, width: true, height: true } } },
-  });
+const VALID_SLOTS = new Set<string>(["hero", "portrait", "wide", "smallA", "smallB"]);
 
-  return rows.map((r) => ({
+function parseSlot(raw: string | null | undefined): TeaserSlot | null {
+  if (!raw || !VALID_SLOTS.has(raw)) return null;
+  return raw as TeaserSlot;
+}
+
+function mapRow(r: {
+  id: string;
+  title: string;
+  caption: string | null;
+  alt: string | null;
+  colorWorlds: unknown;
+  featured: boolean;
+  teaserSlot: string | null;
+  mediaAsset: { url: string; alt: string | null; width: number | null; height: number | null };
+}): FrontendAmbienteImage {
+  return {
     id: r.id,
     title: r.title,
     caption: r.caption,
     alt: r.alt || r.mediaAsset.alt,
     colorWorlds: parseColorWorlds(r.colorWorlds),
     featured: r.featured,
+    teaserSlot: parseSlot(r.teaserSlot),
     imageUrl: r.mediaAsset.url,
     width: r.mediaAsset.width,
     height: r.mediaAsset.height,
-  }));
+  };
+}
+
+const INCLUDE_MEDIA = {
+  mediaAsset: { select: { url: true, alt: true, width: true, height: true } },
+} as const;
+
+export async function getActiveAmbienteImages(): Promise<FrontendAmbienteImage[]> {
+  const rows = await prisma.ambienteImage.findMany({
+    where: { isActive: true },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    include: INCLUDE_MEDIA,
+  });
+  return rows.map(mapRow);
+}
+
+export async function getTeaserAmbienteImages(): Promise<Record<TeaserSlot, FrontendAmbienteImage | null>> {
+  const rows = await prisma.ambienteImage.findMany({
+    where: {
+      isActive: true,
+      teaserSlot: { not: null },
+    },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    include: INCLUDE_MEDIA,
+  });
+
+  const slotMap: Record<TeaserSlot, FrontendAmbienteImage | null> = {
+    hero: null,
+    portrait: null,
+    wide: null,
+    smallA: null,
+    smallB: null,
+  };
+
+  for (const r of rows) {
+    const slot = parseSlot(r.teaserSlot);
+    if (slot && !slotMap[slot]) {
+      slotMap[slot] = mapRow(r);
+    }
+  }
+
+  return slotMap;
 }
 
 export async function getFeaturedAmbienteImages(
@@ -46,18 +101,7 @@ export async function getFeaturedAmbienteImages(
     where: { isActive: true, featured: true },
     orderBy: [{ order: "asc" }, { createdAt: "desc" }],
     take: limit,
-    include: { mediaAsset: { select: { url: true, alt: true, width: true, height: true } } },
+    include: INCLUDE_MEDIA,
   });
-
-  return rows.map((r) => ({
-    id: r.id,
-    title: r.title,
-    caption: r.caption,
-    alt: r.alt || r.mediaAsset.alt,
-    colorWorlds: parseColorWorlds(r.colorWorlds),
-    featured: r.featured,
-    imageUrl: r.mediaAsset.url,
-    width: r.mediaAsset.width,
-    height: r.mediaAsset.height,
-  }));
+  return rows.map(mapRow);
 }

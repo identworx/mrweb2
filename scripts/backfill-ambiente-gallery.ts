@@ -1,8 +1,9 @@
 /**
  * Backfill script for Ambiente Gallery.
  *
- * Tries to find MediaAssets in an "ambiente" folder and creates
- * AmbienteImage records for them.
+ * Phase 1: Creates AmbienteImage records from MediaAssets in an "ambiente" folder.
+ * Phase 2: Assigns teaserSlot to the first 5 active images (by order) that
+ *          don't already have a slot, without overwriting existing assignments.
  *
  * Usage:
  *   npx tsx scripts/backfill-ambiente-gallery.ts          # dry-run
@@ -18,18 +19,16 @@ const prisma = new PrismaClient({ adapter });
 
 const apply = process.argv.includes("--apply");
 
-async function main() {
-  console.log(`\n=== Ambiente Gallery Backfill (${apply ? "APPLY" : "DRY-RUN"}) ===\n`);
+const TEASER_SLOTS = ["hero", "portrait", "wide", "smallA", "smallB"] as const;
 
-  // Check existing records
+async function backfillRecords() {
   const existing = await prisma.ambienteImage.count();
   if (existing > 0) {
     console.log(`ALREADY_CONFIGURED: ${existing} AmbienteImage record(s) already exist.`);
-    console.log("Skipping backfill to avoid duplicates.\n");
+    console.log("Skipping record creation to avoid duplicates.");
     return;
   }
 
-  // Look for an "ambiente" media folder
   const folder = await prisma.mediaFolder.findFirst({
     where: {
       OR: [
@@ -59,7 +58,6 @@ async function main() {
       select: { id: true, filename: true, url: true, alt: true, title: true },
     });
   } else {
-    // Fallback: look for assets with "ambiente" in filename
     candidates = await prisma.mediaAsset.findMany({
       where: {
         OR: [
@@ -80,7 +78,7 @@ async function main() {
 
   if (candidates.length === 0) {
     console.log("SKIP: No matching MediaAssets found for ambiente gallery.");
-    console.log("→ Use the admin at /admin/ambiente to add images manually.\n");
+    console.log("→ Use the admin at /admin/ambiente to add images manually.");
     return;
   }
 
@@ -113,10 +111,75 @@ async function main() {
 
   if (apply) {
     console.log(`\n✓ Created ${candidates.length} AmbienteImage record(s).`);
-    console.log("→ Set colorWorlds and captions in the admin at /admin/ambiente.\n");
   } else {
-    console.log(`\nDry run complete. Run with --apply to create records.\n`);
+    console.log(`\nDry run — run with --apply to create records.`);
   }
+}
+
+async function backfillTeaserSlots() {
+  console.log("\n--- Teaser Slot Assignment ---\n");
+
+  const occupied = await prisma.ambienteImage.findMany({
+    where: { teaserSlot: { not: null } },
+    select: { id: true, title: true, teaserSlot: true },
+  });
+
+  const takenSlots = new Set(occupied.map((r) => r.teaserSlot));
+  const freeSlots = TEASER_SLOTS.filter((s) => !takenSlots.has(s));
+
+  if (freeSlots.length === 0) {
+    console.log("ALL_SLOTS_FILLED: All 5 teaser slots are already assigned.");
+    return;
+  }
+
+  if (occupied.length > 0) {
+    console.log("Existing slot assignments:");
+    for (const r of occupied) {
+      console.log(`  ${r.teaserSlot} → "${r.title}" (${r.id})`);
+    }
+  }
+
+  console.log(`Free slots: ${freeSlots.join(", ")}`);
+
+  const candidates = await prisma.ambienteImage.findMany({
+    where: { isActive: true, teaserSlot: null },
+    orderBy: [{ order: "asc" }, { createdAt: "asc" }],
+    take: freeSlots.length,
+    select: { id: true, title: true },
+  });
+
+  if (candidates.length === 0) {
+    console.log("SKIP: No unassigned active images available for slot assignment.");
+    return;
+  }
+
+  console.log(`\nAssigning ${Math.min(candidates.length, freeSlots.length)} slot(s):\n`);
+
+  for (let i = 0; i < candidates.length && i < freeSlots.length; i++) {
+    const img = candidates[i];
+    const slot = freeSlots[i];
+    console.log(`  ${apply ? "ASSIGN" : "WOULD ASSIGN"}: ${slot} → "${img.title}" (${img.id})`);
+
+    if (apply) {
+      await prisma.ambienteImage.update({
+        where: { id: img.id },
+        data: { teaserSlot: slot },
+      });
+    }
+  }
+
+  if (apply) {
+    console.log(`\n✓ Assigned ${Math.min(candidates.length, freeSlots.length)} teaser slot(s).`);
+  } else {
+    console.log(`\nDry run — run with --apply to assign slots.`);
+  }
+}
+
+async function main() {
+  console.log(`\n=== Ambiente Gallery Backfill (${apply ? "APPLY" : "DRY-RUN"}) ===\n`);
+  await backfillRecords();
+  await backfillTeaserSlots();
+  console.log("");
 }
 
 main()

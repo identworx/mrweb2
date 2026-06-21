@@ -59,8 +59,8 @@ export default async function AmbienteListPage() {
                 <th className="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">
                   Farbwelten
                 </th>
-                <th className="text-center px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">
-                  Featured
+                <th className="text-left px-4 py-3 font-medium text-gray-600 hidden md:table-cell">
+                  Mosaik
                 </th>
                 <th className="text-center px-4 py-3 font-medium text-gray-600 hidden sm:table-cell">
                   Status
@@ -114,11 +114,13 @@ export default async function AmbienteListPage() {
                         ))}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-center hidden sm:table-cell">
-                      {img.featured ? (
-                        <span className="inline-block w-2 h-2 rounded-full bg-orange-500" title="Featured" />
+                    <td className="px-4 py-3 hidden md:table-cell">
+                      {img.teaserSlot ? (
+                        <span className="inline-block px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider rounded bg-orange-50 text-orange-700">
+                          {img.teaserSlot}
+                        </span>
                       ) : (
-                        <span className="inline-block w-2 h-2 rounded-full bg-gray-200" />
+                        <span className="text-gray-300 text-xs">—</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-center hidden sm:table-cell">
