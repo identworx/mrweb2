@@ -184,6 +184,15 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
+    style: "homepage-ambiente-teaser",
+    label: "Ambiente-Mosaik (Startseite)",
+    description: "Ambiente-Vorschaumosaik ohne Überschrift. Bilder werden unter /admin/ambiente gepflegt. Hier nur CTA-Text, CTA-Link und Position.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "homepage-ambiente-teaser",
+    },
+  },
+  {
     style: "collections-ambiente-teaser",
     label: "Ambiente-Mosaik (Kollektionen)",
     description: "Mosaik-Teaser mit Ambiente-Bildern. Bilder werden unter /admin/ambiente gepflegt. Hier nur Texte und Position.",

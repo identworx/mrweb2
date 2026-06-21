@@ -8,6 +8,7 @@ import { getPublishedCollections } from "@/lib/cms/collections";
 import { getPublicDownloads } from "@/lib/cms/downloads";
 import { getPublishedNewsArticles } from "@/lib/cms/news";
 import { getIconSlots } from "@/lib/cms/icons";
+import { getTeaserAmbienteImages } from "@/lib/cms/ambiente";
 import HomepageHero from "@/components/homepage/HomepageHero";
 import HomepageValueProps from "@/components/homepage/HomepageValueProps";
 import HomepageImageTextFeature from "@/components/homepage/HomepageImageTextFeature";
@@ -15,6 +16,7 @@ import HomepageCollections from "@/components/homepage/HomepageCollections";
 import HomepageSustainability from "@/components/homepage/HomepageSustainability";
 import HomepageDownloads from "@/components/homepage/HomepageDownloads";
 import HomepageNews from "@/components/homepage/HomepageNews";
+import AmbienteTeaser from "@/components/collections/AmbienteTeaser";
 
 export const revalidate = 60;
 
@@ -159,7 +161,7 @@ const FALLBACK_SECTIONS: HomepageSection[] = [
 ];
 
 export default async function Home() {
-  const [layout, homepageData, collections, downloads, articles, icons] = await Promise.all([
+  const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots] = await Promise.all([
     getPublicLayoutData(),
     getHomepageData(),
     getPublishedCollections(),
@@ -169,6 +171,7 @@ export default async function Home() {
       "arrow-right", "scroll-down", "download-book",
       "value-comfort", "value-quality", "value-sustainability", "value-design",
     ]),
+    getTeaserAmbienteImages(),
   ]);
 
   const sections = homepageData?.sections.length
@@ -183,6 +186,18 @@ export default async function Home() {
           switch (section.style) {
             case "home-hero":
               return <HomepageHero key={section.id} section={section} icons={icons} />;
+            case "homepage-ambiente-teaser":
+              return (
+                <AmbienteTeaser
+                  key={section.id}
+                  slots={ambienteSlots}
+                  showHeader={false}
+                  ctaPlacement="below-right"
+                  variant="homepage"
+                  ctaLabel={section.buttonLabel || "Alle Ambiente-Bilder"}
+                  ctaHref={section.buttonHref || "/kollektionen/ambiente"}
+                />
+              );
             case "value-props":
               return <HomepageValueProps key={section.id} section={section} icons={icons} />;
             case "image-text-feature":

@@ -10,6 +10,10 @@ interface Props {
   intro?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  showHeader?: boolean;
+  ctaPlacement?: "top-right" | "below-right";
+  className?: string;
+  variant?: "default" | "homepage";
 }
 
 const COLOR_WORLD_LABELS: Record<string, string> = {
@@ -80,6 +84,10 @@ export default function AmbienteTeaser({
   intro,
   ctaLabel = "Alle Ambiente-Bilder",
   ctaHref = "/kollektionen/ambiente",
+  showHeader = true,
+  ctaPlacement = "top-right",
+  className,
+  variant = "default",
 }: Props) {
   const { hero, portrait, wide, smallA, smallB } = slots;
 
@@ -89,39 +97,45 @@ export default function AmbienteTeaser({
   if (filled.length === 0) return null;
 
   const hasFiveSlots = hero && portrait && wide && smallA && smallB;
+  const isHomepage = variant === "homepage";
+  const sectionPadding = isHomepage ? "py-12 md:py-16" : "py-16 md:py-24";
+
+  const ctaLink = ctaLabel && ctaHref ? (
+    <Link
+      href={ctaHref}
+      className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
+    >
+      {ctaLabel}
+      <span aria-hidden="true">&rarr;</span>
+    </Link>
+  ) : null;
 
   return (
-    <section className="py-16 md:py-24 bg-cream">
+    <section className={`${sectionPadding} bg-cream ${className ?? ""}`}>
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-        <ScrollReveal>
-          <div className="mb-10 md:mb-14">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                {eyebrow}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-end justify-between gap-4">
-              <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
-                {title}
-              </h2>
-              {ctaLabel && ctaHref && (
-                <Link
-                  href={ctaHref}
-                  className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
-                >
-                  {ctaLabel}
-                  <span aria-hidden="true">&rarr;</span>
-                </Link>
+        {showHeader && (
+          <ScrollReveal>
+            <div className="mb-10 md:mb-14">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="accent-line" />
+                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                  {eyebrow}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
+                  {title}
+                </h2>
+                {ctaPlacement === "top-right" && ctaLink}
+              </div>
+              {intro && (
+                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mt-4">
+                  {intro}
+                </p>
               )}
             </div>
-            {intro && (
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mt-4">
-                {intro}
-              </p>
-            )}
-          </div>
-        </ScrollReveal>
+          </ScrollReveal>
+        )}
 
         <ScrollReveal>
           {/* Desktop mosaic (lg+): 5-slot curated grid */}
@@ -208,7 +222,7 @@ export default function AmbienteTeaser({
           )}
 
           {/* Mobile: stacked */}
-          <div className={hasFiveSlots ? "flex flex-col gap-3 sm:hidden" : "flex flex-col gap-3 sm:hidden"}>
+          <div className="flex flex-col gap-3 sm:hidden">
             {filled.slice(0, 3).map((img, i) => (
               <div
                 key={img.id}
@@ -246,6 +260,13 @@ export default function AmbienteTeaser({
             )}
           </div>
         </ScrollReveal>
+
+        {/* CTA below mosaic */}
+        {ctaPlacement === "below-right" && ctaLink && (
+          <div className="flex justify-end mt-5 md:mt-6">
+            {ctaLink}
+          </div>
+        )}
       </div>
     </section>
   );

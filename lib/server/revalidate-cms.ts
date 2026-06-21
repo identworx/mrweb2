@@ -86,6 +86,7 @@ export function revalidateNews(slug?: string) {
 }
 
 export function revalidateAmbiente() {
+  safeRevalidate("/");
   safeRevalidate("/kollektionen");
   safeRevalidate("/kollektionen/ambiente");
 }
