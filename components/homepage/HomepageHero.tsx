@@ -53,7 +53,7 @@ export default function HomepageHero({ section, icons = {} }: Props) {
       />
 
       <div className="relative h-full flex items-end">
-        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-20 md:pb-28 lg:pb-32">
+        <div className="mx-auto max-w-[1400px] w-full px-6 md:px-10 lg:px-12 pb-20 md:pb-24 lg:pb-20">
           <div className="max-w-xl lg:max-w-[620px]">
             <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase mb-6">
               {eyebrow}
