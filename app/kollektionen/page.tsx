@@ -113,6 +113,16 @@ export default async function KollektionenPage() {
   const ctaSection =
     findSection(sections, "collection-cta") ?? FALLBACK_CTA;
 
+  const pageEyebrow =
+    pageResult.state === "published" && pageResult.page.eyebrow
+      ? pageResult.page.eyebrow
+      : "Farbwelten";
+
+  const pageHeadline =
+    pageResult.state === "published" && pageResult.page.headline
+      ? pageResult.page.headline
+      : "Kollektionen.";
+
   const introText =
     pageResult.state === "published" && pageResult.page.introText
       ? pageResult.page.introText
@@ -141,6 +151,20 @@ export default async function KollektionenPage() {
   const introBlock = (
     <section key="intro" className="pt-14 md:pt-20 pb-10 md:pb-14 bg-white">
       <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+        <ScrollReveal>
+          <div className="mb-10 md:mb-14">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="accent-line" />
+              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                {pageEyebrow}
+              </p>
+            </div>
+            <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
+              {pageHeadline}
+            </h2>
+          </div>
+        </ScrollReveal>
+
         {allMoodColors.length > 0 && (
           <div className="flex mb-10 md:mb-14" aria-hidden="true">
             {allMoodColors.map((color, i) => (

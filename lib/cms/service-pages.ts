@@ -18,6 +18,7 @@ export interface FrontendServiceSection {
 export interface FrontendServicePage {
   slug: string;
   title: string;
+  eyebrow: string | null;
   headline: string | null;
   introText: string | null;
   heroImageUrl: string | null;
@@ -57,6 +58,7 @@ export async function getServicePageBySlug(slug: string): Promise<ServicePageRes
       page: {
         slug: page.slug,
         title: page.title,
+        eyebrow: page.eyebrow,
         headline: page.headline,
         introText: page.introText,
         heroImageUrl: getMediaUrl(page.heroImage, "") || null,
