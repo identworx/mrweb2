@@ -60,7 +60,7 @@ export default function HomepageCollections({ section, collections, icons = {} }
           >
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-pumpkin/20 group-hover:bg-pumpkin/40 transition-colors duration-500" />
 
-            <div className="flex flex-col items-start justify-center flex-1 p-6 md:p-7">
+            <div className="flex flex-col items-start justify-center flex-1 p-5 pt-6">
               <p className="font-accent text-pumpkin/60 text-[10px] tracking-[0.25em] uppercase mb-3">
                 Alle Farbwelten
               </p>
@@ -72,8 +72,8 @@ export default function HomepageCollections({ section, collections, icons = {} }
               </p>
             </div>
 
-            <div className="mt-auto p-6 md:p-7 pt-0">
-              <div className="flex items-center justify-end pt-3 border-t border-black/[0.05]">
+            <div className="mt-auto p-5 pt-0">
+              <div className="flex items-center justify-end mt-4 pt-3 border-t border-black/[0.05]">
                 <span className="flex items-center gap-1.5 text-pumpkin/70 group-hover:text-pumpkin transition-colors duration-500">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.14em]">
                     Übersicht öffnen
