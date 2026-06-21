@@ -10,6 +10,7 @@ import "@fontsource/josefin-sans/400.css";
 import "@fontsource/josefin-sans/400-italic.css";
 import "./globals.css";
 import { getSiteSettings } from "@/lib/cms/settings";
+import ConsentProvider from "@/components/consent/ConsentProvider";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
@@ -31,7 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className="h-full antialiased">
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <ConsentProvider>{children}</ConsentProvider>
+      </body>
     </html>
   );
 }

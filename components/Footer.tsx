@@ -3,6 +3,7 @@ import Link from "next/link";
 import { footerData } from "@/lib/mosaroma/footer";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import CookieSettingsButton from "@/components/consent/CookieSettingsButton";
 
 export interface FooterNavColumn {
   title: string;
@@ -298,18 +299,22 @@ export default function Footer({
             </div>
 
             <div className="flex flex-wrap justify-center gap-5 text-[11px]">
-              {legal.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  {...(item.target === "_blank"
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                  className="font-body text-white/40 hover:text-white/60 transition-colors duration-400"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {legal.map((item) =>
+                item.label === "Cookie-Einstellungen" ? (
+                  <CookieSettingsButton key={item.label} />
+                ) : (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    {...(item.target === "_blank"
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                    className="font-body text-white/40 hover:text-white/60 transition-colors duration-400"
+                  >
+                    {item.label}
+                  </Link>
+                ),
+              )}
             </div>
           </div>
         </div>
