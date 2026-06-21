@@ -85,6 +85,11 @@ export function revalidateNews(slug?: string) {
   if (slug) safeRevalidate(`/neuigkeiten/${slug}`);
 }
 
+export function revalidateAmbiente() {
+  safeRevalidate("/kollektionen");
+  safeRevalidate("/kollektionen/ambiente");
+}
+
 export function revalidateContactForm() {
   safeRevalidate("/kontakt");
 }

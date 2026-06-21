@@ -26,6 +26,7 @@ const navGroups = [
       { label: "Materialien", href: "/admin/materials", icon: "layers" },
       { label: "Stoffbibliothek", href: "/admin/fabrics", icon: "swatch" },
       { label: "Neuigkeiten", href: "/admin/news", icon: "newspaper" },
+      { label: "Ambiente-Galerie", href: "/admin/ambiente", icon: "image" },
     ],
   },
   {

@@ -164,6 +164,7 @@ model MediaAsset {
   newsCardImages        NewsArticle[]  @relation("NewsCardImage")
   measurementImages     Measurement[]  @relation("MeasurementImage")
   fabricSwatchImages    FabricSwatch[] @relation("FabricSwatchImage")
+  ambienteImages        AmbienteImage[] @relation("AmbienteImageAsset")
   iconSlots             IconSlot[]
 }
 
@@ -567,6 +568,27 @@ model FabricAvailability {
   productType FabricProductType @relation(fields: [productTypeId], references: [id], onDelete: Cascade)
 
   @@unique([swatchId, productTypeId])
+}
+
+// ---------------------------------------------------------------------------
+// Ambiente Gallery
+// ---------------------------------------------------------------------------
+
+model AmbienteImage {
+  id           String     @id @default(cuid())
+  title        String
+  caption      String?
+  alt          String?
+  colorWorlds  Json?
+  featured     Boolean    @default(false)
+  isActive     Boolean    @default(true)
+  order        Int        @default(0)
+
+  mediaAssetId String
+  mediaAsset   MediaAsset @relation("AmbienteImageAsset", fields: [mediaAssetId], references: [id])
+
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 // ---------------------------------------------------------------------------

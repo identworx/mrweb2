@@ -9,11 +9,13 @@ import ScrollReveal from "@/components/ScrollReveal";
 import CollectionBenefitsSection from "@/components/service/CollectionBenefitsSection";
 import CollectionCtaSection from "@/components/service/CollectionCtaSection";
 import { getPublishedCollections } from "@/lib/cms/collections";
+import { getFeaturedAmbienteImages } from "@/lib/cms/ambiente";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
+import AmbienteTeaser from "@/components/collections/AmbienteTeaser";
 
 export const revalidate = 60;
 
@@ -90,10 +92,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KollektionenPage() {
-  const [layout, hero, collections, pageResult, icons] = await Promise.all([
+  const [layout, hero, collections, ambienteImages, pageResult, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kollektionen", "kollektionen"),
     getPublishedCollections(),
+    getFeaturedAmbienteImages(5),
     getServicePageBySlug("kollektionen"),
     getIconSlots(["benefit-sun", "benefit-droplet", "benefit-shield", "benefit-star", "benefit-fallback", "arrow-right", "checkmark"]),
   ]);
@@ -128,10 +131,9 @@ export default async function KollektionenPage() {
         />
         <BreadcrumbBar items={[{ label: "Kollektionen" }]} />
 
-        {/* Collection grid */}
-        <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
+        {/* Mood color bar + intro */}
+        <section className="pt-14 md:pt-20 pb-10 md:pb-14 bg-white">
           <div className="mx-auto max-w-[1440px] px-5 md:px-10">
-            {/* Mood color bar */}
             {allMoodColors.length > 0 && (
               <div className="flex mb-10 md:mb-14" aria-hidden="true">
                 {allMoodColors.map((color, i) => (
@@ -145,11 +147,19 @@ export default async function KollektionenPage() {
             )}
 
             <ScrollReveal>
-              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mb-12 md:mb-16">
+              <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch]">
                 {introText}
               </p>
             </ScrollReveal>
+          </div>
+        </section>
 
+        {/* Ambiente teaser */}
+        <AmbienteTeaser images={ambienteImages} />
+
+        {/* Collection grid */}
+        <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
+          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
             {collections.length === 0 ? (
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
                 Aktuell sind keine Kollektionen verfügbar. Bitte schauen Sie
