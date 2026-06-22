@@ -13,6 +13,8 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 
+import DataRow from "@/components/DataRow";
+
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,17 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
       hero.seoDescription ||
       "Technische Materialeigenschaften, Prüfwerte und Outdoor-Performance der Mosaroma Stoffqualitäten im Vergleich.",
   };
-}
-
-function DataRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-start gap-4">
-      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/50 w-28 shrink-0 pt-0.5">
-        {label}
-      </span>
-      <span className="font-body text-anthracite text-sm">{value}</span>
-    </div>
-  );
 }
 
 export default async function TechnischeDatenPage() {

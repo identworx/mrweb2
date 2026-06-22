@@ -26,7 +26,7 @@ export default function HomepageImageTextFeature({ section, icons = {} }: Props)
     <section className="py-20 md:py-28 lg:py-32 bg-white">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[14px] ring-1 ring-black/5 shadow-[0_24px_60px_rgba(45,45,45,0.10)] bg-cream group">
+          <div className="relative aspect-[4/3] overflow-hidden ring-1 ring-black/5 shadow-[0_24px_60px_rgba(45,45,45,0.10)] bg-cream group">
             <Image
               src={imageUrl}
               alt={imageAlt}

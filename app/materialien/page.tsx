@@ -209,7 +209,7 @@ export default async function MaterialienPage() {
                     <div className="flex flex-wrap gap-2.5 mb-10">
                       {olefin.tags.map((tag, i) => (
                         <ScrollReveal key={tag} delay={i * 60}>
-                          <span className="inline-block font-accent text-[10px] tracking-[0.18em] uppercase bg-pumpkin/8 text-anthracite/80 px-3.5 py-1.5 rounded-full">
+                          <span className="inline-block font-accent text-[10px] tracking-[0.18em] uppercase bg-pumpkin/8 text-anthracite/80 px-3.5 py-1.5">
                             {tag}
                           </span>
                         </ScrollReveal>

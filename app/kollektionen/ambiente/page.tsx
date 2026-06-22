@@ -40,7 +40,7 @@ export default async function AmbienteGalleryPage() {
         />
 
         <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
-          <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+          <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <ScrollReveal>
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-[56ch] mb-10 md:mb-14">
                 Filtern Sie nach Farbwelt und öffnen Sie jedes Motiv in voller

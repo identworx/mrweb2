@@ -118,7 +118,7 @@ export default function AmbienteTeaser({
 
   return (
     <section className={`${sectionPadding} ${sectionBg} ${className ?? ""}`}>
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         {showHeader && (
           <ScrollReveal>
             <div className="mb-10 md:mb-14">

@@ -101,7 +101,7 @@ export default function HomepageHero({ section, icons = {} }: Props) {
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-50 motion-safe:animate-bounce text-white">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-40 motion-safe:animate-[scroll-hint_2.5s_ease-in-out_infinite] text-white">
         <CmsIcon icon={icons["scroll-down"]} width={16} height={24} />
       </div>
     </section>

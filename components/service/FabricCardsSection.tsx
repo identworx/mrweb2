@@ -1,4 +1,5 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import DataRow from "@/components/DataRow";
 
 interface FabricCard {
   name: string;
@@ -9,17 +10,6 @@ interface FabricCard {
   comfort: string;
   cushionThickness?: string;
   description?: string;
-}
-
-function DataRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-start gap-4">
-      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-text-gray/50 w-28 shrink-0 pt-0.5">
-        {label}
-      </span>
-      <span className="font-body text-anthracite text-sm">{value}</span>
-    </div>
-  );
 }
 
 export default function FabricCardsSection({

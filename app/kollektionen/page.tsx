@@ -130,13 +130,10 @@ export default async function KollektionenPage() {
 
   const allMoodColors = collections.flatMap((c) => c.moodColors);
 
-  // Ambiente teaser visibility: shown unless explicitly deactivated via CMS
-  const showAmbiente = ambienteSection ? true : true;
-
   // Build ordered content blocks
   const ambienteOrder = ambienteSection?.order ?? 10;
 
-  const ambienteBlock = showAmbiente ? (
+  const ambienteBlock = (
     <AmbienteTeaser
       key="ambiente"
       slots={ambienteSlots}
@@ -146,11 +143,11 @@ export default async function KollektionenPage() {
       ctaLabel={ambienteSection?.buttonLabel || undefined}
       ctaHref={ambienteSection?.buttonHref || undefined}
     />
-  ) : null;
+  );
 
   const introBlock = (
     <section key="intro" className="pt-14 md:pt-20 pb-10 md:pb-14 bg-white">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <ScrollReveal>
           <div className="mb-10 md:mb-14">
             <div className="flex items-center gap-4 mb-4">
@@ -188,7 +185,7 @@ export default async function KollektionenPage() {
 
   const gridBlock = (
     <section key="grid" className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         {collections.length === 0 ? (
           <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
             Aktuell sind keine Kollektionen verfügbar. Bitte schauen Sie

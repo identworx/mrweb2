@@ -33,7 +33,7 @@ export default function CollectionBenefitsSection({
 
   return (
     <section className={`py-16 md:py-24 ${className}`}>
-      <div className="mx-auto max-w-[1440px] px-5 md:px-10">
+      <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         {(section.title || section.content) && (
           <ScrollReveal>
             <div className="max-w-3xl mb-14">

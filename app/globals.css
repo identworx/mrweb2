@@ -303,6 +303,12 @@ html {
   display: none;
 }
 
+/* Scroll hint — subtle pulse, no bounce */
+@keyframes scroll-hint {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 0.7; transform: translateY(4px); }
+}
+
 /* Drawer slide-in */
 @keyframes slide-in-right {
   from { transform: translateX(100%); }
