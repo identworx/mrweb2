@@ -17,6 +17,7 @@ import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 import DataRow from "@/components/DataRow";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -211,26 +212,15 @@ export default async function StoffTechnischeDatenPage() {
               </div>
             </section>
 
-            {/* Static fallback — CTA */}
-            <section className="section-padding bg-anthracite">
-              <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  Fragen zu Stoffen oder technischen Daten?
-                </h2>
-                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-                  Wir beraten Sie gerne zu Materialien, Prüfwerten und
-                  Stoffqualitäten.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link href="/kontakt" className="btn-primary">
-                    Kontakt aufnehmen
-                  </Link>
-                  <Link href="/kataloge" className="btn-outline-white">
-                    Zurück zu Kataloge
-                  </Link>
-                </div>
-              </div>
-            </section>
+            <PageCta
+              variant="light"
+              title="Fragen zu Stoffen oder technischen Daten?"
+              description="Wir beraten Sie gerne zu Materialien, Prüfwerten und Stoffqualitäten."
+              primaryLabel="Kontakt aufnehmen"
+              primaryHref="/kontakt"
+              secondaryLabel="Zurück zu Kataloge"
+              secondaryHref="/kataloge"
+            />
           </>
         )}
       </main>

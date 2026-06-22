@@ -22,6 +22,7 @@ import Image from "next/image";
 import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -439,19 +440,13 @@ export default async function MaterialienPage() {
             </section>
 
             {/* CTA */}
-            <section className="section-padding bg-anthracite">
-              <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  {ctaData?.title || "Alle Details im Katalog"}
-                </h2>
-                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-                  {ctaData?.content || "Entdecken Sie alle Stoffqualitäten, Farben und technischen Daten in unserem aktuellen Katalog."}
-                </p>
-                <Link href={ctaData?.buttonHref || "/kataloge"} className="btn-outline-white">
-                  {ctaData?.buttonLabel || "Katalog ansehen"}
-                </Link>
-              </div>
-            </section>
+            <PageCta
+              variant="light"
+              title={ctaData?.title || "Alle Details im Katalog"}
+              description={ctaData?.content || "Entdecken Sie alle Stoffqualitäten, Farben und technischen Daten in unserem aktuellen Katalog."}
+              primaryLabel={ctaData?.buttonLabel || "Katalog ansehen"}
+              primaryHref={ctaData?.buttonHref || "/kataloge"}
+            />
           </>
         )}
       </main>

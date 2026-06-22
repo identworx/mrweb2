@@ -14,6 +14,7 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -230,26 +231,15 @@ export default async function PflegeGarantiePage() {
               </div>
             </section>
 
-            {/* CTA */}
-            <section className="section-padding bg-anthracite">
-              <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  Mehr über unsere Materialien
-                </h2>
-                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-                  Detaillierte Informationen zu Stoffqualitäten, Prüfwerten und
-                  Pflegeeigenschaften finden Sie auf unserer Materialseite.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                  <Link href="/materialien" className="btn-primary">
-                    Materialien entdecken
-                  </Link>
-                  <Link href="/kontakt" className="btn-outline-white">
-                    Kontakt aufnehmen
-                  </Link>
-                </div>
-              </div>
-            </section>
+            <PageCta
+              variant="light"
+              title="Mehr über unsere Materialien"
+              description="Detaillierte Informationen zu Stoffqualitäten, Prüfwerten und Pflegeeigenschaften finden Sie auf unserer Materialseite."
+              primaryLabel="Materialien entdecken"
+              primaryHref="/materialien"
+              secondaryLabel="Kontakt aufnehmen"
+              secondaryHref="/kontakt"
+            />
           </>
         )}
       </main>

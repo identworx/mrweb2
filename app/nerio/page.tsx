@@ -692,27 +692,27 @@ export default async function NerioPage() {
             </section>
 
             {/* Final CTA */}
-            <section className="section-padding bg-anthracite">
+            <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-center">
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-center">
                   {cta.title}
                 </h2>
-                <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-12 text-center">
+                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-12 text-center">
                   {cta.content}
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
                   <Link
                     href="/materialien/stoffe-muster?family=nerio"
-                    className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
+                    className="group block bg-white border border-black/[0.06] p-8 text-center transition-all duration-300 hover:border-black/[0.10] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
                   >
                     <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
                       <CmsIcon icon={icons["nerio-fabric-grid"]} width={28} height={28} />
                     </div>
-                    <h3 className="font-heading text-white text-lg font-bold mb-2">
+                    <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
                       NERIO Stoffe
                     </h3>
-                    <p className="font-body text-white/50 text-sm leading-relaxed mb-6">
+                    <p className="font-body text-text-gray/60 text-sm leading-relaxed mb-6">
                       Alle Stoffe, Muster und Farben der NERIO-Linie entdecken.
                     </p>
                     <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
@@ -722,15 +722,15 @@ export default async function NerioPage() {
 
                   <Link
                     href="/kollektionen/nerio-oceana"
-                    className="group block bg-white/[0.06] border border-white/[0.08] p-8 text-center transition-all duration-300 hover:bg-white/[0.10] hover:border-white/[0.14]"
+                    className="group block bg-white border border-black/[0.06] p-8 text-center transition-all duration-300 hover:border-black/[0.10] hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
                   >
                     <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center text-pumpkin">
                       <CmsIcon icon={icons["nerio-collection-box"]} width={28} height={28} />
                     </div>
-                    <h3 className="font-heading text-white text-lg font-bold mb-2">
+                    <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
                       NERIO Collection
                     </h3>
-                    <p className="font-body text-white/50 text-sm leading-relaxed mb-6">
+                    <p className="font-body text-text-gray/60 text-sm leading-relaxed mb-6">
                       Die NERIO Oceana Kollektion mit allen Produkten.
                     </p>
                     <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
@@ -740,7 +740,7 @@ export default async function NerioPage() {
                 </div>
 
                 <div className="text-center mt-10">
-                  <Link href={cta.buttonHref} className="btn-outline-white">
+                  <Link href={cta.buttonHref} className="btn-outline">
                     {cta.buttonLabel}
                   </Link>
                 </div>

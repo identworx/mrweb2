@@ -216,7 +216,7 @@ export default async function Home() {
           }
         })}
         <PageCta
-          variant="dark"
+          variant="light"
           title="Bereit für Ihren Außenbereich?"
           description="Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Materialien und Sondermaßen beraten."
           primaryLabel="Muster anfordern"
