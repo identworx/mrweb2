@@ -14,7 +14,6 @@ const FALLBACK_IMAGE = "/images/news/mackintosh-technologie.jpg";
 
 export default function HomepageImageTextFeature({ section, icons = {} }: Props) {
   const bullets = (section.settings.bullets as string[]) || [];
-  const eyebrow = section.eyebrow || "Material & Technologie";
   const title = section.title || "Mackintosh® Technology.";
   const content = section.content || "";
   const ctaLabel = section.buttonLabel;

@@ -244,7 +244,7 @@ export default async function MaterialienPage() {
                           alt={olefinImage.alt}
                           width={600}
                           height={460}
-                          className="w-full aspect-[5/4] object-cover rounded-[14px] shadow-[0_6px_28px_rgba(45,45,45,0.06)]"
+                          className="w-full aspect-[5/4] object-cover shadow-[0_6px_28px_rgba(45,45,45,0.06)]"
                         />
                       </div>
                     </ScrollReveal>
