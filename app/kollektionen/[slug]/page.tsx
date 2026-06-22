@@ -549,32 +549,32 @@ export default async function KollektionPage({ params }: PageProps) {
         </section>
 
         {/* ── Collection CTA ── */}
-        <section id="beratung" className="relative bg-anthracite overflow-hidden py-16 md:py-20">
+        <section id="beratung" className="relative bg-cream overflow-hidden py-16 md:py-20">
           <div
             className="absolute inset-0 opacity-[0.025]"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.4) 3px, rgba(255,255,255,0.4) 4px), repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.25) 3px, rgba(255,255,255,0.25) 4px)",
+                "repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.4) 3px, rgba(0,0,0,0.4) 4px), repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.25) 3px, rgba(0,0,0,0.25) 4px)",
             }}
           />
 
           <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="max-w-2xl mx-auto text-center">
               <ScrollReveal>
-                <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.25em] uppercase mb-4">
+                <p className="font-accent text-pumpkin text-[10px] tracking-[0.25em] uppercase mb-4">
                   Beratung & Muster
                 </p>
-                <h2 className="font-heading text-white text-2xl md:text-3xl font-bold tracking-tight mb-4">
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-4">
                   {collection.name} Collection für Ihr Projekt?
                 </h2>
-                <p className="font-body text-white/55 text-[15px] leading-[1.8] mb-8 max-w-lg mx-auto">
+                <p className="font-body text-text-gray text-[15px] leading-[1.8] mb-8 max-w-lg mx-auto">
                   Fordern Sie passende Muster an oder lassen Sie sich zu Formen, Materialien und Produktmaßen beraten.
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                   <Link href="/kontakt" className="btn-primary">
                     Kontakt aufnehmen
                   </Link>
-                  <Link href="/kataloge/produktmasse" className="btn-outline-white">
+                  <Link href="/kataloge/produktmasse" className="btn-outline">
                     Produktmaße ansehen
                   </Link>
                 </div>

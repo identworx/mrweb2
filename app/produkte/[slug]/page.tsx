@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageCta from "@/components/PageCta";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ProductCard from "@/components/ProductCard";
 import ProductImageGallery from "@/components/products/ProductImageGallery";
@@ -381,26 +382,15 @@ export default async function ProduktPage({ params }: PageProps) {
           </section>
         )}
 
-        {/* ── Product CTA ── */}
-        <section className="py-14 md:py-20 bg-anthracite">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              {product.name} für Ihr Projekt?
-            </h2>
-            <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Fordern Sie ein Muster an oder lassen Sie sich zu Material,
-              Maßen und Verfügbarkeit beraten.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-primary">
-                Kontakt aufnehmen
-              </Link>
-              <Link href="/kataloge" className="btn-outline-white">
-                Katalog ansehen
-              </Link>
-            </div>
-          </div>
-        </section>
+        <PageCta
+          variant="light"
+          title={`${product.name} für Ihr Projekt?`}
+          description="Fordern Sie ein Muster an oder lassen Sie sich zu Material, Maßen und Verfügbarkeit beraten."
+          primaryLabel="Kontakt aufnehmen"
+          primaryHref="/kontakt"
+          secondaryLabel="Katalog ansehen"
+          secondaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>
