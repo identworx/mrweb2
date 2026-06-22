@@ -278,7 +278,7 @@ export default async function NerioPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         {/* NERIO Hero */}
         <section className="relative overflow-hidden h-[400px] md:h-[480px] flex items-end">
           <Image

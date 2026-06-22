@@ -58,7 +58,7 @@ export default async function StoffTechnischeDatenPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}

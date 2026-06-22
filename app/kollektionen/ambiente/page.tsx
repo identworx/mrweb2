@@ -26,7 +26,7 @@ export default async function AmbienteGalleryPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow="Saison 2027 · Outdoor Living"
           title="Ambiente."

@@ -30,7 +30,7 @@ export default async function NeuigkeitenPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}

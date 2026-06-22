@@ -168,7 +168,7 @@ export default async function KollektionPage({ params }: PageProps) {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         {/* ── Hero ── */}
         <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
           {hasRealHero ? (

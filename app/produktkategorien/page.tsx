@@ -25,7 +25,7 @@ export default async function ProduktkategorienPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow="Entdecken"
           title="Produktkategorien"

@@ -75,7 +75,7 @@ export default async function CmsPage({
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           title={page.headline || page.title}
           description={page.introText || undefined}

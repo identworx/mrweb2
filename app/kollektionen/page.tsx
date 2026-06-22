@@ -247,7 +247,7 @@ export default async function KollektionenPage() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}

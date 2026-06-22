@@ -39,7 +39,7 @@ export default async function StoffeMusterPage({
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <PageHero
           eyebrow={hero.eyebrow}
           title={hero.title}

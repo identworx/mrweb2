@@ -66,7 +66,7 @@ export default async function NeuigkeitDetailPage({
     return (
       <>
         <Header {...layout.header} />
-        <main>
+        <main id="main">
           <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
             <Image
               src={article.heroImageUrl || "/images/placeholders/page-heroes/neuigkeiten-hero.svg"}
@@ -155,7 +155,7 @@ export default async function NeuigkeitDetailPage({
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         <section className="relative overflow-hidden h-[300px] md:h-[320px] flex items-end">
           <Image
             src="/images/placeholders/page-heroes/neuigkeiten-hero.svg"

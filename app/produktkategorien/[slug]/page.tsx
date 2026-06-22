@@ -110,7 +110,7 @@ export default async function KategoriePage({ params }: PageProps) {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         {/* Category detail with breadcrumbs */}
         <section className="bg-cream pt-28 md:pt-32 pb-16 md:pb-24">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

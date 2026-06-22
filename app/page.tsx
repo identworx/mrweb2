@@ -181,7 +181,7 @@ export default async function Home() {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         {sections.map((section) => {
           switch (section.style) {
             case "home-hero":

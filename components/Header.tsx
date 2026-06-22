@@ -62,7 +62,14 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
   const logoAlt = siteName ? `${siteName} Logo` : "Mosaroma Logo";
 
   return (
-    <header
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:bg-pumpkin focus:text-white focus:font-heading focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[0.12em]"
+      >
+        Zum Inhalt springen
+      </a>
+      <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
         scrolled
           ? "bg-white/[0.97] backdrop-blur-xl"
@@ -225,5 +232,6 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
         </nav>
       </div>
     </header>
+    </>
   );
 }

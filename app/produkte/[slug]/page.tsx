@@ -130,7 +130,7 @@ export default async function ProduktPage({ params }: PageProps) {
   return (
     <>
       <Header {...layout.header} />
-      <main>
+      <main id="main">
         {/* ── Product Hero Band ── */}
         <section
           className="relative bg-anthracite pt-28 md:pt-32 pb-6 md:pb-8"
