@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -10,6 +9,7 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -143,21 +143,13 @@ export default async function KontaktPage() {
         </section>
 
 
-        {/* CTA */}
-        <section className="section-padding bg-anthracite">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Alle Details im Katalog
-            </h2>
-            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Entdecken Sie alle Produkte, Stoffqualitäten und Kollektionen in
-              unserem aktuellen Katalog.
-            </p>
-            <Link href="/kataloge" className="btn-outline-white">
-              Katalog ansehen
-            </Link>
-          </div>
-        </section>
+        <PageCta
+          variant="light"
+          title="Alle Details im Katalog"
+          description="Entdecken Sie alle Produkte, Stoffqualitäten und Kollektionen in unserem aktuellen Katalog."
+          primaryLabel="Katalog ansehen"
+          primaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>

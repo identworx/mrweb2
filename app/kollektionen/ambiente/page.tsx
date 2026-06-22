@@ -7,7 +7,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import AmbienteGalleryClient from "@/components/collections/AmbienteGalleryClient";
 import { getActiveAmbienteImages } from "@/lib/cms/ambiente";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
-import Link from "next/link";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -52,25 +52,14 @@ export default async function AmbienteGalleryPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 md:py-28 bg-anthracite text-white">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <ScrollReveal>
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase mb-4">
-                Inspiration gefunden?
-              </p>
-              <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                Diese Stimmung für Ihren Außenbereich?
-              </h2>
-              <p className="font-body text-white/60 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-8">
-                Wir stellen passende Stoffmuster für Ihr Projekt zusammen.
-              </p>
-              <Link href="/kontakt" className="btn-primary">
-                Musterset anfordern
-              </Link>
-            </ScrollReveal>
-          </div>
-        </section>
+        <PageCta
+          variant="light"
+          eyebrow="Inspiration gefunden?"
+          title="Diese Stimmung für Ihren Außenbereich?"
+          description="Wir stellen passende Stoffmuster für Ihr Projekt zusammen."
+          primaryLabel="Musterset anfordern"
+          primaryHref="/kontakt"
+        />
       </main>
       <Footer {...layout.footer} />
     </>

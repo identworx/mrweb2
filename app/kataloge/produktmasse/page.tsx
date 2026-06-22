@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -13,6 +12,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getIconSlots } from "@/lib/cms/icons";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicMeasurements, measurementGroups } from "@/lib/cms/measurements";
+import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -167,26 +167,15 @@ export default async function ProduktmassePage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="section-padding bg-anthracite">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Fragen zu Produktmaßen?
-            </h2>
-            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Sprechen Sie uns an — wir beraten Sie gerne zu Maßen,
-              Sonderanfertigungen und Verfügbarkeit.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-primary">
-                Kontakt aufnehmen
-              </Link>
-              <Link href="/kataloge" className="btn-outline-white">
-                Zurück zu Kataloge
-              </Link>
-            </div>
-          </div>
-        </section>
+        <PageCta
+          variant="minimal"
+          title="Fragen zu Produktmaßen?"
+          description="Sprechen Sie uns an — wir beraten Sie gerne zu Maßen, Sonderanfertigungen und Verfügbarkeit."
+          primaryLabel="Kontakt aufnehmen"
+          primaryHref="/kontakt"
+          secondaryLabel="Zurück zu Kataloge"
+          secondaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>

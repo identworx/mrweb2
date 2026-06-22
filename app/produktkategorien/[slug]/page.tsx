@@ -18,6 +18,7 @@ import {
 } from "@/lib/cms/products";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
+import PageCta from "@/components/PageCta";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 
@@ -285,26 +286,15 @@ export default async function KategoriePage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="section-padding bg-anthracite">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Interessiert an {group.name}?
-            </h2>
-            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Entdecken Sie unser komplettes Sortiment im Katalog oder nehmen
-              Sie direkt Kontakt mit uns auf.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kataloge" className="btn-outline-white">
-                Katalog ansehen
-              </Link>
-              <Link href="/kontakt" className="btn-primary">
-                Kontakt aufnehmen
-              </Link>
-            </div>
-          </div>
-        </section>
+        <PageCta
+          variant="minimal"
+          title={`Interessiert an ${group.name}?`}
+          description="Entdecken Sie unser komplettes Sortiment im Katalog oder nehmen Sie direkt Kontakt mit uns auf."
+          primaryLabel="Kontakt aufnehmen"
+          primaryHref="/kontakt"
+          secondaryLabel="Katalog ansehen"
+          secondaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>

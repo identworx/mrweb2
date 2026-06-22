@@ -12,6 +12,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import PageCta from "@/components/PageCta";
 
 import DataRow from "@/components/DataRow";
 
@@ -152,26 +153,15 @@ export default async function TechnischeDatenPage() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="section-padding bg-anthracite">
-          <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
-            <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-              Fragen zu Stoffen oder technischen Daten?
-            </h2>
-            <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-xl mx-auto mb-10">
-              Wir beraten Sie gerne zu Materialien, Prüfwerten und
-              Stoffqualitäten.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/kontakt" className="btn-primary">
-                Kontakt aufnehmen
-              </Link>
-              <Link href="/kataloge" className="btn-outline-white">
-                Katalog ansehen
-              </Link>
-            </div>
-          </div>
-        </section>
+        <PageCta
+          variant="light"
+          title="Fragen zu Stoffen oder technischen Daten?"
+          description="Wir beraten Sie gerne zu Materialien, Prüfwerten und Stoffqualitäten."
+          primaryLabel="Kontakt aufnehmen"
+          primaryHref="/kontakt"
+          secondaryLabel="Katalog ansehen"
+          secondaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>
