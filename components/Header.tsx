@@ -65,7 +65,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:bg-pumpkin focus:text-white focus:font-heading focus:text-xs focus:font-semibold focus:uppercase focus:tracking-[0.12em]"
+        className="fixed left-3 -top-20 z-[80] px-3 py-2 bg-pumpkin text-white font-heading text-[10px] font-semibold uppercase tracking-[0.12em] shadow-lg transition-all duration-200 focus:top-3 focus:outline-none focus:ring-2 focus:ring-white/80"
       >
         Zum Inhalt springen
       </a>
