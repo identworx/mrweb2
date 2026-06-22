@@ -501,12 +501,9 @@ export default async function NerioPage() {
             {/* Versprechen */}
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    {promise.eyebrow}
-                  </p>
-                </div>
+                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                  {promise.eyebrow}
+                </p>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   {promise.title}
@@ -542,13 +539,6 @@ export default async function NerioPage() {
             {/* Highlights / Stats */}
             <section className="section-padding bg-anthracite">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line !bg-pumpkin" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    {highlights.eyebrow}
-                  </p>
-                </div>
-
                 <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
                   {highlights.title}
                 </h2>
@@ -577,7 +567,6 @@ export default async function NerioPage() {
 
             {/* Videos */}
             <NerioVideoSection
-              eyebrow={nerioVideos.eyebrow}
               title={nerioVideos.title}
               intro={nerioVideos.intro}
               videos={nerioVideos.videos}
@@ -586,12 +575,9 @@ export default async function NerioPage() {
             {/* Technische Fakten */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    {techFacts.eyebrow}
-                  </p>
-                </div>
+                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                  {techFacts.eyebrow}
+                </p>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   {techFacts.title}
@@ -647,13 +633,6 @@ export default async function NerioPage() {
             {/* Produkte & Stoffe */}
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    {productsPreview.eyebrow}
-                  </p>
-                </div>
-
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   {productsPreview.title}
                 </h2>
