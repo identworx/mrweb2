@@ -257,12 +257,9 @@ export default async function MaterialienPage() {
             {hubFamilies.length > 0 && (
             <section id="stofffamilien" className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    {hubFamilies.length} Qualitäten
-                  </p>
-                </div>
+                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                  {hubFamilies.length} Qualitäten
+                </p>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   Unsere Stofffamilien
@@ -429,13 +426,6 @@ export default async function MaterialienPage() {
             {/* Stoffe & Muster — Preview */}
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Stoffbibliothek
-                  </p>
-                </div>
-
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   Stoffe & Muster entdecken
                 </h2>
