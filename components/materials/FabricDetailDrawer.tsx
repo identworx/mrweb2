@@ -54,7 +54,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
       >
         <button
           onClick={onClose}
-          className="sticky top-0 right-0 z-10 float-right m-4 w-10 h-10 flex items-center justify-center bg-anthracite/5 hover:bg-anthracite/10 text-anthracite/60 transition-colors"
+          className="sticky top-0 right-0 z-10 float-right m-4 w-10 h-10 flex items-center justify-center bg-anthracite/5 hover:bg-anthracite/10 text-text-muted transition-colors"
           aria-label="Schließen"
         >
           <CmsIcon icon={icons["ui-close"]} width={18} height={18} />
@@ -90,7 +90,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           </h2>
 
           {swatch.articleNumber && (
-            <p className="font-accent text-text-gray/50 text-xs tracking-wider uppercase mt-1">
+            <p className="font-accent text-text-muted text-xs tracking-wider uppercase mt-1">
               Art. {swatch.articleNumber}
             </p>
           )}
@@ -99,7 +99,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
             <div className="mt-4 space-y-1">
               {swatch.patternType && (
                 <p className="font-body text-text-gray text-sm">
-                  <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.1em] text-text-gray/60 mr-2">
+                  <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.1em] text-text-muted mr-2">
                     Typ
                   </span>
                   {swatch.patternType}
@@ -119,7 +119,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
 
           {swatch.availableProductTypes.length > 0 && (
             <div className="mt-6 pt-6 border-t border-black/[0.06]">
-              <p className="font-heading text-[10px] font-semibold uppercase tracking-[0.15em] text-anthracite/60 mb-3">
+              <p className="font-heading text-[10px] font-semibold uppercase tracking-[0.15em] text-text-muted mb-3">
                 Verfügbar als
               </p>
               <div className="space-y-2">
@@ -132,7 +132,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
                       {pt.name}
                     </span>
                     {pt.note && (
-                      <span className="font-accent text-text-gray/50 text-[10px] tracking-wider uppercase">
+                      <span className="font-accent text-text-muted text-[10px] tracking-wider uppercase">
                         {pt.note}
                       </span>
                     )}

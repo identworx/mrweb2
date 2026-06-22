@@ -352,7 +352,7 @@ export default async function KollektionPage({ params }: PageProps) {
                         <p className="font-heading text-anthracite text-sm font-semibold">
                           {collection.name} {String(i + 1).padStart(2, "0")}
                         </p>
-                        <p className="font-accent text-text-gray/50 text-[11px] tracking-wider uppercase">
+                        <p className="font-accent text-text-muted text-[11px] tracking-wider uppercase">
                           {color}
                         </p>
                       </div>
@@ -389,7 +389,7 @@ export default async function KollektionPage({ params }: PageProps) {
                             {group.name}
                           </h3>
                         </div>
-                        <span className="font-accent text-text-gray/50 text-[11px] tracking-[0.12em] uppercase flex-shrink-0 ml-4">
+                        <span className="font-accent text-text-muted text-[11px] tracking-[0.12em] uppercase flex-shrink-0 ml-4">
                           {group.products.length} {group.products.length === 1 ? "Produkt" : "Produkte"}
                         </span>
                       </div>

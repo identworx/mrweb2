@@ -58,7 +58,7 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
                 {swatch.name}
               </h3>
               {swatch.articleNumber && (
-                <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase mt-0.5">
+                <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase mt-0.5">
                   Art. {swatch.articleNumber}
                 </p>
               )}

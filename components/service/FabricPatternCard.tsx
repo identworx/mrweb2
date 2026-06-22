@@ -104,10 +104,10 @@ export default function FabricPatternCard({
                   </div>
                 ))}
               </div>
-              <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.1em] uppercase mt-2">
+              <p className="font-accent text-text-muted text-[10px] tracking-[0.1em] uppercase mt-2">
                 {colors.length} {colors.length === 1 ? "Farbe" : "Farben"}
                 {matchedCategories.length > 0 && (
-                  <span className="text-text-gray/40">
+                  <span className="text-text-muted">
                     {" · "}
                     {matchedCategories.length}{" "}
                     {matchedCategories.length === 1 ? "Produkt" : "Produkte"}

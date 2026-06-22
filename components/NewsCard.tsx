@@ -30,7 +30,7 @@ export default function NewsCard({
       className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
     >
       {isPlaceholder && (
-        <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-gray/60 italic">
+        <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-muted italic">
           (Platzhalter)
         </span>
       )}
@@ -52,7 +52,7 @@ export default function NewsCard({
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
             {tag}
           </span>
-          <span className="font-body text-text-gray/50 text-xs">{date}</span>
+          <span className="font-body text-text-muted text-xs">{date}</span>
         </div>
 
         <h3 className="font-heading text-anthracite text-base md:text-lg font-bold leading-snug mb-2.5 group-hover:text-pumpkin transition-colors duration-300">

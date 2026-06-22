@@ -31,7 +31,7 @@ export default function CollectionProductCard({
       />
 
       <div className="flex flex-col flex-1 p-4 md:p-5">
-        <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase">
+        <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase">
           {product.productGroupName}
         </p>
 
@@ -47,7 +47,7 @@ export default function CollectionProductCard({
             <p className="font-body text-text-gray text-xs">{product.size}</p>
           )}
           {product.code && (
-            <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase">
+            <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase">
               Art. {product.code}
             </p>
           )}

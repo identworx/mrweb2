@@ -62,7 +62,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
 
   if (status === "success") {
     return (
-      <div className="bg-green-50 border border-green-200 p-6 text-center">
+      <div className="bg-green-50 border border-green-200 p-6 text-center" role="status">
         <p className="font-body text-green-800 text-base">
           {form.successMessage}
         </p>
@@ -73,7 +73,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-5" noValidate>
       {status === "error" && errorMsg && (
-        <div className="bg-red-50 border border-red-200 px-4 py-3">
+        <div className="bg-red-50 border border-red-200 px-4 py-3" role="alert">
           <p className="font-body text-red-800 text-sm">{errorMsg}</p>
         </div>
       )}
@@ -103,7 +103,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
   const inputClasses =
     "w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300";
   const labelClasses =
-    "block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-anthracite/60 mb-2";
+    "block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted mb-2";
 
   if (field.type === "CONSENT") {
     return (
@@ -148,7 +148,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
           className={`${inputClasses} resize-vertical`}
         />
         {field.helpText && (
-          <p className="font-body text-xs text-text-gray/60 mt-1">{field.helpText}</p>
+          <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
       </div>
     );
@@ -176,7 +176,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
           ))}
         </select>
         {field.helpText && (
-          <p className="font-body text-xs text-text-gray/60 mt-1">{field.helpText}</p>
+          <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
       </div>
     );
@@ -205,7 +205,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
         className={inputClasses}
       />
       {field.helpText && (
-        <p className="font-body text-xs text-text-gray/60 mt-1">{field.helpText}</p>
+        <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
       )}
     </div>
   );

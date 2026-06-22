@@ -58,13 +58,13 @@ export default function FabricMatrixView({
         <table className="w-full min-w-[700px] border-collapse">
           <thead>
             <tr className="bg-[#FAF8F5]">
-              <th className="sticky left-0 z-20 bg-[#FAF8F5] text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-anthracite/50 py-3 px-4 w-[280px] border-r border-black/[0.06]">
+              <th className="sticky left-0 z-20 bg-[#FAF8F5] text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-text-muted py-3 px-4 w-[280px] border-r border-black/[0.06]">
                 Stoff
               </th>
               {productTypes.map((pt) => (
                 <th
                   key={pt.slug}
-                  className="text-center font-accent text-[10px] font-normal uppercase tracking-[0.1em] text-anthracite/50 py-3 px-2 min-w-[80px]"
+                  className="text-center font-accent text-[10px] font-normal uppercase tracking-[0.1em] text-text-muted py-3 px-2 min-w-[80px]"
                 >
                   {pt.name}
                 </th>
@@ -92,7 +92,7 @@ export default function FabricMatrixView({
                         <p className="font-heading text-anthracite text-sm font-semibold leading-tight truncate">
                           {swatch.name}
                         </p>
-                        <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase truncate">
+                        <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase truncate">
                           {swatch.articleNumber && `Art. ${swatch.articleNumber}`}
                           {swatch.articleNumber && swatch.familyName && " · "}
                           {swatch.familyName}
@@ -108,7 +108,7 @@ export default function FabricMatrixView({
                           <div className="flex flex-col items-center gap-0.5">
                             <CmsIcon icon={icons["checkmark"]} width={16} height={16} className="text-pumpkin" />
                             {avail.note && (
-                              <span className="font-accent text-[8px] text-text-gray/40 tracking-wide uppercase leading-tight">
+                              <span className="font-accent text-[8px] text-text-muted tracking-wide uppercase leading-tight">
                                 {avail.note}
                               </span>
                             )}
@@ -143,7 +143,7 @@ export default function FabricMatrixView({
                 <p className="font-heading text-anthracite text-sm font-semibold leading-tight">
                   {swatch.name}
                 </p>
-                <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase mt-0.5">
+                <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase mt-0.5">
                   {swatch.familyName}
                   {swatch.articleNumber && ` · Art. ${swatch.articleNumber}`}
                 </p>
@@ -152,11 +152,11 @@ export default function FabricMatrixView({
                     {swatch.availableProductTypes.map((pt) => (
                       <span
                         key={pt.slug}
-                        className="font-accent text-[8px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-gray/60 border border-black/[0.04]"
+                        className="font-accent text-[8px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-muted border border-black/[0.04]"
                       >
                         {pt.name}
                         {pt.note && (
-                          <span className="text-text-gray/30 ml-0.5">({pt.note})</span>
+                          <span className="text-text-muted ml-0.5">({pt.note})</span>
                         )}
                       </span>
                     ))}

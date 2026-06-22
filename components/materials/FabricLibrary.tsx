@@ -170,6 +170,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                 setVisibleCount(PAGE_SIZE);
               }}
               placeholder="Stoff suchen (Name, Artikelnummer…)"
+              aria-label="Stoffe durchsuchen"
               className="w-full pl-10 pr-4 py-2.5 border border-anthracite/15 bg-white font-body text-sm text-anthracite placeholder:text-anthracite/30 focus:outline-none focus:border-anthracite/30 transition-colors"
             />
           </div>
@@ -180,6 +181,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
               setActiveProductFilter(e.target.value);
               setVisibleCount(PAGE_SIZE);
             }}
+            aria-label="Nach Produktart filtern"
             className="border border-anthracite/15 bg-white px-3 py-2.5 font-body text-sm text-anthracite focus:outline-none focus:border-anthracite/30 transition-colors"
           >
             <option value="">Alle Produktarten</option>
@@ -241,10 +243,10 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
 
       {/* Status bar */}
       <div className="flex items-center justify-between mb-6">
-        <p className="font-accent text-text-gray/50 text-[11px] tracking-[0.1em] uppercase">
+        <p className="font-accent text-text-muted text-[11px] tracking-[0.1em] uppercase">
           {filtered.length} {filtered.length === 1 ? "Stoff" : "Stoffe"}
           {viewMode === "grid" && filtered.length > visibleCount && (
-            <span className="text-text-gray/30">
+            <span className="text-text-muted">
               {" "}· {visibleCount} angezeigt
             </span>
           )}

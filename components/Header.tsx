@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { mainNavLinks } from "@/lib/mosaroma/navigation";
@@ -36,6 +36,13 @@ function badgeClasses(variant?: string): string {
 export default function Header({ navItems, logoUrl, siteName, icons = {} }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const closeMobile = useCallback(() => {
+    setMobileOpen(false);
+    toggleRef.current?.focus();
+  }, []);
 
   const links: HeaderNavItem[] =
     navItems && navItems.length > 0
@@ -57,6 +64,43 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
     return () => {
       document.body.style.overflow = "";
     };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMobile();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen, closeMobile]);
+
+  useEffect(() => {
+    if (!mobileOpen || !menuRef.current) return;
+    const menu = menuRef.current;
+    const onTrap = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      const focusable = menu.querySelectorAll<HTMLElement>(
+        'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    menu.addEventListener("keydown", onTrap);
+    const firstLink = menu.querySelector<HTMLElement>("a[href]");
+    firstLink?.focus();
+    return () => menu.removeEventListener("keydown", onTrap);
   }, [mobileOpen]);
 
   const logoAlt = siteName ? `${siteName} Logo` : "Mosaroma Logo";
@@ -151,13 +195,15 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
           </div>
 
           <button
+            ref={toggleRef}
             aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
+            aria-expanded={mobileOpen}
             className={`lg:hidden p-3.5 -mr-1 transition-all duration-300 ${
               scrolled || mobileOpen
                 ? "text-anthracite hover:bg-light-gray"
                 : "text-white hover:bg-white/10"
             }`}
-            onClick={() => setMobileOpen(!mobileOpen)}
+            onClick={() => mobileOpen ? closeMobile() : setMobileOpen(true)}
           >
             <div className="w-[22px] flex flex-col gap-[5px]">
               <span
@@ -181,6 +227,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
       </div>
 
       <div
+        ref={menuRef}
         className={`lg:hidden fixed inset-0 bg-white z-40 transition-all duration-400 ${
           scrolled ? "top-[68px] md:top-[76px]" : "top-[88px] md:top-[108px]"
         } ${
@@ -192,7 +239,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
         <nav className="flex flex-col px-8 pt-10 gap-0">
           <Link
             href="/"
-            onClick={() => setMobileOpen(false)}
+            onClick={closeMobile}
             className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
           >
             Startseite
@@ -203,7 +250,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
               key={link.href}
               href={link.href}
               {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobile}
               className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
               style={{ animationDelay: `${i * 50}ms` }}
             >
@@ -223,7 +270,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
           <div className="mt-8 pt-6">
             <Link
               href="/kontakt"
-              onClick={() => setMobileOpen(false)}
+              onClick={closeMobile}
               className="btn-primary w-full justify-center"
             >
               Kontakt

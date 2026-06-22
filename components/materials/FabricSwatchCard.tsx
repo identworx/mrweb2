@@ -40,14 +40,14 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
       </div>
 
       <div className="p-3 flex flex-col flex-1">
-        <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-0.5">
+        <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-0.5">
           {swatch.familyName}
         </p>
         <h3 className="font-heading text-anthracite text-[13px] font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">
           {swatch.name}
         </h3>
         {swatch.articleNumber && (
-          <p className="font-accent text-text-gray/40 text-[10px] tracking-wider uppercase mt-0.5">
+          <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase mt-0.5">
             Art. {swatch.articleNumber}
           </p>
         )}
@@ -58,7 +58,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
               {swatch.availableProductTypes.slice(0, 5).map((pt) => (
                 <span
                   key={pt.slug}
-                  className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-gray/60 border border-black/[0.04]"
+                  className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-muted border border-black/[0.04]"
                 >
                   {pt.name}
                 </span>

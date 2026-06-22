@@ -24,7 +24,7 @@ export default function Breadcrumbs({
     <nav aria-label="Breadcrumb">
       <ol
         className={`flex flex-wrap items-center gap-1 font-body text-xs tracking-wide ${
-          isLight ? "text-white/50" : "text-text-gray/50"
+          isLight ? "text-white/50" : "text-text-muted"
         }`}
       >
         <li>
@@ -56,7 +56,7 @@ export default function Breadcrumbs({
               </Link>
             ) : (
               <span
-                className={isLight ? "text-white/70" : "text-text-gray/70"}
+                className={isLight ? "text-white/70" : "text-text-muted"}
               >
                 {item.label}
               </span>

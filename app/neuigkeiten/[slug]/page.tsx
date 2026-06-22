@@ -119,7 +119,7 @@ export default async function NeuigkeitDetailPage({
                       {article.excerpt}
                     </p>
                     <div className="bg-cream p-8 md:p-12 mb-10">
-                      <p className="font-body text-text-gray/50 text-sm italic">
+                      <p className="font-body text-text-muted text-sm italic">
                         Dieser Inhalt wird in Kürze veröffentlicht. Schauen Sie bald wieder vorbei.
                       </p>
                     </div>
@@ -202,7 +202,7 @@ export default async function NeuigkeitDetailPage({
               </p>
 
               <div className="bg-cream p-8 md:p-12 mb-10">
-                <p className="font-body text-text-gray/50 text-sm italic">
+                <p className="font-body text-text-muted text-sm italic">
                   Dieser Inhalt wird in Kürze veröffentlicht. Schauen Sie bald wieder vorbei.
                 </p>
               </div>

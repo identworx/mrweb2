@@ -171,7 +171,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 </div>
                 <Link
                   href={`/kollektionen/${product.collectionSlug}`}
-                  className="font-accent text-white/40 text-[11px] tracking-[0.2em] uppercase hover:text-white/70 transition-colors"
+                  className="font-accent text-white/60 text-[11px] tracking-[0.2em] uppercase hover:text-white/70 transition-colors"
                 >
                   {displayCollection} Collection
                 </Link>
@@ -220,7 +220,7 @@ export default async function ProduktPage({ params }: PageProps) {
                     </div>
                     <Link
                       href={`/kollektionen/${product.collectionSlug}`}
-                      className="font-accent text-text-gray/50 text-[10px] tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
+                      className="font-accent text-text-muted text-[10px] tracking-[0.2em] uppercase hover:text-pumpkin transition-colors"
                     >
                       {displayCollection} Collection
                     </Link>
@@ -230,7 +230,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 {product.productGroupName && (
                   <Link
                     href={`/produktkategorien/${product.categorySlug}`}
-                    className="inline-block font-accent text-text-gray/40 text-[10px] tracking-[0.15em] uppercase hover:text-pumpkin transition-colors mb-5"
+                    className="inline-block font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase hover:text-pumpkin transition-colors mb-5"
                   >
                     {product.productGroupName}
                   </Link>
@@ -289,7 +289,7 @@ export default async function ProduktPage({ params }: PageProps) {
                       Katalog ansehen
                     </Link>
                   </div>
-                  <p className="font-body text-text-gray/40 text-xs mt-3 text-center">
+                  <p className="font-body text-text-muted text-xs mt-3 text-center">
                     Muster & Beratung auf Anfrage
                   </p>
                 </div>
@@ -413,7 +413,7 @@ function SpecCard({ label, value }: { label: string; value: string }) {
 function MaterialCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-5 md:p-6 bg-[#FAF8F5] border border-black/[0.04]">
-      <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.2em] uppercase mb-2">
+      <p className="font-accent text-text-muted text-[10px] tracking-[0.2em] uppercase mb-2">
         {label}
       </p>
       <p className="font-heading text-anthracite text-sm font-semibold">

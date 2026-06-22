@@ -22,16 +22,16 @@ export default function TechnicalDataTable({
         <table className="w-full min-w-[700px]">
           <thead>
             <tr>
-              <th className={`${thBase} text-anthracite/50 ${cellPadding}`}>
+              <th className={`${thBase} text-text-muted ${cellPadding}`}>
                 Eigenschaft
               </th>
-              <th className={`${thBase} text-anthracite/50 ${cellPadding}`}>
+              <th className={`${thBase} text-text-muted ${cellPadding}`}>
                 Prüfnorm
               </th>
               <th className={`${thBase} text-pumpkin ${cellPadding}`}>
                 Solution Dyed Olefin
               </th>
-              <th className={`${thBase} text-anthracite/50 ${cellPadding}`}>
+              <th className={`${thBase} text-text-muted ${cellPadding}`}>
                 Piece Dyed Polyester
               </th>
             </tr>
@@ -48,7 +48,7 @@ export default function TechnicalDataTable({
                   {row.property}
                 </td>
                 <td
-                  className={`font-body text-text-gray/60 text-sm ${cellPadding}`}
+                  className={`font-body text-text-muted text-sm ${cellPadding}`}
                 >
                   {row.standard}
                 </td>
@@ -69,10 +69,10 @@ export default function TechnicalDataTable({
       </div>
 
       <div className="mt-6 space-y-1">
-        <p className="font-body text-text-gray/50 text-xs">
+        <p className="font-body text-text-muted text-xs">
           {"¹ Die Bewertung erfolgt auf einer Skala von 1–8, wobei 1 die schlechteste und 8 die beste Bewertung darstellt."}
         </p>
-        <p className="font-body text-text-gray/50 text-xs">
+        <p className="font-body text-text-muted text-xs">
           {"² Die Bewertung der Waschechtheit und der Reibungsfestigkeit erfolgt auf einer Skala von 1–5, wobei 1 die schlechteste und 5 die beste Bewertung ist."}
         </p>
       </div>

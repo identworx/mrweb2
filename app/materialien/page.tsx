@@ -258,7 +258,7 @@ export default async function MaterialienPage() {
             {hubFamilies.length > 0 && (
             <section id="stofffamilien" className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-3">
                   {hubFamilies.length} Qualitäten
                 </p>
 

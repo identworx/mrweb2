@@ -60,7 +60,7 @@ export default function MeasurementImageCard({
             {item.notes.map((note) => (
               <p
                 key={note}
-                className="font-body text-text-gray/70 text-xs leading-relaxed"
+                className="font-body text-text-muted text-xs leading-relaxed"
               >
                 {note}
               </p>
@@ -71,7 +71,7 @@ export default function MeasurementImageCard({
         <div className="space-y-1.5 mt-auto pt-3 border-t border-black/[0.04]">
           {item.rows.map((row) => (
             <div key={row.label} className="flex items-baseline justify-between gap-3">
-              <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.05em] text-text-gray/50 shrink-0">
+              <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted shrink-0">
                 {row.label}
               </span>
               <span className="font-body text-anthracite text-sm font-medium text-right">

@@ -62,7 +62,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
       />
 
       <div className="p-4 md:p-5">
-        <p className="font-accent text-text-gray/60 text-[10px] tracking-[0.15em] uppercase">
+        <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase">
           {displayCollection} · {displayCategory}
         </p>
 
@@ -78,7 +78,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
             <p className="font-body text-text-gray text-xs">{product.size}</p>
           )}
           {product.code && (
-            <p className="font-accent text-text-gray/50 text-[10px] tracking-wider uppercase">
+            <p className="font-accent text-text-muted text-[10px] tracking-wider uppercase">
               Art. {product.code}
             </p>
           )}

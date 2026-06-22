@@ -501,7 +501,7 @@ export default async function NerioPage() {
             {/* Versprechen */}
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-3">
                   {promise.eyebrow}
                 </p>
 
@@ -575,7 +575,7 @@ export default async function NerioPage() {
             {/* Technische Fakten */}
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <p className="font-accent text-text-gray/50 text-[10px] tracking-[0.15em] uppercase mb-3">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-3">
                   {techFacts.eyebrow}
                 </p>
 
