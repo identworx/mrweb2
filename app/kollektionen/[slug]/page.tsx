@@ -369,12 +369,6 @@ export default async function KollektionPage({ params }: PageProps) {
           <section id="produkte" className="bg-white py-12 md:py-16">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <ScrollReveal>
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                    Kollektion
-                  </p>
-                </div>
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-12">
                   <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight">
                     Produkte in dieser Kollektion
@@ -511,12 +505,6 @@ export default async function KollektionPage({ params }: PageProps) {
         <section id="service" className="bg-white py-12 md:py-16">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <ScrollReveal>
-              <div className="flex items-center gap-4 mb-5">
-                <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
-                  Informationen
-                </p>
-              </div>
               <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-10">
                 Passende Informationen
               </h2>
