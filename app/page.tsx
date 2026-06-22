@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PageCta from "@/components/PageCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { getHomepageData, type HomepageSection } from "@/lib/cms/homepage";
@@ -214,6 +215,15 @@ export default async function Home() {
               return null;
           }
         })}
+        <PageCta
+          variant="dark"
+          title="Bereit für Ihren Außenbereich?"
+          description="Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Materialien und Sondermaßen beraten."
+          primaryLabel="Muster anfordern"
+          primaryHref="/kontakt"
+          secondaryLabel="Kataloge ansehen"
+          secondaryHref="/kataloge"
+        />
       </main>
       <Footer {...layout.footer} />
     </>
