@@ -12,7 +12,6 @@ interface Props {
 }
 
 export default function HomepageDownloads({ section, downloads, icons = {} }: Props) {
-  const eyebrow = section.eyebrow || "Downloads";
   const title = section.title || "Kataloge & Dokumente.";
   const description = section.content || "";
   const ctaLabel = section.buttonLabel;

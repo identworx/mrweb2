@@ -13,7 +13,6 @@ interface Props {
 }
 
 export default function HomepageNews({ section, articles, icons = {} }: Props) {
-  const eyebrow = section.eyebrow || "Neuigkeiten";
   const title = section.title || "Aktuelles.";
   const description = section.content || "";
   const ctaLabel = section.buttonLabel;

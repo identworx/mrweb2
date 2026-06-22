@@ -17,7 +17,6 @@ interface Props {
 
 export default function HomepageSustainability({ section, icons = {} }: Props) {
   const stats = (section.settings.stats as Stat[]) || [];
-  const eyebrow = section.eyebrow || "Nachhaltigkeit";
   const title = section.title || "Grün gewebt. Vom Tropfen an.";
   const content = section.content || "";
   const ctaLabel = section.buttonLabel;
