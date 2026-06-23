@@ -6,6 +6,7 @@
 
   /* Brand Colors */
   --color-pumpkin: #E07B12;
+  --color-pumpkin-button: #AB5D0D;
   --color-burnt-orange: #D35400;
   --color-anthracite: #2D2D2D;
   --color-cream: #FAF8F5;
@@ -86,7 +87,7 @@ html {
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem 2.5rem;
-  background-color: var(--color-pumpkin);
+  background-color: var(--color-pumpkin-button);
   color: white;
   font-family: var(--font-heading);
   font-weight: 600;

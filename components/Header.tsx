@@ -24,7 +24,7 @@ interface HeaderProps {
 
 const BADGE_VARIANTS: Record<string, string> = {
   blue: "bg-[#2F7195] text-white",
-  orange: "bg-pumpkin text-white",
+  orange: "bg-pumpkin-button text-white",
   dark: "bg-anthracite text-white",
   light: "bg-white/90 text-anthracite",
 };

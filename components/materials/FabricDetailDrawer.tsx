@@ -192,7 +192,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           <div className="mt-8 space-y-3">
             <Link
               href="/kontakt"
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-pumpkin text-white font-heading text-sm font-semibold uppercase tracking-[0.08em] hover:bg-pumpkin/90 transition-colors duration-300"
+              className="flex items-center justify-center gap-2 w-full py-3.5 bg-pumpkin-button text-white font-heading text-sm font-semibold uppercase tracking-[0.08em] hover:bg-burnt-orange transition-colors duration-300"
             >
               Muster anfragen
             </Link>

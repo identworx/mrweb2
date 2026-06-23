@@ -55,14 +55,14 @@ export default function DownloadCard({
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 bg-pumpkin/10 text-anthracite hover:bg-pumpkin hover:text-white transition-all duration-300"
+            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 bg-pumpkin/10 text-anthracite hover:bg-pumpkin-button hover:text-white transition-all duration-300"
           >
             Ansehen
           </a>
           <a
             href={href}
             download
-            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 border border-anthracite/15 text-text-muted hover:bg-pumpkin hover:border-pumpkin hover:text-white group-hover:border-white/20 group-hover:text-white/70 group-hover:hover:bg-pumpkin group-hover:hover:border-pumpkin group-hover:hover:text-white transition-all duration-300"
+            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 border border-anthracite/15 text-text-muted hover:bg-pumpkin-button hover:border-pumpkin-button hover:text-white group-hover:border-white/20 group-hover:text-white/70 group-hover:hover:bg-pumpkin-button group-hover:hover:border-pumpkin-button group-hover:hover:text-white transition-all duration-300"
           >
             Download
           </a>
