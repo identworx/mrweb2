@@ -211,7 +211,7 @@ export default function Footer({
 
             {/* Navigation columns */}
             {footerColumns.map((column) => (
-              <div key={column.title} className="lg:col-span-2">
+              <nav key={column.title} aria-label={column.title} className="lg:col-span-2">
                 <h4 className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
                   {column.title}
                 </h4>
@@ -230,7 +230,7 @@ export default function Footer({
                     </li>
                   ))}
                 </ul>
-              </div>
+              </nav>
             ))}
 
             {/* Contact column */}

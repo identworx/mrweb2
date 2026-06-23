@@ -35,9 +35,9 @@ export default function HomepageValueProps({ section, icons = {} }: Props) {
                   <CmsIcon icon={icons[slotKey]} width={28} height={28} />
                 </div>
                 <div>
-                  <h3 className="font-heading text-anthracite text-base font-bold mb-1.5">
+                  <h2 className="font-heading text-anthracite text-base font-bold mb-1.5">
                     {card.title}
-                  </h3>
+                  </h2>
                   <p className="font-body text-text-gray text-sm leading-[1.7]">
                     {card.text}
                   </p>

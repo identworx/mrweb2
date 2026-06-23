@@ -9,7 +9,7 @@ const navItems = [
 
 export default function MeasurementNav() {
   return (
-    <nav className="flex flex-wrap gap-2">
+    <nav aria-label="Maßnavigation" className="flex flex-wrap gap-2">
       {navItems.map((item) => (
         <a
           key={item.href}

@@ -135,16 +135,16 @@ export default async function StoffTechnischeDatenPage() {
                   <table className="w-full min-w-[600px] border border-light-gray bg-white">
                     <thead>
                       <tr className="bg-anthracite">
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
+                        <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Eigenschaft
                         </th>
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
+                        <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Prüfnorm
                         </th>
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-pumpkin">
+                        <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-pumpkin">
                           Solution Dyed Olefin
                         </th>
-                        <th className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
+                        <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
                           Piece Dyed Polyester
                         </th>
                       </tr>

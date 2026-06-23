@@ -158,7 +158,7 @@ export default function FabricPatternCard({
                         className="w-8 h-8 object-contain invert opacity-70"
                       />
                     ) : (
-                      <CmsIcon icon={icons[`category-${cat.categorySlug}`] ?? icons["category-default"]} width={32} height={32} className="w-8 h-8 text-white/50" />
+                      <CmsIcon icon={icons[`category-${cat.categorySlug}`] ?? icons["category-default"]} width={32} height={32} className="w-8 h-8 text-white/70" />
                     )}
                     <span className="font-accent text-white/70 text-[9px] tracking-[0.05em] uppercase text-center leading-tight">
                       {cat.categoryName}

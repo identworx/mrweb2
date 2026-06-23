@@ -114,7 +114,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
         Zum Inhalt springen
       </a>
       <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
         scrolled
           ? "bg-white/[0.97] backdrop-blur-xl"
           : ""
@@ -134,7 +134,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
       )}
 
       <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 lg:px-12">
-        <div className={`flex items-center justify-between transition-all duration-700 ease-out ${
+        <div className={`flex items-center justify-between motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
           scrolled ? "h-[68px] md:h-[76px]" : "h-[88px] md:h-[108px]"
         }`}>
           <Link href="/" className="flex-shrink-0">
@@ -144,7 +144,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
               width={280}
               height={70}
               priority
-              className={`transition-all duration-700 ease-out w-auto ${
+              className={`motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out w-auto ${
                 scrolled
                   ? "h-[44px] md:h-[50px]"
                   : "h-[52px] md:h-[62px] brightness-0 invert drop-shadow-[0_1px_3px_rgba(0,0,0,0.25)]"
