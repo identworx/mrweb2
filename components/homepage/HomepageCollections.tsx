@@ -13,7 +13,6 @@ interface Props {
 }
 
 export default function HomepageCollections({ section, collections, icons = {} }: Props) {
-  const eyebrow = section.eyebrow || "Farbwelten";
   const title = section.title || "Kollektionen.";
   const description = section.content || "";
   const ctaHref = section.buttonHref || "/kollektionen";
@@ -22,12 +21,6 @@ export default function HomepageCollections({ section, collections, icons = {} }
     <section className="py-20 md:py-24 lg:py-28 bg-cream">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="mb-12 md:mb-16">
-          <div className="flex items-center gap-4 mb-5">
-            <div className="accent-line" />
-            <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
-              {eyebrow}
-            </p>
-          </div>
           <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-tight">
             {title}
           </h2>

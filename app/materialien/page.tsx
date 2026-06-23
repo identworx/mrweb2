@@ -364,13 +364,6 @@ export default async function MaterialienPage() {
             {/* OceanCycle Kreislauf */}
             <section id="nachhaltigkeit" className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <div className="flex items-center gap-4 mb-5">
-                  <div className="accent-line" />
-                  <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
-                    {ocean.eyebrow}
-                  </p>
-                </div>
-
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   {ocean.title}
                 </h2>

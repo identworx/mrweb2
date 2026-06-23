@@ -329,12 +329,6 @@ export default async function KollektionPage({ params }: PageProps) {
           <section id="farben" className="bg-cream py-12 md:py-16">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <ScrollReveal>
-                <div className="flex items-center gap-4 mb-8">
-                  <div className="accent-line" />
-                  <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
-                    Farbwelt
-                  </p>
-                </div>
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-10">
                   Die Stimmungsfarben
                 </h2>
