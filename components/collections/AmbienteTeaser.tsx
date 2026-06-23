@@ -42,7 +42,7 @@ function TeaserTile({
   return (
     <Link
       href={href}
-      className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
+      className="relative overflow-hidden border border-black/[0.04] bg-[#FAF8F5] group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
       style={{ gridArea: area }}
       aria-label={`Ambiente-Galerie: ${image.caption || image.title}`}
     >
@@ -170,7 +170,7 @@ export default function AmbienteTeaser({
                 <Link
                   key={img.id}
                   href={tileHref}
-                  className={`relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin ${
+                  className={`relative overflow-hidden border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin ${
                     i === 0 ? "col-span-2 aspect-[16/9]" : "aspect-[4/3]"
                   }`}
                   aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
@@ -237,7 +237,7 @@ export default function AmbienteTeaser({
               <Link
                 key={img.id}
                 href={tileHref}
-                className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
+                className="relative overflow-hidden border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
                 style={{ height: i === 0 ? "280px" : "200px" }}
                 aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
               >
@@ -257,7 +257,7 @@ export default function AmbienteTeaser({
                   <Link
                     key={img.id}
                     href={tileHref}
-                    className="relative overflow-hidden rounded-lg border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
+                    className="relative overflow-hidden border border-black/[0.04] bg-[#FAF8F5] block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
                     style={{ height: "160px" }}
                     aria-label={`Ambiente-Galerie: ${img.caption || img.title}`}
                   >

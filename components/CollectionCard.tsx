@@ -127,11 +127,11 @@ export default function CollectionCard({
         </p>
 
         <div className="flex items-center justify-end mt-4 pt-3 border-t border-black/[0.05]">
-          <span className="flex items-center gap-1.5 text-pumpkin/70 group-hover:text-pumpkin transition-colors duration-500">
+          <span className="flex items-center gap-1.5 text-anthracite group-hover:text-pumpkin transition-colors duration-500">
             <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.14em]">
               Entdecken
             </span>
-            <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+            <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
           </span>
         </div>
       </div>

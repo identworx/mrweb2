@@ -156,7 +156,7 @@ function VideoModal({
         </button>
 
         {/* 16:9 video area */}
-        <div className="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl">
+        <div className="relative w-full aspect-video bg-black overflow-hidden shadow-2xl">
           <iframe
             src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&start=${start}`}
             title={video.title}
@@ -199,7 +199,7 @@ function VideoCard({
     <button
       type="button"
       onClick={onPlay}
-      className="group text-left w-full bg-[#0C3D40] border border-[#e8e4df] rounded-lg overflow-hidden shadow-[0_2px_8px_rgba(45,45,45,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(45,45,45,0.08)] motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6B6D] focus-visible:ring-offset-2"
+      className="group text-left w-full bg-[#0C3D40] border border-[#e8e4df] overflow-hidden shadow-[0_2px_8px_rgba(45,45,45,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(45,45,45,0.08)] motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6B6D] focus-visible:ring-offset-2"
       aria-label={`Video abspielen: ${video.title}`}
     >
       {/* Thumbnail area (16:9) */}

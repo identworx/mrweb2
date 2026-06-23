@@ -99,7 +99,7 @@ export default function PageCta({
     <section className="section-padding bg-anthracite">
       <div className="mx-auto max-w-[1400px] px-5 md:px-10 text-center">
         {eyebrow && (
-          <p className="font-accent text-pumpkin/80 text-xs tracking-[0.3em] uppercase mb-4">
+          <p className="font-accent text-white/70 text-xs tracking-[0.3em] uppercase mb-4">
             {eyebrow}
           </p>
         )}

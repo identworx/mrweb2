@@ -170,7 +170,7 @@ export default async function MaterialienPage() {
                         {step.description}
                       </p>
                       {step.label && (
-                        <p className="font-accent text-pumpkin/70 text-xs tracking-[0.15em] uppercase mt-3">
+                        <p className="font-accent text-text-muted text-xs tracking-[0.15em] uppercase mt-3">
                           {step.label}
                         </p>
                       )}

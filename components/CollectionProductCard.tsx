@@ -53,11 +53,11 @@ export default function CollectionProductCard({
           )}
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-pumpkin/70 group-hover:text-pumpkin transition-colors duration-300 mt-3 pt-3 border-t border-black/[0.04]">
+        <span className="inline-flex items-center gap-1.5 text-anthracite group-hover:text-pumpkin transition-colors duration-300 mt-3 pt-3 border-t border-black/[0.04]">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Details
           </span>
-          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
+          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
         </span>
       </div>
     </Link>

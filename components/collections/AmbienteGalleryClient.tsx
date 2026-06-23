@@ -88,7 +88,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
               setFilter(opt.value);
               setLightboxIndex(null);
             }}
-            className={`px-4 py-2 text-sm font-heading font-semibold tracking-wide rounded-lg transition-colors duration-200 ${
+            className={`px-4 py-2 text-sm font-heading font-semibold tracking-wide transition-colors duration-200 ${
               filter === opt.value
                 ? "bg-anthracite text-white"
                 : "bg-white text-anthracite border border-black/10 hover:border-anthracite/30"
@@ -112,7 +112,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
               key={img.id}
               type="button"
               onClick={(e) => openLightbox(i, e.currentTarget)}
-              className="group relative mb-4 block w-full break-inside-avoid overflow-hidden rounded-lg border border-black/[0.04] bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
+              className="group relative mb-4 block w-full break-inside-avoid overflow-hidden border border-black/[0.04] bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
             >
               <Image
                 src={img.imageUrl}
@@ -211,7 +211,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
               alt={currentImage.alt || currentImage.title}
               width={currentImage.width || 1500}
               height={currentImage.height || 1000}
-              className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-lg"
+              className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
               sizes="90vw"
               priority
             />
@@ -244,7 +244,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
                 {currentImage.caption || currentImage.title}
               </p>
               {currentImage.colorWorlds.length > 0 && (
-                <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.2em] uppercase mt-1">
+                <p className="font-accent text-white/70 text-[10px] tracking-[0.2em] uppercase mt-1">
                   {currentImage.colorWorlds
                     .map(
                       (w) =>

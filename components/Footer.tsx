@@ -137,7 +137,7 @@ export default function Footer({
 
           <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 py-16 md:py-20">
             <div className="max-w-2xl mx-auto text-center">
-              <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.25em] uppercase mb-4">
+              <p className="font-accent text-white/70 text-[10px] tracking-[0.25em] uppercase mb-4">
                 {ctaEyebrow || CTA_DEFAULTS.eyebrow}
               </p>
               <h2 className="font-heading text-white text-xl md:text-2xl font-bold tracking-tight leading-tight mb-4">
@@ -277,7 +277,7 @@ export default function Footer({
 
               <Link
                 href={resolvedContact.buttonHref}
-                className="inline-flex items-center gap-2 font-heading text-[10px] font-semibold uppercase tracking-[0.14em] text-pumpkin/70 hover:text-pumpkin transition-colors duration-400"
+                className="inline-flex items-center gap-2 font-heading text-[10px] font-semibold uppercase tracking-[0.14em] text-white/70 hover:text-pumpkin transition-colors duration-400"
               >
                 {resolvedContact.buttonLabel}
                 <CmsIcon icon={icons["arrow-right"]} width={13} height={13} />
