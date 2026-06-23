@@ -96,7 +96,7 @@ export default async function UeberUnsPage() {
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
-              <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+              <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                 Unsere Versprechen
               </p>
             </div>

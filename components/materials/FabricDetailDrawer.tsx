@@ -128,7 +128,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
         </div>
 
         <div className="p-6 md:p-8">
-          <p className="font-accent text-pumpkin-text text-[10px] tracking-[0.2em] uppercase mb-2">
+          <p className="font-accent text-text-muted text-[10px] tracking-[0.2em] uppercase mb-2">
             {swatch.familyName}
           </p>
 

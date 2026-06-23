@@ -36,10 +36,10 @@ export default function HomepageNews({ section, articles, icons = {} }: Props) {
           {ctaLabel && ctaHref && (
             <Link
               href={ctaHref}
-              className="inline-flex items-center gap-2 font-heading text-pumpkin-text text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300 shrink-0"
+              className="inline-flex items-center gap-2 font-heading text-anthracite text-sm font-semibold tracking-wide hover:text-pumpkin transition-colors duration-300 shrink-0"
             >
               {ctaLabel}
-              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
+              <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin" />
             </Link>
           )}
         </div>

@@ -152,7 +152,7 @@ export default async function KollektionenPage() {
           <div className="mb-10 md:mb-14">
             <div className="flex items-center gap-4 mb-4">
               <div className="accent-line" />
-              <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+              <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                 {pageEyebrow}
               </p>
             </div>

@@ -55,7 +55,7 @@ export default function DownloadCard({
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 bg-pumpkin/10 text-pumpkin-text hover:bg-pumpkin hover:text-white transition-all duration-300"
+            className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-4 py-2 bg-pumpkin/10 text-anthracite hover:bg-pumpkin hover:text-white transition-all duration-300"
           >
             Ansehen
           </a>

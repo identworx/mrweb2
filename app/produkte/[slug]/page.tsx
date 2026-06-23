@@ -316,12 +316,12 @@ export default async function ProduktPage({ params }: PageProps) {
               </div>
               <Link
                 href="/materialien"
-                className="inline-flex items-center gap-3 text-pumpkin-text mt-8 group"
+                className="inline-flex items-center gap-3 text-anthracite hover:text-pumpkin mt-8 group transition-colors duration-300"
               >
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Mehr über {fabric.name} erfahren
                 </span>
-                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </section>
@@ -351,12 +351,12 @@ export default async function ProduktPage({ params }: PageProps) {
                 </p>
                 <Link
                   href={`/kollektionen/${product.collectionSlug}`}
-                  className="inline-flex items-center gap-3 text-pumpkin-text mt-6 group"
+                  className="inline-flex items-center gap-3 text-anthracite hover:text-pumpkin mt-6 group transition-colors duration-300"
                 >
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                     Zur {displayCollection} Collection
                   </span>
-                  <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+                  <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
               </div>
             </div>

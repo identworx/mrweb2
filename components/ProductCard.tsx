@@ -89,7 +89,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
             {product.features.map((feature) => (
               <span
                 key={feature}
-                className="font-accent text-[9px] tracking-[0.08em] uppercase px-2 py-0.5 border border-pumpkin/20 text-pumpkin-text bg-pumpkin/5"
+                className="font-accent text-[9px] tracking-[0.08em] uppercase px-2 py-0.5 border border-pumpkin/20 text-text-muted bg-pumpkin/5"
               >
                 {feature}
               </span>
@@ -97,11 +97,11 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
           </div>
         )}
 
-        <span className="inline-flex items-center gap-2 text-pumpkin-text mt-3">
+        <span className="inline-flex items-center gap-2 text-anthracite mt-3">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Produkt ansehen
           </span>
-          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
         </span>
       </div>
     </Link>

@@ -355,7 +355,7 @@ export default async function NerioPage() {
                   <div>
                     <div className="flex items-center gap-4 mb-5">
                       <div className="accent-line" />
-                      <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+                      <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                         {story.eyebrow}
                       </p>
                     </div>
@@ -409,7 +409,7 @@ export default async function NerioPage() {
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                     {ocean.eyebrow}
                   </p>
                 </div>
@@ -715,7 +715,7 @@ export default async function NerioPage() {
                     <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
                       Alle Stoffe, Muster und Farben der NERIO-Linie entdecken.
                     </p>
-                    <span className="font-heading text-pumpkin-text text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
+                    <span className="font-heading text-anthracite text-xs font-semibold uppercase tracking-[0.12em] group-hover:text-pumpkin group-hover:tracking-[0.16em] transition-all duration-300">
                       Stoffe ansehen
                     </span>
                   </Link>
@@ -733,7 +733,7 @@ export default async function NerioPage() {
                     <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
                       Die NERIO Oceana Kollektion mit allen Produkten.
                     </p>
-                    <span className="font-heading text-pumpkin-text text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
+                    <span className="font-heading text-anthracite text-xs font-semibold uppercase tracking-[0.12em] group-hover:text-pumpkin group-hover:tracking-[0.16em] transition-all duration-300">
                       Collection ansehen
                     </span>
                   </Link>

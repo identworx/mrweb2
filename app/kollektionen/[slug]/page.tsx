@@ -205,7 +205,7 @@ export default async function KollektionPage({ params }: PageProps) {
               <div className="max-w-2xl">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-px bg-pumpkin" />
-                  <p className="font-accent text-pumpkin-text text-[11px] tracking-[0.3em] uppercase">
+                  <p className="font-accent text-text-muted text-[11px] tracking-[0.3em] uppercase">
                     {collection.eyebrow}
                   </p>
                 </div>
@@ -331,7 +331,7 @@ export default async function KollektionPage({ params }: PageProps) {
               <ScrollReveal>
                 <div className="flex items-center gap-4 mb-8">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                     Farbwelt
                   </p>
                 </div>
@@ -419,7 +419,7 @@ export default async function KollektionPage({ params }: PageProps) {
               <ScrollReveal>
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
                     Stoff & Technik
                   </p>
                 </div>
@@ -432,7 +432,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 <div className="bg-white border border-black/[0.06] overflow-hidden">
                   <div className="grid grid-cols-1 lg:grid-cols-2">
                     <div className="p-8 md:p-10 lg:p-12">
-                      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] px-4 py-2 border border-pumpkin/30 text-pumpkin-text bg-pumpkin/[0.04] inline-block mb-5">
+                      <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.1em] px-4 py-2 border border-pumpkin/30 text-text-muted bg-pumpkin/[0.04] inline-block mb-5">
                         {collection.fabric}
                       </span>
 
@@ -451,12 +451,12 @@ export default async function KollektionPage({ params }: PageProps) {
                       <div className="flex flex-wrap gap-3">
                         <Link
                           href="/materialien"
-                          className="inline-flex items-center gap-2 text-pumpkin-text group"
+                          className="inline-flex items-center gap-2 text-anthracite hover:text-pumpkin group"
                         >
                           <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                             Materialien entdecken
                           </span>
-                          <CmsIcon icon={icons["arrow-right"]} width={13} height={13} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
+                          <CmsIcon icon={icons["arrow-right"]} width={13} height={13} className="text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
                         </Link>
                       </div>
                     </div>
@@ -523,11 +523,11 @@ export default async function KollektionPage({ params }: PageProps) {
                     <p className="font-body text-text-muted text-[13px] leading-[1.7] mt-2 flex-1">
                       {link.description}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 text-pumpkin-text group-hover:text-pumpkin transition-colors duration-300 mt-4">
+                    <span className="inline-flex items-center gap-1.5 text-anthracite group-hover:text-pumpkin transition-colors duration-300 mt-4">
                       <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
                         Ansehen
                       </span>
-                      <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
+                      <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
                     </span>
                   </Link>
                 </ScrollReveal>
@@ -549,7 +549,7 @@ export default async function KollektionPage({ params }: PageProps) {
           <div className="relative mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="max-w-2xl mx-auto text-center">
               <ScrollReveal>
-                <p className="font-accent text-pumpkin-text text-[10px] tracking-[0.25em] uppercase mb-4">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.25em] uppercase mb-4">
                   Beratung & Muster
                 </p>
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-4">

@@ -219,12 +219,12 @@ export default async function KategoriePage({ params }: PageProps) {
               </div>
               <Link
                 href="/materialien"
-                className="inline-flex items-center gap-3 text-pumpkin-text group"
+                className="inline-flex items-center gap-3 text-anthracite hover:text-pumpkin group transition-colors duration-300"
               >
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Alle Materialien entdecken
                 </span>
-                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+                <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
               </Link>
             </div>
           </section>
@@ -247,12 +247,12 @@ export default async function KategoriePage({ params }: PageProps) {
                       </h3>
                       <Link
                         href={`/kollektionen/${cg.slug}`}
-                        className="inline-flex items-center gap-2 text-pumpkin-text group"
+                        className="inline-flex items-center gap-2 text-anthracite hover:text-pumpkin group transition-colors duration-300"
                       >
                         <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                           Kollektion ansehen
                         </span>
-                        <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
+                        <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                       </Link>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">

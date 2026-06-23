@@ -51,7 +51,7 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
             </div>
 
             <div className="p-3">
-              <p className="font-accent text-pumpkin-text text-[10px] tracking-[0.15em] uppercase mb-0.5">
+              <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-0.5">
                 {swatch.familyName}
               </p>
               <h3 className="font-heading text-anthracite text-[13px] font-semibold leading-snug group-hover:text-pumpkin transition-colors duration-300">

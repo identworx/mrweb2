@@ -24,7 +24,7 @@ export default function CollectionCtaSection({
       <div className="relative mx-auto max-w-[1400px] px-5 md:px-10 text-center">
         <ScrollReveal>
           {section.eyebrow && (
-            <p className="font-accent text-pumpkin-text text-[11px] tracking-[0.25em] uppercase mb-5">
+            <p className="font-accent text-text-muted text-[11px] tracking-[0.25em] uppercase mb-5">
               {section.eyebrow}
             </p>
           )}
