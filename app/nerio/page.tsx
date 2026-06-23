@@ -712,7 +712,7 @@ export default async function NerioPage() {
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
                       NERIO Stoffe
                     </h3>
-                    <p className="font-body text-text-gray/60 text-sm leading-relaxed mb-6">
+                    <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
                       Alle Stoffe, Muster und Farben der NERIO-Linie entdecken.
                     </p>
                     <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">
@@ -730,7 +730,7 @@ export default async function NerioPage() {
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
                       NERIO Collection
                     </h3>
-                    <p className="font-body text-text-gray/60 text-sm leading-relaxed mb-6">
+                    <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
                       Die NERIO Oceana Kollektion mit allen Produkten.
                     </p>
                     <span className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] group-hover:tracking-[0.16em] transition-all duration-300">

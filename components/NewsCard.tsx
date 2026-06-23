@@ -27,6 +27,7 @@ export default function NewsCard({
   return (
     <Link
       href={`/neuigkeiten/${slug}`}
+      aria-label={`Weiterlesen: ${title}`}
       className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
     >
       {isPlaceholder && (

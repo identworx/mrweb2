@@ -56,6 +56,7 @@ export default function Breadcrumbs({
               </Link>
             ) : (
               <span
+                aria-current="page"
                 className={isLight ? "text-white/70" : "text-text-muted"}
               >
                 {item.label}

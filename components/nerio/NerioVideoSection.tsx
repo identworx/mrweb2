@@ -256,7 +256,7 @@ function VideoCard({
             {video.description}
           </p>
         )}
-        <p className="font-body text-text-gray/60 text-xs leading-relaxed">
+        <p className="font-body text-text-muted text-xs leading-relaxed">
           Mit Klick wird ein YouTube-Video geladen.
         </p>
       </div>

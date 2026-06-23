@@ -52,7 +52,7 @@ export default function ConsultationCard({
           </Link>
           <Link
             href={secondaryHref}
-            className="inline-flex items-center justify-center gap-2 font-heading text-anthracite/50 text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
+            className="inline-flex items-center justify-center gap-2 font-heading text-text-muted text-[10px] font-semibold uppercase tracking-[0.12em] hover:text-pumpkin transition-colors duration-300"
           >
             {secondaryLabel}
             <CmsIcon icon={icons["arrow-right"]} width={12} height={12} />

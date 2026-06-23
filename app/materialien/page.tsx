@@ -303,7 +303,7 @@ export default async function MaterialienPage() {
                           <div className="space-y-3 text-sm">
                             {family.material && (
                               <div>
-                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
                                   Material
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
@@ -313,7 +313,7 @@ export default async function MaterialienPage() {
                             )}
                             {family.weight && (
                               <div>
-                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
                                   Gewicht
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
@@ -323,7 +323,7 @@ export default async function MaterialienPage() {
                             )}
                             {family.dyeing && (
                               <div>
-                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-gray/60"}`}>
+                                <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
                                   Färbung
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>

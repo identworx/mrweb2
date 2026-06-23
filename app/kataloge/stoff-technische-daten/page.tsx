@@ -160,7 +160,7 @@ export default async function StoffTechnischeDatenPage() {
                           <td className="px-5 py-4 font-heading text-anthracite text-sm font-semibold">
                             {row.property}
                           </td>
-                          <td className="px-5 py-4 font-body text-text-gray/60 text-sm">
+                          <td className="px-5 py-4 font-body text-text-muted text-sm">
                             {row.standard}
                           </td>
                           <td className="px-5 py-4 font-body text-anthracite text-sm font-semibold">

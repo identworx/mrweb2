@@ -109,7 +109,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
     <>
       <a
         href="#main"
-        className="fixed left-3 -top-20 z-[80] px-3 py-2 bg-pumpkin text-white font-heading text-[10px] font-semibold uppercase tracking-[0.12em] shadow-lg transition-all duration-200 focus:top-3 focus:outline-none focus:ring-2 focus:ring-white/80"
+        className="fixed left-3 -top-20 z-[80] px-3 py-2 bg-anthracite text-white font-heading text-[10px] font-semibold uppercase tracking-[0.12em] shadow-lg transition-all duration-200 focus:top-3 focus:outline-none focus:ring-2 focus:ring-pumpkin"
       >
         Zum Inhalt springen
       </a>
@@ -152,7 +152,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             />
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-8 xl:gap-10">
+          <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-8 xl:gap-10">
             {links.map((link) => (
               <Link
                 key={link.href}
@@ -198,6 +198,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             ref={toggleRef}
             aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-menu"
             className={`lg:hidden p-3.5 -mr-1 transition-all duration-300 ${
               scrolled || mobileOpen
                 ? "text-anthracite hover:bg-light-gray"
@@ -227,6 +228,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
       </div>
 
       <div
+        id="mobile-menu"
         ref={menuRef}
         className={`lg:hidden fixed inset-0 bg-white z-40 transition-all duration-400 ${
           scrolled ? "top-[68px] md:top-[76px]" : "top-[88px] md:top-[108px]"
@@ -236,14 +238,14 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             : "opacity-0 pointer-events-none -translate-y-2"
         }`}
       >
-        <nav className="flex flex-col px-8 pt-10 gap-0">
+        <nav aria-label="Mobile Navigation" className="flex flex-col px-8 pt-10 gap-0">
           <Link
             href="/"
             onClick={closeMobile}
             className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
           >
             Startseite
-            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
+            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
           </Link>
           {links.map((link, i) => (
             <Link
@@ -264,7 +266,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
                   </span>
                 )}
               </span>
-              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-medium-gray/60 group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
+              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
             </Link>
           ))}
           <div className="mt-8 pt-6">

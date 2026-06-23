@@ -79,7 +79,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
       )}
 
       {form.fields.map((field) => (
-        <FormFieldInput key={field.name} field={field} />
+        <FormFieldInput key={field.name} field={field} hasError={status === "error"} />
       ))}
 
       {form.honeypotField && (
@@ -99,7 +99,8 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
   );
 }
 
-function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
+function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][number]; hasError?: boolean }) {
+  const isInvalid = hasError && field.required ? true : undefined;
   const inputClasses =
     "w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300";
   const labelClasses =
@@ -113,6 +114,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
           id={field.name}
           name={field.name}
           required={field.required}
+          aria-invalid={isInvalid}
           className="mt-1 rounded border-gray-300 text-pumpkin focus:ring-pumpkin/50"
         />
         <label htmlFor={field.name} className="font-body text-sm text-text-gray leading-relaxed">
@@ -143,6 +145,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
           name={field.name}
           rows={6}
           required={field.required}
+          aria-invalid={isInvalid}
           placeholder={field.placeholder ?? undefined}
           maxLength={5000}
           className={`${inputClasses} resize-vertical`}
@@ -166,6 +169,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
           id={field.name}
           name={field.name}
           required={field.required}
+          aria-invalid={isInvalid}
           className={inputClasses}
         >
           <option value="">{field.placeholder || "Bitte wählen"}</option>
@@ -200,6 +204,7 @@ function FormFieldInput({ field }: { field: PublicForm["fields"][number] }) {
         name={field.name}
         type={inputType}
         required={field.required}
+        aria-invalid={isInvalid}
         placeholder={field.placeholder ?? undefined}
         maxLength={1000}
         className={inputClasses}

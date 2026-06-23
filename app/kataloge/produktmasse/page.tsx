@@ -66,7 +66,7 @@ export default async function ProduktmassePage() {
                   Alle Maße sind ca.-Maße und sollten vorab auf Passgenauigkeit
                   geprüft werden.
                 </p>
-                <p className="font-body text-text-gray/60 text-xs mt-1">
+                <p className="font-body text-text-muted text-xs mt-1">
                   Sondermaße auf Anfrage möglich.
                 </p>
               </div>

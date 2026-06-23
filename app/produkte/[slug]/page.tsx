@@ -270,7 +270,7 @@ export default async function ProduktPage({ params }: PageProps) {
                     {product.features.map((feature) => (
                       <span
                         key={feature}
-                        className="font-accent text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 border border-black/[0.08] text-text-gray/60 bg-[#FAF8F5]"
+                        className="font-accent text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 border border-black/[0.08] text-text-muted bg-[#FAF8F5]"
                       >
                         {feature}
                       </span>

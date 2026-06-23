@@ -279,31 +279,31 @@ export default async function KollektionPage({ params }: PageProps) {
                     <dl className="space-y-3">
                       {collection.fabric && (
                         <div className="flex items-start gap-3">
-                          <dt className="font-body text-text-gray/60 text-[13px] min-w-[90px]">Stoff</dt>
+                          <dt className="font-body text-text-muted text-[13px] min-w-[90px]">Stoff</dt>
                           <dd className="font-body text-anthracite text-[13px] font-medium">{collection.fabric}</dd>
                         </div>
                       )}
                       {fabricData?.dyeing && (
                         <div className="flex items-start gap-3">
-                          <dt className="font-body text-text-gray/60 text-[13px] min-w-[90px]">Färbung</dt>
+                          <dt className="font-body text-text-muted text-[13px] min-w-[90px]">Färbung</dt>
                           <dd className="font-body text-anthracite text-[13px] font-medium">{fabricData.dyeing}</dd>
                         </div>
                       )}
                       {fabricData?.material && (
                         <div className="flex items-start gap-3">
-                          <dt className="font-body text-text-gray/60 text-[13px] min-w-[90px]">Material</dt>
+                          <dt className="font-body text-text-muted text-[13px] min-w-[90px]">Material</dt>
                           <dd className="font-body text-anthracite text-[13px] font-medium">{fabricData.material}</dd>
                         </div>
                       )}
                       {totalProducts > 0 && (
                         <div className="flex items-start gap-3">
-                          <dt className="font-body text-text-gray/60 text-[13px] min-w-[90px]">Produkte</dt>
+                          <dt className="font-body text-text-muted text-[13px] min-w-[90px]">Produkte</dt>
                           <dd className="font-body text-anthracite text-[13px] font-medium">{totalProducts} Artikel in {productGroups.length} Kategorien</dd>
                         </div>
                       )}
                       {collection.moodColors.length > 0 && (
                         <div className="flex items-start gap-3">
-                          <dt className="font-body text-text-gray/60 text-[13px] min-w-[90px]">Palette</dt>
+                          <dt className="font-body text-text-muted text-[13px] min-w-[90px]">Palette</dt>
                           <dd className="flex items-center gap-1.5">
                             {collection.moodColors.map((color, i) => (
                               <div

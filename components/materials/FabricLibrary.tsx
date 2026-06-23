@@ -107,7 +107,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
   if (swatches.length === 0) {
     return (
       <div className="text-center py-16">
-        <p className="font-body text-text-gray/60 text-base">
+        <p className="font-body text-text-muted text-base">
           Noch keine Stoffe in der Bibliothek vorhanden.
         </p>
       </div>
@@ -199,7 +199,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
               className={`px-3 py-2 transition-colors duration-200 ${
                 viewMode === "grid"
                   ? "bg-anthracite text-white"
-                  : "bg-white text-anthracite/50 hover:text-anthracite"
+                  : "bg-white text-text-muted hover:text-anthracite"
               }`}
               aria-label="Kachelansicht"
             >
@@ -211,7 +211,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
               className={`px-3 py-2 border-l border-anthracite/15 transition-colors duration-200 ${
                 viewMode === "matrix"
                   ? "bg-anthracite text-white"
-                  : "bg-white text-anthracite/50 hover:text-anthracite"
+                  : "bg-white text-text-muted hover:text-anthracite"
               }`}
               aria-label="Matrixansicht"
             >
@@ -265,7 +265,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
       {/* Results */}
       {filtered.length === 0 ? (
         <div className="text-center py-12 bg-[#FAF8F5] border border-black/[0.04]">
-          <p className="font-body text-text-gray/60 text-sm">
+          <p className="font-body text-text-muted text-sm">
             Keine Stoffe gefunden.
           </p>
           <button
