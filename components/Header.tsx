@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { mainNavLinks } from "@/lib/mosaroma/navigation";
 import type { ResolvedIcon } from "@/lib/cms/icons";
@@ -33,7 +34,13 @@ function badgeClasses(variant?: string): string {
   return BADGE_VARIANTS[variant || "blue"] || BADGE_VARIANTS.blue;
 }
 
+function isLinkActive(href: string, pathname: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(href + "/");
+}
+
 export default function Header({ navItems, logoUrl, siteName, icons = {} }: HeaderProps) {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -153,40 +160,53 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
           </Link>
 
           <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-8 xl:gap-10">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
-                  scrolled
-                    ? "text-anthracite/85 hover:text-pumpkin"
-                    : "text-white hover:text-white"
-                }`}
-                style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
-              >
-                {link.label}
-                {link.badgeText && (
-                  <span className={`relative -top-[5px] ml-0.5 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
-                    badgeClasses(link.badgeVariant)
-                  }`}>
-                    {link.badgeText}
-                  </span>
-                )}
-                <span className={`absolute -bottom-1.5 left-0 h-px w-0 transition-all duration-400 ease-out group-hover:w-full ${
-                  scrolled ? "bg-pumpkin/70" : "bg-white/50"
-                }`} />
-              </Link>
-            ))}
+            {links.map((link) => {
+              const active = isLinkActive(link.href, pathname);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  aria-current={active ? "page" : undefined}
+                  className={`group relative font-heading text-[12px] font-semibold uppercase tracking-[0.12em] transition-all duration-400 ${
+                    scrolled
+                      ? active
+                        ? "text-pumpkin"
+                        : "text-anthracite/85 hover:text-pumpkin"
+                      : "text-white hover:text-white"
+                  }`}
+                  style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
+                >
+                  {link.label}
+                  {link.badgeText && (
+                    <span className={`relative -top-[5px] ml-0.5 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
+                      badgeClasses(link.badgeVariant)
+                    }`}>
+                      {link.badgeText}
+                    </span>
+                  )}
+                  <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-400 ease-out ${
+                    active ? "w-full" : "w-0 group-hover:w-full"
+                  } ${
+                    scrolled ? "bg-pumpkin/70" : "bg-white/50"
+                  }`} />
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
             <Link
               href="/kontakt"
+              aria-current={isLinkActive("/kontakt", pathname) ? "page" : undefined}
               className={`font-heading text-[11px] font-semibold uppercase tracking-[0.12em] px-5 py-2.5 transition-all duration-300 ${
                 scrolled
-                  ? "border border-anthracite/20 text-anthracite hover:bg-anthracite hover:text-white"
-                  : "border border-white/50 text-white hover:bg-white/10"
+                  ? isLinkActive("/kontakt", pathname)
+                    ? "border border-anthracite bg-anthracite text-white"
+                    : "border border-anthracite/20 text-anthracite hover:bg-anthracite hover:text-white"
+                  : isLinkActive("/kontakt", pathname)
+                    ? "border border-white/70 text-white bg-white/15"
+                    : "border border-white/50 text-white hover:bg-white/10"
               }`}
               style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
             >
@@ -242,33 +262,50 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
           <Link
             href="/"
             onClick={closeMobile}
-            className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
+            aria-current={isLinkActive("/", pathname) ? "page" : undefined}
+            className={`group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${
+              isLinkActive("/", pathname)
+                ? "text-pumpkin"
+                : "text-anthracite hover:text-pumpkin"
+            }`}
           >
             Startseite
-            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-all duration-300" />
+            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className={`motion-safe:group-hover:translate-x-0.5 transition-all duration-300 ${
+              isLinkActive("/", pathname) ? "text-pumpkin" : "text-text-muted group-hover:text-pumpkin"
+            }`} />
           </Link>
-          {links.map((link, i) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              onClick={closeMobile}
-              className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
-              style={{ animationDelay: `${i * 50}ms` }}
-            >
-              <span>
-                {link.label}
-                {link.badgeText && (
-                  <span className={`relative -top-[5px] ml-1 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
-                    badgeClasses(link.badgeVariant)
-                  }`}>
-                    {link.badgeText}
-                  </span>
-                )}
-              </span>
-              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-all duration-300" />
-            </Link>
-          ))}
+          {links.map((link, i) => {
+            const active = isLinkActive(link.href, pathname);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                {...(link.target === "_blank" ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                onClick={closeMobile}
+                aria-current={active ? "page" : undefined}
+                className={`group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${
+                  active
+                    ? "text-pumpkin"
+                    : "text-anthracite hover:text-pumpkin"
+                }`}
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <span>
+                  {link.label}
+                  {link.badgeText && (
+                    <span className={`relative -top-[5px] ml-1 inline-flex items-center px-[5px] py-[1px] text-[8px] font-bold uppercase tracking-[0.06em] leading-none rounded-[2px] ${
+                      badgeClasses(link.badgeVariant)
+                    }`}>
+                      {link.badgeText}
+                    </span>
+                  )}
+                </span>
+                <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className={`motion-safe:group-hover:translate-x-0.5 transition-all duration-300 ${
+                  active ? "text-pumpkin" : "text-text-muted group-hover:text-pumpkin"
+                }`} />
+              </Link>
+            );
+          })}
           <div className="mt-8 pt-6">
             <Link
               href="/kontakt"
