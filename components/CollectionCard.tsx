@@ -100,7 +100,7 @@ export default function CollectionCard({
 
         {/* Title overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-5 pb-4">
-          <p className="font-accent text-white/50 text-[9px] tracking-[0.2em] uppercase mb-1.5">
+          <p className="font-accent text-white/70 text-[9px] tracking-[0.2em] uppercase mb-1.5">
             {fabric}
           </p>
           <h3 className="font-heading text-white text-xl md:text-[1.375rem] font-bold tracking-tight leading-tight">

@@ -171,7 +171,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 </div>
                 <Link
                   href={`/kollektionen/${product.collectionSlug}`}
-                  className="font-accent text-white/60 text-[11px] tracking-[0.2em] uppercase hover:text-white/70 transition-colors"
+                  className="font-accent text-white/70 text-[11px] tracking-[0.2em] uppercase hover:text-white/80 transition-colors"
                 >
                   {displayCollection} Collection
                 </Link>

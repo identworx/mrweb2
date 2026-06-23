@@ -143,7 +143,7 @@ export default function Footer({
               <h2 className="font-heading text-white text-xl md:text-2xl font-bold tracking-tight leading-tight mb-4">
                 {ctaTitle || CTA_DEFAULTS.title}
               </h2>
-              <p className="font-body text-white/60 text-sm leading-[1.8] mb-8 max-w-lg mx-auto">
+              <p className="font-body text-white/70 text-sm leading-[1.8] mb-8 max-w-lg mx-auto">
                 {ctaText || CTA_DEFAULTS.text}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -188,7 +188,7 @@ export default function Footer({
                 height={45}
                 className="h-9 w-auto mb-5 brightness-0 invert"
               />
-              <p className="font-body text-white/55 text-[13px] leading-[1.8] max-w-[280px] mb-6">
+              <p className="font-body text-white/70 text-[13px] leading-[1.8] max-w-[280px] mb-6">
                 {brandDescription}
               </p>
               {socials && (
@@ -200,7 +200,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.platform}
-                      className="inline-flex items-center justify-center w-9 h-9 text-white/50 hover:text-pumpkin transition-colors duration-400"
+                      className="inline-flex items-center justify-center w-9 h-9 text-white/70 hover:text-pumpkin transition-colors duration-400"
                     >
                       <CmsIcon icon={icons[`social-${s.platform}`]} width={16} height={16} />
                     </a>
@@ -212,7 +212,7 @@ export default function Footer({
             {/* Navigation columns */}
             {footerColumns.map((column) => (
               <div key={column.title} className="lg:col-span-2">
-                <h4 className="font-heading text-white/60 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
+                <h4 className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
                   {column.title}
                 </h4>
                 <ul className="space-y-2.5">
@@ -223,7 +223,7 @@ export default function Footer({
                         {...(link.target === "_blank"
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
-                        className="font-body text-white/55 text-[13px] hover:text-white/80 transition-colors duration-400"
+                        className="font-body text-white/70 text-[13px] hover:text-white/80 transition-colors duration-400"
                       >
                         {link.label}
                       </Link>
@@ -235,25 +235,25 @@ export default function Footer({
 
             {/* Contact column */}
             <div className="lg:col-span-3">
-              <h4 className="font-heading text-white/60 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
+              <h4 className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
                 {resolvedContact.title}
               </h4>
               <address className="not-italic space-y-1 mb-5">
-                <p className="font-body text-white/55 text-[13px] leading-[1.8]">
+                <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                   {resolvedContact.companyName}
                 </p>
-                <p className="font-body text-white/55 text-[13px] leading-[1.8]">
+                <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                   {resolvedContact.addressLine1}
                 </p>
                 {resolvedContact.addressLine2 && (
-                  <p className="font-body text-white/55 text-[13px] leading-[1.8]">
+                  <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                     {resolvedContact.addressLine2}
                   </p>
                 )}
-                <p className="font-body text-white/55 text-[13px] leading-[1.8]">
+                <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                   {resolvedContact.postalCity}
                 </p>
-                <p className="font-body text-white/55 text-[13px] leading-[1.8]">
+                <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                   {resolvedContact.country}
                 </p>
               </address>
@@ -261,14 +261,14 @@ export default function Footer({
               <div className="space-y-1.5 mb-6">
                 <a
                   href={`mailto:${resolvedContact.email}`}
-                  className="block font-body text-white/55 text-[13px] hover:text-pumpkin transition-colors duration-400"
+                  className="block font-body text-white/70 text-[13px] hover:text-pumpkin transition-colors duration-400"
                 >
                   {resolvedContact.email}
                 </a>
                 {resolvedContact.phone && (
                   <a
                     href={`tel:${resolvedContact.phone.replace(/\s/g, "")}`}
-                    className="block font-body text-white/55 text-[13px] hover:text-pumpkin transition-colors duration-400"
+                    className="block font-body text-white/70 text-[13px] hover:text-pumpkin transition-colors duration-400"
                   >
                     {resolvedContact.phone}
                   </a>
@@ -288,7 +288,7 @@ export default function Footer({
           {/* ── Tier 3: Bottom Bar ── */}
           <div className="border-t border-white/[0.06] py-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
-              <span className="font-body text-white/60 text-[11px] tracking-wide">
+              <span className="font-body text-white/70 text-[11px] tracking-wide">
                 {copyright}
               </span>
               {bottomNote && (
@@ -309,7 +309,7 @@ export default function Footer({
                     {...(item.target === "_blank"
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
-                    className="font-body text-white/60 hover:text-white/60 transition-colors duration-400"
+                    className="font-body text-white/70 hover:text-white/80 transition-colors duration-400"
                   >
                     {item.label}
                   </Link>

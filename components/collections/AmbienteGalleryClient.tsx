@@ -180,7 +180,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
             </svg>
           </button>
 
-          <div className="absolute top-5 left-1/2 -translate-x-1/2 font-accent text-white/50 text-xs tracking-wider">
+          <div className="absolute top-5 left-1/2 -translate-x-1/2 font-accent text-white/70 text-xs tracking-wider">
             {lightboxIndex + 1} / {filtered.length}
           </div>
 

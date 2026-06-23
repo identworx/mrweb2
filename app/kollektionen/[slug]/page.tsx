@@ -215,7 +215,7 @@ export default async function KollektionPage({ params }: PageProps) {
                 </h1>
 
                 {collection.subtitle && (
-                  <p className="font-heading text-white/65 text-base md:text-lg font-medium tracking-tight leading-snug mt-2 line-clamp-1">
+                  <p className="font-heading text-white/75 text-base md:text-lg font-medium tracking-tight leading-snug mt-2 line-clamp-1">
                     {collection.subtitle}
                   </p>
                 )}

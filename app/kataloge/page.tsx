@@ -123,7 +123,7 @@ export default async function KatalogePage() {
                   )}
                 </div>
 
-                <p className="font-body text-white/60 text-xs mt-6">
+                <p className="font-body text-white/70 text-xs mt-6">
                   Öffnet in neuem Tab.
                 </p>
               </div>
