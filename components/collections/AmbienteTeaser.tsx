@@ -109,7 +109,7 @@ export default function AmbienteTeaser({
   const ctaLink = ctaLabel && ctaHref ? (
     <Link
       href={ctaHref}
-      className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
+      className="inline-flex items-center gap-2 font-heading text-pumpkin-text text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300"
     >
       {ctaLabel}
       <span aria-hidden="true">&rarr;</span>
@@ -124,7 +124,7 @@ export default function AmbienteTeaser({
             <div className="mb-10 md:mb-14">
               <div className="flex items-center gap-4 mb-4">
                 <div className="accent-line" />
-                <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
                   {eyebrow}
                 </p>
               </div>

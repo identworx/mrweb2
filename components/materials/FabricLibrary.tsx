@@ -232,7 +232,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
           {activeFamily === "nerio" && (
             <Link
               href="/nerio"
-              className="inline-flex items-center gap-1.5 mt-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-pumpkin hover:text-pumpkin/80 transition-colors duration-200"
+              className="inline-flex items-center gap-1.5 mt-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-pumpkin-text hover:text-pumpkin transition-colors duration-200"
             >
               Mehr zur NERIO Materialstory
               <CmsIcon icon={icons["arrow-right"]} width={12} height={12} />
@@ -255,7 +255,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
           <button
             type="button"
             onClick={clearFilters}
-            className="font-accent text-pumpkin/70 hover:text-pumpkin text-[11px] tracking-[0.1em] uppercase transition-colors duration-200"
+            className="font-accent text-pumpkin-text hover:text-pumpkin text-[11px] tracking-[0.1em] uppercase transition-colors duration-200"
           >
             Filter zurücksetzen
           </button>

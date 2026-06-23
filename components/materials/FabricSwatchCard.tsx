@@ -64,7 +64,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
                 </span>
               ))}
               {swatch.availableProductTypes.length > 5 && (
-                <span className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 text-pumpkin/60">
+                <span className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 text-pumpkin-text">
                   +{swatch.availableProductTypes.length - 5}
                 </span>
               )}
@@ -72,7 +72,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
           )}
         </div>
 
-        <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-auto pt-2 border-t border-black/[0.04]">
+        <span className="inline-flex items-center gap-1.5 text-pumpkin-text group-hover:text-pumpkin transition-colors duration-300 mt-auto pt-2 border-t border-black/[0.04]">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Details
           </span>

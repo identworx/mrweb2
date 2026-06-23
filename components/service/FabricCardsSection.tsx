@@ -52,7 +52,7 @@ export default function FabricCardsSection({
                 {card.name}
               </h3>
               {card.subtitle && (
-                <span className="inline-block font-accent text-[10px] tracking-[0.1em] uppercase px-3 py-1 border border-pumpkin/25 text-pumpkin/70 bg-pumpkin/5 mb-4">
+                <span className="inline-block font-accent text-[10px] tracking-[0.1em] uppercase px-3 py-1 border border-pumpkin/25 text-pumpkin-text bg-pumpkin/5 mb-4">
                   {card.subtitle}
                 </span>
               )}

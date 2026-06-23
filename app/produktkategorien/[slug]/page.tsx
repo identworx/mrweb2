@@ -219,7 +219,7 @@ export default async function KategoriePage({ params }: PageProps) {
               </div>
               <Link
                 href="/materialien"
-                className="inline-flex items-center gap-3 text-pumpkin group"
+                className="inline-flex items-center gap-3 text-pumpkin-text group"
               >
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Alle Materialien entdecken
@@ -247,7 +247,7 @@ export default async function KategoriePage({ params }: PageProps) {
                       </h3>
                       <Link
                         href={`/kollektionen/${cg.slug}`}
-                        className="inline-flex items-center gap-2 text-pumpkin group"
+                        className="inline-flex items-center gap-2 text-pumpkin-text group"
                       >
                         <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                           Kollektion ansehen

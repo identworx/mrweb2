@@ -316,7 +316,7 @@ export default async function ProduktPage({ params }: PageProps) {
               </div>
               <Link
                 href="/materialien"
-                className="inline-flex items-center gap-3 text-pumpkin mt-8 group"
+                className="inline-flex items-center gap-3 text-pumpkin-text mt-8 group"
               >
                 <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                   Mehr über {fabric.name} erfahren
@@ -351,7 +351,7 @@ export default async function ProduktPage({ params }: PageProps) {
                 </p>
                 <Link
                   href={`/kollektionen/${product.collectionSlug}`}
-                  className="inline-flex items-center gap-3 text-pumpkin mt-6 group"
+                  className="inline-flex items-center gap-3 text-pumpkin-text mt-6 group"
                 >
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                     Zur {displayCollection} Collection

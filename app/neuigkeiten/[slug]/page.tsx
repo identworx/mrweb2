@@ -86,7 +86,7 @@ export default async function NeuigkeitDetailPage({
             <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
+                  <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin-text">
                     {article.category}
                   </span>
                   <span className="font-body text-white/70 text-xs">
@@ -128,7 +128,7 @@ export default async function NeuigkeitDetailPage({
 
                 <Link
                   href="/neuigkeiten"
-                  className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin hover:text-burnt-orange transition-colors duration-300"
+                  className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin-text hover:text-burnt-orange transition-colors duration-300"
                 >
                   <CmsIcon icon={icons["arrow-left"]} width={14} height={14} />
                   Zurück zu Neuigkeiten
@@ -175,7 +175,7 @@ export default async function NeuigkeitDetailPage({
           <div className="relative w-full pt-24 md:pt-28 pb-6 md:pb-8">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="flex items-center gap-3 mb-3">
-                <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin">
+                <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em] px-3 py-1 bg-pumpkin/10 text-pumpkin-text">
                   {staticItem.tag}
                 </span>
                 <span className="font-body text-white/70 text-xs">
@@ -209,7 +209,7 @@ export default async function NeuigkeitDetailPage({
 
               <Link
                 href="/neuigkeiten"
-                className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin hover:text-burnt-orange transition-colors duration-300"
+                className="inline-flex items-center gap-2 font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-pumpkin-text hover:text-burnt-orange transition-colors duration-300"
               >
                 <CmsIcon icon={icons["arrow-left"]} width={14} height={14} />
                 Zurück zu Neuigkeiten

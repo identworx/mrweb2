@@ -61,7 +61,7 @@ export default async function TechnischeDatenPage() {
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
-              <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+              <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
                 Stoffqualitäten
               </p>
             </div>
@@ -77,7 +77,7 @@ export default async function TechnischeDatenPage() {
                       {fabric.name}
                     </h3>
                     {fabric.subtitle && (
-                      <span className="inline-block font-accent text-[10px] tracking-[0.1em] uppercase px-3 py-1 border border-pumpkin/25 text-pumpkin/70 bg-pumpkin/5 mb-4">
+                      <span className="inline-block font-accent text-[10px] tracking-[0.1em] uppercase px-3 py-1 border border-pumpkin/25 text-pumpkin-text bg-pumpkin/5 mb-4">
                         {fabric.subtitle}
                       </span>
                     )}
@@ -143,7 +143,7 @@ export default async function TechnischeDatenPage() {
 
             <Link
               href="/materialien"
-              className="inline-flex items-center gap-3 text-pumpkin mt-10 group"
+              className="inline-flex items-center gap-3 text-pumpkin-text mt-10 group"
             >
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                 Alle Materialien entdecken

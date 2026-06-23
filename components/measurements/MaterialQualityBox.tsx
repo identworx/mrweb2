@@ -15,7 +15,7 @@ export default function MaterialQualityBox({ icons = {} }: { icons?: Record<stri
     <div className="bg-white border border-light-gray p-6 md:p-8">
       <div className="flex items-center gap-4 mb-5">
         <div className="w-12 h-px bg-pumpkin" />
-        <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+        <p className="font-accent text-pumpkin-text text-xs tracking-[0.3em] uppercase">
           Vier Qualitäten
         </p>
       </div>
@@ -45,7 +45,7 @@ export default function MaterialQualityBox({ icons = {} }: { icons?: Record<stri
 
       <Link
         href="/materialien"
-        className="inline-flex items-center gap-3 text-pumpkin mt-6 group"
+        className="inline-flex items-center gap-3 text-pumpkin-text mt-6 group"
       >
         <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
           Alle Qualitäten im Detail

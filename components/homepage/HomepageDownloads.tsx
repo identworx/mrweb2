@@ -35,7 +35,7 @@ export default function HomepageDownloads({ section, downloads, icons = {} }: Pr
           {ctaLabel && ctaHref && (
             <Link
               href={ctaHref}
-              className="inline-flex items-center gap-2 font-heading text-pumpkin text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300 shrink-0"
+              className="inline-flex items-center gap-2 font-heading text-pumpkin-text text-sm font-semibold tracking-wide hover:text-burnt-orange transition-colors duration-300 shrink-0"
             >
               {ctaLabel}
               <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
