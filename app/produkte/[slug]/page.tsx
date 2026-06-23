@@ -400,7 +400,7 @@ export default async function ProduktPage({ params }: PageProps) {
 function SpecCard({ label, value }: { label: string; value: string }) {
   return (
     <div className="p-3.5 md:p-4 bg-[#FAF8F5] border border-black/[0.04]">
-      <p className="font-accent text-text-gray/45 text-[9px] tracking-[0.2em] uppercase mb-1">
+      <p className="font-accent text-text-muted text-[9px] tracking-[0.2em] uppercase mb-1">
         {label}
       </p>
       <p className="font-heading text-anthracite text-[13px] md:text-sm font-semibold leading-snug">

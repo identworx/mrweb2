@@ -225,7 +225,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
       {activeDesc && (
         <div className="mb-6 mt-2">
           {activeDesc.description && (
-            <p className="font-body text-text-gray/70 text-sm leading-relaxed max-w-2xl">
+            <p className="font-body text-text-muted text-sm leading-relaxed max-w-2xl">
               {activeDesc.description}
             </p>
           )}

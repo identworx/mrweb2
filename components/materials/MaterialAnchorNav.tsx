@@ -61,7 +61,7 @@ export default function MaterialAnchorNav() {
                 className={`flex-shrink-0 px-4 py-3 font-accent text-[11px] font-semibold uppercase tracking-[0.12em] border-b-2 transition-colors duration-300 ${
                   isActive
                     ? "text-anthracite border-pumpkin"
-                    : "text-anthracite/40 border-transparent hover:text-anthracite/70"
+                    : "text-text-muted border-transparent hover:text-anthracite"
                 }`}
               >
                 {item.label}

@@ -47,12 +47,12 @@ export default function BenchMeasurementCard({ item }: { item: FrontendMeasureme
         {(item.notes.length > 0 || otherRows.length > 0) && (
           <div className="mt-6 pt-5 border-t border-black/[0.04] flex flex-col sm:flex-row sm:items-center sm:justify-center gap-x-8 gap-y-2 text-center">
             {item.notes.map((note) => (
-              <p key={note} className="font-body text-text-gray/70 text-sm">
+              <p key={note} className="font-body text-text-muted text-sm">
                 {note}
               </p>
             ))}
             {otherRows.map((row) => (
-              <p key={row.label} className="font-body text-text-gray/70 text-sm">
+              <p key={row.label} className="font-body text-text-muted text-sm">
                 {row.label}: {row.value}
               </p>
             ))}

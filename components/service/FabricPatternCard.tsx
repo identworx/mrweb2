@@ -60,7 +60,7 @@ export default function FabricPatternCard({
             {matchedCategories.length > 0 && (
               <button
                 onClick={() => setIsFlipped(true)}
-                className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-pumpkin hover:text-white text-anthracite/40 transition-all duration-300"
+                className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-pumpkin hover:text-white text-text-muted transition-all duration-300"
                 aria-label="Verfügbare Produkte anzeigen"
               >
                 <CmsIcon icon={icons["ui-flip"]} width={14} height={14} />

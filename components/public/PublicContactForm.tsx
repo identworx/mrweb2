@@ -146,12 +146,13 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           rows={6}
           required={field.required}
           aria-invalid={isInvalid}
+          aria-describedby={field.helpText ? `${field.name}-help` : undefined}
           placeholder={field.placeholder ?? undefined}
           maxLength={5000}
           className={`${inputClasses} resize-vertical`}
         />
         {field.helpText && (
-          <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
+          <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
       </div>
     );
@@ -170,6 +171,7 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           name={field.name}
           required={field.required}
           aria-invalid={isInvalid}
+          aria-describedby={field.helpText ? `${field.name}-help` : undefined}
           className={inputClasses}
         >
           <option value="">{field.placeholder || "Bitte wählen"}</option>
@@ -180,7 +182,7 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           ))}
         </select>
         {field.helpText && (
-          <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
+          <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
       </div>
     );
@@ -205,12 +207,13 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
         type={inputType}
         required={field.required}
         aria-invalid={isInvalid}
+        aria-describedby={field.helpText ? `${field.name}-help` : undefined}
         placeholder={field.placeholder ?? undefined}
         maxLength={1000}
         className={inputClasses}
       />
       {field.helpText && (
-        <p className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
+        <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
       )}
     </div>
   );

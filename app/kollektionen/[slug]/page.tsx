@@ -520,7 +520,7 @@ export default async function KollektionPage({ params }: PageProps) {
                     <h3 className="font-heading text-anthracite text-[15px] font-bold tracking-tight group-hover:text-pumpkin transition-colors duration-300">
                       {link.label}
                     </h3>
-                    <p className="font-body text-text-gray/70 text-[13px] leading-[1.7] mt-2 flex-1">
+                    <p className="font-body text-text-muted text-[13px] leading-[1.7] mt-2 flex-1">
                       {link.description}
                     </p>
                     <span className="inline-flex items-center gap-1.5 text-pumpkin/60 group-hover:text-pumpkin transition-colors duration-300 mt-4">

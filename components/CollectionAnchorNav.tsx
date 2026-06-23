@@ -61,7 +61,7 @@ export default function CollectionAnchorNav({ items }: CollectionAnchorNavProps)
               className={`flex-shrink-0 px-3.5 py-1.5 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${
                 activeId === item.id
                   ? "text-pumpkin"
-                  : "text-anthracite/50 hover:text-anthracite"
+                  : "text-text-muted hover:text-anthracite"
               }`}
             >
               {item.label}
