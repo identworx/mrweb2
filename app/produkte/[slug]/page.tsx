@@ -183,7 +183,7 @@ export default async function ProduktPage({ params }: PageProps) {
             </h1>
 
             {product.productGroupName && (
-              <p className="font-body text-white/50 text-sm md:text-base mt-1.5">
+              <p className="font-body text-white/70 text-sm md:text-base mt-1.5">
                 {product.productGroupName}
               </p>
             )}

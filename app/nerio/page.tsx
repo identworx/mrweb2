@@ -554,7 +554,7 @@ export default async function NerioPage() {
                           {stat.label}
                         </p>
                         {stat.detail && (
-                          <p className="font-body text-white/50 text-xs leading-relaxed">
+                          <p className="font-body text-white/70 text-xs leading-relaxed">
                             {stat.detail}
                           </p>
                         )}

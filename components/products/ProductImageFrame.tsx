@@ -142,7 +142,7 @@ export default function ProductImageFrame({
           />
           {(collectionName || productName) && variant !== "thumbnail" && variant !== "compact" && (
             <div className="absolute inset-0 flex items-end p-4 md:p-5">
-              <span className="font-accent text-white/50 text-[10px] tracking-[0.15em] uppercase">
+              <span className="font-accent text-white/70 text-[10px] tracking-[0.15em] uppercase">
                 {collectionName || productName}
               </span>
             </div>

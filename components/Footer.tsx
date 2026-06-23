@@ -292,7 +292,7 @@ export default function Footer({
                 {copyright}
               </span>
               {bottomNote && (
-                <span className="font-body text-white/50 text-[11px]">
+                <span className="font-body text-white/70 text-[11px]">
                   {bottomNote}
                 </span>
               )}

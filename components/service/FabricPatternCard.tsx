@@ -137,7 +137,7 @@ export default function FabricPatternCard({
               <p className="font-heading text-white text-sm font-semibold mb-1">
                 {name}
               </p>
-              <p className="font-accent text-white/50 text-[10px] tracking-[0.15em] uppercase mb-4">
+              <p className="font-accent text-white/70 text-[10px] tracking-[0.15em] uppercase mb-4">
                 Verfügbar als
               </p>
 

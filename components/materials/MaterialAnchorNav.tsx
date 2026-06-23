@@ -77,7 +77,7 @@ export default function MaterialAnchorNav() {
                   key={anchor.id}
                   href={`#${anchor.id}`}
                   onClick={(e) => scrollToAnchor(e, anchor.id)}
-                  className="flex-shrink-0 px-3 py-3 font-accent text-[10px] uppercase tracking-[0.12em] text-anthracite/30 border-b-2 border-transparent hover:text-anthracite/50 transition-colors duration-300"
+                  className="flex-shrink-0 px-3 py-3 font-accent text-[10px] uppercase tracking-[0.12em] text-text-muted border-b-2 border-transparent hover:text-anthracite transition-colors duration-300"
                 >
                   {anchor.label}
                 </a>
