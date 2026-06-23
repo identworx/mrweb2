@@ -1,7 +1,0 @@
-{
-  "source": "ECNU-ICALK/AutoSkill",
-  "sourceType": "git",
-  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
-  "subpath": "SkillBank/ConvSkill/english_gpt3.5_8/基于关键词频率生成严格字数限制的英文产品标题",
-  "installedAt": "2026-06-23T12:32:49.784Z"
-}

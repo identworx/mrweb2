@@ -1,7 +1,0 @@
-{
-  "source": "ECNU-ICALK/AutoSkill",
-  "sourceType": "git",
-  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
-  "subpath": "SkillBank/ConvSkill/chinese_gpt4_8/flask实时刷新matplotlib图像-后台调度-内存缓存",
-  "installedAt": "2026-06-23T12:32:49.596Z"
-}

@@ -1,7 +1,0 @@
-{
-  "source": "ECNU-ICALK/AutoSkill",
-  "sourceType": "git",
-  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
-  "subpath": "SkillBank/ConvSkill/chinese_gpt3.5_8/mongodb定时数据同步与gzip压缩传输",
-  "installedAt": "2026-06-23T12:32:49.548Z"
-}

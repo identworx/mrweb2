@@ -1,7 +1,0 @@
-{
-  "source": "ECNU-ICALK/AutoSkill",
-  "sourceType": "git",
-  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
-  "subpath": "SkillBank/ConvSkill/chinese_gpt4_8_GLM4.7/基于位置映射的gpu数据获取函数实现",
-  "installedAt": "2026-06-23T12:32:49.656Z"
-}

@@ -1,7 +1,0 @@
-{
-  "source": "ECNU-ICALK/AutoSkill",
-  "sourceType": "git",
-  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
-  "subpath": "SkillBank/ConvSkill/chinese_gpt4_8_GLM4.7/dataframe合并后的列清理与数据库插入准备",
-  "installedAt": "2026-06-23T12:32:49.634Z"
-}
