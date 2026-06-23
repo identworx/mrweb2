@@ -29,6 +29,7 @@ import {
 } from "@/lib/cms/service-pages";
 import { getNerioFabricSwatches } from "@/lib/cms/fabric-library";
 import NerioVideoSection from "@/components/nerio/NerioVideoSection";
+import NerioAnchorNav from "@/components/nerio/NerioAnchorNav";
 
 export const revalidate = 60;
 
@@ -336,6 +337,7 @@ export default async function NerioPage() {
         </section>
 
         <BreadcrumbBar items={[{ label: "NERIO" }]} />
+        {!hasCmsSections && <NerioAnchorNav />}
 
         {hasCmsSections ? (
           contentSections.map((section, i) => (
@@ -349,7 +351,7 @@ export default async function NerioPage() {
         ) : (
           <>
             {/* Story */}
-            <section className="pt-12 md:pt-16 pb-24 md:pb-32 bg-white">
+            <section id="story" className="pt-12 md:pt-16 pb-24 md:pb-32 bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="grid grid-cols-1 lg:grid-cols-[5fr_4fr] items-start gap-10 lg:gap-16">
                   <div>
@@ -405,7 +407,7 @@ export default async function NerioPage() {
             </section>
 
             {/* OceanCycle Kreislauf */}
-            <section className="section-padding bg-cream">
+            <section id="technologie" className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
@@ -537,7 +539,7 @@ export default async function NerioPage() {
             </section>
 
             {/* Highlights / Stats */}
-            <section className="section-padding bg-anthracite">
+            <section id="fakten" className="section-padding bg-anthracite">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
                   {highlights.title}
@@ -631,7 +633,7 @@ export default async function NerioPage() {
             </section>
 
             {/* Produkte & Stoffe */}
-            <section className="section-padding bg-white">
+            <section id="produkte" className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
                   {productsPreview.title}
@@ -692,7 +694,7 @@ export default async function NerioPage() {
             </section>
 
             {/* Final CTA */}
-            <section className="section-padding bg-cream">
+            <section id="beratung" className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4 text-center">
                   {cta.title}
