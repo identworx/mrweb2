@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ScrollReveal from "@/components/ScrollReveal";
+import PageCta from "@/components/PageCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 
@@ -224,6 +225,16 @@ export default async function UeberUnsPage() {
             </div>
           </div>
         </section>
+
+        <PageCta
+          variant="dark"
+          title="Bereit für Ihr nächstes Projekt?"
+          description="Ob Fachhandel, Hotellerie oder Gastronomie — wir beraten Sie persönlich zu Kollektionen, Materialien und individuellen Lösungen."
+          primaryLabel="Kontakt aufnehmen"
+          primaryHref="/kontakt"
+          secondaryLabel="Kollektionen entdecken"
+          secondaryHref="/kollektionen"
+        />
       </main>
       <Footer {...layout.footer} />
     </>
