@@ -132,7 +132,7 @@ export default function AmbienteGalleryClient({ images }: Props) {
               />
               <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 motion-reduce:translate-y-0 motion-reduce:opacity-100">
                 {img.colorWorlds.length > 0 && (
-                  <p className="font-accent text-pumpkin text-[10px] tracking-[0.2em] uppercase mb-1">
+                  <p className="font-accent text-pumpkin-accessible text-[10px] tracking-[0.2em] uppercase mb-1">
                     {img.colorWorlds
                       .map(
                         (w) =>

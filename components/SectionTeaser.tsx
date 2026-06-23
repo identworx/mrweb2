@@ -49,7 +49,7 @@ export default function SectionTeaser({
             }`}
           >
             <div className="accent-line" />
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+            <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
               {accent}
             </p>
           </div>

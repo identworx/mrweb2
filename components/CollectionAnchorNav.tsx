@@ -60,7 +60,7 @@ export default function CollectionAnchorNav({ items }: CollectionAnchorNavProps)
               onClick={() => scrollTo(item.id)}
               className={`flex-shrink-0 px-3.5 py-1.5 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${
                 activeId === item.id
-                  ? "text-pumpkin"
+                  ? "text-pumpkin-accessible"
                   : "text-text-muted hover:text-anthracite"
               }`}
             >

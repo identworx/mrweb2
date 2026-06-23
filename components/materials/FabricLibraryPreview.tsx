@@ -70,7 +70,7 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
       <div className="mt-8 text-center">
         <Link
           href="/materialien/stoffe-muster"
-          className="inline-flex items-center gap-2 font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.12em] hover:text-anthracite transition-colors duration-300"
+          className="inline-flex items-center gap-2 font-heading text-pumpkin-accessible text-xs font-semibold uppercase tracking-[0.12em] hover:text-anthracite transition-colors duration-300"
         >
           <span>Alle Stoffe & Muster ansehen</span>
           <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />

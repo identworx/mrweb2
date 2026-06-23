@@ -31,7 +31,7 @@ export default function CrossLinkSection({
           {section.buttonHref && section.buttonLabel && (
             <Link
               href={section.buttonHref}
-              className="inline-flex items-center gap-3 text-pumpkin group"
+              className="inline-flex items-center gap-3 text-pumpkin-accessible group"
             >
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
                 {section.buttonLabel}

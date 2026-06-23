@@ -157,7 +157,7 @@ export default async function KatalogePage() {
                     {page.description}
                   </p>
 
-                  <span className="inline-flex items-center gap-2 text-pumpkin">
+                  <span className="inline-flex items-center gap-2 text-pumpkin-accessible">
                     <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                       Ansehen
                     </span>

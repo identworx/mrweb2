@@ -47,7 +47,7 @@ export default function HeroSection({ icons = {} }: HeroSectionProps) {
           <div className="max-w-xl lg:max-w-[620px]">
 
             {/* Subheadline */}
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase mb-6">
+            <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase mb-6">
               Hochwertige Outdoor-Textilien
             </p>
 

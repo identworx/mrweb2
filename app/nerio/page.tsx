@@ -301,7 +301,7 @@ export default async function NerioPage() {
               {hero.eyebrow && (
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-px bg-pumpkin" />
-                  <p className="font-accent text-pumpkin text-[11px] tracking-[0.3em] uppercase">
+                  <p className="font-accent text-pumpkin-accessible text-[11px] tracking-[0.3em] uppercase">
                     {hero.eyebrow}
                   </p>
                 </div>

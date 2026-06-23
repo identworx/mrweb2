@@ -271,7 +271,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
           <button
             type="button"
             onClick={clearFilters}
-            className="font-heading text-pumpkin text-xs font-semibold uppercase tracking-[0.1em] mt-3 hover:text-pumpkin/80 transition-colors"
+            className="font-heading text-pumpkin-accessible text-xs font-semibold uppercase tracking-[0.1em] mt-3 hover:text-pumpkin/80 transition-colors"
           >
             Filter zurücksetzen
           </button>

@@ -70,7 +70,7 @@ export default async function KontaktPage() {
               <div>
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
                     Kontaktdaten
                   </p>
                 </div>

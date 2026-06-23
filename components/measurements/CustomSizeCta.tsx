@@ -26,7 +26,7 @@ export default function CustomSizeCta({ icons = {} }: { icons?: Record<string, R
 
       <Link
         href="/kontakt"
-        className="inline-flex items-center gap-3 font-heading text-[12px] font-semibold uppercase tracking-[0.12em] px-6 py-3 bg-white text-pumpkin hover:bg-white/90 transition-colors duration-300"
+        className="inline-flex items-center gap-3 font-heading text-[12px] font-semibold uppercase tracking-[0.12em] px-6 py-3 bg-white text-pumpkin-accessible hover:bg-white/90 transition-colors duration-300"
       >
         Kontakt aufnehmen
         <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />

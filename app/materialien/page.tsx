@@ -128,7 +128,7 @@ export default async function MaterialienPage() {
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
                     {tech.eyebrow}
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default async function MaterialienPage() {
                 <div className={`grid grid-cols-1 items-start gap-10 lg:gap-10 ${olefinImage ? "lg:grid-cols-[5fr_4fr]" : ""}`}>
                   <div>
                     <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-                      Warum <em className="text-pumpkin not-italic">Olefin?</em>
+                      Warum <em className="text-pumpkin-accessible not-italic">Olefin?</em>
                     </h2>
 
                     <div className="flex flex-wrap gap-2.5 mb-10">
@@ -293,7 +293,7 @@ export default async function MaterialienPage() {
                             {family.name}
                           </h3>
                           {family.subtitle ? (
-                            <p className="font-accent text-xs tracking-[0.15em] uppercase mb-4 text-pumpkin">
+                            <p className="font-accent text-xs tracking-[0.15em] uppercase mb-4 text-pumpkin-accessible">
                               {family.subtitle}
                             </p>
                           ) : (
@@ -348,7 +348,7 @@ export default async function MaterialienPage() {
                             </div>
                           )}
 
-                          <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin">
+                          <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin-accessible">
                             <span>Stoffe ansehen</span>
                             <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                           </div>
@@ -366,7 +366,7 @@ export default async function MaterialienPage() {
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
-                  <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+                  <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
                     {ocean.eyebrow}
                   </p>
                 </div>

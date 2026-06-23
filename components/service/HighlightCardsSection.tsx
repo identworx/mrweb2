@@ -25,7 +25,7 @@ export default function HighlightCardsSection({
         {section.eyebrow && (
           <div className="flex items-center gap-4 mb-5">
             <div className="accent-line" />
-            <p className="font-accent text-pumpkin text-xs tracking-[0.3em] uppercase">
+            <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
               {section.eyebrow}
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function HighlightCardsSection({
         {section.buttonHref && section.buttonLabel && (
           <Link
             href={section.buttonHref}
-            className="inline-flex items-center gap-3 text-pumpkin mt-10 group"
+            className="inline-flex items-center gap-3 text-pumpkin-accessible mt-10 group"
           >
             <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
               {section.buttonLabel}

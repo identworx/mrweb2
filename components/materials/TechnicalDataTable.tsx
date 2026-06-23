@@ -28,7 +28,7 @@ export default function TechnicalDataTable({
               <th className={`${thBase} text-text-muted ${cellPadding}`}>
                 Prüfnorm
               </th>
-              <th className={`${thBase} text-pumpkin ${cellPadding}`}>
+              <th className={`${thBase} text-pumpkin-accessible ${cellPadding}`}>
                 Solution Dyed Olefin
               </th>
               <th className={`${thBase} text-text-muted ${cellPadding}`}>

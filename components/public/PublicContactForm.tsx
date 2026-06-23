@@ -115,15 +115,15 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           name={field.name}
           required={field.required}
           aria-invalid={isInvalid}
-          className="mt-1 rounded border-gray-300 text-pumpkin focus:ring-pumpkin/50"
+          className="mt-1 rounded border-gray-300 text-pumpkin-accessible focus:ring-pumpkin/50"
         />
         <label htmlFor={field.name} className="font-body text-sm text-text-gray leading-relaxed">
           {field.label}
-          {field.required && <span className="text-pumpkin ml-0.5">*</span>}
+          {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
           {field.helpText && (
             <>
               {" "}
-              <Link href="/datenschutz" className="text-pumpkin hover:underline">
+              <Link href="/datenschutz" className="text-pumpkin-accessible hover:underline">
                 Datenschutzerklärung
               </Link>
             </>
@@ -138,7 +138,7 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
       <div>
         <label htmlFor={field.name} className={labelClasses}>
           {field.label}
-          {field.required && <span className="text-pumpkin ml-0.5">*</span>}
+          {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
         </label>
         <textarea
           id={field.name}
@@ -164,7 +164,7 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
       <div>
         <label htmlFor={field.name} className={labelClasses}>
           {field.label}
-          {field.required && <span className="text-pumpkin ml-0.5">*</span>}
+          {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
         </label>
         <select
           id={field.name}
@@ -199,7 +199,7 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
     <div>
       <label htmlFor={field.name} className={labelClasses}>
         {field.label}
-        {field.required && <span className="text-pumpkin ml-0.5">*</span>}
+        {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
       </label>
       <input
         id={field.name}
