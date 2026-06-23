@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { HomepageSection } from "@/lib/cms/homepage";
 import type { ResolvedIcon } from "@/lib/cms/icons";
@@ -22,15 +23,18 @@ export default function HomepageHero({ section, icons = {} }: Props) {
   const secondaryLabel = (s.secondaryLabel as string) || "";
   const secondaryHref = (s.secondaryHref as string) || "";
   const bgImage = section.imageUrl || FALLBACK_IMAGE;
+  const imageAlt = (section.settings.imageAlt as string) || "";
 
   return (
     <section className="relative w-full h-[100svh] min-h-[700px] max-h-[1100px] overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-no-repeat"
-        style={{
-          backgroundImage: `url('${bgImage}')`,
-          backgroundPosition: "center 45%",
-        }}
+      <Image
+        src={bgImage}
+        alt={imageAlt}
+        fill
+        className="object-cover"
+        style={{ objectPosition: "center 45%" }}
+        sizes="100vw"
+        priority
       />
 
       <div

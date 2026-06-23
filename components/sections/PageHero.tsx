@@ -5,7 +5,7 @@ type PageHeroProps = {
   title: string;
   description?: string;
   image?: string;
-  alt?: string;
+  alt?: string | null;
   variant?: "light" | "dark";
   height?: "compact" | "default" | "large";
 };
@@ -23,7 +23,7 @@ export default function PageHero({
   title,
   description,
   image,
-  alt = "MOSAROMA Hero",
+  alt,
   variant = "dark",
   height = "default",
 }: PageHeroProps) {
@@ -36,7 +36,7 @@ export default function PageHero({
     >
       <Image
         src={heroImage}
-        alt={alt}
+        alt={alt || ""}
         fill
         className="object-cover"
         sizes="100vw"

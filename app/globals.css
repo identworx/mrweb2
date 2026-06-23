@@ -30,6 +30,12 @@
   }
 }
 
+/* Global focus indicator — keyboard only */
+:focus-visible {
+  outline: 2px solid var(--color-pumpkin);
+  outline-offset: 2px;
+}
+
 /* Base styles */
 body {
   background: var(--color-cream);
@@ -47,9 +53,10 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-/* Smooth scrolling */
+/* Smooth scrolling + clear fixed header on anchor targets */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
 }
 
 /* Section spacing utility */

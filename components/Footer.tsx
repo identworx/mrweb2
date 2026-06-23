@@ -200,7 +200,7 @@ export default function Footer({
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={s.platform}
-                      className="text-white/50 hover:text-pumpkin transition-colors duration-400"
+                      className="inline-flex items-center justify-center w-9 h-9 text-white/50 hover:text-pumpkin transition-colors duration-400"
                     >
                       <CmsIcon icon={icons[`social-${s.platform}`]} width={16} height={16} />
                     </a>

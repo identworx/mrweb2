@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { FrontendFabricSwatch } from "@/lib/cms/fabric-library";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+
+const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 interface Props {
   swatch: FrontendFabricSwatch | null;
@@ -15,15 +17,58 @@ interface Props {
 
 export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (swatch) {
+      triggerRef.current = document.activeElement as HTMLElement | null;
+    }
+  }, [swatch]);
+
+  useEffect(() => {
+    if (!swatch) return;
+    closeRef.current?.focus();
+  }, [swatch]);
+
+  const handleClose = useCallback(() => {
+    const el = triggerRef.current;
+    onClose();
+    requestAnimationFrame(() => el?.focus());
+  }, [onClose]);
 
   useEffect(() => {
     if (!swatch) return;
     function handleKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        e.preventDefault();
+        handleClose();
+      }
     }
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
-  }, [swatch, onClose]);
+  }, [swatch, handleClose]);
+
+  useEffect(() => {
+    if (!swatch || !drawerRef.current) return;
+    const drawer = drawerRef.current;
+    function handleTrap(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const focusable = drawer.querySelectorAll<HTMLElement>(FOCUSABLE);
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+    drawer.addEventListener("keydown", handleTrap);
+    return () => drawer.removeEventListener("keydown", handleTrap);
+  }, [swatch]);
 
   useEffect(() => {
     if (swatch) {
@@ -42,7 +87,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
     <div className="fixed inset-0 z-50 flex justify-end">
       <div
         className="absolute inset-0 bg-black/40"
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden="true"
       />
 
@@ -50,10 +95,12 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
         ref={drawerRef}
         className="relative w-full max-w-lg bg-white overflow-y-auto animate-[slide-in-right_300ms_ease-out]"
         role="dialog"
+        aria-modal="true"
         aria-label={`${swatch.name} Details`}
       >
         <button
-          onClick={onClose}
+          ref={closeRef}
+          onClick={handleClose}
           className="sticky top-0 right-0 z-10 float-right m-4 w-10 h-10 flex items-center justify-center bg-anthracite/5 hover:bg-anthracite/10 text-text-muted transition-colors"
           aria-label="Schließen"
         >
