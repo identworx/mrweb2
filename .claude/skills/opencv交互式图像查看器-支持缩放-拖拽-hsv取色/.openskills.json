@@ -1,0 +1,7 @@
+{
+  "source": "ECNU-ICALK/AutoSkill",
+  "sourceType": "git",
+  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
+  "subpath": "SkillBank/ConvSkill/chinese_gpt4_8_GLM4.7/opencv交互式图像查看器-支持缩放-拖拽-hsv取色",
+  "installedAt": "2026-06-23T12:32:49.640Z"
+}

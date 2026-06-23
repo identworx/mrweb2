@@ -1,0 +1,7 @@
+{
+  "source": "ECNU-ICALK/AutoSkill",
+  "sourceType": "git",
+  "repoUrl": "https://github.com/ECNU-ICALK/AutoSkill",
+  "subpath": "SkillBank/ConvSkill/chinese_gpt4_8/使用openpyxl对excel文件进行排序并保留表头",
+  "installedAt": "2026-06-23T12:32:49.612Z"
+}
