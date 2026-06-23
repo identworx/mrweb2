@@ -212,9 +212,9 @@ export default function Footer({
             {/* Navigation columns */}
             {footerColumns.map((column) => (
               <nav key={column.title} aria-label={column.title} className="lg:col-span-2">
-                <h4 className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
+                <p className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
                   {column.title}
-                </h4>
+                </p>
                 <ul className="space-y-2.5">
                   {column.links.map((link) => (
                     <li key={link.label}>
@@ -235,9 +235,9 @@ export default function Footer({
 
             {/* Contact column */}
             <div className="lg:col-span-3">
-              <h4 className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
+              <p className="font-heading text-white/80 text-[10px] font-semibold uppercase tracking-[0.2em] mb-5">
                 {resolvedContact.title}
-              </h4>
+              </p>
               <address className="not-italic space-y-1 mb-5">
                 <p className="font-body text-white/70 text-[13px] leading-[1.8]">
                   {resolvedContact.companyName}
