@@ -77,7 +77,7 @@ export default function FabricPatternCard({
                   alt={`${name} Stoffmuster`}
                   width={400}
                   height={300}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-500 motion-safe:hover:scale-105"
                 />
               </button>
             ) : (

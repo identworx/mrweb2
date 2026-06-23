@@ -24,7 +24,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
             src={swatch.swatchImageUrl}
             alt={`${swatch.name} Stoffmuster`}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
           />
         ) : swatch.colorHex ? (

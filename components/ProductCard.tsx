@@ -101,7 +101,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
             Produkt ansehen
           </span>
-          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+          <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
         </span>
       </div>
     </Link>

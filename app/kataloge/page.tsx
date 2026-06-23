@@ -161,7 +161,7 @@ export default async function KatalogePage() {
                     <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                       Ansehen
                     </span>
-                    <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="group-hover:translate-x-1 transition-transform duration-300" />
+                    <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
                 </Link>
                 </ScrollReveal>

@@ -87,7 +87,7 @@ export default function HeroSection({ icons = {} }: HeroSectionProps) {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-        <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent animate-pulse" />
+        <div className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent motion-safe:animate-pulse" />
       </div>
 
       {/* Side accent */}

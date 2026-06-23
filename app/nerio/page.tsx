@@ -660,7 +660,7 @@ export default async function NerioPage() {
                           src={card.imageUrl}
                           alt={card.imageAlt}
                           fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         />
                       </div>

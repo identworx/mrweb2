@@ -187,6 +187,10 @@ html {
 
 /* TipTap Rich Text Editor */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .btn-primary,
   .btn-outline,
   .btn-outline-white,

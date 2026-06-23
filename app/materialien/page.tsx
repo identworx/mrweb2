@@ -350,7 +350,7 @@ export default async function MaterialienPage() {
 
                           <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin">
                             <span>Stoffe ansehen</span>
-                            <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="group-hover:translate-x-1 transition-transform duration-300" />
+                            <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                           </div>
                         </Link>
                       </ScrollReveal>

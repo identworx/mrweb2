@@ -37,7 +37,7 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
                   src={swatch.swatchImageUrl}
                   alt={`${swatch.name} Stoffmuster`}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
                 />
               ) : swatch.colorHex ? (

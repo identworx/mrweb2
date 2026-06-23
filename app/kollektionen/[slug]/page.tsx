@@ -456,7 +456,7 @@ export default async function KollektionPage({ params }: PageProps) {
                           <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
                             Materialien entdecken
                           </span>
-                          <CmsIcon icon={icons["arrow-right"]} width={13} height={13} className="group-hover:translate-x-0.5 transition-transform duration-300" />
+                          <CmsIcon icon={icons["arrow-right"]} width={13} height={13} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
                         </Link>
                       </div>
                     </div>

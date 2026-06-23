@@ -245,7 +245,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             className="group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-300"
           >
             Startseite
-            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
+            <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-all duration-300" />
           </Link>
           {links.map((link, i) => (
             <Link
@@ -266,7 +266,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
                   </span>
                 )}
               </span>
-              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin group-hover:translate-x-0.5 transition-all duration-300" />
+              <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className="text-text-muted group-hover:text-pumpkin motion-safe:group-hover:translate-x-0.5 transition-all duration-300" />
             </Link>
           ))}
           <div className="mt-8 pt-6">
