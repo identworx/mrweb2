@@ -9,7 +9,6 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
-import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
 
@@ -141,15 +140,6 @@ export default async function KontaktPage() {
             </div>
           </div>
         </section>
-
-
-        <PageCta
-          variant="light"
-          title="Alle Details im Katalog"
-          description="Entdecken Sie alle Produkte, Stoffqualitäten und Kollektionen in unserem aktuellen Katalog."
-          primaryLabel="Katalog ansehen"
-          primaryHref="/kataloge"
-        />
       </main>
       <Footer {...layout.footer} />
     </>
