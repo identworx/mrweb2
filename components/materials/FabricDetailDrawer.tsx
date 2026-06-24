@@ -6,6 +6,8 @@ import Link from "next/link";
 import type { FrontendFabricSwatch } from "@/lib/cms/fabric-library";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
@@ -13,9 +15,10 @@ interface Props {
   swatch: FrontendFabricSwatch | null;
   onClose: () => void;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Props) {
+export default function FabricDetailDrawer({ swatch, onClose, icons = {}, locale = "de" }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
@@ -102,7 +105,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           ref={closeRef}
           onClick={handleClose}
           className="sticky top-0 right-0 z-10 float-right m-4 w-10 h-10 flex items-center justify-center bg-anthracite/5 hover:bg-anthracite/10 text-text-muted transition-colors"
-          aria-label="Schließen"
+          aria-label={locale === "en" ? "Close" : "Schließen"}
         >
           <CmsIcon icon={icons["ui-close"]} width={18} height={18} />
         </button>
@@ -111,7 +114,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           {swatch.swatchImageUrl ? (
             <Image
               src={swatch.swatchImageUrl}
-              alt={`${swatch.name} Stoffmuster`}
+              alt={locale === "en" ? `${swatch.name} fabric swatch` : `${swatch.name} Stoffmuster`}
               width={600}
               height={600}
               className="w-full h-full object-cover"
@@ -147,7 +150,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
               {swatch.patternType && (
                 <p className="font-body text-text-gray text-sm">
                   <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.1em] text-text-muted mr-2">
-                    Typ
+                    {locale === "en" ? "Type" : "Typ"}
                   </span>
                   {swatch.patternType}
                 </p>
@@ -167,7 +170,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           {swatch.availableProductTypes.length > 0 && (
             <div className="mt-6 pt-6 border-t border-black/[0.06]">
               <p className="font-heading text-[10px] font-semibold uppercase tracking-[0.15em] text-text-muted mb-3">
-                Verfügbar als
+                {locale === "en" ? "Available as" : "Verfügbar als"}
               </p>
               <div className="space-y-2">
                 {swatch.availableProductTypes.map((pt) => (
@@ -191,16 +194,16 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
 
           <div className="mt-8 space-y-3">
             <Link
-              href="/kontakt"
+              href={localizedHref("/kontakt", locale)}
               className="flex items-center justify-center gap-2 w-full py-3.5 bg-pumpkin-button text-white font-heading text-sm font-semibold uppercase tracking-[0.08em] hover:bg-burnt-orange transition-colors duration-300"
             >
-              Muster anfragen
+              {locale === "en" ? "Request samples" : "Muster anfragen"}
             </Link>
             <Link
-              href="/kataloge"
+              href={localizedHref("/kataloge", locale)}
               className="flex items-center justify-center gap-2 w-full py-3.5 border border-anthracite/20 text-anthracite font-heading text-sm font-semibold uppercase tracking-[0.08em] hover:border-anthracite/40 transition-colors duration-300"
             >
-              Katalog ansehen
+              {locale === "en" ? "View catalogue" : "Katalog ansehen"}
             </Link>
           </div>
         </div>

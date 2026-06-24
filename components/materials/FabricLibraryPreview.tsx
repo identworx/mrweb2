@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface Props {
   swatches: Array<{
@@ -17,10 +19,12 @@ interface Props {
   }>;
   icons?: Record<string, ResolvedIcon>;
   limit?: number;
+  locale?: Locale;
 }
 
-export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 }: Props) {
+export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10, locale = "de" }: Props) {
   const visible = swatches.slice(0, limit);
+  const fabricsHref = localizedHref("/materialien/stoffe-muster", locale);
 
   return (
     <div>
@@ -28,14 +32,14 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
         {visible.map((swatch) => (
           <Link
             key={swatch.id}
-            href="/materialien/stoffe-muster"
+            href={fabricsHref}
             className="group bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
           >
             <div className="aspect-square overflow-hidden bg-cream relative">
               {swatch.swatchImageUrl ? (
                 <Image
                   src={swatch.swatchImageUrl}
-                  alt={`${swatch.name} Stoffmuster`}
+                  alt={locale === "en" ? `${swatch.name} fabric swatch` : `${swatch.name} Stoffmuster`}
                   fill
                   className="object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
@@ -69,10 +73,10 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
 
       <div className="mt-8 text-center">
         <Link
-          href="/materialien/stoffe-muster"
+          href={fabricsHref}
           className="inline-flex items-center gap-2 font-heading text-pumpkin-accessible text-xs font-semibold uppercase tracking-[0.12em] hover:text-anthracite transition-colors duration-300"
         >
-          <span>Alle Stoffe & Muster ansehen</span>
+          <span>{locale === "en" ? "View all fabrics & swatches" : "Alle Stoffe & Muster ansehen"}</span>
           <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="motion-safe:group-hover:translate-x-0.5 transition-transform duration-300" />
         </Link>
       </div>

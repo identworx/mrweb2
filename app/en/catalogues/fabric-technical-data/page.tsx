@@ -70,6 +70,7 @@ export default async function FabricTechnicalDataPage() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (

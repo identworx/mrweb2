@@ -26,12 +26,35 @@ const staticRoutes: RouteMapping[] = [
   { de: "/neuigkeiten", en: "/en/news" },
 ];
 
+const dynamicPrefixes: { de: string; en: string }[] = [
+  { de: "/kollektionen/", en: "/en/collections/" },
+  { de: "/produkte/", en: "/en/products/" },
+  { de: "/produktkategorien/", en: "/en/product-categories/" },
+  { de: "/neuigkeiten/", en: "/en/news/" },
+];
+
 const dynamicRoutePatterns: { de: string; en: string }[] = [
   { de: "/kollektionen/[slug]", en: "/en/collections/[slug]" },
   { de: "/produkte/[slug]", en: "/en/products/[slug]" },
   { de: "/produktkategorien/[slug]", en: "/en/product-categories/[slug]" },
   { de: "/neuigkeiten/[slug]", en: "/en/news/[slug]" },
 ];
+
+export function localizedHref(dePath: string, locale: Locale): string {
+  if (locale === "de") return dePath;
+
+  for (const route of staticRoutes) {
+    if (dePath === route.de) return route.en;
+  }
+
+  for (const prefix of dynamicPrefixes) {
+    if (dePath.startsWith(prefix.de)) {
+      return prefix.en + dePath.slice(prefix.de.length);
+    }
+  }
+
+  return "/en" + dePath;
+}
 
 export function getAlternateRoute(
   currentPath: string,

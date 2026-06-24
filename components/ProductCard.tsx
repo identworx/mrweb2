@@ -2,6 +2,8 @@ import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import ProductImageFrame from "./products/ProductImageFrame";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface ProductCardProps {
   slug: string;
@@ -41,7 +43,7 @@ const collectionNames: Record<string, string> = {
   basic: "Basic",
 };
 
-export default function ProductCard({ product, icons = {} }: { product: ProductCardProps; icons?: Record<string, ResolvedIcon> }) {
+export default function ProductCard({ product, icons = {}, locale = "de" }: { product: ProductCardProps; icons?: Record<string, ResolvedIcon>; locale?: Locale }) {
   const displayCollection =
     product.collectionName || collectionNames[product.collectionSlug] || product.collectionSlug;
   const displayCategory =
@@ -49,7 +51,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
 
   return (
     <Link
-      href={`/produkte/${product.slug}`}
+      href={localizedHref(`/produkte/${product.slug}`, locale)}
       className="group block bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
     >
       <ProductImageFrame
@@ -99,7 +101,7 @@ export default function ProductCard({ product, icons = {} }: { product: ProductC
 
         <span className="inline-flex items-center gap-2 text-anthracite mt-3">
           <span className="font-heading text-[10px] font-semibold uppercase tracking-[0.12em]">
-            Produkt ansehen
+            {locale === "en" ? "View product" : "Produkt ansehen"}
           </span>
           <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
         </span>

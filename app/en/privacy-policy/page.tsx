@@ -60,6 +60,7 @@ export default async function PrivacyPolicyPage() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (

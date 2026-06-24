@@ -3,21 +3,25 @@ import Link from "next/link";
 import ProductImageFrame from "./products/ProductImageFrame";
 import CmsIcon from "@/components/cms/CmsIcon";
 import type { FrontendProduct } from "@/lib/cms/products";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface CollectionProductCardProps {
   product: FrontendProduct;
   collectionColors: string[];
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 export default function CollectionProductCard({
   product,
   collectionColors,
   icons = {},
+  locale = "de",
 }: CollectionProductCardProps) {
   return (
     <Link
-      href={`/produkte/${product.slug}`}
+      href={localizedHref(`/produkte/${product.slug}`, locale)}
       className="group flex flex-col h-full bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
     >
       <ProductImageFrame

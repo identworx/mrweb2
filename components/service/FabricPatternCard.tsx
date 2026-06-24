@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface PatternColor {
   name: string;
@@ -24,6 +26,7 @@ interface Props {
   availableCategories?: string[];
   categoryIcons: CategoryIcon[];
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 export default function FabricPatternCard({
@@ -33,6 +36,7 @@ export default function FabricPatternCard({
   availableCategories = [],
   categoryIcons,
   icons = {},
+  locale = "de",
 }: Props) {
   const [isFlipped, setIsFlipped] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -61,7 +65,7 @@ export default function FabricPatternCard({
               <button
                 onClick={() => setIsFlipped(true)}
                 className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/80 hover:bg-pumpkin hover:text-white text-text-muted transition-all duration-300"
-                aria-label="Verfügbare Produkte anzeigen"
+                aria-label={locale === "en" ? "Show available products" : "Verfügbare Produkte anzeigen"}
               >
                 <CmsIcon icon={icons["ui-flip"]} width={14} height={14} />
               </button>
@@ -74,7 +78,7 @@ export default function FabricPatternCard({
               >
                 <Image
                   src={thumbnailUrl}
-                  alt={`${name} Stoffmuster`}
+                  alt={locale === "en" ? `${name} fabric swatch` : `${name} Stoffmuster`}
                   width={400}
                   height={300}
                   className="w-full h-full object-cover transition-transform duration-500 motion-safe:hover:scale-105"
@@ -105,12 +109,12 @@ export default function FabricPatternCard({
                 ))}
               </div>
               <p className="font-accent text-text-muted text-[10px] tracking-[0.1em] uppercase mt-2">
-                {colors.length} {colors.length === 1 ? "Farbe" : "Farben"}
+                {colors.length} {locale === "en" ? (colors.length === 1 ? "colour" : "colours") : (colors.length === 1 ? "Farbe" : "Farben")}
                 {matchedCategories.length > 0 && (
                   <span className="text-text-muted">
                     {" · "}
                     {matchedCategories.length}{" "}
-                    {matchedCategories.length === 1 ? "Produkt" : "Produkte"}
+                    {locale === "en" ? (matchedCategories.length === 1 ? "product" : "products") : (matchedCategories.length === 1 ? "Produkt" : "Produkte")}
                   </span>
                 )}
               </p>
@@ -128,7 +132,7 @@ export default function FabricPatternCard({
             <button
               onClick={() => setIsFlipped(false)}
               className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 text-white/60 transition-all duration-300"
-              aria-label="Zurück zur Vorderseite"
+              aria-label={locale === "en" ? "Back to front" : "Zurück zur Vorderseite"}
             >
               <CmsIcon icon={icons["ui-close"]} width={14} height={14} />
             </button>
@@ -138,14 +142,14 @@ export default function FabricPatternCard({
                 {name}
               </p>
               <p className="font-accent text-white/70 text-[10px] tracking-[0.15em] uppercase mb-4">
-                Verfügbar als
+                {locale === "en" ? "Available as" : "Verfügbar als"}
               </p>
 
               <div className="grid grid-cols-3 gap-2 flex-1 content-start">
                 {matchedCategories.map((cat) => (
                   <Link
                     key={cat.categorySlug}
-                    href={`/produktkategorien/${cat.categorySlug}`}
+                    href={localizedHref(`/produktkategorien/${cat.categorySlug}`, locale)}
                     onClick={(e) => e.stopPropagation()}
                     className="flex flex-col items-center gap-1.5 p-2 bg-white/5 hover:bg-white/10 transition-colors duration-300"
                   >
@@ -180,13 +184,13 @@ export default function FabricPatternCard({
           <button
             onClick={() => dialogRef.current?.close()}
             className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/40 hover:bg-black/60 text-white transition-colors"
-            aria-label="Schließen"
+            aria-label={locale === "en" ? "Close" : "Schließen"}
           >
             <CmsIcon icon={icons["ui-close"]} width={16} height={16} />
           </button>
           <Image
             src={thumbnailUrl}
-            alt={`${name} Stoffmuster — Großansicht`}
+            alt={locale === "en" ? `${name} fabric swatch — full view` : `${name} Stoffmuster — Großansicht`}
             width={800}
             height={600}
             className="w-auto h-auto max-w-full max-h-[85vh] object-contain"

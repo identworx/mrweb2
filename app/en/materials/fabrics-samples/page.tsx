@@ -58,7 +58,7 @@ export default async function FabricsSamplesPage({
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <FabricLibrary data={fabricData} initialFamily={family} icons={icons} />
+            <FabricLibrary data={fabricData} initialFamily={family} icons={icons} locale="en" />
           </div>
         </section>
       </main>

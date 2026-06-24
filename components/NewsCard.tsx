@@ -2,6 +2,8 @@ import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import Image from "next/image";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface NewsCardProps {
   title: string;
@@ -12,6 +14,7 @@ interface NewsCardProps {
   imageUrl?: string | null;
   isPlaceholder?: boolean;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 export default function NewsCard({
@@ -23,16 +26,17 @@ export default function NewsCard({
   imageUrl,
   isPlaceholder = false,
   icons = {},
+  locale = "de",
 }: NewsCardProps) {
   return (
     <Link
-      href={`/neuigkeiten/${slug}`}
-      aria-label={`Weiterlesen: ${title}`}
+      href={localizedHref(`/neuigkeiten/${slug}`, locale)}
+      aria-label={locale === "en" ? `Read more: ${title}` : `Weiterlesen: ${title}`}
       className="group block bg-white transition-all duration-500 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] relative overflow-hidden"
     >
       {isPlaceholder && (
         <span className="absolute top-3 right-3 z-10 font-body text-[10px] text-text-muted italic">
-          (Platzhalter)
+          {locale === "en" ? "(Placeholder)" : "(Platzhalter)"}
         </span>
       )}
 
@@ -66,7 +70,7 @@ export default function NewsCard({
 
         <div className="mt-4 flex items-center gap-2 text-anthracite">
           <span className="font-heading text-[11px] font-semibold uppercase tracking-[0.12em]">
-            Weiterlesen
+            {locale === "en" ? "Read more" : "Weiterlesen"}
           </span>
           <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
         </div>

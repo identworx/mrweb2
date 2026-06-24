@@ -11,6 +11,8 @@ import CmsIcon from "@/components/cms/CmsIcon";
 import FabricSwatchCard from "./FabricSwatchCard";
 import FabricMatrixView from "./FabricMatrixView";
 import FabricDetailDrawer from "./FabricDetailDrawer";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 type ViewMode = "grid" | "matrix";
 const PAGE_SIZE = 30;
@@ -19,9 +21,10 @@ interface Props {
   data: FabricLibraryData;
   initialFamily?: string;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function FabricLibrary({ data, initialFamily, icons = {} }: Props) {
+export default function FabricLibrary({ data, initialFamily, icons = {}, locale = "de" }: Props) {
   const { families, swatches, productTypes } = data;
 
   const resolvedInitial =
@@ -108,7 +111,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
     return (
       <div className="text-center py-16">
         <p className="font-body text-text-muted text-base">
-          Noch keine Stoffe in der Bibliothek vorhanden.
+          {locale === "en" ? "No fabrics in the library yet." : "Noch keine Stoffe in der Bibliothek vorhanden."}
         </p>
       </div>
     );
@@ -138,7 +141,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                 : "bg-white text-anthracite border-anthracite/15 hover:border-anthracite/30"
             }`}
           >
-            Alle
+            {locale === "en" ? "All" : "Alle"}
           </button>
           {families.map((f) => (
             <button
@@ -169,8 +172,8 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                 setSearch(e.target.value);
                 setVisibleCount(PAGE_SIZE);
               }}
-              placeholder="Stoff suchen (Name, Artikelnummer…)"
-              aria-label="Stoffe durchsuchen"
+              placeholder={locale === "en" ? "Search fabric (name, article no.)" : "Stoff suchen (Name, Artikelnummer…)"}
+              aria-label={locale === "en" ? "Search fabrics" : "Stoffe durchsuchen"}
               className="w-full pl-10 pr-4 py-2.5 border border-anthracite/15 bg-white font-body text-sm text-anthracite placeholder:text-anthracite/30 focus:outline-none focus:border-anthracite/30 transition-colors"
             />
           </div>
@@ -181,10 +184,10 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
               setActiveProductFilter(e.target.value);
               setVisibleCount(PAGE_SIZE);
             }}
-            aria-label="Nach Produktart filtern"
+            aria-label={locale === "en" ? "Filter by product type" : "Nach Produktart filtern"}
             className="border border-anthracite/15 bg-white px-3 py-2.5 font-body text-sm text-anthracite focus:outline-none focus:border-anthracite/30 transition-colors"
           >
-            <option value="">Alle Produktarten</option>
+            <option value="">{locale === "en" ? "All product types" : "Alle Produktarten"}</option>
             {productTypes.map((pt) => (
               <option key={pt.slug} value={pt.slug}>
                 {pt.name}
@@ -201,7 +204,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                   ? "bg-anthracite text-white"
                   : "bg-white text-text-muted hover:text-anthracite"
               }`}
-              aria-label="Kachelansicht"
+              aria-label={locale === "en" ? "Grid view" : "Kachelansicht"}
             >
               <CmsIcon icon={icons["ui-grid"]} width={18} height={18} />
             </button>
@@ -213,7 +216,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                   ? "bg-anthracite text-white"
                   : "bg-white text-text-muted hover:text-anthracite"
               }`}
-              aria-label="Matrixansicht"
+              aria-label={locale === "en" ? "Matrix view" : "Matrixansicht"}
             >
               <CmsIcon icon={icons["ui-matrix"]} width={18} height={18} />
             </button>
@@ -231,10 +234,10 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
           )}
           {activeFamily === "nerio" && (
             <Link
-              href="/nerio"
+              href={localizedHref("/nerio", locale)}
               className="inline-flex items-center gap-1.5 mt-3 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-anthracite hover:text-pumpkin transition-colors duration-200"
             >
-              Mehr zur NERIO Materialstory
+              {locale === "en" ? "More about the NERIO material story" : "Mehr zur NERIO Materialstory"}
               <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="text-pumpkin" />
             </Link>
           )}
@@ -244,10 +247,10 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
       {/* Status bar */}
       <div className="flex items-center justify-between mb-6">
         <p className="font-accent text-text-muted text-[11px] tracking-[0.1em] uppercase">
-          {filtered.length} {filtered.length === 1 ? "Stoff" : "Stoffe"}
+          {filtered.length} {locale === "en" ? (filtered.length === 1 ? "fabric" : "fabrics") : (filtered.length === 1 ? "Stoff" : "Stoffe")}
           {viewMode === "grid" && filtered.length > visibleCount && (
             <span className="text-text-muted">
-              {" "}· {visibleCount} angezeigt
+              {" "}· {visibleCount} {locale === "en" ? "shown" : "angezeigt"}
             </span>
           )}
         </p>
@@ -257,7 +260,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
             onClick={clearFilters}
             className="font-accent text-anthracite hover:text-pumpkin text-[11px] tracking-[0.1em] uppercase transition-colors duration-200"
           >
-            Filter zurücksetzen
+            {locale === "en" ? "Clear filters" : "Filter zurücksetzen"}
           </button>
         )}
       </div>
@@ -266,14 +269,14 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
       {filtered.length === 0 ? (
         <div className="text-center py-12 bg-cream border border-black/[0.04]">
           <p className="font-body text-text-muted text-sm">
-            Keine Stoffe gefunden.
+            {locale === "en" ? "No fabrics found." : "Keine Stoffe gefunden."}
           </p>
           <button
             type="button"
             onClick={clearFilters}
             className="font-heading text-pumpkin-accessible text-xs font-semibold uppercase tracking-[0.1em] mt-3 hover:text-pumpkin/80 transition-colors"
           >
-            Filter zurücksetzen
+            {locale === "en" ? "Clear filters" : "Filter zurücksetzen"}
           </button>
         </div>
       ) : viewMode === "grid" ? (
@@ -295,7 +298,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
                 onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                 className="font-heading text-sm font-semibold uppercase tracking-[0.08em] px-8 py-3 border border-anthracite/20 text-anthracite hover:border-anthracite/40 transition-colors duration-300"
               >
-                Mehr anzeigen ({Math.min(PAGE_SIZE, filtered.length - visibleCount)} weitere)
+                {locale === "en" ? `Show more (${Math.min(PAGE_SIZE, filtered.length - visibleCount)} more)` : `Mehr anzeigen (${Math.min(PAGE_SIZE, filtered.length - visibleCount)} weitere)`}
               </button>
             </div>
           )}
@@ -314,6 +317,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
         swatch={selectedSwatch}
         onClose={() => setSelectedSwatch(null)}
         icons={icons}
+        locale={locale}
       />
     </div>
   );

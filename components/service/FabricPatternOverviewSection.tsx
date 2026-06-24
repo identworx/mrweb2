@@ -1,5 +1,6 @@
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
 import ScrollReveal from "@/components/ScrollReveal";
 import FabricPatternCard from "./FabricPatternCard";
 
@@ -32,10 +33,12 @@ export default function FabricPatternOverviewSection({
   section,
   className = "bg-white",
   icons = {},
+  locale = "de",
 }: {
   section: FrontendServiceSection;
   className?: string;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }) {
   const groups = Array.isArray(section.settings.groups)
     ? (section.settings.groups as PatternGroup[])
@@ -96,6 +99,7 @@ export default function FabricPatternOverviewSection({
                       availableCategories={pattern.availableCategories}
                       categoryIcons={categoryIcons}
                       icons={icons}
+                      locale={locale}
                     />
                   ))}
                 </div>

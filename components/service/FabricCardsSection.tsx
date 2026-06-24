@@ -1,4 +1,5 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
 import DataRow from "@/components/DataRow";
 
 interface FabricCard {
@@ -15,9 +16,11 @@ interface FabricCard {
 export default function FabricCardsSection({
   section,
   className = "bg-white",
+  locale = "de",
 }: {
   section: FrontendServiceSection;
   className?: string;
+  locale?: Locale;
 }) {
   const cards = Array.isArray(section.settings.cards)
     ? (section.settings.cards as FabricCard[])
@@ -58,10 +61,10 @@ export default function FabricCardsSection({
               )}
               <div className="space-y-3">
                 {card.material && <DataRow label="Material" value={card.material} />}
-                {card.weight && <DataRow label="Gewicht" value={card.weight} />}
-                {card.dyeing && <DataRow label="Färbung" value={card.dyeing} />}
-                {card.comfort && <DataRow label="Komfort" value={card.comfort} />}
-                {card.cushionThickness && <DataRow label="Auflagenstärke" value={card.cushionThickness} />}
+                {card.weight && <DataRow label={locale === "en" ? "Weight" : "Gewicht"} value={card.weight} />}
+                {card.dyeing && <DataRow label={locale === "en" ? "Dyeing" : "Färbung"} value={card.dyeing} />}
+                {card.comfort && <DataRow label={locale === "en" ? "Comfort" : "Komfort"} value={card.comfort} />}
+                {card.cushionThickness && <DataRow label={locale === "en" ? "Cushion Thickness" : "Auflagenstärke"} value={card.cushionThickness} />}
               </div>
               {card.description && (
                 <p className="font-body text-text-gray text-sm mt-4 italic">

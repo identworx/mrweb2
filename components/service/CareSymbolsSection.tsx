@@ -1,5 +1,6 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import type { ResolvedIcon } from "@/lib/cms/icons";
+import type { Locale } from "@/lib/i18n/config";
 import CmsIcon from "@/components/cms/CmsIcon";
 import CareCardPrint from "./CareCardPrint";
 
@@ -12,10 +13,12 @@ export default function CareSymbolsSection({
   section,
   className = "bg-white",
   icons = {},
+  locale = "de",
 }: {
   section: FrontendServiceSection;
   className?: string;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }) {
   const symbols = Array.isArray(section.settings.symbols)
     ? (section.settings.symbols as CareSymbol[])
@@ -44,7 +47,7 @@ export default function CareSymbolsSection({
             </figure>
           ))}
         </div>
-        <CareCardPrint icons={icons} />
+        <CareCardPrint icons={icons} locale={locale} />
       </div>
     </section>
   );

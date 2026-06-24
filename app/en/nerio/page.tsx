@@ -346,6 +346,7 @@ export default async function NerioPageEn() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (
@@ -671,7 +672,7 @@ export default async function NerioPageEn() {
                     <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
                       Current NERIO Fabrics
                     </h3>
-                    <FabricLibraryPreview swatches={nerioSwatches} icons={icons} limit={5} />
+                    <FabricLibraryPreview swatches={nerioSwatches} icons={icons} limit={5} locale="en" />
                   </div>
                 )}
 

@@ -395,6 +395,7 @@ export default async function CollectionPage({ params }: PageProps) {
                           <CollectionProductCard
                             product={product}
                             collectionColors={collection.moodColors}
+                            locale="en"
                           />
                         </ScrollReveal>
                       ))}

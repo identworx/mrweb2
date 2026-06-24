@@ -60,6 +60,7 @@ export default async function LegalNoticePage() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (

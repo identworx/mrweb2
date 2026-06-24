@@ -202,6 +202,7 @@ export default async function CollectionsPage() {
                   fabric={collection.fabric}
                   image={collection.cardImage}
                   alt={collection.cardAlt}
+                  locale="en"
                 />
               </ScrollReveal>
             ))}

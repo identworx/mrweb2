@@ -1,5 +1,6 @@
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import CareListSection from "./CareListSection";
 import FabricCardsSection from "./FabricCardsSection";
@@ -20,9 +21,10 @@ interface Props {
   section: FrontendServiceSection;
   background?: "white" | "cream";
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function ServiceSectionRenderer({ section, background = "white", icons = {} }: Props) {
+export default function ServiceSectionRenderer({ section, background = "white", icons = {}, locale = "de" }: Props) {
   const style = (section.settings.style as string) || "";
   const bg = background === "cream" ? "bg-cream" : "bg-white";
 
@@ -30,31 +32,31 @@ export default function ServiceSectionRenderer({ section, background = "white", 
     case "care-list":
       return <CareListSection section={section} className={bg} icons={icons} />;
     case "fabric-cards":
-      return <FabricCardsSection section={section} className={bg} />;
+      return <FabricCardsSection section={section} className={bg} locale={locale} />;
     case "comparison-table":
-      return <ComparisonTableSection section={section} className={bg} />;
+      return <ComparisonTableSection section={section} className={bg} locale={locale} />;
     case "highlight-cards":
       return <HighlightCardsSection section={section} className={bg} icons={icons} />;
     case "cross-link":
-      return <CrossLinkSection section={section} className={bg} icons={icons} />;
+      return <CrossLinkSection section={section} className={bg} icons={icons} locale={locale} />;
     case "intro-columns":
       return <IntroColumnsSection section={section} className={bg} />;
     case "numbered-steps":
       return <NumberedStepsSection section={section} className={bg} />;
     case "care-symbols":
-      return <CareSymbolsSection section={section} className={bg} icons={icons} />;
+      return <CareSymbolsSection section={section} className={bg} icons={icons} locale={locale} />;
     case "guarantee-hero":
       return <GuaranteeHeroSection section={section} />;
     case "process-chain":
       return <ProcessChainSection section={section} className={bg} icons={icons} />;
     case "fabric-pattern-overview":
-      return <FabricPatternOverviewSection section={section} className={bg} icons={icons} />;
+      return <FabricPatternOverviewSection section={section} className={bg} icons={icons} locale={locale} />;
     case "collection-benefits":
       return <CollectionBenefitsSection section={section} className={bg} icons={icons} />;
     case "collection-cta":
-      return <CollectionCtaSection section={section} />;
+      return <CollectionCtaSection section={section} locale={locale} />;
     case "cta":
-      return <ServiceCtaSection section={section} />;
+      return <ServiceCtaSection section={section} locale={locale} />;
     default:
       if (section.content) {
         return (

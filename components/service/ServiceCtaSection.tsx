@@ -1,14 +1,19 @@
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 
 export default function ServiceCtaSection({
   section,
+  locale = "de",
 }: {
   section: FrontendServiceSection;
+  locale?: Locale;
 }) {
-  const secondaryHref = (section.settings.secondaryHref as string) || "/kataloge";
-  const secondaryLabel = (section.settings.secondaryLabel as string) || "Zurück zu Kataloge";
+  const rawHref = (section.settings.secondaryHref as string) || "/kataloge";
+  const secondaryHref = localizedHref(rawHref, locale);
+  const secondaryLabel = (section.settings.secondaryLabel as string) || (locale === "en" ? "Back to Catalogues" : "Zurück zu Kataloge");
 
   return (
     <section className="section-padding bg-anthracite">
@@ -26,7 +31,7 @@ export default function ServiceCtaSection({
         )}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           {section.buttonHref && section.buttonLabel && (
-            <Link href={section.buttonHref} className="btn-primary">
+            <Link href={localizedHref(section.buttonHref, locale)} className="btn-primary">
               {section.buttonLabel}
             </Link>
           )}

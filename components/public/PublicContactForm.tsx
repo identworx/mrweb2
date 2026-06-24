@@ -3,28 +3,54 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import type { PublicForm, PublicFormField } from "@/lib/cms/forms";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-function validateField(field: PublicFormField, value: string | boolean): string {
+const validationMessages = {
+  de: {
+    consent: "Bitte stimme zu, um fortzufahren.",
+    email: "Bitte gib eine E-Mail-Adresse ein.",
+    phone: "Bitte gib eine Telefonnummer ein.",
+    select: "Bitte wähle eine Option.",
+    required: "Bitte fülle dieses Feld aus.",
+    invalidEmail: "Bitte gib eine gültige E-Mail-Adresse ein.",
+    submitting: "Wird gesendet...",
+    privacyLink: "Datenschutzerklärung",
+  },
+  en: {
+    consent: "Please accept to continue.",
+    email: "Please enter an email address.",
+    phone: "Please enter a phone number.",
+    select: "Please select an option.",
+    required: "Please fill in this field.",
+    invalidEmail: "Please enter a valid email address.",
+    submitting: "Sending...",
+    privacyLink: "Privacy Policy",
+  },
+} as const;
+
+function validateField(field: PublicFormField, value: string | boolean, locale: Locale = "de"): string {
+  const t = validationMessages[locale];
   if (field.type === "CONSENT") {
-    if (field.required && !value) return "Bitte stimme zu, um fortzufahren.";
+    if (field.required && !value) return t.consent;
     return "";
   }
   const str = typeof value === "string" ? value.trim() : "";
   if (field.required && !str) {
-    if (field.type === "EMAIL") return "Bitte gib eine E-Mail-Adresse ein.";
-    if (field.type === "PHONE") return "Bitte gib eine Telefonnummer ein.";
-    if (field.type === "SELECT") return "Bitte wähle eine Option.";
-    return "Bitte fülle dieses Feld aus.";
+    if (field.type === "EMAIL") return t.email;
+    if (field.type === "PHONE") return t.phone;
+    if (field.type === "SELECT") return t.select;
+    return t.required;
   }
   if (field.type === "EMAIL" && str && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str)) {
-    return "Bitte gib eine gültige E-Mail-Adresse ein.";
+    return t.invalidEmail;
   }
   return "";
 }
 
-export default function PublicContactForm({ form }: { form: PublicForm }) {
+export default function PublicContactForm({ form, locale = "de" }: { form: PublicForm; locale?: Locale }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -37,7 +63,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
 
   function handleFieldBlur(fieldDef: PublicFormField, value: string | boolean) {
     if (!fieldErrors[fieldDef.name]) return;
-    const err = validateField(fieldDef, value);
+    const err = validateField(fieldDef, value, locale);
     setFieldErrors((prev) => {
       if (err) return { ...prev, [fieldDef.name]: err };
       const next = { ...prev };
@@ -57,7 +83,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
       const val = field.type === "CONSENT"
         ? formData.get(field.name) === "on"
         : (formData.get(field.name) as string) ?? "";
-      const err = validateField(field, val);
+      const err = validateField(field, val, locale);
       if (err) errors[field.name] = err;
     }
     setFieldErrors(errors);
@@ -131,7 +157,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
       )}
 
       {form.fields.map((field) => (
-        <FormFieldInput key={field.name} field={field} error={fieldErrors[field.name]} onBlur={handleFieldBlur} />
+        <FormFieldInput key={field.name} field={field} error={fieldErrors[field.name]} onBlur={handleFieldBlur} locale={locale} />
       ))}
 
       {form.honeypotField && (
@@ -145,13 +171,13 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
         disabled={status === "submitting"}
         className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {status === "submitting" ? "Wird gesendet..." : form.submitLabel}
+        {status === "submitting" ? validationMessages[locale].submitting : form.submitLabel}
       </button>
     </form>
   );
 }
 
-function FormFieldInput({ field, error, onBlur }: { field: PublicForm["fields"][number]; error?: string; onBlur?: (field: PublicFormField, value: string | boolean) => void }) {
+function FormFieldInput({ field, error, onBlur, locale = "de" }: { field: PublicForm["fields"][number]; error?: string; onBlur?: (field: PublicFormField, value: string | boolean) => void; locale?: Locale }) {
   const isInvalid = error ? true : undefined;
   const describedBy = [
     error ? `${field.name}-error` : null,
@@ -183,8 +209,8 @@ function FormFieldInput({ field, error, onBlur }: { field: PublicForm["fields"][
             {field.helpText && (
               <>
                 {" "}
-                <Link href="/datenschutz" className="text-pumpkin-accessible hover:underline">
-                  Datenschutzerklärung
+                <Link href={localizedHref("/datenschutz", locale)} className="text-pumpkin-accessible hover:underline">
+                  {validationMessages[locale].privacyLink}
                 </Link>
               </>
             )}

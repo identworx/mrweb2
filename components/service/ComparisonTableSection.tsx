@@ -1,4 +1,5 @@
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
 
 interface ComparisonRow {
   property: string;
@@ -8,9 +9,11 @@ interface ComparisonRow {
 export default function ComparisonTableSection({
   section,
   className = "bg-cream",
+  locale = "de",
 }: {
   section: FrontendServiceSection;
   className?: string;
+  locale?: Locale;
 }) {
   const columns = Array.isArray(section.settings.columns)
     ? (section.settings.columns as string[])
@@ -43,7 +46,7 @@ export default function ComparisonTableSection({
             <thead>
               <tr className="bg-anthracite">
                 <th className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70">
-                  Eigenschaft
+                  {locale === "en" ? "Property" : "Eigenschaft"}
                 </th>
                 {columns.map((col) => (
                   <th key={col} className="px-5 py-4 text-left font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-white/70">

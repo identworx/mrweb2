@@ -95,6 +95,7 @@ export default async function CareWarrantyPage() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (
@@ -197,7 +198,7 @@ export default async function CareWarrantyPage() {
                     </figure>
                   ))}
                 </div>
-                <CareCardPrint icons={icons} />
+                <CareCardPrint icons={icons} locale="en" />
               </div>
             </section>
 

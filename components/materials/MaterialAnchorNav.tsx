@@ -2,21 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { Locale } from "@/lib/i18n/config";
 
 interface NavItem {
   label: string;
   href: string;
 }
 
-const SECTION_LINKS: NavItem[] = [
+const DE_LINKS: NavItem[] = [
   { label: "Übersicht", href: "/materialien" },
   { label: "Stoffe & Muster", href: "/materialien/stoffe-muster" },
   { label: "Technische Daten", href: "/materialien/technische-daten" },
-  // TODO: Materialdetailseiten — uncomment when routes exist
-  // { label: "Mackintosh®", href: "/materialien/mackintosh" },
-  // { label: "Mackintosh® Lite", href: "/materialien/mackintosh-lite" },
-  // { label: "NERIO / Oceana", href: "/materialien/nerio" },
-  // { label: "Basic", href: "/materialien/basic" },
+];
+
+const EN_LINKS: NavItem[] = [
+  { label: "Overview", href: "/en/materials" },
+  { label: "Fabrics & Swatches", href: "/en/materials/fabrics-samples" },
+  { label: "Technical Data", href: "/en/materials/technical-data" },
 ];
 
 const HEADER_OFFSET = 80;
@@ -26,10 +28,16 @@ interface AnchorItem {
   id: string;
 }
 
-const HUB_ANCHORS: AnchorItem[] = [
+const DE_HUB_ANCHORS: AnchorItem[] = [
   { label: "Technologie", id: "technologie" },
   { label: "Stofffamilien", id: "stofffamilien" },
   { label: "Nachhaltigkeit", id: "nachhaltigkeit" },
+];
+
+const EN_HUB_ANCHORS: AnchorItem[] = [
+  { label: "Technology", id: "technologie" },
+  { label: "Fabric Families", id: "stofffamilien" },
+  { label: "Sustainability", id: "nachhaltigkeit" },
 ];
 
 function scrollToAnchor(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
@@ -40,18 +48,20 @@ function scrollToAnchor(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
   window.scrollTo({ top: y, behavior: "smooth" });
 }
 
-export default function MaterialAnchorNav() {
+export default function MaterialAnchorNav({ locale = "de" }: { locale?: Locale }) {
   const pathname = usePathname();
-  const isHub = pathname === "/materialien";
+  const sectionLinks = locale === "en" ? EN_LINKS : DE_LINKS;
+  const hubAnchors = locale === "en" ? EN_HUB_ANCHORS : DE_HUB_ANCHORS;
+  const isHub = pathname === "/materialien" || pathname === "/en/materials";
 
   return (
     <nav
-      aria-label="Materialien-Bereichsnavigation"
+      aria-label={locale === "en" ? "Materials section navigation" : "Materialien-Bereichsnavigation"}
       className="bg-white border-b border-anthracite/10"
     >
       <div className="mx-auto max-w-[1400px] px-5 md:px-10">
         <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-hide flex-nowrap py-0 -mx-1">
-          {SECTION_LINKS.map((item) => {
+          {sectionLinks.map((item) => {
             const isActive = item.href === pathname;
 
             return (
@@ -69,10 +79,10 @@ export default function MaterialAnchorNav() {
             );
           })}
 
-          {isHub && HUB_ANCHORS.length > 0 && (
+          {isHub && hubAnchors.length > 0 && (
             <>
               <span className="flex-shrink-0 w-px h-4 bg-anthracite/10 mx-2" aria-hidden="true" />
-              {HUB_ANCHORS.map((anchor) => (
+              {hubAnchors.map((anchor) => (
                 <a
                   key={anchor.id}
                   href={`#${anchor.id}`}

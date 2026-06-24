@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
-import MeasurementNav from "@/components/measurements/MeasurementNav";
+import MeasurementNavEn from "@/components/measurements/MeasurementNavEn";
 import MeasurementImageCard from "@/components/measurements/MeasurementImageCard";
 import BenchMeasurementCard from "@/components/measurements/BenchMeasurementCard";
 import MaterialQualityBox from "@/components/measurements/MaterialQualityBox";
@@ -11,7 +11,7 @@ import CustomSizeCta from "@/components/measurements/CustomSizeCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getIconSlots } from "@/lib/cms/icons";
 import { getPageHeroData } from "@/lib/cms/page-hero";
-import { getPublicMeasurements, measurementGroups } from "@/lib/cms/measurements";
+import { getPublicMeasurements } from "@/lib/cms/measurements";
 import PageCta from "@/components/PageCta";
 
 export const revalidate = 60;
@@ -71,7 +71,7 @@ export default async function ProductDimensionsPage() {
                 </p>
               </div>
             </div>
-            <MeasurementNav />
+            <MeasurementNavEn />
           </div>
         </section>
 
@@ -81,7 +81,7 @@ export default async function ProductDimensionsPage() {
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
               <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
-                {measurementGroups[0].title}
+                Cushions & Pads
               </p>
             </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
@@ -161,8 +161,8 @@ export default async function ProductDimensionsPage() {
               id="massanfertigung"
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              <MaterialQualityBox icons={icons} />
-              <CustomSizeCta icons={icons} />
+              <MaterialQualityBox icons={icons} locale="en" />
+              <CustomSizeCta icons={icons} locale="en" />
             </div>
           </div>
         </section>

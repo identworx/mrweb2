@@ -1,6 +1,8 @@
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import CmsIcon from "@/components/cms/CmsIcon";
 
@@ -8,10 +10,12 @@ export default function CrossLinkSection({
   section,
   className = "bg-cream",
   icons = {},
+  locale = "de",
 }: {
   section: FrontendServiceSection;
   className?: string;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }) {
   return (
     <section className={`section-padding ${className}`}>
@@ -30,7 +34,7 @@ export default function CrossLinkSection({
           )}
           {section.buttonHref && section.buttonLabel && (
             <Link
-              href={section.buttonHref}
+              href={localizedHref(section.buttonHref, locale)}
               className="inline-flex items-center gap-3 text-pumpkin-accessible group"
             >
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">

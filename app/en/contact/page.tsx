@@ -142,7 +142,7 @@ export default async function ContactPage() {
                     </p>
                   </div>
                 ) : displayForm ? (
-                  <PublicContactForm form={displayForm} />
+                  <PublicContactForm form={displayForm} locale="en" />
                 ) : null}
               </div>
             </div>

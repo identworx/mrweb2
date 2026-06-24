@@ -119,6 +119,7 @@ export default async function MaterialsPage() {
               section={section}
               background={i % 2 === 0 ? "white" : "cream"}
               icons={icons}
+              locale="en"
             />
           ))
         ) : (
@@ -428,7 +429,7 @@ export default async function MaterialsPage() {
                   Browse our complete fabric library — filter by fabric family, product type, or search by fabric name and article number.
                 </p>
 
-                <FabricLibraryPreview swatches={previewSwatches} icons={icons} />
+                <FabricLibraryPreview swatches={previewSwatches} icons={icons} locale="en" />
               </div>
             </section>
 

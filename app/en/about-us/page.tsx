@@ -155,7 +155,7 @@ export default async function AboutUsPage() {
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              Oyten bei Bremen
+              Oyten near Bremen
             </h2>
 
             <ScrollReveal>
@@ -170,7 +170,7 @@ export default async function AboutUsPage() {
                 </div>
                 <div>
                   <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                    seit 2021
+                    since 2021
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
                     at the location
@@ -178,7 +178,7 @@ export default async function AboutUsPage() {
                 </div>
                 <div>
                   <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                    2–4 Tage
+                    2–4 days
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
                     Delivery DACH

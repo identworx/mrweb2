@@ -1,14 +1,19 @@
 import Link from "next/link";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function CollectionCtaSection({
   section,
+  locale = "de",
 }: {
   section: FrontendServiceSection;
+  locale?: Locale;
 }) {
-  const secondaryHref = (section.settings.secondaryHref as string) || "/kataloge";
-  const secondaryLabel = (section.settings.secondaryLabel as string) || "Kataloge ansehen";
+  const rawHref = (section.settings.secondaryHref as string) || "/kataloge";
+  const secondaryHref = localizedHref(rawHref, locale);
+  const secondaryLabel = (section.settings.secondaryLabel as string) || (locale === "en" ? "View catalogues" : "Kataloge ansehen");
 
   return (
     <section className="relative py-20 md:py-28 bg-cream overflow-hidden">
@@ -40,7 +45,7 @@ export default function CollectionCtaSection({
           )}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {section.buttonHref && section.buttonLabel && (
-              <Link href={section.buttonHref} className="btn-primary">
+              <Link href={localizedHref(section.buttonHref, locale)} className="btn-primary">
                 {section.buttonLabel}
               </Link>
             )}

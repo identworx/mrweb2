@@ -57,6 +57,7 @@ export default async function NewsPage() {
                     description={item.description}
                     slug={item.slug}
                     imageUrl={item.imageUrl}
+                    locale="en"
                   />
                 ))}
               </div>
