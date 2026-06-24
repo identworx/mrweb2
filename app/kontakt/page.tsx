@@ -49,6 +49,13 @@ export default async function KontaktPage() {
   const isInactive = status === "inactive";
   const displayForm = form || (isInactive ? null : FALLBACK_FORM);
 
+  const companyName = layout.footer.companyName || "Mosaroma Industries GmbH";
+  const addressLine1 = layout.footer.addressLine1 || "Rudolf-Diesel-Str. 11–13";
+  const addressLine2 = layout.footer.addressLine2 || null;
+  const postalCity = layout.footer.postalCity || "28876 Oyten";
+  const country = layout.footer.country || "Deutschland";
+  const email = layout.footer.email || layout.siteSettings.contactEmail || "info@mosaroma.de";
+
   return (
     <>
       <Header {...layout.header} />
@@ -75,16 +82,17 @@ export default async function KontaktPage() {
                 </div>
 
                 <h2 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight mb-8">
-                  Mosaroma Industries GmbH
+                  {companyName}
                 </h2>
 
                 <div className="space-y-4 mb-8">
                   <p className="font-body text-text-gray text-base leading-[1.8]">
-                    Rudolf-Diesel-Str. 11–13
+                    {addressLine1}
+                    {addressLine2 && (<><br />{addressLine2}</>)}
                     <br />
-                    28876 Oyten
+                    {postalCity}
                     <br />
-                    Deutschland
+                    {country}
                   </p>
                 </div>
 
@@ -92,10 +100,10 @@ export default async function KontaktPage() {
                   <div className="flex items-center gap-3">
                     <CmsIcon icon={icons["contact-email"]} width={16} height={16} className="text-pumpkin flex-shrink-0" />
                     <a
-                      href="mailto:info@mosaroma.de"
+                      href={`mailto:${email}`}
                       className="font-body text-anthracite text-sm hover:text-pumpkin transition-colors duration-300"
                     >
-                      info@mosaroma.de
+                      {email}
                     </a>
                   </div>
                   <div className="flex items-center gap-3">
