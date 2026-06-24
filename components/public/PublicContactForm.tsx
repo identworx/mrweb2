@@ -2,13 +2,32 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import type { PublicForm } from "@/lib/cms/forms";
+import type { PublicForm, PublicFormField } from "@/lib/cms/forms";
 
 type Status = "idle" | "submitting" | "success" | "error";
+
+function validateField(field: PublicFormField, value: string | boolean): string {
+  if (field.type === "CONSENT") {
+    if (field.required && !value) return "Bitte stimme zu, um fortzufahren.";
+    return "";
+  }
+  const str = typeof value === "string" ? value.trim() : "";
+  if (field.required && !str) {
+    if (field.type === "EMAIL") return "Bitte gib eine E-Mail-Adresse ein.";
+    if (field.type === "PHONE") return "Bitte gib eine Telefonnummer ein.";
+    if (field.type === "SELECT") return "Bitte wähle eine Option.";
+    return "Bitte fülle dieses Feld aus.";
+  }
+  if (field.type === "EMAIL" && str && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str)) {
+    return "Bitte gib eine gültige E-Mail-Adresse ein.";
+  }
+  return "";
+}
 
 export default function PublicContactForm({ form }: { form: PublicForm }) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const formRef = useRef<HTMLFormElement>(null);
   const loadedAt = useRef(0);
 
@@ -16,12 +35,44 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
     loadedAt.current = Date.now();
   }, []);
 
+  function handleFieldBlur(fieldDef: PublicFormField, value: string | boolean) {
+    if (!fieldErrors[fieldDef.name]) return;
+    const err = validateField(fieldDef, value);
+    setFieldErrors((prev) => {
+      if (err) return { ...prev, [fieldDef.name]: err };
+      const next = { ...prev };
+      delete next[fieldDef.name];
+      return next;
+    });
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("submitting");
     setErrorMsg("");
 
     const formData = new FormData(e.currentTarget);
+
+    const errors: Record<string, string> = {};
+    for (const field of form.fields) {
+      const val = field.type === "CONSENT"
+        ? formData.get(field.name) === "on"
+        : (formData.get(field.name) as string) ?? "";
+      const err = validateField(field, val);
+      if (err) errors[field.name] = err;
+    }
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      const firstField = form.fields.find((f) => errors[f.name]);
+      if (firstField) {
+        const el = e.currentTarget.elements.namedItem(firstField.name);
+        if (el instanceof HTMLElement) el.focus();
+      }
+      return;
+    }
+
+    setStatus("submitting");
+
     const payload: Record<string, unknown> = {};
 
     for (const field of form.fields) {
@@ -53,6 +104,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
       }
 
       setStatus("success");
+      setFieldErrors({});
       formRef.current?.reset();
     } catch {
       setErrorMsg(form.errorMessage);
@@ -79,7 +131,7 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
       )}
 
       {form.fields.map((field) => (
-        <FormFieldInput key={field.name} field={field} hasError={status === "error"} />
+        <FormFieldInput key={field.name} field={field} error={fieldErrors[field.name]} onBlur={handleFieldBlur} />
       ))}
 
       {form.honeypotField && (
@@ -99,36 +151,48 @@ export default function PublicContactForm({ form }: { form: PublicForm }) {
   );
 }
 
-function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][number]; hasError?: boolean }) {
-  const isInvalid = hasError && field.required ? true : undefined;
+function FormFieldInput({ field, error, onBlur }: { field: PublicForm["fields"][number]; error?: string; onBlur?: (field: PublicFormField, value: string | boolean) => void }) {
+  const isInvalid = error ? true : undefined;
+  const describedBy = [
+    error ? `${field.name}-error` : null,
+    field.helpText ? `${field.name}-help` : null,
+  ].filter(Boolean).join(" ") || undefined;
   const inputClasses =
     "w-full font-body text-sm text-anthracite bg-light-gray border-0 px-5 py-3.5 placeholder:text-text-gray/40 focus:outline-none focus:ring-2 focus:ring-pumpkin/30 transition-all duration-300";
+  const errorRing = error ? " ring-1 ring-red-400" : "";
   const labelClasses =
     "block font-heading text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted mb-2";
 
   if (field.type === "CONSENT") {
     return (
-      <div className="flex items-start gap-3">
-        <input
-          type="checkbox"
-          id={field.name}
-          name={field.name}
-          required={field.required}
-          aria-invalid={isInvalid}
-          className="mt-1 rounded border-gray-300 text-pumpkin-accessible focus:ring-pumpkin/50"
-        />
-        <label htmlFor={field.name} className="font-body text-sm text-text-gray leading-relaxed">
-          {field.label}
-          {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
-          {field.helpText && (
-            <>
-              {" "}
-              <Link href="/datenschutz" className="text-pumpkin-accessible hover:underline">
-                Datenschutzerklärung
-              </Link>
-            </>
-          )}
-        </label>
+      <div>
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id={field.name}
+            name={field.name}
+            required={field.required}
+            aria-invalid={isInvalid}
+            aria-describedby={error ? `${field.name}-error` : undefined}
+            onBlur={(e) => onBlur?.(field, e.target.checked)}
+            className="mt-1 rounded border-gray-300 text-pumpkin-accessible focus:ring-pumpkin/50"
+          />
+          <label htmlFor={field.name} className="font-body text-sm text-text-gray leading-relaxed">
+            {field.label}
+            {field.required && <span className="text-pumpkin-accessible ml-0.5">*</span>}
+            {field.helpText && (
+              <>
+                {" "}
+                <Link href="/datenschutz" className="text-pumpkin-accessible hover:underline">
+                  Datenschutzerklärung
+                </Link>
+              </>
+            )}
+          </label>
+        </div>
+        {error && (
+          <p id={`${field.name}-error`} className="font-body text-xs text-red-600 mt-1">{error}</p>
+        )}
       </div>
     );
   }
@@ -146,11 +210,15 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           rows={6}
           required={field.required}
           aria-invalid={isInvalid}
-          aria-describedby={field.helpText ? `${field.name}-help` : undefined}
+          aria-describedby={describedBy}
+          onBlur={(e) => onBlur?.(field, e.target.value)}
           placeholder={field.placeholder ?? undefined}
           maxLength={5000}
-          className={`${inputClasses} resize-vertical`}
+          className={`${inputClasses}${errorRing} resize-vertical`}
         />
+        {error && (
+          <p id={`${field.name}-error`} className="font-body text-xs text-red-600 mt-1">{error}</p>
+        )}
         {field.helpText && (
           <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
@@ -171,8 +239,9 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
           name={field.name}
           required={field.required}
           aria-invalid={isInvalid}
-          aria-describedby={field.helpText ? `${field.name}-help` : undefined}
-          className={inputClasses}
+          aria-describedby={describedBy}
+          onBlur={(e) => onBlur?.(field, e.target.value)}
+          className={`${inputClasses}${errorRing}`}
         >
           <option value="">{field.placeholder || "Bitte wählen"}</option>
           {options.map((opt) => (
@@ -181,6 +250,9 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
             </option>
           ))}
         </select>
+        {error && (
+          <p id={`${field.name}-error`} className="font-body text-xs text-red-600 mt-1">{error}</p>
+        )}
         {field.helpText && (
           <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
         )}
@@ -207,11 +279,15 @@ function FormFieldInput({ field, hasError }: { field: PublicForm["fields"][numbe
         type={inputType}
         required={field.required}
         aria-invalid={isInvalid}
-        aria-describedby={field.helpText ? `${field.name}-help` : undefined}
+        aria-describedby={describedBy}
+        onBlur={(e) => onBlur?.(field, e.target.value)}
         placeholder={field.placeholder ?? undefined}
         maxLength={1000}
-        className={inputClasses}
+        className={`${inputClasses}${errorRing}`}
       />
+      {error && (
+        <p id={`${field.name}-error`} className="font-body text-xs text-red-600 mt-1">{error}</p>
+      )}
       {field.helpText && (
         <p id={`${field.name}-help`} className="font-body text-xs text-text-muted mt-1">{field.helpText}</p>
       )}
