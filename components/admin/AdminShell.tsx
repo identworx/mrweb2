@@ -158,7 +158,7 @@ export default function AdminShell({
             onClick={handleLogout}
             className="text-gray-400 hover:text-white text-xs px-2 py-1 rounded hover:bg-gray-800 transition-colors"
           >
-            Logout
+            Abmelden
           </button>
         </div>
       </div>

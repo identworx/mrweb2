@@ -195,6 +195,7 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
                 </option>
               ))}
             </select>
+            <p className="text-xs text-gray-400 mt-1">Nur veröffentlichte Inhalte sind öffentlich sichtbar.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Typ</label>

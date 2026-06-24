@@ -168,6 +168,7 @@ export default function ProductEditForm({
                 </option>
               ))}
             </select>
+            <p className="text-xs text-gray-400 mt-1">Nur veröffentlichte Inhalte sind öffentlich sichtbar.</p>
           </div>
         </div>
 

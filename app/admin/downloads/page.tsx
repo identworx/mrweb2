@@ -43,6 +43,9 @@ export default async function DownloadsListPage({
           <p className="text-sm text-gray-500 mt-1">
             {downloads.length} Downloads verwalten und bearbeiten.
           </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Downloads vom Typ Katalog erscheinen automatisch auf der öffentlichen Katalogseite.
+          </p>
         </div>
         <Link
           href="/admin/downloads/new"
