@@ -4,6 +4,9 @@ import { footerData } from "@/lib/mosaroma/footer";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import CookieSettingsButton from "@/components/consent/CookieSettingsButton";
+import type { Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { getFooterLegalLinks } from "@/lib/i18n/navigation";
 
 export interface FooterNavColumn {
   title: string;
@@ -38,6 +41,7 @@ export interface FooterProps {
   contactButtonHref?: string | null;
   bottomNote?: string | null;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 const CTA_DEFAULTS = {
@@ -89,11 +93,13 @@ export default function Footer({
   contactButtonHref,
   bottomNote,
   icons = {},
+  locale = "de",
 }: FooterProps) {
+  const t = getDictionary(locale);
   const brandDescription =
     description || footerData.brand.description;
   const copyright =
-    copyrightText || `© ${new Date().getFullYear()} MOSAROMA GmbH. Alle Rechte vorbehalten.`;
+    copyrightText || `© ${new Date().getFullYear()} MOSAROMA GmbH. ${t.footer.copyright}`;
   const footerColumns: FooterNavColumn[] =
     columns && columns.length > 0
       ? columns
@@ -104,22 +110,37 @@ export default function Footer({
   const legal: { label: string; href: string; target?: string }[] =
     legalLinks && legalLinks.length > 0
       ? legalLinks
-      : footerData.legal.map((l) => ({ label: l.label, href: l.href }));
+      : locale === "en"
+        ? getFooterLegalLinks("en")
+        : footerData.legal.map((l) => ({ label: l.label, href: l.href }));
   const socials = socialLinks && socialLinks.length > 0 ? socialLinks : null;
 
   const showCta = ctaEnabled === true;
 
+  const contactHref = locale === "en" ? "/en/contact" : "/kontakt";
+  const catalogueHref = locale === "en" ? "/en/catalogues" : "/kataloge";
+
+  const resolvedCta = {
+    eyebrow: ctaEyebrow || (locale === "en" ? t.footer.ctaEyebrow : CTA_DEFAULTS.eyebrow),
+    title: ctaTitle || (locale === "en" ? t.footer.ctaTitle : CTA_DEFAULTS.title),
+    text: ctaText || (locale === "en" ? t.footer.ctaText : CTA_DEFAULTS.text),
+    primaryLabel: ctaPrimaryLabel || (locale === "en" ? t.footer.ctaPrimary : CTA_DEFAULTS.primaryLabel),
+    primaryHref: ctaPrimaryHref || contactHref,
+    secondaryLabel: ctaSecondaryLabel || (locale === "en" ? t.footer.ctaSecondary : CTA_DEFAULTS.secondaryLabel),
+    secondaryHref: ctaSecondaryHref || catalogueHref,
+  };
+
   const resolvedContact = {
-    title: contactTitle || CONTACT_DEFAULTS.title,
+    title: contactTitle || (locale === "en" ? t.footer.contactTitle : CONTACT_DEFAULTS.title),
     companyName: companyName || CONTACT_DEFAULTS.companyName,
     addressLine1: addressLine1 || CONTACT_DEFAULTS.addressLine1,
     addressLine2: addressLine2 || null,
     postalCity: postalCity || CONTACT_DEFAULTS.postalCity,
-    country: country || CONTACT_DEFAULTS.country,
+    country: country || (locale === "en" ? t.common.country : CONTACT_DEFAULTS.country),
     email: email || CONTACT_DEFAULTS.email,
     phone: phone || null,
-    buttonLabel: contactButtonLabel || CONTACT_DEFAULTS.buttonLabel,
-    buttonHref: contactButtonHref || CONTACT_DEFAULTS.buttonHref,
+    buttonLabel: contactButtonLabel || (locale === "en" ? t.footer.contactButton : CONTACT_DEFAULTS.buttonLabel),
+    buttonHref: contactButtonHref || contactHref,
   };
 
   return (
@@ -138,27 +159,27 @@ export default function Footer({
           <div className="relative mx-auto max-w-[1400px] px-6 md:px-10 py-16 md:py-20">
             <div className="max-w-2xl mx-auto text-center">
               <p className="font-accent text-white/70 text-[10px] tracking-[0.25em] uppercase mb-4">
-                {ctaEyebrow || CTA_DEFAULTS.eyebrow}
+                {resolvedCta.eyebrow}
               </p>
               <h2 className="font-heading text-white text-xl md:text-2xl font-bold tracking-tight leading-tight mb-4">
-                {ctaTitle || CTA_DEFAULTS.title}
+                {resolvedCta.title}
               </h2>
               <p className="font-body text-white/70 text-sm leading-[1.8] mb-8 max-w-lg mx-auto">
-                {ctaText || CTA_DEFAULTS.text}
+                {resolvedCta.text}
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Link
-                  href={ctaPrimaryHref || CTA_DEFAULTS.primaryHref}
+                  href={resolvedCta.primaryHref}
                   className="btn-primary"
                 >
-                  {ctaPrimaryLabel || CTA_DEFAULTS.primaryLabel}
+                  {resolvedCta.primaryLabel}
                 </Link>
-                {(ctaSecondaryLabel || CTA_DEFAULTS.secondaryLabel) && (
+                {resolvedCta.secondaryLabel && (
                   <Link
-                    href={ctaSecondaryHref || CTA_DEFAULTS.secondaryHref}
+                    href={resolvedCta.secondaryHref}
                     className="btn-outline-white"
                   >
-                    {ctaSecondaryLabel || CTA_DEFAULTS.secondaryLabel}
+                    {resolvedCta.secondaryLabel}
                   </Link>
                 )}
               </div>

@@ -7,6 +7,10 @@ import Image from "next/image";
 import { mainNavLinks } from "@/lib/mosaroma/navigation";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import type { Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { getNavLinks } from "@/lib/i18n/navigation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export interface HeaderNavItem {
   label: string;
@@ -21,6 +25,7 @@ interface HeaderProps {
   logoUrl?: string | null;
   siteName?: string | null;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 const BADGE_VARIANTS: Record<string, string> = {
@@ -39,22 +44,30 @@ function isLinkActive(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export default function Header({ navItems, logoUrl, siteName, icons = {} }: HeaderProps) {
+export default function Header({ navItems, logoUrl, siteName, icons = {}, locale = "de" }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const t = getDictionary(locale);
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
     toggleRef.current?.focus();
   }, []);
 
+  const fallbackLinks = locale === "en"
+    ? getNavLinks("en").map((l) => ({ label: l.label, href: l.href }))
+    : mainNavLinks.map((l) => ({ label: l.label, href: l.href }));
+
   const links: HeaderNavItem[] =
     navItems && navItems.length > 0
       ? navItems
-      : mainNavLinks.map((l) => ({ label: l.label, href: l.href }));
+      : fallbackLinks;
+
+  const homeHref = locale === "en" ? "/en" : "/";
+  const contactHref = locale === "en" ? "/en/contact" : "/kontakt";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -118,7 +131,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
         href="#main"
         className="fixed left-3 -top-20 z-[80] px-3 py-2 bg-anthracite text-white font-heading text-[10px] font-semibold uppercase tracking-[0.12em] shadow-lg transition-all duration-200 focus:top-3 focus:outline-none focus:ring-2 focus:ring-pumpkin"
       >
-        Zum Inhalt springen
+        {t.header.skipToContent}
       </a>
       <header
       className={`fixed top-0 left-0 right-0 z-50 motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
@@ -144,7 +157,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
         <div className={`flex items-center justify-between motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out ${
           scrolled ? "h-[68px] md:h-[76px]" : "h-[88px] md:h-[108px]"
         }`}>
-          <Link href="/" className="flex-shrink-0">
+          <Link href={homeHref} className="flex-shrink-0">
             <Image
               src={logoUrl || "/mosaroma_logo.png"}
               alt={logoAlt}
@@ -159,7 +172,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             />
           </Link>
 
-          <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-8 xl:gap-10">
+          <nav aria-label={locale === "en" ? "Main navigation" : "Hauptnavigation"} className="hidden lg:flex items-center gap-8 xl:gap-10">
             {links.map((link) => {
               const active = isLinkActive(link.href, pathname);
               return (
@@ -196,9 +209,10 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
+            <LanguageSwitcher locale={locale} scrolled={scrolled} />
             <Link
-              href="/kontakt"
-              aria-current={isLinkActive("/kontakt", pathname) ? "page" : undefined}
+              href={contactHref}
+              aria-current={isLinkActive(contactHref, pathname) ? "page" : undefined}
               className={`font-heading text-[11px] font-semibold uppercase tracking-[0.12em] px-5 py-2.5 transition-all duration-300 ${
                 scrolled
                   ? isLinkActive("/kontakt", pathname)
@@ -210,13 +224,13 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
               }`}
               style={scrolled ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,0.3)" }}
             >
-              Kontakt
+              {t.header.contactCta}
             </Link>
           </div>
 
           <button
             ref={toggleRef}
-            aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
+            aria-label={mobileOpen ? t.header.closeMenu : t.header.openMenu}
             aria-expanded={mobileOpen}
             aria-controls="mobile-menu"
             className={`lg:hidden p-3.5 -mr-1 transition-all duration-300 ${
@@ -258,18 +272,18 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             : "opacity-0 pointer-events-none -translate-y-2"
         }`}
       >
-        <nav aria-label="Mobile Navigation" className="flex flex-col px-8 pt-10 gap-0">
+        <nav aria-label={locale === "en" ? "Mobile navigation" : "Mobile Navigation"} className="flex flex-col px-8 pt-10 gap-0">
           <Link
-            href="/"
+            href={homeHref}
             onClick={closeMobile}
-            aria-current={isLinkActive("/", pathname) ? "page" : undefined}
+            aria-current={isLinkActive(homeHref, pathname) ? "page" : undefined}
             className={`group flex items-center justify-between py-4.5 border-b border-light-gray font-heading text-[15px] font-semibold uppercase tracking-[0.1em] transition-colors duration-300 ${
-              isLinkActive("/", pathname)
+              isLinkActive(homeHref, pathname)
                 ? "text-pumpkin"
                 : "text-anthracite hover:text-pumpkin"
             }`}
           >
-            Startseite
+            {t.header.home}
             <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className={`motion-safe:group-hover:translate-x-0.5 transition-all duration-300 ${
               isLinkActive("/", pathname) ? "text-pumpkin" : "text-text-muted group-hover:text-pumpkin"
             }`} />
@@ -306,18 +320,21 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
               </Link>
             );
           })}
-          <div className="mt-8 pt-6">
+          <div className="mt-4 px-8">
+            <LanguageSwitcher locale={locale} scrolled />
+          </div>
+          <div className="mt-4 pt-6">
             <Link
-              href="/kontakt"
+              href={contactHref}
               onClick={closeMobile}
-              aria-current={isLinkActive("/kontakt", pathname) ? "page" : undefined}
+              aria-current={isLinkActive(contactHref, pathname) ? "page" : undefined}
               className={`w-full justify-center ${
-                isLinkActive("/kontakt", pathname)
+                isLinkActive(contactHref, pathname)
                   ? "btn-primary ring-2 ring-pumpkin/30"
                   : "btn-primary"
               }`}
             >
-              Kontakt
+              {t.header.contactCta}
             </Link>
           </div>
         </nav>

@@ -6,6 +6,7 @@ import { resolveNavigationLink } from "./link-resolver";
 import { getIconSlots, type ResolvedIcon } from "./icons";
 import type { HeaderNavItem } from "@/components/Header";
 import type { FooterNavColumn, FooterProps } from "@/components/Footer";
+import type { Locale } from "@/lib/i18n/config";
 
 interface LayoutData {
   header: {
@@ -13,6 +14,7 @@ interface LayoutData {
     logoUrl: string | null;
     siteName: string | null;
     icons: Record<string, ResolvedIcon>;
+    locale: Locale;
   };
   footer: FooterProps;
   siteSettings: {
@@ -25,7 +27,7 @@ interface LayoutData {
   };
 }
 
-export async function getPublicLayoutData(): Promise<LayoutData> {
+export async function getPublicLayoutData(locale: Locale = "de"): Promise<LayoutData> {
   const [settings, headerNav, footerMenus, footerSettings, layoutIcons] = await Promise.all([
     getSiteSettings(),
     getHeaderNavigation(),
@@ -100,6 +102,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
       logoUrl,
       siteName: settings?.siteName ?? null,
       icons: layoutIcons,
+      locale,
     },
     footer: {
       description: footerSettings?.description ?? null,
@@ -129,6 +132,7 @@ export async function getPublicLayoutData(): Promise<LayoutData> {
       contactButtonHref: footerSettings?.contactButtonHref ?? null,
       bottomNote: footerSettings?.bottomNote ?? null,
       icons: layoutIcons,
+      locale,
     },
     siteSettings: {
       siteName: settings?.siteName ?? null,
