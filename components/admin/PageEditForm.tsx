@@ -105,6 +105,13 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
         </div>
       )}
 
+      {page.type === "LEGAL" && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg px-4 py-3 text-sm text-amber-900 flex items-start gap-2">
+          <span className="shrink-0 mt-0.5">⚠</span>
+          <span>Rechtlich erforderliche Seite. Diese Seite muss dauerhaft veröffentlicht bleiben und kann nicht archiviert oder gelöscht werden.</span>
+        </div>
+      )}
+
       <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
         Eyebrow, Headline, Einleitungstext und Hero-Bild steuern den Hero-Bereich der öffentlichen Seite. SEO-Titel und -Beschreibung steuern die Metadaten. Nur veröffentlichte Seiten werden öffentlich angezeigt.
       </div>
@@ -176,9 +183,13 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
             <select
               value={form.status}
               onChange={(e) => update("status", e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              disabled={page.type === "LEGAL"}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
-              {PAGE_STATUSES.map((s) => (
+              {(page.type === "LEGAL"
+                ? PAGE_STATUSES.filter((s) => s.value === "PUBLISHED")
+                : PAGE_STATUSES
+              ).map((s) => (
                 <option key={s.value} value={s.value}>
                   {s.label}
                 </option>
@@ -247,8 +258,11 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
           entityName={form.title || "Seite"}
           apiEndpoint="/api/admin/pages"
           redirectTo="/admin/pages"
-          archiveAction={{ currentStatus: form.status }}
-          deleteAction={{ enabled: true }}
+          archiveAction={page.type !== "LEGAL" ? { currentStatus: form.status } : undefined}
+          deleteAction={page.type === "LEGAL"
+            ? { enabled: false, disabledReason: "Rechtlich erforderliche Seiten können nicht gelöscht werden." }
+            : { enabled: true }
+          }
           userRole={userRole}
         />
       )}

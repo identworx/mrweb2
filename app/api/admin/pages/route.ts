@@ -28,6 +28,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { id, ...data } = body;
 
+    if (id) {
+      const existing = await prisma.page.findUnique({ where: { id }, select: { type: true, status: true } });
+      if (existing?.type === "LEGAL" && data.status && data.status !== "PUBLISHED") {
+        return NextResponse.json(
+          { error: "Rechtlich erforderliche Seiten müssen veröffentlicht bleiben." },
+          { status: 403 },
+        );
+      }
+    }
+
     const fields = {
       title: data.title,
       slug: data.slug,
@@ -79,6 +89,14 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "Ungültiger Status" }, { status: 400 });
     }
 
+    const existing = await prisma.page.findUnique({ where: { id }, select: { type: true } });
+    if (existing?.type === "LEGAL" && status !== "PUBLISHED") {
+      return NextResponse.json(
+        { error: "Rechtlich erforderliche Seiten müssen veröffentlicht bleiben." },
+        { status: 403 },
+      );
+    }
+
     const page = await prisma.page.update({
       where: { id },
       data: { status },
@@ -109,8 +127,16 @@ export async function DELETE(request: NextRequest) {
 
     const page = await prisma.page.findUnique({
       where: { id },
-      select: { slug: true },
+      select: { slug: true, type: true },
     });
+
+    if (page?.type === "LEGAL") {
+      return NextResponse.json(
+        { error: "Rechtlich erforderliche Seiten können nicht gelöscht werden." },
+        { status: 403 },
+      );
+    }
+
     await prisma.page.delete({ where: { id } });
     if (page) revalidatePage(page.slug);
     return NextResponse.json({ success: true });

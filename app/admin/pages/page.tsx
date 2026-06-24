@@ -125,6 +125,11 @@ export default async function PagesListPage({
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {page.type}
+                  {page.type === "LEGAL" && (
+                    <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800" title="Rechtlich erforderliche Seite — kann nicht archiviert oder gelöscht werden">
+                      Geschützt
+                    </span>
+                  )}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
                   {page._count.sections > 0 ? (
@@ -151,7 +156,7 @@ export default async function PagesListPage({
                     entityName={page.title}
                     apiEndpoint="/api/admin/pages"
                     editHref={`/admin/pages/${page.id}`}
-                    archiveAction={{ currentStatus: page.status }}
+                    archiveAction={page.type !== "LEGAL" ? { currentStatus: page.status } : undefined}
                     userRole={userRole}
                   />
                 </td>
