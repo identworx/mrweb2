@@ -381,6 +381,7 @@ function FamilyManager({
             <div>
               <label className={labelCls}>Slug</label>
               <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto" className={inputCls} />
+              <p className="text-xs text-gray-400 mt-1">Nur Kleinbuchstaben, Zahlen und Bindestriche. Leer = automatisch.</p>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -391,6 +392,7 @@ function FamilyManager({
             <div>
               <label className={labelCls}>Eyebrow</label>
               <input value={eyebrow} onChange={(e) => setEyebrow(e.target.value)} placeholder="z.B. Premium Outdoor" className={inputCls} />
+              <p className="text-xs text-gray-400 mt-1">Kleiner Text über dem Stoffnamen.</p>
             </div>
           </div>
           <div>
@@ -597,6 +599,7 @@ function ProductTypeManager({
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
               <input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder="auto" className="w-full px-3 py-2 border border-gray-300 rounded text-sm" />
+              <p className="text-xs text-gray-400 mt-1">Nur Kleinbuchstaben, Zahlen und Bindestriche. Leer = automatisch.</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Icon Key</label>

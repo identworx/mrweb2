@@ -44,7 +44,7 @@ export default async function StoffTechnischeDatenPage() {
                       : "bg-gray-100 text-gray-600"
                 }`}
               >
-                {page.status}
+                {page.status === "PUBLISHED" ? "Veröffentlicht" : page.status === "DRAFT" ? "Entwurf" : "Archiviert"}
               </span>
             </div>
             {page.headline && (

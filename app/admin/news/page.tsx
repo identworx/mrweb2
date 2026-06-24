@@ -10,6 +10,12 @@ const statusColors: Record<string, string> = {
   ARCHIVED: "bg-gray-100 text-gray-600",
 };
 
+const statusLabels: Record<string, string> = {
+  PUBLISHED: "Veröffentlicht",
+  DRAFT: "Entwurf",
+  ARCHIVED: "Archiviert",
+};
+
 const STATUS_OPTIONS = [
   { value: "all", label: "Alle" },
   { value: "PUBLISHED", label: "Veröffentlicht" },
@@ -127,7 +133,7 @@ export default async function NewsListPage({
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColors[article.status] ?? "bg-gray-100 text-gray-600"}`}
                   >
-                    {article.status}
+                    {statusLabels[article.status] ?? article.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">

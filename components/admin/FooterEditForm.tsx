@@ -190,6 +190,7 @@ export default function FooterEditForm({ settings }: { settings: FooterData }) {
                 placeholder="Beratung & Muster"
                 className={inputClass}
               />
+              <p className="text-xs text-gray-400 mt-1">Kleiner Text über der CTA-Überschrift.</p>
             </div>
 
             <div>

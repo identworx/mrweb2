@@ -27,7 +27,11 @@ interface PageData {
   seoDescription: string;
 }
 
-const PAGE_STATUSES = ["DRAFT", "PUBLISHED", "ARCHIVED"];
+const PAGE_STATUSES: { value: string; label: string }[] = [
+  { value: "DRAFT", label: "Entwurf" },
+  { value: "PUBLISHED", label: "Veröffentlicht" },
+  { value: "ARCHIVED", label: "Archiviert" },
+];
 const PAGE_TYPES = [
   "HOME",
   "STANDARD",
@@ -110,7 +114,7 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Titel</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Titel <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={form.title}
@@ -119,13 +123,14 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Slug <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={form.slug}
               onChange={(e) => update("slug", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
+            <p className="text-xs text-gray-400 mt-1">URL-Teil, z.B. green-collection. Nur Kleinbuchstaben, Zahlen und Bindestriche.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Eyebrow</label>
@@ -135,6 +140,7 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
               onChange={(e) => update("eyebrow", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
+            <p className="text-xs text-gray-400 mt-1">Kleiner Text über der Überschrift im Hero-Bereich.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Headline</label>
@@ -173,8 +179,8 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               {PAGE_STATUSES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
+                <option key={s.value} value={s.value}>
+                  {s.label}
                 </option>
               ))}
             </select>

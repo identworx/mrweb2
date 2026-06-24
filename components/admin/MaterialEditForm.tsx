@@ -104,7 +104,7 @@ export default function MaterialEditForm({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={form.name}
@@ -113,13 +113,14 @@ export default function MaterialEditForm({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Slug <span className="text-red-500">*</span></label>
             <input
               type="text"
               value={form.slug}
               onChange={(e) => update("slug", e.target.value)}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
+            <p className="text-xs text-gray-400 mt-1">URL-Teil, z.B. mackintosh. Nur Kleinbuchstaben, Zahlen und Bindestriche.</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Untertitel</label>
