@@ -4,9 +4,19 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/db/prisma";
 
 const SESSION_COOKIE = "admin_session";
-const SECRET = new TextEncoder().encode(
-  process.env.ADMIN_JWT_SECRET || "mosaroma-admin-dev-secret-change-me",
-);
+
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.ADMIN_JWT_SECRET;
+  if (!secret && process.env.NODE_ENV === "production") {
+    throw new Error(
+      "ADMIN_JWT_SECRET ist nicht gesetzt. Der Server kann in Production nicht ohne sicheres JWT-Secret starten. " +
+      "Bitte setzen Sie ADMIN_JWT_SECRET in Ihrer Umgebung (mindestens 32 Zeichen, z.B. via `openssl rand -base64 32`).",
+    );
+  }
+  return new TextEncoder().encode(secret || "mosaroma-admin-dev-secret-DO-NOT-USE-IN-PRODUCTION");
+}
+
+const SECRET = getJwtSecret();
 
 export async function hashPassword(password: string): Promise<string> {
   return hash(password, 12);
