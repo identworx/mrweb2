@@ -184,6 +184,7 @@ export default function MediaEditForm({
             onChange={(e) => setAlt(e.target.value)}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <p className="text-xs text-gray-400 mt-1">Bildbeschreibung für Suchmaschinen und Screenreader. Kurz beschreiben, was auf dem Bild zu sehen ist.</p>
         </div>
 
         <div>

@@ -16,6 +16,19 @@ const statusLabels: Record<string, string> = {
   ARCHIVED: "Archiviert",
 };
 
+const typeLabels: Record<string, string> = {
+  HOME: "Startseite",
+  STANDARD: "Standardseite",
+  COLLECTION_INDEX: "Kollektionsübersicht",
+  COLLECTION_DETAIL: "Kollektionsdetail",
+  MATERIAL_INDEX: "Materialübersicht",
+  CATALOG_INDEX: "Katalogübersicht",
+  SERVICE: "Serviceseite",
+  NEWS_INDEX: "Neuigkeiten",
+  CONTACT: "Kontaktseite",
+  LEGAL: "Rechtliche Seite",
+};
+
 const STATUS_OPTIONS = [
   { value: "all", label: "Alle" },
   { value: "PUBLISHED", label: "Veröffentlicht" },
@@ -124,7 +137,7 @@ export default async function PagesListPage({
                   /{page.slug}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-500">
-                  {page.type}
+                  {typeLabels[page.type] ?? page.type}
                   {page.type === "LEGAL" && (
                     <span className="ml-1.5 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-800" title="Rechtlich erforderliche Seite — kann nicht archiviert oder gelöscht werden">
                       Geschützt

@@ -32,17 +32,17 @@ const PAGE_STATUSES: { value: string; label: string }[] = [
   { value: "PUBLISHED", label: "Veröffentlicht" },
   { value: "ARCHIVED", label: "Archiviert" },
 ];
-const PAGE_TYPES = [
-  "HOME",
-  "STANDARD",
-  "COLLECTION_INDEX",
-  "COLLECTION_DETAIL",
-  "MATERIAL_INDEX",
-  "CATALOG_INDEX",
-  "SERVICE",
-  "NEWS_INDEX",
-  "CONTACT",
-  "LEGAL",
+const PAGE_TYPES: { value: string; label: string }[] = [
+  { value: "HOME", label: "Startseite" },
+  { value: "STANDARD", label: "Standardseite" },
+  { value: "COLLECTION_INDEX", label: "Kollektionsübersicht" },
+  { value: "COLLECTION_DETAIL", label: "Kollektionsdetail" },
+  { value: "MATERIAL_INDEX", label: "Materialübersicht" },
+  { value: "CATALOG_INDEX", label: "Katalogübersicht" },
+  { value: "SERVICE", label: "Serviceseite" },
+  { value: "NEWS_INDEX", label: "Neuigkeiten" },
+  { value: "CONTACT", label: "Kontaktseite" },
+  { value: "LEGAL", label: "Rechtliche Seite" },
 ];
 
 export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWER" }: { page: PageData; mediaAssets?: MediaOption[]; userRole?: string }) {
@@ -204,8 +204,8 @@ export default function PageEditForm({ page, mediaAssets = [], userRole = "VIEWE
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             >
               {PAGE_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t}
+                <option key={t.value} value={t.value}>
+                  {t.label}
                 </option>
               ))}
             </select>
