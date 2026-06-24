@@ -5,8 +5,8 @@ const HEADER_OFFSET = 80;
 const ANCHORS = [
   { label: "Story", id: "story" },
   { label: "Technologie", id: "technologie" },
-  { label: "Produkte", id: "produkte" },
   { label: "Fakten", id: "fakten" },
+  { label: "Produkte", id: "produkte" },
   { label: "Beratung", id: "beratung" },
 ];
 

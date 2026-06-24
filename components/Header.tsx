@@ -310,7 +310,12 @@ export default function Header({ navItems, logoUrl, siteName, icons = {} }: Head
             <Link
               href="/kontakt"
               onClick={closeMobile}
-              className="btn-primary w-full justify-center"
+              aria-current={isLinkActive("/kontakt", pathname) ? "page" : undefined}
+              className={`w-full justify-center ${
+                isLinkActive("/kontakt", pathname)
+                  ? "btn-primary ring-2 ring-pumpkin/30"
+                  : "btn-primary"
+              }`}
             >
               Kontakt
             </Link>

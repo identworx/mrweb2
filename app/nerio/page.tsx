@@ -323,7 +323,7 @@ export default async function NerioPage() {
                   href="/kollektionen/nerio-oceana"
                   className="btn-primary"
                 >
-                  Collection ansehen
+                  Kollektion ansehen
                 </Link>
                 <Link
                   href="/materialien/stoffe-muster?family=nerio"
@@ -729,7 +729,7 @@ export default async function NerioPage() {
                       Die NERIO Oceana Kollektion mit allen Produkten.
                     </p>
                     <span className="font-heading text-anthracite text-xs font-semibold uppercase tracking-[0.12em] group-hover:text-pumpkin group-hover:tracking-[0.16em] transition-all duration-300">
-                      Collection ansehen
+                      Kollektion ansehen
                     </span>
                   </Link>
                 </div>
