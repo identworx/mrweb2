@@ -18,7 +18,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
       onClick={() => onSelect?.(swatch)}
       className="group text-left bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10] w-full h-full flex flex-col"
     >
-      <div className="aspect-[4/3] overflow-hidden bg-[#FAF8F5] relative">
+      <div className="aspect-[4/3] overflow-hidden bg-cream relative">
         {swatch.swatchImageUrl ? (
           <Image
             src={swatch.swatchImageUrl}
@@ -58,7 +58,7 @@ export default function FabricSwatchCard({ swatch, onSelect, icons = {} }: Props
               {swatch.availableProductTypes.slice(0, 5).map((pt) => (
                 <span
                   key={pt.slug}
-                  className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-muted border border-black/[0.04]"
+                  className="font-accent text-[9px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-cream text-text-muted border border-black/[0.04]"
                 >
                   {pt.name}
                 </span>

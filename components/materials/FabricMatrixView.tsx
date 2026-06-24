@@ -57,8 +57,8 @@ export default function FabricMatrixView({
       <div className="hidden md:block overflow-x-auto border border-black/[0.06]">
         <table className="w-full min-w-[700px] border-collapse">
           <thead>
-            <tr className="bg-[#FAF8F5]">
-              <th className="sticky left-0 z-20 bg-[#FAF8F5] text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-text-muted py-3 px-4 w-[280px] border-r border-black/[0.06]">
+            <tr className="bg-cream">
+              <th className="sticky left-0 z-20 bg-cream text-left font-accent text-[10px] font-normal uppercase tracking-[0.12em] text-text-muted py-3 px-4 w-[280px] border-r border-black/[0.06]">
                 Stoff
               </th>
               {productTypes.map((pt) => (
@@ -152,7 +152,7 @@ export default function FabricMatrixView({
                     {swatch.availableProductTypes.map((pt) => (
                       <span
                         key={pt.slug}
-                        className="font-accent text-[8px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-[#FAF8F5] text-text-muted border border-black/[0.04]"
+                        className="font-accent text-[8px] tracking-[0.06em] uppercase px-1.5 py-0.5 bg-cream text-text-muted border border-black/[0.04]"
                       >
                         {pt.name}
                         {pt.note && (

@@ -104,7 +104,7 @@ export default function ProductImageFrame({
   return (
     <div
       className={[
-        "relative overflow-hidden bg-[#FAF8F5]",
+        "relative overflow-hidden bg-cream",
         config.aspect,
         thumbnailRing,
         className,

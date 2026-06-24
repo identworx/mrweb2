@@ -31,7 +31,7 @@ export default function FabricLibraryPreview({ swatches, icons = {}, limit = 10 
             href="/materialien/stoffe-muster"
             className="group bg-white border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.10]"
           >
-            <div className="aspect-square overflow-hidden bg-[#FAF8F5] relative">
+            <div className="aspect-square overflow-hidden bg-cream relative">
               {swatch.swatchImageUrl ? (
                 <Image
                   src={swatch.swatchImageUrl}

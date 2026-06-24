@@ -49,7 +49,7 @@ export default function HomepageCollections({ section, collections, icons = {} }
 
           <Link
             href={ctaHref}
-            className="group relative flex flex-col h-full bg-[#FAF8F5] border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.12]"
+            className="group relative flex flex-col h-full bg-cream border border-black/[0.06] transition-all duration-500 motion-safe:hover:-translate-y-0.5 hover:border-black/[0.12]"
           >
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-pumpkin/20 group-hover:bg-pumpkin/40 transition-colors duration-500" />
 

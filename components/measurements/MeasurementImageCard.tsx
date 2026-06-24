@@ -32,7 +32,7 @@ export default function MeasurementImageCard({
 }) {
   return (
     <div className="bg-white border border-black/[0.06] h-full flex flex-col">
-      <div className={`flex items-center justify-center bg-[#FAF8F5] p-6 md:p-8 ${stageClasses[mediaSize]}`}>
+      <div className={`flex items-center justify-center bg-cream p-6 md:p-8 ${stageClasses[mediaSize]}`}>
         {item.imageUrl ? (
           <div className={`relative w-full aspect-[4/3] ${imageClasses[mediaSize]}`}>
             <Image

@@ -51,7 +51,7 @@ function parseYouTubeId(url: string): string | null {
 function PlayIcon({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#FAF8F5]/90 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.15)] flex items-center justify-center ${className}`}
+      className={`w-14 h-14 md:w-16 md:h-16 rounded-full bg-cream/90 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.15)] flex items-center justify-center ${className}`}
     >
       <svg
         viewBox="0 0 24 24"
@@ -247,7 +247,7 @@ function VideoCard({
       </div>
 
       {/* Card body */}
-      <div className="p-5 md:p-6 bg-[#FAF8F5]">
+      <div className="p-5 md:p-6 bg-cream">
         <h3 className="font-heading text-anthracite text-base md:text-lg font-bold tracking-tight mb-2 group-hover:text-[#1B6B6D] transition-colors duration-300">
           {video.title}
         </h3>

@@ -191,7 +191,7 @@ export default async function ProduktPage({ params }: PageProps) {
         </section>
 
         {/* ── Product Stage ── */}
-        <section className="bg-[#FAF8F5] py-10 md:py-14">
+        <section className="bg-cream py-10 md:py-14">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)] gap-8 lg:gap-12">
               {/* Gallery */}
@@ -270,7 +270,7 @@ export default async function ProduktPage({ params }: PageProps) {
                     {product.features.map((feature) => (
                       <span
                         key={feature}
-                        className="font-accent text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 border border-black/[0.08] text-text-muted bg-[#FAF8F5]"
+                        className="font-accent text-[9px] tracking-[0.1em] uppercase px-2.5 py-1 border border-black/[0.08] text-text-muted bg-cream"
                       >
                         {feature}
                       </span>
@@ -329,7 +329,7 @@ export default async function ProduktPage({ params }: PageProps) {
 
         {/* ── Collection Reference ── */}
         {staticCollection && (
-          <section className="py-12 md:py-16 bg-[#FAF8F5]">
+          <section className="py-12 md:py-16 bg-cream">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               <div className="bg-white border border-black/[0.06] p-8 md:p-10 lg:p-12 max-w-3xl">
                 {moodColors.length > 0 && (
@@ -399,7 +399,7 @@ export default async function ProduktPage({ params }: PageProps) {
 
 function SpecCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-3.5 md:p-4 bg-[#FAF8F5] border border-black/[0.04]">
+    <div className="p-3.5 md:p-4 bg-cream border border-black/[0.04]">
       <p className="font-accent text-text-muted text-[9px] tracking-[0.2em] uppercase mb-1">
         {label}
       </p>
@@ -412,7 +412,7 @@ function SpecCard({ label, value }: { label: string; value: string }) {
 
 function MaterialCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-5 md:p-6 bg-[#FAF8F5] border border-black/[0.04]">
+    <div className="p-5 md:p-6 bg-cream border border-black/[0.04]">
       <p className="font-accent text-text-muted text-[10px] tracking-[0.2em] uppercase mb-2">
         {label}
       </p>

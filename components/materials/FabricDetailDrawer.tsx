@@ -107,7 +107,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
           <CmsIcon icon={icons["ui-close"]} width={18} height={18} />
         </button>
 
-        <div className="aspect-square bg-[#FAF8F5] overflow-hidden">
+        <div className="aspect-square bg-cream overflow-hidden">
           {swatch.swatchImageUrl ? (
             <Image
               src={swatch.swatchImageUrl}
@@ -173,7 +173,7 @@ export default function FabricDetailDrawer({ swatch, onClose, icons = {} }: Prop
                 {swatch.availableProductTypes.map((pt) => (
                   <div
                     key={pt.slug}
-                    className="flex items-center justify-between p-3 bg-[#FAF8F5] border border-black/[0.04]"
+                    className="flex items-center justify-between p-3 bg-cream border border-black/[0.04]"
                   >
                     <span className="font-body text-anthracite text-sm">
                       {pt.name}

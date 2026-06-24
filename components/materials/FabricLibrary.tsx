@@ -264,7 +264,7 @@ export default function FabricLibrary({ data, initialFamily, icons = {} }: Props
 
       {/* Results */}
       {filtered.length === 0 ? (
-        <div className="text-center py-12 bg-[#FAF8F5] border border-black/[0.04]">
+        <div className="text-center py-12 bg-cream border border-black/[0.04]">
           <p className="font-body text-text-muted text-sm">
             Keine Stoffe gefunden.
           </p>
