@@ -23,7 +23,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
-import { translateProductType } from "@/lib/i18n/product-types";
+import { translateProductTypeAsync } from "@/lib/i18n/product-types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -129,7 +129,7 @@ export default async function ProductPage({ params }: PageProps) {
   const moodColors = staticCollection?.moodColors || [];
   const displayCollection = product.collectionName || staticCollection?.name || product.collectionSlug;
   const displayProductGroup = product.productGroupName
-    ? translateProductType(product.productGroupName, "en")
+    ? await translateProductTypeAsync(product.productGroupName, "en")
     : null;
 
   return (

@@ -5,7 +5,7 @@ import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import CookieSettingsButton from "@/components/consent/CookieSettingsButton";
 import type { Locale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionary";
+import { getDictionary, type Dictionary } from "@/lib/i18n/dictionary";
 import { getFooterLegalLinks } from "@/lib/i18n/navigation";
 
 export interface FooterNavColumn {
@@ -42,6 +42,7 @@ export interface FooterProps {
   bottomNote?: string | null;
   icons?: Record<string, ResolvedIcon>;
   locale?: Locale;
+  dictionary?: Dictionary;
 }
 
 const CTA_DEFAULTS = {
@@ -94,8 +95,9 @@ export default function Footer({
   bottomNote,
   icons = {},
   locale = "de",
+  dictionary,
 }: FooterProps) {
-  const t = getDictionary(locale);
+  const t = dictionary || getDictionary(locale);
   const brandDescription =
     description || footerData.brand.description;
   const copyright =

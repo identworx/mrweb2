@@ -7,7 +7,7 @@ import BreadcrumbBar from "@/components/BreadcrumbBar";
 import CategoryCard from "@/components/CategoryCard";
 import { getActiveProductGroups } from "@/lib/cms/product-groups";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
-import { translateProductType } from "@/lib/i18n/product-types";
+import { translateProductTypeAsync } from "@/lib/i18n/product-types";
 
 export const metadata: Metadata = {
   title: "Product Categories | Mosaroma Outdoor Textiles",
@@ -22,6 +22,13 @@ export default async function ProductCategoriesPage() {
     getPublicLayoutData("en"),
     getActiveProductGroups(),
   ]);
+
+  const translatedNames = new Map<string, string>();
+  await Promise.all(
+    groups.map(async (g) => {
+      translatedNames.set(g.slug, await translateProductTypeAsync(g.name, "en"));
+    }),
+  );
 
   return (
     <>
@@ -45,7 +52,7 @@ export default async function ProductCategoriesPage() {
                 {groups.map((group) => (
                   <CategoryCard
                     key={group.slug}
-                    title={translateProductType(group.name, "en")}
+                    title={translatedNames.get(group.slug) || group.name}
                     image={group.image}
                     alt={group.imageAlt}
                     description={group.shortDescription}

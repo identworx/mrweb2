@@ -1,8 +1,9 @@
 export { type Locale, defaultLocale, supportedLocales, isValidLocale } from "./config";
 export { getDictionary, type Dictionary } from "./dictionary";
+export { getDictionaryAsync } from "./dictionary-async";
 export { getAlternateRoute, getDeRoute, getEnRoute, getAllAlternates } from "./routes";
 export { getNavLinks, getFooterLegalLinks } from "./navigation";
-export { translateProductType, getProductTypeMap } from "./product-types";
+export { translateProductType, translateProductTypeAsync, getProductTypeMap } from "./product-types";
 export {
   getTranslation,
   getTranslations,

@@ -7,6 +7,8 @@ import { getIconSlots, type ResolvedIcon } from "./icons";
 import type { HeaderNavItem } from "@/components/Header";
 import type { FooterNavColumn, FooterProps } from "@/components/Footer";
 import type { Locale } from "@/lib/i18n/config";
+import { getDictionaryAsync } from "@/lib/i18n/dictionary-async";
+import type { Dictionary } from "@/lib/i18n/dictionary";
 
 interface LayoutData {
   header: {
@@ -15,6 +17,7 @@ interface LayoutData {
     siteName: string | null;
     icons: Record<string, ResolvedIcon>;
     locale: Locale;
+    dictionary?: Dictionary;
   };
   footer: FooterProps;
   siteSettings: {
@@ -28,7 +31,7 @@ interface LayoutData {
 }
 
 export async function getPublicLayoutData(locale: Locale = "de"): Promise<LayoutData> {
-  const [settings, headerNav, footerMenus, footerSettings, layoutIcons] = await Promise.all([
+  const [settings, headerNav, footerMenus, footerSettings, layoutIcons, dictionary] = await Promise.all([
     getSiteSettings(),
     getHeaderNavigation(),
     getFooterNavigation(),
@@ -43,6 +46,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       "social-linkedin",
       "social-houzz",
     ]),
+    getDictionaryAsync(locale),
   ]);
 
   const headerItems: HeaderNavItem[] = headerNav?.items
@@ -103,6 +107,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       siteName: settings?.siteName ?? null,
       icons: layoutIcons,
       locale,
+      dictionary,
     },
     footer: {
       description: footerSettings?.description ?? null,
@@ -133,6 +138,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       bottomNote: footerSettings?.bottomNote ?? null,
       icons: layoutIcons,
       locale,
+      dictionary,
     },
     siteSettings: {
       siteName: settings?.siteName ?? null,

@@ -8,7 +8,7 @@ import { mainNavLinks } from "@/lib/mosaroma/navigation";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import type { Locale } from "@/lib/i18n/config";
-import { getDictionary } from "@/lib/i18n/dictionary";
+import { getDictionary, type Dictionary } from "@/lib/i18n/dictionary";
 import { getNavLinks } from "@/lib/i18n/navigation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
@@ -26,6 +26,7 @@ interface HeaderProps {
   siteName?: string | null;
   icons?: Record<string, ResolvedIcon>;
   locale?: Locale;
+  dictionary?: Dictionary;
 }
 
 const BADGE_VARIANTS: Record<string, string> = {
@@ -44,13 +45,13 @@ function isLinkActive(href: string, pathname: string): boolean {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export default function Header({ navItems, logoUrl, siteName, icons = {}, locale = "de" }: HeaderProps) {
+export default function Header({ navItems, logoUrl, siteName, icons = {}, locale = "de", dictionary }: HeaderProps) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const t = getDictionary(locale);
+  const t = dictionary || getDictionary(locale);
 
   const closeMobile = useCallback(() => {
     setMobileOpen(false);

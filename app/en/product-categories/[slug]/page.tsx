@@ -21,7 +21,7 @@ import { getSiteSettings } from "@/lib/cms/settings";
 import PageCta from "@/components/PageCta";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
-import { translateProductType } from "@/lib/i18n/product-types";
+import { translateProductTypeAsync } from "@/lib/i18n/product-types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Category not found | Mosaroma" };
   }
   const settings = await getSiteSettings();
-  const displayName = translateProductType(group.name, "en");
+  const displayName = await translateProductTypeAsync(group.name, "en");
   const title = group.seoTitle || `${displayName} | Mosaroma Product Categories`;
   const description =
     group.seoDescription ||
@@ -109,7 +109,7 @@ export default async function CategoryPage({ params }: PageProps) {
 
   const staticCat = getStaticCategoryBySlug(slug);
   const collectionGroups = groupProductsByCollection(products);
-  const displayName = translateProductType(group.name, "en");
+  const displayName = await translateProductTypeAsync(group.name, "en");
 
   return (
     <>
