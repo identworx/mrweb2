@@ -55,9 +55,9 @@ export const footerData: FooterData = {
     },
   ],
   legal: [
-    { label: "Impressum", href: "#" }, // TODO: finale URL einsetzen
-    { label: "Datenschutz", href: "#" }, // TODO: finale URL einsetzen
-    { label: "Allgemeine Geschäftsbedingungen", href: "#" }, // TODO: finale URL einsetzen
-    { label: "Cookie-Einstellungen", href: "#" }, // TODO: finale URL einsetzen
+    { label: "Impressum", href: "/impressum" },
+    { label: "Datenschutz", href: "/datenschutz" },
+    { label: "Allgemeine Geschäftsbedingungen", href: "/agb" },
+    { label: "Cookie-Einstellungen", href: "#" },
   ],
 };

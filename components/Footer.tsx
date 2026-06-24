@@ -93,7 +93,7 @@ export default function Footer({
   const brandDescription =
     description || footerData.brand.description;
   const copyright =
-    copyrightText || "© 2026 MOSAROMA GmbH. Alle Rechte vorbehalten.";
+    copyrightText || `© ${new Date().getFullYear()} MOSAROMA GmbH. Alle Rechte vorbehalten.`;
   const footerColumns: FooterNavColumn[] =
     columns && columns.length > 0
       ? columns
