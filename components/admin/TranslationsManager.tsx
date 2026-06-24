@@ -22,17 +22,22 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
 };
 
 const ENTITY_TYPE_LABELS: Record<string, string> = {
+  dictionary: "Wörterbuch (UI-Texte)",
+  homepage: "Startseite",
   page: "Seite",
   collection: "Kollektion",
   product: "Produkt",
   productGroup: "Produktgruppe",
+  productType: "Produktart",
   material: "Material",
+  fabricQuality: "Stoffqualität",
+  technicalData: "Technische Daten",
+  glossary: "Glossar",
   news: "Neuigkeit",
   download: "Download",
   navigation: "Navigation",
   footer: "Footer",
   settings: "Einstellungen",
-  homepage: "Startseite",
 };
 
 export default function TranslationsManager({
