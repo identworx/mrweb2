@@ -4,7 +4,7 @@ import { getProductStaticParams } from "@/lib/cms/products";
 import { getProductGroupStaticParams } from "@/lib/cms/product-groups";
 import { getNewsStaticParams } from "@/lib/cms/news";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mosaroma.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mosaroma.de";
 
 const staticDeRoutes = [
   "/",
@@ -16,7 +16,7 @@ const staticDeRoutes = [
   "/materialien/technische-daten",
   "/nerio",
   "/kataloge",
-  "/kataloge/produktabmessungen",
+  "/kataloge/produktmasse",
   "/kataloge/pflege-garantie",
   "/kataloge/stoff-technische-daten",
   "/kontakt",

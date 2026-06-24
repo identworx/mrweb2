@@ -15,7 +15,7 @@ const staticRoutes: RouteMapping[] = [
   { de: "/materialien/technische-daten", en: "/en/materials/technical-data" },
   { de: "/nerio", en: "/en/nerio" },
   { de: "/kataloge", en: "/en/catalogues" },
-  { de: "/kataloge/produktabmessungen", en: "/en/catalogues/product-dimensions" },
+  { de: "/kataloge/produktmasse", en: "/en/catalogues/product-dimensions" },
   { de: "/kataloge/pflege-garantie", en: "/en/catalogues/care-warranty" },
   { de: "/kataloge/stoff-technische-daten", en: "/en/catalogues/fabric-technical-data" },
   { de: "/kontakt", en: "/en/contact" },
