@@ -6,11 +6,6 @@ export interface ServicePage {
   icon: "ruler" | "shield" | "fabric";
 }
 
-export const catalogLinks = {
-  de: "https://katalog.mosaroma.de/",
-  en: "https://catalog.mosaroma.de/",
-};
-
 export const servicePages: ServicePage[] = [
   {
     slug: "produktmasse",

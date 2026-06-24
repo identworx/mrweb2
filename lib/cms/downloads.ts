@@ -42,10 +42,14 @@ export async function getPublicDownloadsByType(type: string): Promise<FrontendDo
       include: { image: true },
     });
 
-    return downloads.map(mapDownloadForFrontend);
+    if (downloads.length > 0) return downloads.map(mapDownloadForFrontend);
+
+    const fallback = CATALOG_FALLBACKS[type];
+    return fallback || [];
   } catch (error) {
     console.error(`CMS: getPublicDownloadsByType("${type}") failed`, error);
-    return [];
+    const fallback = CATALOG_FALLBACKS[type];
+    return fallback || [];
   }
 }
 
@@ -66,6 +70,37 @@ function mapDownloadForFrontend(dl: DbDownload): FrontendDownload {
     order: dl.order,
   };
 }
+
+const CATALOG_FALLBACKS: Record<string, FrontendDownload[]> = {
+  catalog: [
+    {
+      id: "fallback-catalog-de",
+      title: "Katalog 2027 (Deutsch)",
+      description: "",
+      type: "catalog",
+      language: "de",
+      fileUrl: null,
+      externalUrl: "https://katalog.mosaroma.de/",
+      buttonLabel: "Deutsch ansehen",
+      opensInNewTab: true,
+      imageUrl: null,
+      order: 0,
+    },
+    {
+      id: "fallback-catalog-en",
+      title: "Catalog 2027 (English)",
+      description: "",
+      type: "catalog",
+      language: "en",
+      fileUrl: null,
+      externalUrl: "https://catalog.mosaroma.de/",
+      buttonLabel: "English ansehen",
+      opensInNewTab: true,
+      imageUrl: null,
+      order: 1,
+    },
+  ],
+};
 
 function getStaticFallbackDownloads(): FrontendDownload[] {
   return staticDownloads.map((d, i) => ({

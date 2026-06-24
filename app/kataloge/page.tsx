@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
 import ScrollReveal from "@/components/ScrollReveal";
-import { servicePages, catalogLinks } from "@/lib/mosaroma/servicePages";
+import { servicePages } from "@/lib/mosaroma/servicePages";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicDownloadsByType } from "@/lib/cms/downloads";
@@ -107,20 +107,8 @@ export default async function KatalogePage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
-                  {catalogDe ? (
-                    <CatalogCard download={catalogDe} icons={icons} />
-                  ) : (
-                    <a href={catalogLinks.de} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
-                      Deutsch ansehen <CmsIcon icon={icons["external-link"]} width={14} height={14} />
-                    </a>
-                  )}
-                  {catalogEn ? (
-                    <CatalogCard download={catalogEn} icons={icons} />
-                  ) : (
-                    <a href={catalogLinks.en} target="_blank" rel="noopener noreferrer" className="btn-outline-white">
-                      English ansehen <CmsIcon icon={icons["external-link"]} width={14} height={14} />
-                    </a>
-                  )}
+                  {catalogDe && <CatalogCard download={catalogDe} icons={icons} />}
+                  {catalogEn && <CatalogCard download={catalogEn} icons={icons} />}
                 </div>
 
                 <p className="font-body text-white/70 text-xs mt-6">
