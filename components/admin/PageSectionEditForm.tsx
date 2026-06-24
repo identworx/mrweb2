@@ -161,7 +161,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Button Href</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Button-Link</label>
             <input
               type="text"
               value={form.buttonHref}
@@ -320,7 +320,7 @@ function CtaFields({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Primär Href</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Primär-Link</label>
           <input
             type="text"
             value={buttonHref}
@@ -339,7 +339,7 @@ function CtaFields({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär Href</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär-Link</label>
           <input
             type="text"
             value={(settings.secondaryHref as string) || ""}
@@ -762,7 +762,7 @@ function HomeHeroFields({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 1 Href</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 1 Link</label>
           <input
             type="text"
             value={buttonHref}
@@ -780,7 +780,7 @@ function HomeHeroFields({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 2 Href</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">CTA 2 Link</label>
           <input
             type="text"
             value={(settings.secondaryHref as string) || ""}
@@ -1375,7 +1375,7 @@ function CollectionConsultationCardFields({
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär Href</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Sekundär-Link</label>
           <input
             type="text"
             value={(settings.secondaryHref as string) || ""}
