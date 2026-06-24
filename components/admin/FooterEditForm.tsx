@@ -268,6 +268,10 @@ export default function FooterEditForm({ settings }: { settings: FooterData }) {
       <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
         <h2 className="text-lg font-semibold text-gray-900">Kontakt-Spalte</h2>
 
+        <p className="text-xs text-gray-400">
+          Diese Kontaktdaten werden im Footer und auf der öffentlichen Kontaktseite angezeigt.
+        </p>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Spalten-Titel</label>
           <input
