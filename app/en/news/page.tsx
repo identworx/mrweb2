@@ -11,11 +11,10 @@ import { getPublishedNewsArticles } from "@/lib/cms/news";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("neuigkeiten", "neuigkeiten");
+  const hero = await getPageHeroData("neuigkeiten", "neuigkeiten", "en");
   return {
-    title: hero.seoTitle || "News | Mosaroma",
+    title: "News | Mosaroma",
     description:
-      hero.seoDescription ||
       "Latest news, collections and material innovations from MOSAROMA.",
   };
 }
@@ -23,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function NewsPage() {
   const [layout, hero, articles] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("neuigkeiten", "neuigkeiten"),
+    getPageHeroData("neuigkeiten", "neuigkeiten", "en"),
     getPublishedNewsArticles(),
   ]);
 

@@ -62,12 +62,10 @@ const mackintoshHighlightsEn = [
 ];
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("technische-daten", "technischeDaten");
+  const hero = await getPageHeroData("technische-daten", "technischeDaten", "en");
   return {
-    title:
-      hero.seoTitle || "Technical Data | Mosaroma",
+    title: "Technical Data | Mosaroma",
     description:
-      hero.seoDescription ||
       "Technical material properties, test values and outdoor performance of Mosaroma fabric qualities compared.",
   };
 }
@@ -75,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TechnicalDataPage() {
   const [layout, hero, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("technische-daten", "technischeDaten"),
+    getPageHeroData("technische-daten", "technischeDaten", "en"),
     getIconSlots(["arrow-right", "checkmark"]),
   ]);
 

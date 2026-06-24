@@ -9,6 +9,7 @@ import type { FooterNavColumn, FooterProps } from "@/components/Footer";
 import type { Locale } from "@/lib/i18n/config";
 import { getDictionaryAsync } from "@/lib/i18n/dictionary-async";
 import type { Dictionary } from "@/lib/i18n/dictionary";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface LayoutData {
   header: {
@@ -28,6 +29,32 @@ interface LayoutData {
     phone: string | null;
     address: string | null;
   };
+}
+
+const NAV_LABEL_EN: Record<string, string> = {
+  Kollektionen: "Collections",
+  Materialien: "Materials",
+  "Über uns": "About Us",
+  Kataloge: "Catalogues",
+  Neuigkeiten: "News",
+  Kontakt: "Contact",
+  NERIO: "NERIO",
+  Impressum: "Legal Notice",
+  Datenschutz: "Privacy Policy",
+  AGB: "Terms & Conditions",
+  "Allgemeine Geschäftsbedingungen": "Terms & Conditions",
+  "Cookie-Einstellungen": "Cookie Settings",
+  "Pflege & Garantie": "Care & Warranty",
+  Produktmaße: "Product Dimensions",
+  "Stoff- & technische Daten": "Fabric & Technical Data",
+  "Kontakt aufnehmen": "Contact us",
+  "Mehr erfahren": "Learn more",
+  Service: "Service",
+};
+
+function localizeLabel(label: string, locale: Locale): string {
+  if (locale === "de") return label;
+  return NAV_LABEL_EN[label] || label;
 }
 
 export async function getPublicLayoutData(locale: Locale = "de"): Promise<LayoutData> {
@@ -54,8 +81,8 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
         .map((item) => resolveNavigationLink(item))
         .filter((link) => link.href && link.status === "ok")
         .map((link) => ({
-          label: link.label,
-          href: link.href!,
+          label: localizeLabel(link.label, locale),
+          href: localizedHref(link.href!, locale),
           target: link.target,
           badgeText: link.badgeText,
           badgeVariant: link.badgeVariant,
@@ -76,17 +103,17 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       if (menu.location === "LEGAL") {
         for (const link of resolved) {
           legalLinks.push({
-            label: link.label,
-            href: link.href!,
+            label: localizeLabel(link.label, locale),
+            href: localizedHref(link.href!, locale),
             target: link.target,
           });
         }
       } else {
         footerColumns.push({
-          title: menu.name,
+          title: localizeLabel(menu.name, locale),
           links: resolved.map((link) => ({
-            label: link.label,
-            href: link.href!,
+            label: localizeLabel(link.label, locale),
+            href: localizedHref(link.href!, locale),
             target: link.target,
           })),
         });
@@ -122,9 +149,9 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       ctaTitle: footerSettings?.ctaTitle ?? null,
       ctaText: footerSettings?.ctaText ?? null,
       ctaPrimaryLabel: footerSettings?.ctaPrimaryLabel ?? null,
-      ctaPrimaryHref: footerSettings?.ctaPrimaryHref ?? null,
+      ctaPrimaryHref: footerSettings?.ctaPrimaryHref ? localizedHref(footerSettings.ctaPrimaryHref, locale) : null,
       ctaSecondaryLabel: footerSettings?.ctaSecondaryLabel ?? null,
-      ctaSecondaryHref: footerSettings?.ctaSecondaryHref ?? null,
+      ctaSecondaryHref: footerSettings?.ctaSecondaryHref ? localizedHref(footerSettings.ctaSecondaryHref, locale) : null,
       contactTitle: footerSettings?.contactTitle ?? null,
       companyName: footerSettings?.companyName ?? null,
       addressLine1: footerSettings?.addressLine1 ?? null,
@@ -133,8 +160,8 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       country: footerSettings?.country ?? null,
       email: footerSettings?.email ?? null,
       phone: footerSettings?.phone ?? null,
-      contactButtonLabel: footerSettings?.contactButtonLabel ?? null,
-      contactButtonHref: footerSettings?.contactButtonHref ?? null,
+      contactButtonLabel: footerSettings?.contactButtonLabel ? localizeLabel(footerSettings.contactButtonLabel, locale) : null,
+      contactButtonHref: footerSettings?.contactButtonHref ? localizedHref(footerSettings.contactButtonHref, locale) : null,
       bottomNote: footerSettings?.bottomNote ?? null,
       icons: layoutIcons,
       locale,

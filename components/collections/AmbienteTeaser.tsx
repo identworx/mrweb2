@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { FrontendAmbienteImage, TeaserSlot } from "@/lib/cms/ambiente";
 import ScrollReveal from "@/components/ScrollReveal";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface Props {
   slots: Record<TeaserSlot, FrontendAmbienteImage | null>;
@@ -14,6 +16,7 @@ interface Props {
   ctaPlacement?: "top-right" | "below-right";
   className?: string;
   variant?: "default" | "homepage";
+  locale?: Locale;
 }
 
 const COLOR_WORLD_LABELS: Record<string, string> = {
@@ -92,6 +95,7 @@ export default function AmbienteTeaser({
   ctaPlacement = "top-right",
   className,
   variant = "default",
+  locale = "de",
 }: Props) {
   const { hero, portrait, wide, smallA, smallB } = slots;
 
@@ -104,11 +108,11 @@ export default function AmbienteTeaser({
   const isHomepage = variant === "homepage";
   const sectionPadding = isHomepage ? "pt-10 md:pt-14 pb-6 md:pb-8" : "py-16 md:py-24";
   const sectionBg = isHomepage ? "bg-white" : "bg-cream";
-  const tileHref = ctaHref || "/kollektionen/ambiente";
+  const tileHref = localizedHref(ctaHref || "/kollektionen/ambiente", locale);
 
   const ctaLink = ctaLabel && ctaHref ? (
     <Link
-      href={ctaHref}
+      href={localizedHref(ctaHref, locale)}
       className="inline-flex items-center gap-2 font-heading text-anthracite text-sm font-semibold tracking-wide hover:text-pumpkin transition-colors duration-300"
     >
       {ctaLabel}

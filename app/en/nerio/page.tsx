@@ -9,11 +9,11 @@ import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
-  nerioStory,
-  nerioPromise,
-  nerioHighlights,
-  nerioTechnicalFacts,
-  oceanCycleProcess,
+  nerioStoryEn as nerioStory,
+  nerioPromiseEn as nerioPromise,
+  nerioHighlightsEn as nerioHighlights,
+  nerioTechnicalFactsEn as nerioTechnicalFacts,
+  oceanCycleProcessEn as oceanCycleProcess,
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getIconSlots } from "@/lib/cms/icons";
@@ -34,13 +34,10 @@ import NerioAnchorNavEn from "@/components/nerio/NerioAnchorNavEn";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("nerio", "nerio");
+  const hero = await getPageHeroData("nerio", "nerio", "en");
   return {
-    title:
-      hero.seoTitle ||
-      "NERIO | Mosaroma",
+    title: "NERIO | Mosaroma",
     description:
-      hero.seoDescription ||
       "NERIO: Performance fabrics made from 50% recycled ocean polypropylene. OceanCycle® certified, PFAS-free and solution-dyed for outstanding colourfastness.",
   };
 }
@@ -73,7 +70,7 @@ export default async function NerioPageEn() {
     icons,
   ] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("nerio", "nerio"),
+    getPageHeroData("nerio", "nerio", "en"),
     getServicePageBySlug("nerio"),
     getSectionData("nerio", "nerio-story"),
     getSectionImage("nerio", "nerio-story"),
@@ -90,59 +87,51 @@ export default async function NerioPageEn() {
   ]);
 
   const story = {
-    eyebrow: storyData?.eyebrow || nerioStory.eyebrow,
-    title: storyData?.title || nerioStory.title,
-    content: storyData?.content?.trim() || null,
+    eyebrow: nerioStory.eyebrow,
+    title: nerioStory.title,
+    content: null,
     fallbackParagraphs: nerioStory.paragraphs,
   };
 
   type OceanStep = { title: string; description: string; imageId?: string | null; imageFit?: "contain" | "cover" };
-  const oceanSteps: OceanStep[] =
-    Array.isArray(oceanData?.settings?.steps) &&
-    (oceanData.settings.steps as OceanStep[]).length > 0
-      ? (oceanData.settings.steps as OceanStep[])
-      : oceanCycleProcess.steps;
+  const cmsOceanSteps = Array.isArray(oceanData?.settings?.steps) && (oceanData.settings.steps as OceanStep[]).length > 0
+    ? (oceanData.settings.steps as OceanStep[])
+    : null;
+  const oceanSteps: OceanStep[] = oceanCycleProcess.steps.map((fallback, i) => ({
+    title: fallback.title,
+    description: fallback.description,
+    imageId: cmsOceanSteps?.[i]?.imageId ?? null,
+    imageFit: cmsOceanSteps?.[i]?.imageFit ?? "contain",
+  }));
 
   const oceanStepImages = await resolveMediaIds(
     oceanSteps.map((s) => s.imageId),
   );
 
   const ocean = {
-    eyebrow: oceanData?.eyebrow || "OceanCycle®",
-    title: oceanData?.title || oceanCycleProcess.title,
-    content: oceanData?.content?.trim() || null,
+    eyebrow: "OceanCycle®",
+    title: oceanCycleProcess.title,
+    content: null,
     fallbackDescription: oceanCycleProcess.description,
     steps: oceanSteps.map((s) => ({
       ...s,
       imageFit: s.imageFit || "contain",
       image: s.imageId ? oceanStepImages[s.imageId] ?? null : null,
     })),
-    highlights:
-      Array.isArray(oceanData?.settings?.highlights) &&
-      (oceanData.settings.highlights as string[]).length > 0
-        ? (oceanData.settings.highlights as string[])
-        : oceanCycleProcess.highlights,
+    highlights: oceanCycleProcess.highlights,
   };
 
   const promise = {
-    eyebrow: promiseData?.eyebrow || nerioPromise.eyebrow,
-    title: promiseData?.title || nerioPromise.title,
-    content: promiseData?.content?.trim() || null,
-    items:
-      Array.isArray(promiseData?.settings?.items) &&
-      (promiseData.settings.items as Array<{ iconKey: string; title: string; text: string }>).length > 0
-        ? (promiseData.settings.items as Array<{ iconKey: string; title: string; text: string }>)
-        : nerioPromise.items,
+    eyebrow: nerioPromise.eyebrow,
+    title: nerioPromise.title,
+    content: null,
+    items: nerioPromise.items,
   };
 
   const highlights = {
-    eyebrow: highlightsData?.eyebrow || nerioHighlights.eyebrow,
-    title: highlightsData?.title || nerioHighlights.title,
-    stats:
-      Array.isArray(highlightsData?.settings?.stats) &&
-      (highlightsData.settings.stats as Array<{ value: string; label: string; detail: string }>).length > 0
-        ? (highlightsData.settings.stats as Array<{ value: string; label: string; detail: string }>)
-        : nerioHighlights.stats,
+    eyebrow: nerioHighlights.eyebrow,
+    title: nerioHighlights.title,
+    stats: nerioHighlights.stats,
   };
 
   const fallbackVideos = [
@@ -178,21 +167,16 @@ export default async function NerioPageEn() {
     },
   ];
 
-  const rawVideos =
-    Array.isArray(videosData?.settings?.videos) &&
-    (videosData.settings.videos as typeof fallbackVideos).length > 0
-      ? (videosData.settings.videos as typeof fallbackVideos)
-      : fallbackVideos;
+  const rawVideos = fallbackVideos;
 
   const videoThumbnails = await resolveVideoThumbnails(
     videosData?.settings ?? { videos: rawVideos },
   );
 
   const nerioVideos = {
-    eyebrow: videosData?.eyebrow || "Processes & Cycles",
-    title: videosData?.title || "How responsibility becomes new material",
+    eyebrow: "Processes & Cycles",
+    title: "How responsibility becomes new material",
     intro:
-      videosData?.content?.trim() ||
       "The NERIO material story becomes more tangible when you see the individual steps: from collected raw material through processing and recycling to new applications in the textile sector.",
     videos: rawVideos
       .filter((v) => v.enabled)
@@ -213,22 +197,14 @@ export default async function NerioPageEn() {
   };
 
   const techFacts = {
-    eyebrow: techFactsData?.eyebrow || nerioTechnicalFacts.eyebrow,
-    title: techFactsData?.title || nerioTechnicalFacts.title,
-    content: techFactsData?.content?.trim() || null,
-    facts:
-      Array.isArray(techFactsData?.settings?.facts) &&
-      (techFactsData.settings.facts as Array<{ label: string; value: string }>).length > 0
-        ? (techFactsData.settings.facts as Array<{ label: string; value: string }>)
-        : nerioTechnicalFacts.facts,
+    eyebrow: nerioTechnicalFacts.eyebrow,
+    title: nerioTechnicalFacts.title,
+    content: null,
+    facts: nerioTechnicalFacts.facts,
   };
 
   type ProductCard = { id: string; title: string; href: string; imageId: string | null; isActive: boolean; order: number; fallbackImage?: string };
-  const rawCards: ProductCard[] =
-    Array.isArray(productsData?.settings?.cards) &&
-    (productsData.settings.cards as ProductCard[]).length > 0
-      ? (productsData.settings.cards as ProductCard[])
-      : NERIO_PRODUCT_CARDS_FALLBACK;
+  const rawCards: ProductCard[] = NERIO_PRODUCT_CARDS_FALLBACK;
 
   const productCardImages = await resolveMediaIds(
     rawCards.map((c) => c.imageId),
@@ -248,21 +224,19 @@ export default async function NerioPageEn() {
     });
 
   const productsPreview = {
-    eyebrow: productsData?.eyebrow || "Products & Fabrics",
-    title: productsData?.title || "Discover NERIO Fabrics",
-    content: productsData?.content?.trim() || null,
+    eyebrow: "Products & Fabrics",
+    title: "Discover NERIO Fabrics",
+    content: null,
     fallbackDescription:
       "All NERIO fabrics made from recycled ocean polypropylene at a glance — available as cushions, pads and accessories.",
     cards: activeCards,
   };
 
   const cta = {
-    title: ctaData?.title || "Experience NERIO",
-    content:
-      ctaData?.content ||
-      "Discover the complete NERIO collection and request your personal sample set.",
-    buttonLabel: ctaData?.buttonLabel || "Request sample set",
-    buttonHref: ctaData?.buttonHref || "/en/contact",
+    title: "Experience NERIO",
+    content: "Discover the complete NERIO collection and request your personal sample set.",
+    buttonLabel: "Request sample set",
+    buttonHref: "/en/contact",
   };
 
   const contentSections =

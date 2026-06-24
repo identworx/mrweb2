@@ -26,6 +26,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { translateProductType } from "@/lib/i18n/product-types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -380,7 +381,7 @@ export default async function CollectionPage({ params }: PageProps) {
                       <div className="flex items-end justify-between border-b border-black/[0.06] pb-4 mb-8">
                         <div>
                           <h3 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight">
-                            {group.name}
+                            {translateProductType(group.name, "en")}
                           </h3>
                         </div>
                         <span className="font-accent text-text-muted text-[11px] tracking-[0.12em] uppercase flex-shrink-0 ml-4">

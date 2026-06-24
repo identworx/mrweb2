@@ -17,11 +17,10 @@ import PageCta from "@/components/PageCta";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("produktmasse", "produktmasse");
+  const hero = await getPageHeroData("produktmasse", "produktmasse", "en");
   return {
-    title: hero.seoTitle || "Product Dimensions | Mosaroma",
+    title: "Product Dimensions | Mosaroma",
     description:
-      hero.seoDescription ||
       "Overview of key Mosaroma product dimensions for cushions, pads, back cushions, bench cushions, poufs, placemats and table runners.",
   };
 }
@@ -29,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ProductDimensionsPage() {
   const [layout, hero, allMeasurements, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("produktmasse", "produktmasse"),
+    getPageHeroData("produktmasse", "produktmasse", "en"),
     getPublicMeasurements(),
     getIconSlots(["arrow-right"]),
   ]);

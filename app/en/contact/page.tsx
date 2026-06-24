@@ -29,11 +29,10 @@ const FALLBACK_FORM: PublicForm = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("kontakt", "kontakt");
+  const hero = await getPageHeroData("kontakt", "kontakt", "en");
   return {
-    title: hero.seoTitle || "Contact | Mosaroma",
+    title: "Contact | Mosaroma",
     description:
-      hero.seoDescription ||
       "Contact MOSAROMA — Mosaroma Industries GmbH in Oyten near Bremen. We look forward to hearing from you.",
   };
 }
@@ -41,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage() {
   const [layout, hero, { form, status }, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("kontakt", "kontakt"),
+    getPageHeroData("kontakt", "kontakt", "en"),
     getPublicFormBySlug("contact"),
     getIconSlots(["contact-email", "contact-globe", "contact-clock"]),
   ]);

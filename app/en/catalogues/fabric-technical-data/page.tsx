@@ -22,11 +22,10 @@ import PageCta from "@/components/PageCta";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten");
+  const hero = await getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en");
   return {
-    title: hero.seoTitle || "Fabric Technical Data | Mosaroma",
+    title: "Fabric Technical Data | Mosaroma",
     description:
-      hero.seoDescription ||
       "Technical information on Mosaroma fabric qualities, materials, weights and test values.",
   };
 }
@@ -34,7 +33,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function FabricTechnicalDataPage() {
   const [layout, hero, result, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten"),
+    getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en"),
     getServicePageBySlug("stoff-technische-daten"),
     getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);

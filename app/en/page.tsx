@@ -175,9 +175,7 @@ export default async function Home() {
     getTeaserAmbienteImages(),
   ]);
 
-  const sections = homepageData?.sections.length
-    ? homepageData.sections
-    : FALLBACK_SECTIONS;
+  const sections = FALLBACK_SECTIONS;
 
   return (
     <>
@@ -186,7 +184,7 @@ export default async function Home() {
         {sections.map((section) => {
           switch (section.style) {
             case "home-hero":
-              return <HomepageHero key={section.id} section={section} icons={icons} />;
+              return <HomepageHero key={section.id} section={section} icons={icons} locale={locale} />;
             case "homepage-ambiente-teaser":
               return (
                 <AmbienteTeaser
@@ -197,20 +195,21 @@ export default async function Home() {
                   variant="homepage"
                   ctaLabel={section.buttonLabel || "All ambiente images"}
                   ctaHref={section.buttonHref || "/en/collections/ambiente"}
+                  locale={locale}
                 />
               );
             case "value-props":
-              return <HomepageValueProps key={section.id} section={section} icons={icons} />;
+              return <HomepageValueProps key={section.id} section={section} icons={icons} locale={locale} />;
             case "image-text-feature":
-              return <HomepageImageTextFeature key={section.id} section={section} icons={icons} />;
+              return <HomepageImageTextFeature key={section.id} section={section} icons={icons} locale={locale} />;
             case "collection-showcase":
-              return <HomepageCollections key={section.id} section={section} collections={collections} icons={icons} />;
+              return <HomepageCollections key={section.id} section={section} collections={collections} icons={icons} locale={locale} />;
             case "sustainability-stats":
-              return <HomepageSustainability key={section.id} section={section} icons={icons} />;
+              return <HomepageSustainability key={section.id} section={section} icons={icons} locale={locale} />;
             case "downloads-teaser":
-              return <HomepageDownloads key={section.id} section={section} downloads={downloads} icons={icons} />;
+              return <HomepageDownloads key={section.id} section={section} downloads={downloads} icons={icons} locale={locale} />;
             case "news-teaser":
-              return <HomepageNews key={section.id} section={section} articles={articles} icons={icons} />;
+              return <HomepageNews key={section.id} section={section} articles={articles} icons={icons} locale={locale} />;
             default:
               return null;
           }

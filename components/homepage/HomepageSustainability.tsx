@@ -3,6 +3,8 @@ import type { HomepageSection } from "@/lib/cms/homepage";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface Stat {
   value: string;
@@ -13,9 +15,10 @@ interface Stat {
 interface Props {
   section: HomepageSection;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function HomepageSustainability({ section, icons = {} }: Props) {
+export default function HomepageSustainability({ section, icons = {}, locale = "de" }: Props) {
   const stats = (section.settings.stats as Stat[]) || [];
   const title = section.title || "Grün gewebt. Vom Tropfen an.";
   const content = section.content || "";
@@ -65,7 +68,7 @@ export default function HomepageSustainability({ section, icons = {} }: Props) {
 
         {ctaLabel && ctaHref && (
           <div className="mt-12 md:mt-16 text-center">
-            <Link href={ctaHref} className="btn-outline-white">
+            <Link href={localizedHref(ctaHref, locale)} className="btn-outline-white">
               {ctaLabel}
               <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
             </Link>

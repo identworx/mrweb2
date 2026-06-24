@@ -16,11 +16,10 @@ import type { ServicePage } from "@/lib/mosaroma/servicePages";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("kataloge", "kataloge");
+  const hero = await getPageHeroData("kataloge", "kataloge", "en");
   return {
-    title: hero.seoTitle || "Catalogues & Downloads | Mosaroma",
+    title: "Catalogues & Downloads | Mosaroma",
     description:
-      hero.seoDescription ||
       "Mosaroma Catalogue 2027, product dimensions, care instructions, warranty information and technical fabric data.",
   };
 }
@@ -78,7 +77,7 @@ function CatalogCard({ download, icons }: { download: FrontendDownload; icons: R
 export default async function CataloguesPage() {
   const [layout, hero, catalogs, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("kataloge", "kataloge"),
+    getPageHeroData("kataloge", "kataloge", "en"),
     getPublicDownloadsByType("catalog"),
     getIconSlots(["service-ruler", "service-shield", "service-fabric", "external-link", "arrow-right"]),
   ]);

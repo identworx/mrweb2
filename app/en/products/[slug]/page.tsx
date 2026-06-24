@@ -23,7 +23,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
-import { translateProductTypeAsync } from "@/lib/i18n/product-types";
+import { translateProductTypeAsync, translateProductDisplayName } from "@/lib/i18n/product-types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const settings = await getSiteSettings();
   const title =
     product.seoTitle ||
-    `${product.name} | Mosaroma Products`;
+    `${translateProductDisplayName(product.name, "en")} | Mosaroma Products`;
   const description =
     product.seoDescription ||
     product.shortDescription ||
@@ -131,6 +131,7 @@ export default async function ProductPage({ params }: PageProps) {
   const displayProductGroup = product.productGroupName
     ? await translateProductTypeAsync(product.productGroupName, "en")
     : null;
+  const displayName = translateProductDisplayName(product.name, "en");
 
   return (
     <>
@@ -169,7 +170,7 @@ export default async function ProductPage({ params }: PageProps) {
             )}
 
             <h1 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.1]">
-              {product.name}
+              {displayName}
             </h1>
 
             {displayProductGroup && (
@@ -183,7 +184,7 @@ export default async function ProductPage({ params }: PageProps) {
         <BreadcrumbBar items={[
           { label: "Collections", href: "/en/collections" },
           { label: displayCollection, href: `/en/collections/${product.collectionSlug}` },
-          { label: product.name },
+          { label: displayName },
         ]} />
 
         {/* -- Product Stage -- */}
@@ -380,7 +381,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         <PageCta
           variant="light"
-          title={`${product.name} for Your Project?`}
+          title={`${displayName} for Your Project?`}
           description="Request a sample or get advice on materials, dimensions and availability."
           primaryLabel="Get in touch"
           primaryHref="/en/contact"

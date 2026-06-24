@@ -4,15 +4,18 @@ import type { HomepageSection } from "@/lib/cms/homepage";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface Props {
   section: HomepageSection;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
 const FALLBACK_IMAGE = "/Luxury-Outdoor-Space-with-Premium-Garden-Furniture.jpg";
 
-export default function HomepageHero({ section, icons = {} }: Props) {
+export default function HomepageHero({ section, icons = {}, locale = "de" }: Props) {
   const s = section.settings;
   const eyebrow = section.eyebrow || "Hochwertige Outdoor-Textilien";
   const headline = section.title || "Design trifft\nPerformance.";
@@ -90,12 +93,12 @@ export default function HomepageHero({ section, icons = {} }: Props) {
             )}
 
             <div className="flex flex-wrap items-center gap-3 md:gap-4">
-              <Link href={ctaHref} className="btn-primary">
+              <Link href={localizedHref(ctaHref, locale)} className="btn-primary">
                 {ctaLabel}
                 <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
               </Link>
               {secondaryLabel && secondaryHref && (
-                <Link href={secondaryHref} className="btn-outline-white">
+                <Link href={localizedHref(secondaryHref, locale)} className="btn-outline-white">
                   {secondaryLabel}
                   <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
                 </Link>

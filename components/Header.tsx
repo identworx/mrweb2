@@ -216,10 +216,10 @@ export default function Header({ navItems, logoUrl, siteName, icons = {}, locale
               aria-current={isLinkActive(contactHref, pathname) ? "page" : undefined}
               className={`font-heading text-[11px] font-semibold uppercase tracking-[0.12em] px-5 py-2.5 transition-all duration-300 ${
                 scrolled
-                  ? isLinkActive("/kontakt", pathname)
+                  ? isLinkActive(contactHref, pathname)
                     ? "border border-anthracite bg-anthracite text-white"
                     : "border border-anthracite/20 text-anthracite hover:bg-anthracite hover:text-white"
-                  : isLinkActive("/kontakt", pathname)
+                  : isLinkActive(contactHref, pathname)
                     ? "border border-white/70 text-white bg-white/15"
                     : "border border-white/50 text-white hover:bg-white/10"
               }`}
@@ -286,7 +286,7 @@ export default function Header({ navItems, logoUrl, siteName, icons = {}, locale
           >
             {t.header.home}
             <CmsIcon icon={icons["chevron-right"]} width={14} height={14} className={`motion-safe:group-hover:translate-x-0.5 transition-all duration-300 ${
-              isLinkActive("/", pathname) ? "text-pumpkin" : "text-text-muted group-hover:text-pumpkin"
+              isLinkActive(homeHref, pathname) ? "text-pumpkin" : "text-text-muted group-hover:text-pumpkin"
             }`} />
           </Link>
           {links.map((link, i) => {

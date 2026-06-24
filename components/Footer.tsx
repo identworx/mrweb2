@@ -7,6 +7,7 @@ import CookieSettingsButton from "@/components/consent/CookieSettingsButton";
 import type { Locale } from "@/lib/i18n/config";
 import { getDictionary, type Dictionary } from "@/lib/i18n/dictionary";
 import { getFooterLegalLinks } from "@/lib/i18n/navigation";
+import { localizedHref } from "@/lib/i18n/routes";
 
 export interface FooterNavColumn {
   title: string;
@@ -99,15 +100,31 @@ export default function Footer({
 }: FooterProps) {
   const t = dictionary || getDictionary(locale);
   const brandDescription =
-    description || footerData.brand.description;
+    description || (locale === "en"
+      ? "Design meets performance. Premium outdoor textiles for lasting moments in the open air."
+      : footerData.brand.description);
   const copyright =
     copyrightText || `© ${new Date().getFullYear()} MOSAROMA GmbH. ${t.footer.copyright}`;
+  const fallbackLabelMap: Record<string, string> = locale === "en" ? {
+    Kollektionen: "Collections",
+    Materialien: "Materials",
+    Service: "Service",
+    Kataloge: "Catalogues",
+    Produktmaße: "Product Dimensions",
+    "Pflege & Garantie": "Care & Warranty",
+    "Stoff- & technische Daten": "Fabric & Technical Data",
+    Kontakt: "Contact",
+    "Kontakt aufnehmen": "Contact us",
+  } : {};
   const footerColumns: FooterNavColumn[] =
     columns && columns.length > 0
       ? columns
       : footerData.columns.map((c) => ({
-          title: c.title,
-          links: c.links.map((l) => ({ label: l.label, href: l.href })),
+          title: fallbackLabelMap[c.title] || c.title,
+          links: c.links.map((l) => ({
+            label: fallbackLabelMap[l.label] || l.label,
+            href: localizedHref(l.href, locale),
+          })),
         }));
   const legal: { label: string; href: string; target?: string }[] =
     legalLinks && legalLinks.length > 0
@@ -323,7 +340,7 @@ export default function Footer({
 
             <div className="flex flex-wrap justify-center gap-5 text-[11px]">
               {legal.map((item) =>
-                item.label === "Cookie-Einstellungen" ? (
+                item.label === "Cookie-Einstellungen" || item.label === "Cookie Settings" ? (
                   <CookieSettingsButton key={item.label} />
                 ) : (
                   <Link

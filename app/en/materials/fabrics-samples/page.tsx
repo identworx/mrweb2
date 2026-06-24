@@ -13,12 +13,10 @@ import { getIconSlots } from "@/lib/cms/icons";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("stoffe-muster", "stoffeMuster");
+  const hero = await getPageHeroData("stoffe-muster", "stoffeMuster", "en");
   return {
-    title:
-      hero.seoTitle || "Fabrics & Samples | Mosaroma",
+    title: "Fabrics & Samples | Mosaroma",
     description:
-      hero.seoDescription ||
       "Discover all Mosaroma fabrics and samples. Filter by material family, product type or article number.",
   };
 }
@@ -31,7 +29,7 @@ export default async function FabricsSamplesPage({
   const { family } = await searchParams;
   const [layout, hero, fabricData, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("stoffe-muster", "stoffeMuster"),
+    getPageHeroData("stoffe-muster", "stoffeMuster", "en"),
     getFabricLibraryData(),
     getIconSlots(["ui-search", "ui-grid", "ui-matrix", "ui-close", "ui-image-placeholder", "arrow-right", "checkmark"]),
   ]);

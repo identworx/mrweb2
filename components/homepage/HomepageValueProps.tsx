@@ -3,6 +3,8 @@ import type { HomepageSection } from "@/lib/cms/homepage";
 import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import { VALUE_PROP_KEY_MAP } from "@/lib/cms/icon-key-map";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface ValueCard {
   iconKey: string;
@@ -13,9 +15,10 @@ interface ValueCard {
 interface Props {
   section: HomepageSection;
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function HomepageValueProps({ section, icons = {} }: Props) {
+export default function HomepageValueProps({ section, icons = {}, locale = "de" }: Props) {
   const cards = (section.settings.cards as ValueCard[]) || [];
   const ctaLabel = section.buttonLabel;
   const ctaHref = section.buttonHref;
@@ -49,7 +52,7 @@ export default function HomepageValueProps({ section, icons = {} }: Props) {
 
         {ctaLabel && ctaHref && (
           <div className="mt-10 md:mt-12 text-center">
-            <Link href={ctaHref} className="btn-outline">
+            <Link href={localizedHref(ctaHref, locale)} className="btn-outline">
               {ctaLabel}
               <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
             </Link>

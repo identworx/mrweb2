@@ -5,6 +5,7 @@ import CmsIcon from "@/components/cms/CmsIcon";
 import type { FrontendProduct } from "@/lib/cms/products";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/routes";
+import { translateProductType, translateProductDisplayName } from "@/lib/i18n/product-types";
 
 interface CollectionProductCardProps {
   product: FrontendProduct;
@@ -36,11 +37,11 @@ export default function CollectionProductCard({
 
       <div className="flex flex-col flex-1 p-4 md:p-5">
         <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase">
-          {product.productGroupName}
+          {product.productGroupName ? translateProductType(product.productGroupName, locale) : ""}
         </p>
 
         <h3 className="font-heading text-anthracite text-sm md:text-[15px] font-bold leading-snug mt-1 group-hover:text-pumpkin transition-colors duration-300">
-          {product.name}
+          {translateProductDisplayName(product.name, locale)}
         </h3>
 
         <div className="mt-2 space-y-0.5 flex-1">

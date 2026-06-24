@@ -5,14 +5,17 @@ import type { ResolvedIcon } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
 import NewsCard from "@/components/NewsCard";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/routes";
 
 interface Props {
   section: HomepageSection;
   articles: FrontendNewsCard[];
   icons?: Record<string, ResolvedIcon>;
+  locale?: Locale;
 }
 
-export default function HomepageNews({ section, articles, icons = {} }: Props) {
+export default function HomepageNews({ section, articles, icons = {}, locale = "de" }: Props) {
   const title = section.title || "Aktuelles.";
   const description = section.content || "";
   const ctaLabel = section.buttonLabel;
@@ -35,7 +38,7 @@ export default function HomepageNews({ section, articles, icons = {} }: Props) {
           </div>
           {ctaLabel && ctaHref && (
             <Link
-              href={ctaHref}
+              href={localizedHref(ctaHref, locale)}
               className="inline-flex items-center gap-2 font-heading text-anthracite text-sm font-semibold tracking-wide hover:text-pumpkin transition-colors duration-300 shrink-0"
             >
               {ctaLabel}
@@ -54,6 +57,7 @@ export default function HomepageNews({ section, articles, icons = {} }: Props) {
               description={item.description}
               slug={item.slug}
               imageUrl={item.imageUrl}
+              locale={locale}
             />
           ))}
         </div>

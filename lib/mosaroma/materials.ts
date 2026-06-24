@@ -582,3 +582,131 @@ export const fabricPatternGroups: FabricPatternGroup[] = [
     ],
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/*  English versions of key fallback content for EN pages                      */
+/* -------------------------------------------------------------------------- */
+
+export const mackintoshTechnologyEn: MackintoshTechnology = {
+  title: "Mackintosh® Technology",
+  description: [
+    "Mackintosh® Technology is based on solution-dyed olefin — a process in which the colour is introduced into the granulate during fibre production. The result: fibres that are dyed throughout, with colour at the core rather than on the surface.",
+    "This process eliminates the need for post-dyeing, washing and chemical treatment. Water and energy consumption drops dramatically, and the CO₂ footprint improves measurably — with no compromise on colour accuracy or durability.",
+  ],
+  steps: [
+    {
+      title: "Granulate",
+      description:
+        "Olefin granulate forms the raw material base. This lightweight, chemically stable polymer is the foundation for all Mackintosh® fabrics.",
+    },
+    {
+      title: "Additive",
+      description:
+        "Colour pigments and UV stabilisers are mixed directly into the molten granulate — before the fibre is even formed.",
+    },
+    {
+      title: "Solution Dyeing",
+      description:
+        "The coloured melt is drawn through spinnerets to form fibres. The colour sits in the fibre core — permanent, lightfast and bleach-resistant.",
+    },
+  ],
+  benefits: [
+    "Exceptional lightfastness (7–8 on the scale)",
+    "Highest UV resistance",
+    "Water absorption below 0.1%",
+    "Bleach- and mould-resistant",
+    "PFAS-free",
+    "Low CO₂ footprint through elimination of wet finishing",
+  ],
+};
+
+export const olefinBenefitsEn = {
+  tags: ["Flexible", "Lightweight", "Heat-resistant", "Dimensionally stable"],
+  paragraphs: [
+    "Polypropylene, also known as olefin for many years, is a modern plastic produced by polymerising propylene. Its most important properties include high flexibility, low weight and very good heat resistance.",
+    "Olefin can be spun into fibres and is used in both industrial and household textiles. The material shares some properties with polyethylene but is stronger, stiffer and more resistant. At higher temperatures it remains dimensionally stable and durable. A large proportion of global polypropylene production is processed into fibres.",
+    "Olefin fibres are used in numerous products, including upholstered furniture, indoor and outdoor carpets, ropes, cords, fishing equipment and medical applications. In addition, polypropylene non-wovens are used for soil stabilisation and reinforcement in construction and road building.",
+    "Thanks to these properties, olefin fabrics are particularly suitable for outdoor use. The Mosaroma collections are made entirely from polypropylene and are therefore permanently designed for outdoor use.",
+  ],
+};
+
+export const oceanCycleProcessEn = {
+  title: "OceanCycle Process",
+  description:
+    "Ocean-bound plastic is collected within 50 km of coastlines or at major waterways leading to the oceans. Through a certified process, it is transformed into high-quality material for our NERIO fabrics.",
+  steps: [
+    {
+      title: "Collection",
+      description:
+        "Ocean-bound plastic is collected near coastlines and waterways before it reaches the seas.",
+    },
+    {
+      title: "Sorting",
+      description:
+        "The collected materials are separated by polymer type and quality and prepared for further processing.",
+    },
+    {
+      title: "Cleaning",
+      description:
+        "Thorough cleaning and preparation of the material to remove contaminants and foreign matter.",
+    },
+    {
+      title: "Recycling",
+      description:
+        "Processing into high-quality recycled polypropylene (rPP), which serves as the basis for NERIO yarns.",
+    },
+  ] as OceanCycleStep[],
+  highlights: [
+    "Min. 50% OceanCycle recycled polypropylene",
+    "PFAS-free — safer for people and planet",
+    "Solution-dyed for exceptional colourfastness",
+    "Designed for durability and long product life",
+    "Reduces ocean-bound plastic pollution",
+  ],
+};
+
+export const nerioStoryEn = {
+  eyebrow: "The Story",
+  title: "Born from the Ocean. Made for the Future.",
+  paragraphs: [
+    "NERIO combines premium outdoor performance with genuine sustainability. Every fabric in the NERIO line contains at least 50% recycled polypropylene, recovered from ocean-bound plastic.",
+    "The fibre is solution-dyed — colour and UV protection are anchored at the core. No post-dyeing, no water consumption, no chemical baths. The result: long-lasting fabrics with excellent colourfastness and measurable CO₂ savings.",
+  ],
+};
+
+export const nerioPromiseEn = {
+  eyebrow: "Our Promise",
+  title: "Sustainability Without Compromise",
+  items: [
+    { iconKey: "recycle", title: "50% Recycled", text: "At least half of the material comes from OceanCycle® certified, recycled ocean polypropylene." },
+    { iconKey: "droplet", title: "PFAS-free", text: "Completely free from per- and polyfluoroalkyl substances — safer for people, animals and the environment." },
+    { iconKey: "sun", title: "Solution-Dyed", text: "Solution-dyed for excellent colourfastness with drastically reduced water and energy consumption." },
+    { iconKey: "shield", title: "Durable", text: "Designed for long product life — less waste, more years of use." },
+  ],
+};
+
+export const nerioHighlightsEn = {
+  eyebrow: "At a Glance",
+  title: "NERIO Highlights",
+  stats: [
+    { value: "50%", label: "recycled ocean PP", detail: "OceanCycle® certified" },
+    { value: "0", label: "PFAS", detail: "Completely fluorine-free production" },
+    { value: "7–8", label: "lightfastness", detail: "Highest grade on the rating scale" },
+    { value: "< 0.1%", label: "water absorption", detail: "Practically water-repellent" },
+  ],
+};
+
+export const nerioTechnicalFactsEn = {
+  eyebrow: "Technical Data",
+  title: "NERIO in Detail",
+  facts: [
+    { label: "Material", value: "100% Olefin (50% recycled)" },
+    { label: "Weight", value: "approx. 200–230 g/m²" },
+    { label: "Dyeing", value: "solution-dyed" },
+    { label: "Certification", value: "OceanCycle®" },
+    { label: "Lightfastness", value: "7–8 (BS EN ISO 105-B02)" },
+    { label: "UV Resistance", value: "5/5" },
+    { label: "PFAS", value: "Not detected" },
+    { label: "Mould Resistance", value: "Passed (AATCC 147)" },
+  ],
+};

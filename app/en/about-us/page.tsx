@@ -12,11 +12,10 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("ueber-uns", "ueberUns");
+  const hero = await getPageHeroData("ueber-uns", "ueberUns", "en");
   return {
-    title: hero.seoTitle || "About Us | Mosaroma",
+    title: "About Us | Mosaroma",
     description:
-      hero.seoDescription ||
       "For generations, we have been developing and producing premium outdoor textiles. Design, performance and responsible practice — that is MOSAROMA.",
   };
 }
@@ -53,7 +52,7 @@ const sustainabilityStats = [
 export default async function AboutUsPage() {
   const [layout, hero] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("ueber-uns", "ueberUns"),
+    getPageHeroData("ueber-uns", "ueberUns", "en"),
   ]);
 
   return (

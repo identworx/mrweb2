@@ -10,9 +10,9 @@ import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import {
-  mackintoshTechnology,
-  olefinBenefits,
-  oceanCycleProcess,
+  mackintoshTechnologyEn as mackintoshTechnology,
+  olefinBenefitsEn as olefinBenefits,
+  oceanCycleProcessEn as oceanCycleProcess,
 } from "@/lib/mosaroma/materials";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
@@ -27,11 +27,10 @@ import PageCta from "@/components/PageCta";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("materialien", "materialien");
+  const hero = await getPageHeroData("materialien", "materialien", "en");
   return {
-    title: hero.seoTitle || "Materials | Mosaroma",
+    title: "Materials | Mosaroma",
     description:
-      hero.seoDescription ||
       "Discover Mosaroma's fabric qualities: Mackintosh® solution-dyed olefin, Nerio recycled ocean plastic, and Basic outdoor fabrics.",
   };
 }
@@ -39,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function MaterialsPage() {
   const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("materialien", "materialien"),
+    getPageHeroData("materialien", "materialien", "en"),
     getServicePageBySlug("materialien"),
     getFabricPreviewSwatches(6),
     getSectionImage("materialien", "materials-olefin"),
@@ -52,41 +51,31 @@ export default async function MaterialsPage() {
   ]);
 
   const tech = {
-    eyebrow: techData?.eyebrow || "Technology",
-    title: techData?.title || mackintoshTechnology.title,
-    content: techData?.content?.trim() || null,
+    eyebrow: "Technology",
+    title: mackintoshTechnology.title,
+    content: null,
     fallbackParagraphs: mackintoshTechnology.description,
-    steps: Array.isArray(techData?.settings?.steps) && (techData.settings.steps as Array<{title: string; label: string; description: string}>).length > 0
-      ? (techData.settings.steps as Array<{title: string; label: string; description: string}>)
-      : mackintoshTechnology.steps.map((s, i) => ({
-          ...s,
-          label: ["100 % PP", "Additively water-repellent", "Spin-dyed UV pigments"][i] || "",
-        })),
-    benefits: Array.isArray(techData?.settings?.benefits) && (techData.settings.benefits as string[]).length > 0
-      ? (techData.settings.benefits as string[])
-      : mackintoshTechnology.benefits,
+    steps: mackintoshTechnology.steps.map((s, i) => ({
+      ...s,
+      label: ["100 % PP", "Additively water-repellent", "Spin-dyed UV pigments"][i] || "",
+    })),
+    benefits: mackintoshTechnology.benefits,
   };
 
   const olefin = {
-    title: olefinData?.title || "Why Olefin?",
-    tags: Array.isArray(olefinData?.settings?.tags) && (olefinData.settings.tags as string[]).length > 0
-      ? (olefinData.settings.tags as string[])
-      : olefinBenefits.tags,
-    content: olefinData?.content?.trim() || null,
+    title: "Why Olefin?",
+    tags: olefinBenefits.tags,
+    content: null,
     fallbackParagraphs: olefinBenefits.paragraphs,
   };
 
   const ocean = {
-    eyebrow: oceanData?.eyebrow || "Sustainability",
-    title: oceanData?.title || oceanCycleProcess.title,
-    content: oceanData?.content?.trim() || null,
+    eyebrow: "Sustainability",
+    title: oceanCycleProcess.title,
+    content: null,
     fallbackDescription: oceanCycleProcess.description,
-    steps: Array.isArray(oceanData?.settings?.steps) && (oceanData.settings.steps as Array<{title: string; description: string}>).length > 0
-      ? (oceanData.settings.steps as Array<{title: string; description: string}>)
-      : oceanCycleProcess.steps,
-    highlights: Array.isArray(oceanData?.settings?.highlights) && (oceanData.settings.highlights as string[]).length > 0
-      ? (oceanData.settings.highlights as string[])
-      : oceanCycleProcess.highlights,
+    steps: oceanCycleProcess.steps,
+    highlights: oceanCycleProcess.highlights,
   };
 
   const contentSections =
@@ -436,10 +425,10 @@ export default async function MaterialsPage() {
             {/* CTA */}
             <PageCta
               variant="light"
-              title={ctaData?.title || "All Details in the Catalogue"}
-              description={ctaData?.content || "Discover all fabric qualities, colours and technical data in our current catalogue."}
-              primaryLabel={ctaData?.buttonLabel || "View catalogue"}
-              primaryHref={ctaData?.buttonHref || "/en/catalogues"}
+              title="All Details in the Catalogue"
+              description="Discover all fabric qualities, colours and technical data in our current catalogue."
+              primaryLabel="View catalogue"
+              primaryHref="/en/catalogues"
             />
           </>
         )}

@@ -83,11 +83,10 @@ function findSection(
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("kollektionen", "kollektionen");
+  const hero = await getPageHeroData("kollektionen", "kollektionen", "en");
   return {
-    title: hero.seoTitle || "Collections 2027 | Mosaroma",
+    title: "Collections 2027 | Mosaroma",
     description:
-      hero.seoDescription ||
       "Discover MOSAROMA's 7 collections — curated colour worlds for the outdoors, made in Mackintosh®, Nerio and Basic qualities.",
   };
 }
@@ -95,7 +94,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CollectionsPage() {
   const [layout, hero, collections, ambienteSlots, pageResult, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("kollektionen", "kollektionen"),
+    getPageHeroData("kollektionen", "kollektionen", "en"),
     getPublishedCollections(),
     getTeaserAmbienteImages(),
     getServicePageBySlug("kollektionen"),
@@ -106,27 +105,13 @@ export default async function CollectionsPage() {
     pageResult.state === "published" ? pageResult.page.sections : [];
 
   const ambienteSection = findSection(sections, "collections-ambiente-teaser");
-  const consultationSection =
-    findSection(sections, "collection-consultation-card") ?? FALLBACK_CONSULTATION;
-  const benefitsSection =
-    findSection(sections, "collection-benefits") ?? FALLBACK_BENEFITS;
-  const ctaSection =
-    findSection(sections, "collection-cta") ?? FALLBACK_CTA;
+  const consultationSection = FALLBACK_CONSULTATION;
+  const benefitsSection = FALLBACK_BENEFITS;
+  const ctaSection = FALLBACK_CTA;
 
-  const pageEyebrow =
-    pageResult.state === "published" && pageResult.page.eyebrow
-      ? pageResult.page.eyebrow
-      : "Colour Worlds";
-
-  const pageHeadline =
-    pageResult.state === "published" && pageResult.page.headline
-      ? pageResult.page.headline
-      : "Collections.";
-
-  const introText =
-    pageResult.state === "published" && pageResult.page.introText
-      ? pageResult.page.introText
-      : "Each collection tells its own story of colour, material and mood. Choose the colour world that suits your outdoor space.";
+  const pageEyebrow = "Colour Worlds";
+  const pageHeadline = "Collections.";
+  const introText = "Each collection tells its own story of colour, material and mood. Choose the colour world that suits your outdoor space.";
 
   const allMoodColors = collections.flatMap((c) => c.moodColors);
 
@@ -142,6 +127,7 @@ export default async function CollectionsPage() {
       intro={ambienteSection?.content || undefined}
       ctaLabel={ambienteSection?.buttonLabel || undefined}
       ctaHref={ambienteSection?.buttonHref || undefined}
+      locale="en"
     />
   );
 
@@ -227,7 +213,7 @@ export default async function CollectionsPage() {
   );
 
   const ctaBlock = (
-    <CollectionCtaSection key="cta" section={ctaSection} />
+    <CollectionCtaSection key="cta" section={ctaSection} locale="en" />
   );
 
   // Sort content blocks by order (ambiente from CMS, others at fixed positions)

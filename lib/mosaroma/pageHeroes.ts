@@ -104,3 +104,78 @@ export const pageHeroes: Record<string, PageHeroData> = {
     alt: "Mosaroma NERIO Nachhaltigkeits-Kollektion Hero",
   },
 };
+
+export const pageHeroesEn: Record<string, Partial<PageHeroData>> = {
+  kollektionen: {
+    eyebrow: "Season 2027 · Outdoor Living",
+    title: "Seven Colour Worlds.",
+    description: "Each collection tells its own story of colour, material and mood. Choose the world that suits your outdoor space.",
+    alt: "Mosaroma Collections Hero with fabric texture and colour fields",
+  },
+  materialien: {
+    eyebrow: "Material & Technology",
+    title: "Materials built for the outdoors.",
+    description: "Outdoor textiles designed for comfort, durability and reliable performance in the open air.",
+    alt: "Mosaroma Materials Hero with woven fabric texture",
+  },
+  ueberUns: {
+    eyebrow: "About Mosaroma",
+    title: "This is who we are.",
+    description: "Design, performance and responsible practice for long-lasting outdoor textiles.",
+    alt: "Mosaroma About Us Hero in premium outdoor style",
+  },
+  kataloge: {
+    eyebrow: "Downloads",
+    title: "Catalogues & Downloads",
+    description: "Documents on products, fabrics, collections, care and technical data.",
+    alt: "Mosaroma Catalogues and Downloads Hero",
+  },
+  neuigkeiten: {
+    eyebrow: "Latest",
+    title: "News",
+    description: "Current topics on collections, materials and outdoor textiles.",
+    alt: "Mosaroma News Hero",
+  },
+  kontakt: {
+    eyebrow: "Contact",
+    title: "Get in touch.",
+    description: "We are happy to help with questions about collections, materials, catalogues and products.",
+    alt: "Mosaroma Contact Hero",
+  },
+  produktmasse: {
+    eyebrow: "Overview · Product Dimensions",
+    title: "Product Dimensions",
+    description: "All key dimensions of Mosaroma product types at a glance.",
+    alt: "Mosaroma Product Dimensions Hero with technical lines and measurements",
+  },
+  pflegeGarantie: {
+    eyebrow: "Service",
+    title: "Care & Warranty",
+    description: "Instructions on cleaning, storage and warranty for Mosaroma outdoor products.",
+    alt: "Mosaroma Care and Warranty Hero",
+  },
+  stoffeMuster: {
+    eyebrow: "Fabric Library",
+    title: "Fabrics & Samples",
+    description: "Filter by material family, product type or search by fabric name and article number.",
+    alt: "Mosaroma Fabrics and Samples Hero",
+  },
+  technischeDaten: {
+    eyebrow: "Material Comparison",
+    title: "Technical Data",
+    description: "Material properties, test values and outdoor performance of our fabric qualities compared.",
+    alt: "Mosaroma Technical Data Hero",
+  },
+  stoffTechnischeDaten: {
+    eyebrow: "Service",
+    title: "Fabric & Technical Data",
+    description: "Technical information on fabric qualities, material composition and test values.",
+    alt: "Mosaroma Fabric and Technical Data Hero",
+  },
+  nerio: {
+    eyebrow: "Sustainability · OceanCycle®",
+    title: "NERIO — Born from the Ocean.",
+    description: "Performance fabrics made from recycled ocean polypropylene. OceanCycle® certified, PFAS-free and solution-dyed.",
+    alt: "Mosaroma NERIO Sustainability Collection Hero",
+  },
+};

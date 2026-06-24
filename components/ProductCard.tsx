@@ -4,6 +4,7 @@ import ProductImageFrame from "./products/ProductImageFrame";
 import CmsIcon from "@/components/cms/CmsIcon";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/routes";
+import { translateProductType, translateProductDisplayName } from "@/lib/i18n/product-types";
 
 interface ProductCardProps {
   slug: string;
@@ -46,8 +47,10 @@ const collectionNames: Record<string, string> = {
 export default function ProductCard({ product, icons = {}, locale = "de" }: { product: ProductCardProps; icons?: Record<string, ResolvedIcon>; locale?: Locale }) {
   const displayCollection =
     product.collectionName || collectionNames[product.collectionSlug] || product.collectionSlug;
-  const displayCategory =
+  const rawCategory =
     product.productGroupName || categoryTitles[product.categorySlug] || product.categorySlug;
+  const displayCategory = translateProductType(rawCategory, locale);
+  const displayName = translateProductDisplayName(product.name, locale);
 
   return (
     <Link
@@ -69,7 +72,7 @@ export default function ProductCard({ product, icons = {}, locale = "de" }: { pr
         </p>
 
         <h3 className="font-heading text-anthracite text-sm md:text-base font-bold leading-snug mt-1.5 group-hover:text-pumpkin transition-colors duration-300">
-          {product.name}
+          {displayName}
         </h3>
 
         <div className="mt-2.5 space-y-1">

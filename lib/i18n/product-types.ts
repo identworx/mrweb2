@@ -25,6 +25,20 @@ export function getProductTypeMap(): Record<string, string> {
   return { ...productTypeTranslations };
 }
 
+export function translateProductDisplayName(
+  name: string,
+  locale: Locale,
+): string {
+  if (locale === "de") return name;
+  let result = name;
+  for (const [de, en] of Object.entries(productTypeTranslations)) {
+    if (result.includes(de)) {
+      result = result.replace(de, en);
+    }
+  }
+  return result;
+}
+
 export async function translateProductTypeAsync(
   germanName: string,
   locale: Locale,

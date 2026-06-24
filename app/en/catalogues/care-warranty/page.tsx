@@ -19,11 +19,10 @@ import PageCta from "@/components/PageCta";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("pflege-garantie", "pflegeGarantie");
+  const hero = await getPageHeroData("pflege-garantie", "pflegeGarantie", "en");
   return {
-    title: hero.seoTitle || "Care & Warranty | Mosaroma",
+    title: "Care & Warranty | Mosaroma",
     description:
-      hero.seoDescription ||
       "Washing instructions, care advice and warranty terms for Mosaroma outdoor textiles made from MACKINTOSH® Solution-Dyed Olefin.",
   };
 }
@@ -57,7 +56,7 @@ const staticCareSymbols = [
 export default async function CareWarrantyPage() {
   const [layout, hero, result, icons] = await Promise.all([
     getPublicLayoutData("en"),
-    getPageHeroData("pflege-garantie", "pflegeGarantie"),
+    getPageHeroData("pflege-garantie", "pflegeGarantie", "en"),
     getServicePageBySlug("pflege-garantie"),
     getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
