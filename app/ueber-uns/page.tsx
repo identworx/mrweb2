@@ -46,8 +46,8 @@ const promises = [
 
 const sustainabilityStats = [
   { value: "42 %", label: "weniger Wasser" },
-  { value: "38 %", label: "weniger Energie" },
-  { value: "71 %", label: "weniger CO₂" },
+  { value: "38 %", label: "weniger Chemie" },
+  { value: "71 %", label: "Solarstrom" },
 ];
 
 export default async function UeberUnsPage() {
