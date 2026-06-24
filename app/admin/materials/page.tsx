@@ -43,6 +43,9 @@ export default async function MaterialsListPage({
           <p className="text-sm text-gray-500 mt-1">
             {materials.length} Materialien verwalten und bearbeiten.
           </p>
+          <p className="text-xs text-gray-400 mt-1">
+            Hier pflegst du Material-Stammdaten für Produkt- und Inhaltszuordnungen.
+          </p>
         </div>
         <Link
           href="/admin/materials/new"

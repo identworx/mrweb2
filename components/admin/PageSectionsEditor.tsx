@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { getStyleLabel, isHelperSection } from "@/lib/admin/page-section-schemas";
 import PageSectionEditForm from "./PageSectionEditForm";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface SectionRow {
   id: string;
@@ -108,18 +109,25 @@ export default function PageSectionsEditor({ pageId, initialSections, userRole }
     }
   }
 
-  async function handleDelete(id: string, title: string) {
-    if (!confirm(`Sektion "${title || "Ohne Titel"}" endgültig löschen?`)) return;
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  async function confirmDeleteSection() {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/page-sections?id=${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/admin/page-sections?id=${deleteTarget.id}`, { method: "DELETE" });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || "Fehler");
       }
       await reload();
+      setDeleteTarget(null);
       showMessage("success", "Sektion gelöscht.");
     } catch (err) {
       showMessage("error", err instanceof Error ? err.message : "Fehler beim Löschen");
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -229,6 +237,17 @@ export default function PageSectionsEditor({ pageId, initialSections, userRole }
         </p>
       )}
 
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Sektion löschen"
+        message={`„${deleteTarget?.title || "Ohne Titel"}" endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.`}
+        confirmLabel="Endgültig löschen"
+        variant="danger"
+        loading={deleting}
+        onConfirm={confirmDeleteSection}
+        onCancel={() => setDeleteTarget(null)}
+      />
+
       <div className="space-y-3">
         {sections.map((section, idx) => (
           <div
@@ -310,7 +329,7 @@ export default function PageSectionsEditor({ pageId, initialSections, userRole }
                   </button>
                   {canDelete && (
                     <button
-                      onClick={() => handleDelete(section.id, section.title || "")}
+                      onClick={() => setDeleteTarget({ id: section.id, title: section.title || "" })}
                       disabled={saving}
                       className="px-2 py-1 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                     >

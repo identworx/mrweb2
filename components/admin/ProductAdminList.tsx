@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface ProductRow {
   id: string;
@@ -200,10 +201,19 @@ export default function ProductAdminList({
     }).then(() => router.refresh());
   }
 
-  function deleteProduct(id: string, name: string) {
-    if (!confirm(`"${name}" endgültig löschen?`)) return;
-    fetch(`/api/admin/products?id=${id}`, { method: "DELETE" })
-      .then(() => router.refresh());
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  async function confirmDelete() {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await fetch(`/api/admin/products?id=${deleteTarget.id}`, { method: "DELETE" });
+      setDeleteTarget(null);
+      router.refresh();
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (
@@ -414,7 +424,7 @@ export default function ProductAdminList({
                 <td className="px-3 py-2.5 text-sm text-gray-500">{p.materialName || "–"}</td>
                 <td className="px-3 py-2.5">
                   <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${statusColors[p.status] ?? "bg-gray-100 text-gray-600"}`}>
-                    {p.status === "PUBLISHED" ? "Live" : p.status === "DRAFT" ? "Entwurf" : "Archiv"}
+                    {p.status === "PUBLISHED" ? "Veröffentlicht" : p.status === "DRAFT" ? "Entwurf" : "Archiviert"}
                   </span>
                 </td>
                 <td className="px-3 py-2.5">
@@ -450,7 +460,7 @@ export default function ProductAdminList({
                     )}
                     {userRole === "ADMIN" && (
                       <button
-                        onClick={() => deleteProduct(p.id, p.name)}
+                        onClick={() => setDeleteTarget({ id: p.id, name: p.name })}
                         className="text-xs text-red-400 hover:text-red-600"
                         title="Löschen"
                       >
@@ -485,6 +495,17 @@ export default function ProductAdminList({
           </button>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        title="Produkt löschen"
+        message={`„${deleteTarget?.name}" endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.`}
+        confirmLabel="Endgültig löschen"
+        variant="danger"
+        loading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

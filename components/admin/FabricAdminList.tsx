@@ -100,7 +100,12 @@ export default function FabricAdminList({
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Stoffbibliothek</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Stoffbibliothek</h1>
+          <p className="text-xs text-gray-400 mt-1">
+            Hier pflegst du Stoffmuster, Farbmuster und Swatches für die öffentliche Stoffübersicht.
+          </p>
+        </div>
         <Link
           href="/admin/fabrics/new"
           className="px-4 py-2 bg-orange-600 text-white text-sm font-medium rounded hover:bg-orange-700"
