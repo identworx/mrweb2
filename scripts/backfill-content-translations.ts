@@ -536,8 +536,8 @@ add("collection", "red", "longDescription", "Die Red Collection setzt auf warme 
 add("collection", "yellow", "eyebrow", "Kollektion 04", "Collection 04");
 add("collection", "yellow", "shortDescription", "Sonnige Töne und warme Goldakzente.", "Sunny tones and warm gold accents.");
 
-add("collection", "gray", "eyebrow", "Kollektion 05", "Collection 05");
-add("collection", "gray", "shortDescription", "Zeitlose Neutraltöne und moderne Eleganz.", "Timeless neutrals and modern elegance.");
+add("collection", "earth-grey", "eyebrow", "Kollektion 05", "Collection 05");
+add("collection", "earth-grey", "shortDescription", "Erdige Naturtöne und ruhige Graunuancen für zeitlose Outdoor-Konzepte.", "Earthy natural tones and calm shades of grey for timeless outdoor concepts.");
 
 add("collection", "natural", "eyebrow", "Kollektion 06", "Collection 06");
 add("collection", "natural", "shortDescription", "Natürliche Erdtöne und organische Wärme.", "Natural earth tones and organic warmth.");
