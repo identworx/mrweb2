@@ -23,7 +23,7 @@ export default async function NewsPage() {
   const [layout, hero, articles] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("neuigkeiten", "neuigkeiten", "en"),
-    getPublishedNewsArticles(),
+    getPublishedNewsArticles("en"),
   ]);
 
   return (

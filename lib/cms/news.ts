@@ -2,6 +2,8 @@ import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { getMediaUrl } from "./media-url";
 import { newsItems as staticNews } from "@/lib/mosaroma/news";
+import type { Locale } from "@/lib/i18n/config";
+import { overlayCmsBatch } from "@/lib/i18n/cms-overlay";
 
 export interface FrontendNewsArticle {
   slug: string;
@@ -35,7 +37,31 @@ export type NewsArticleLookupResult =
 
 const DEFAULT_HERO = "/images/placeholders/page-heroes/neuigkeiten-hero.svg";
 
-export async function getPublishedNewsArticles(): Promise<FrontendNewsCard[]> {
+const NEWS_CARD_TEXT_FIELDS: (keyof FrontendNewsCard & string)[] = [
+  "title", "tag", "description",
+];
+
+const NEWS_ARTICLE_TEXT_FIELDS: (keyof FrontendNewsArticle & string)[] = [
+  "title", "eyebrow", "excerpt", "content", "category",
+  "seoTitle", "seoDescription",
+];
+
+function formatNewsDate(date: Date | null, locale: Locale): string {
+  if (!date) return "2027";
+  const dateLocale = locale === "en" ? "en-GB" : "de-DE";
+  return date.toLocaleDateString(dateLocale, { year: "numeric", month: "long" });
+}
+
+function formatNewsDateFull(date: Date | null, locale: Locale): string {
+  if (!date) return "2027";
+  const dateLocale = locale === "en" ? "en-GB" : "de-DE";
+  return date.toLocaleDateString(dateLocale, { year: "numeric", month: "long", day: "numeric" });
+}
+
+const DEFAULT_TAG_DE = "Neuigkeiten";
+const DEFAULT_TAG_EN = "News";
+
+export async function getPublishedNewsArticles(locale: Locale = "de"): Promise<FrontendNewsCard[]> {
   try {
     const articles = await prisma.newsArticle.findMany({
       where: { status: "PUBLISHED" },
@@ -43,25 +69,29 @@ export async function getPublishedNewsArticles(): Promise<FrontendNewsCard[]> {
       include: { cardImage: true },
     });
 
-    if (articles.length === 0) return getStaticFallbackCards();
+    if (articles.length === 0) return getStaticFallbackCards(locale);
 
-    return articles.map((a) => ({
+    const defaultTag = locale === "en" ? DEFAULT_TAG_EN : DEFAULT_TAG_DE;
+    const cards: FrontendNewsCard[] = articles.map((a) => ({
       slug: a.slug,
       title: a.title,
-      tag: a.category || a.eyebrow || "Neuigkeiten",
-      date: a.publishedAt
-        ? a.publishedAt.toLocaleDateString("de-DE", { year: "numeric", month: "long" })
-        : "2027",
+      tag: a.category || a.eyebrow || defaultTag,
+      date: formatNewsDate(a.publishedAt, locale),
       description: a.excerpt || (a.content ? a.content.slice(0, 200) : ""),
       imageUrl: getMediaUrl(a.cardImage, "") || null,
     }));
+
+    return overlayCmsBatch("newsArticle", cards, "slug", NEWS_CARD_TEXT_FIELDS, locale);
   } catch (error) {
     console.error("CMS: getPublishedNewsArticles failed", error);
-    return getStaticFallbackCards();
+    return getStaticFallbackCards(locale);
   }
 }
 
-export async function getNewsArticleBySlugWithStatus(slug: string): Promise<NewsArticleLookupResult> {
+export async function getNewsArticleBySlugWithStatus(
+  slug: string,
+  locale: Locale = "de",
+): Promise<NewsArticleLookupResult> {
   try {
     const article = await prisma.newsArticle.findUnique({
       where: { slug },
@@ -74,10 +104,9 @@ export async function getNewsArticleBySlugWithStatus(slug: string): Promise<News
       return { state: "not-public", status: article.status as "DRAFT" | "ARCHIVED" };
     }
 
-    return {
-      state: "published",
-      article: mapNewsArticleForFrontend(article),
-    };
+    const mapped = mapNewsArticleForFrontend(article, locale);
+    const [overlaid] = await overlayCmsBatch("newsArticle", [mapped], "slug", NEWS_ARTICLE_TEXT_FIELDS, locale);
+    return { state: "published", article: overlaid };
   } catch (error) {
     console.error(`CMS: getNewsArticleBySlugWithStatus("${slug}") failed`, error);
     return { state: "error", error };
@@ -117,9 +146,10 @@ interface DbArticle {
   cardImage: { url?: string | null } | null;
 }
 
-function mapNewsArticleForFrontend(a: DbArticle): FrontendNewsArticle {
+function mapNewsArticleForFrontend(a: DbArticle, locale: Locale = "de"): FrontendNewsArticle {
   const heroImageUrl = getMediaUrl(a.heroImage, "") || getMediaUrl(a.cardImage, DEFAULT_HERO);
   const cardImageUrl = getMediaUrl(a.cardImage, "") || heroImageUrl;
+  const defaultTag = locale === "en" ? DEFAULT_TAG_EN : DEFAULT_TAG_DE;
 
   return {
     slug: a.slug,
@@ -127,10 +157,8 @@ function mapNewsArticleForFrontend(a: DbArticle): FrontendNewsArticle {
     eyebrow: a.eyebrow,
     excerpt: a.excerpt || (a.content ? a.content.slice(0, 200) : ""),
     content: a.content || "",
-    category: a.category || a.eyebrow || "Neuigkeiten",
-    publishedAt: a.publishedAt
-      ? a.publishedAt.toLocaleDateString("de-DE", { year: "numeric", month: "long", day: "numeric" })
-      : "2027",
+    category: a.category || a.eyebrow || defaultTag,
+    publishedAt: formatNewsDateFull(a.publishedAt, locale),
     heroImageUrl,
     cardImageUrl,
     seoTitle: a.seoTitle,
@@ -139,7 +167,7 @@ function mapNewsArticleForFrontend(a: DbArticle): FrontendNewsArticle {
   };
 }
 
-function getStaticFallbackCards(): FrontendNewsCard[] {
+function getStaticFallbackCards(locale: Locale = "de"): FrontendNewsCard[] {
   return staticNews.map((n) => ({
     slug: n.slug,
     title: n.title,

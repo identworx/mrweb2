@@ -9,6 +9,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getFabricLibraryData } from "@/lib/cms/fabric-library";
 import { getIconSlots } from "@/lib/cms/icons";
+import { getDictionaryAsync } from "@/lib/i18n/dictionary-async";
 
 export const revalidate = 60;
 
@@ -27,11 +28,12 @@ export default async function FabricsSamplesPage({
   searchParams: Promise<{ family?: string }>;
 }) {
   const { family } = await searchParams;
-  const [layout, hero, fabricData, icons] = await Promise.all([
+  const [layout, hero, fabricData, icons, dictionary] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("stoffe-muster", "stoffeMuster", "en"),
-    getFabricLibraryData(),
+    getFabricLibraryData("en"),
     getIconSlots(["ui-search", "ui-grid", "ui-matrix", "ui-close", "ui-image-placeholder", "arrow-right", "checkmark"]),
+    getDictionaryAsync("en"),
   ]);
 
   return (
@@ -56,7 +58,7 @@ export default async function FabricsSamplesPage({
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <FabricLibrary data={fabricData} initialFamily={family} icons={icons} locale="en" />
+            <FabricLibrary data={fabricData} initialFamily={family} icons={icons} locale="en" dictionary={dictionary} />
           </div>
         </section>
       </main>

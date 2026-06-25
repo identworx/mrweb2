@@ -1,8 +1,9 @@
 import "server-only";
 import { getPublishedPageBySlug } from "./pages";
 import { getMediaUrl } from "./media-url";
-import { pageHeroes, pageHeroesEn, type PageHeroData } from "@/lib/mosaroma/pageHeroes";
+import { pageHeroes, type PageHeroData } from "@/lib/mosaroma/pageHeroes";
 import type { Locale } from "@/lib/i18n/config";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 interface CmsPageHeroData extends PageHeroData {
   seoTitle?: string | null;
@@ -15,7 +16,6 @@ export async function getPageHeroData(
   locale: Locale = "de",
 ): Promise<CmsPageHeroData> {
   const fallback = pageHeroes[fallbackKey];
-  const enOverride = locale === "en" ? pageHeroesEn[fallbackKey] : null;
   const page = await getPublishedPageBySlug(slug);
 
   const image = getMediaUrl(
@@ -23,27 +23,32 @@ export async function getPageHeroData(
     fallback?.image || "/images/placeholders/page-heroes/default-hero.svg",
   );
 
-  if (locale === "en") {
+  const baseEyebrow = page?.eyebrow || fallback?.eyebrow;
+  const baseTitle = page?.headline || page?.title || fallback?.title || slug;
+  const baseDescription = page?.introText || fallback?.description;
+  const baseAlt = page?.heroImage?.alt || fallback?.alt || "MOSAROMA Hero";
+
+  if (locale === "de") {
     return {
-      eyebrow: enOverride?.eyebrow || fallback?.eyebrow,
-      title: enOverride?.title || fallback?.title || slug,
-      description: enOverride?.description || fallback?.description,
+      eyebrow: baseEyebrow,
+      title: baseTitle,
+      description: baseDescription,
       image,
-      alt: enOverride?.alt || fallback?.alt || "MOSAROMA Hero",
-      seoTitle: null,
-      seoDescription: null,
+      alt: baseAlt,
+      seoTitle: page?.seoTitle ?? null,
+      seoDescription: page?.seoDescription ?? null,
     };
   }
 
-  if (!page) return { ...fallback, seoTitle: null, seoDescription: null };
+  const translations = await getTranslations("pageHero", fallbackKey, locale);
 
   return {
-    eyebrow: page.eyebrow || fallback?.eyebrow,
-    title: page.headline || page.title || fallback?.title || slug,
-    description: page.introText || fallback?.description,
+    eyebrow: translations.eyebrow || baseEyebrow,
+    title: translations.title || baseTitle,
+    description: translations.description || baseDescription,
     image,
-    alt: page.heroImage?.alt || fallback?.alt || "MOSAROMA Hero",
-    seoTitle: page.seoTitle,
-    seoDescription: page.seoDescription,
+    alt: translations.alt || baseAlt,
+    seoTitle: null,
+    seoDescription: null,
   };
 }

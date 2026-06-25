@@ -95,7 +95,7 @@ export default async function CollectionsPage() {
   const [layout, hero, collections, ambienteSlots, pageResult, icons] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("kollektionen", "kollektionen", "en"),
-    getPublishedCollections(),
+    getPublishedCollections("en"),
     getTeaserAmbienteImages(),
     getServicePageBySlug("kollektionen"),
     getIconSlots(["benefit-sun", "benefit-droplet", "benefit-shield", "benefit-star", "benefit-fallback", "arrow-right", "checkmark"]),

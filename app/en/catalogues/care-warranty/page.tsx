@@ -15,50 +15,54 @@ import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import PageCta from "@/components/PageCta";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("pflege-garantie", "pflegeGarantie", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("pflege-garantie", "pflegeGarantie", "en"),
+    getTranslations("page", "care-warranty", "en"),
+  ]);
   return {
-    title: "Care & Warranty | Mosaroma",
-    description:
-      "Washing instructions, care advice and warranty terms for Mosaroma outdoor textiles made from MACKINTOSH® Solution-Dyed Olefin.",
+    title: t["seoTitle"] || "Pflege & Garantie | Mosaroma",
+    description: t["seoDescription"] || "Waschanleitungen, Pflegetipps und Garantiebedingungen für Mosaroma-Outdoor-Textilien aus MACKINTOSH® Solution-Dyed Olefin.",
   };
 }
 
 const staticWashSteps = [
   {
     step: "01",
-    title: "Washing",
-    text: "Remove the filling from the cover. Wash the cover by hand or in the machine. Select the **delicate cycle at max. 30 °C** and use a mild detergent.",
+    title: "Waschen",
+    text: "Füllung aus dem Bezug nehmen. Bezug von Hand oder in der Maschine waschen. **Schonwaschgang bei max. 30 °C** wählen und ein mildes Waschmittel verwenden.",
   },
   {
     step: "02",
-    title: "Treating Stains",
-    text: "Remove stubborn stains with a solution of **15 ml mild detergent + 50 ml household bleach** in 1 litre of warm water (max. 30 °C). Gently dab the stain or loosen with a soft brush, then wash as in step 1.",
+    title: "Fleckenbehandlung",
+    text: "Hartnäckige Flecken mit einer Lösung aus **15 ml mildem Waschmittel + 50 ml Haushaltsbleiche** in 1 Liter warmem Wasser (max. 30 °C) behandeln. Fleck vorsichtig abtupfen oder mit einer weichen Bürste lösen, dann wie in Schritt 1 waschen.",
   },
   {
     step: "03",
-    title: "Drying",
-    text: "**Dry the damp cover flat or hanging in the open air** — do not tumble dry, do not place in direct sunlight. Pull the cover back over the filling while still damp to avoid creasing.",
+    title: "Trocknen",
+    text: "**Feuchten Bezug flach oder hängend an der Luft trocknen** — nicht in den Trockner, nicht in die direkte Sonne. Bezug noch leicht feucht wieder über die Füllung ziehen, um Faltenbildung zu vermeiden.",
   },
 ];
 
 const staticCareSymbols = [
-  { label: "Delicate wash, no fabric softener", key: "wash-30" },
-  { label: "Diluted bleach permitted", key: "bleach-dilute" },
-  { label: "Do not tumble dry", key: "no-dryer" },
-  { label: "Air dry", key: "line-dry" },
-  { label: "Keep away from heat, store dry", key: "no-heat" },
+  { label: "Schonwaschgang, kein Weichspüler", key: "wash-30" },
+  { label: "Verdünnte Bleiche erlaubt", key: "bleach-dilute" },
+  { label: "Nicht in den Trockner", key: "no-dryer" },
+  { label: "An der Luft trocknen", key: "line-dry" },
+  { label: "Von Wärmequellen fernhalten, trocken lagern", key: "no-heat" },
 ];
 
 export default async function CareWarrantyPage() {
-  const [layout, hero, result, icons] = await Promise.all([
+  const [layout, hero, result, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("pflege-garantie", "pflegeGarantie", "en"),
     getServicePageBySlug("pflege-garantie"),
     getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
+    getTranslations("page", "care-warranty", "en"),
   ]);
 
   if (result.state === "not-public") {
@@ -67,6 +71,17 @@ export default async function CareWarrantyPage() {
 
   const hasCmsSections =
     result.state === "published" && result.page.sections.length > 0;
+
+  const localizedWashSteps = staticWashSteps.map((step, i) => ({
+    step: step.step,
+    title: t[`wash.${i + 1}.title`] || step.title,
+    text: t[`wash.${i + 1}.text`] || step.text,
+  }));
+
+  const localizedCareSymbols = staticCareSymbols.map((sym, i) => ({
+    label: t[`care.${i + 1}.label`] || sym.label,
+    key: sym.key,
+  }));
 
   return (
     <>
@@ -82,8 +97,8 @@ export default async function CareWarrantyPage() {
         />
         <BreadcrumbBar
           items={[
-            { label: "Catalogues", href: "/en/catalogues" },
-            { label: "Care & Warranty" },
+            { label: t["breadcrumb.catalogues"] || "Kataloge", href: "/en/catalogues" },
+            { label: t["breadcrumb.self"] || "Pflege & Garantie" },
           ]}
         />
 
@@ -103,43 +118,33 @@ export default async function CareWarrantyPage() {
             <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-3xl md:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.1] mb-3">
-                  Buy once.
+                  {t["introTitle1"] || "Einmal kaufen."}
                 </h2>
                 <p className="font-heading text-pumpkin text-2xl md:text-3xl lg:text-[2.25rem] font-bold tracking-tight leading-[1.1] italic mb-10 md:mb-14">
-                  Keep for years.
+                  {t["introTitle2"] || "Jahrelang behalten."}
                 </p>
 
                 <div className="max-w-3xl mb-16 md:mb-20">
                   <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                    MACKINTOSH® Solution-Dyed Olefin is designed for
-                    long-term outdoor use. Our fabrics also make the cushions
-                    moisture-resistant. Remove soiling as soon as possible and
-                    clean the covers with water and a sponge. Regular care will
-                    extend the lifespan of your cushions and pads and keep them
-                    looking like new.
+                    {t["introText"] || "MACKINTOSH® Solution-Dyed Olefin ist für den langfristigen Outdoor-Einsatz konzipiert. Unsere Stoffe machen die Kissen zudem feuchtigkeitsbeständig. Verschmutzungen möglichst bald entfernen und die Bezüge mit Wasser und einem Schwamm reinigen. Regelmäßige Pflege verlängert die Lebensdauer Ihrer Kissen und Polster und hält sie wie neu."}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
                   <div>
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-4">
-                      Storage
+                      {t["storageTitle"] || "Aufbewahrung"}
                     </h3>
                     <p className="font-body text-text-gray text-sm leading-[1.8]" style={{ textWrap: "pretty" }}>
-                      Dry the damp cover flat or hanging in the open air — do
-                      not tumble dry, do not place in direct sunlight. Pull the
-                      cover back over the filling while still damp to avoid
-                      creasing.
+                      {t["storageText"] || "Feuchten Bezug flach oder hängend an der Luft trocknen — nicht in den Trockner, nicht in die direkte Sonne. Bezug noch leicht feucht wieder über die Füllung ziehen, um Faltenbildung zu vermeiden."}
                     </p>
                   </div>
                   <div>
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-4">
-                      Sealing
+                      {t["sealingTitle"] || "Versiegelung"}
                     </h3>
                     <p className="font-body text-text-gray text-sm leading-[1.8]" style={{ textWrap: "pretty" }}>
-                      The fabrics are water- and soil-repellent — no additional
-                      sealing required. Should a special treatment ever be
-                      needed, please get in touch.
+                      {t["sealingText"] || "Die Stoffe sind wasser- und schmutzabweisend — keine zusätzliche Versiegelung erforderlich. Sollte eine Spezialbehandlung nötig sein, kontaktieren Sie uns."}
                     </p>
                   </div>
                 </div>
@@ -152,16 +157,16 @@ export default async function CareWarrantyPage() {
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
-                    Washing Instructions
+                    {t["washEyebrow"] || "Waschanleitung"}
                   </p>
                 </div>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12 md:mb-16">
-                  Clean in three steps.
+                  {t["washTitle"] || "In drei Schritten sauber."}
                 </h2>
 
                 <div className="space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-8">
-                  {staticWashSteps.map((step) => (
+                  {localizedWashSteps.map((step) => (
                     <div key={step.step}>
                       <span className="font-heading text-pumpkin text-4xl md:text-5xl font-extrabold tracking-tight">
                         {step.step}
@@ -182,11 +187,11 @@ export default async function CareWarrantyPage() {
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-10 md:mb-14">
-                  Care at a Glance
+                  {t["careTitle"] || "Pflege auf einen Blick"}
                 </h2>
 
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-8 md:gap-6">
-                  {staticCareSymbols.map((symbol) => (
+                  {localizedCareSymbols.map((symbol) => (
                     <figure key={symbol.key} className="text-center">
                       <div className="w-16 h-16 mx-auto flex items-center justify-center border border-anthracite/15 text-anthracite mb-4" aria-hidden="true">
                         <CmsIcon icon={icons[`care-${symbol.key}`]} width={32} height={32} />
@@ -210,20 +215,15 @@ export default async function CareWarrantyPage() {
                       3
                     </span>
                     <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight -mt-2 md:-mt-4" aria-hidden="true">
-                      Years on Mosaroma.
+                      {t["warrantyYears"] || "Jahre auf Mosaroma."}
                     </h2>
                   </div>
                   <div>
                     <p className="font-body text-white/90 text-base md:text-[1.0625rem] leading-[1.8] mb-6" style={{ textWrap: "pretty" }}>
-                      We know how important quality and reliability are. That is
-                      why we stand behind all Mosaroma fabrics with comprehensive
-                      warranties.
+                      {t["warrantyText1"] || "Wir wissen, wie wichtig Qualität und Zuverlässigkeit sind. Deshalb stehen wir hinter allen Mosaroma-Stoffen mit umfassenden Garantien."}
                     </p>
                     <p className="font-body text-white/90 text-base md:text-[1.0625rem] leading-[1.8]" style={{ textWrap: "pretty" }}>
-                      Our upholstery fabrics are covered by a limited 3-year
-                      warranty that provides protection against loss of strength
-                      or colour, pilling and abrasion from normal use and
-                      weathering.
+                      {t["warrantyText2"] || "Unsere Bezugsstoffe sind durch eine beschränkte 3-Jahres-Garantie abgedeckt, die Schutz vor Festigkeits- oder Farbverlust, Pilling und Abrieb bei normaler Nutzung und Witterung bietet."}
                     </p>
                   </div>
                 </div>
@@ -232,11 +232,11 @@ export default async function CareWarrantyPage() {
 
             <PageCta
               variant="light"
-              title="More about our materials"
-              description="Detailed information on fabric qualities, test values and care properties can be found on our materials page."
-              primaryLabel="Discover materials"
+              title={t["cta.title"] || "Mehr über unsere Materialien"}
+              description={t["cta.description"] || "Detaillierte Informationen zu Stoffqualitäten, Prüfwerten und Pflegeeigenschaften finden Sie auf unserer Materialien-Seite."}
+              primaryLabel={t["cta.primaryLabel"] || "Materialien entdecken"}
               primaryHref="/en/materials"
-              secondaryLabel="Contact us"
+              secondaryLabel={t["cta.secondaryLabel"] || "Kontakt aufnehmen"}
               secondaryHref="/en/contact"
             />
           </>

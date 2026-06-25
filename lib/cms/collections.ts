@@ -5,6 +5,8 @@ import {
   collections as staticCollections,
   getCollectionBySlug as getStaticCollectionBySlug,
 } from "@/lib/mosaroma/collections";
+import type { Locale } from "@/lib/i18n/config";
+import { overlayCmsBatch } from "@/lib/i18n/cms-overlay";
 
 export interface FrontendCollection {
   slug: string;
@@ -113,7 +115,12 @@ export function mapCollectionForFrontend(
   };
 }
 
-export async function getPublishedCollections(): Promise<FrontendCollection[]> {
+const COLLECTION_TEXT_FIELDS: (keyof FrontendCollection & string)[] = [
+  "name", "eyebrow", "subtitle", "shortDescription", "longDescription", "fabric",
+  "cardAlt", "heroAlt", "seoTitle", "seoDescription",
+];
+
+export async function getPublishedCollections(locale: Locale = "de"): Promise<FrontendCollection[]> {
   try {
     const dbCollections = await prisma.collection.findMany({
       where: { status: "PUBLISHED" },
@@ -124,30 +131,34 @@ export async function getPublishedCollections(): Promise<FrontendCollection[]> {
       },
     });
 
+    let collections: FrontendCollection[];
+
     if (dbCollections.length > 0) {
-      return dbCollections.map((c) => mapCollectionForFrontend(c));
+      collections = dbCollections.map((c) => mapCollectionForFrontend(c));
+    } else {
+      collections = staticCollections.map((sc) => ({
+        slug: sc.slug,
+        name: sc.name,
+        number: sc.number,
+        eyebrow: `Kollektion ${sc.number}`,
+        subtitle: sc.subtitle,
+        shortDescription: sc.description,
+        longDescription: sc.extendedDescription,
+        fabric: sc.fabric,
+        cardImage: sc.image,
+        cardAlt: sc.alt,
+        heroImage: `/images/placeholders/collections/hero/${sc.slug}.svg`,
+        heroAlt: `${sc.name} Collection Hero`,
+        moodColors: [...sc.moodColors],
+        seoTitle: null,
+        seoDescription: null,
+      }));
     }
 
-    return staticCollections.map((sc) => ({
-      slug: sc.slug,
-      name: sc.name,
-      number: sc.number,
-      eyebrow: `Kollektion ${sc.number}`,
-      subtitle: sc.subtitle,
-      shortDescription: sc.description,
-      longDescription: sc.extendedDescription,
-      fabric: sc.fabric,
-      cardImage: sc.image,
-      cardAlt: sc.alt,
-      heroImage: `/images/placeholders/collections/hero/${sc.slug}.svg`,
-      heroAlt: `${sc.name} Collection Hero`,
-      moodColors: [...sc.moodColors],
-      seoTitle: null,
-      seoDescription: null,
-    }));
+    return overlayCmsBatch("collection", collections, "slug", COLLECTION_TEXT_FIELDS, locale);
   } catch (error) {
     console.error("CMS: getPublishedCollections failed", error);
-    return staticCollections.map((sc) => ({
+    const collections = staticCollections.map((sc) => ({
       slug: sc.slug,
       name: sc.name,
       number: sc.number,
@@ -164,6 +175,7 @@ export async function getPublishedCollections(): Promise<FrontendCollection[]> {
       seoTitle: null,
       seoDescription: null,
     }));
+    return overlayCmsBatch("collection", collections, "slug", COLLECTION_TEXT_FIELDS, locale);
   }
 }
 
@@ -175,12 +187,15 @@ export type CollectionLookupResult =
 
 export async function getCollectionBySlugWithStatus(
   slug: string,
+  locale: Locale = "de",
 ): Promise<CollectionLookupResult> {
   try {
     const dbCol = await fetchCollectionBySlug(slug);
 
     if (dbCol && dbCol.status === "PUBLISHED") {
-      return { state: "published", collection: mapCollectionForFrontend(dbCol) };
+      const collection = mapCollectionForFrontend(dbCol);
+      const [overlaid] = await overlayCmsBatch("collection", [collection], "slug", COLLECTION_TEXT_FIELDS, locale);
+      return { state: "published", collection: overlaid };
     }
 
     if (dbCol) {

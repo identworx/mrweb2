@@ -164,10 +164,10 @@ const FALLBACK_SECTIONS: HomepageSection[] = [
 export default async function Home() {
   const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots] = await Promise.all([
     getPublicLayoutData("en"),
-    getHomepageData(),
-    getPublishedCollections(),
-    getPublicDownloads(),
-    getPublishedNewsArticles(),
+    getHomepageData("en"),
+    getPublishedCollections("en"),
+    getPublicDownloads("en"),
+    getPublishedNewsArticles("en"),
     getIconSlots([
       "arrow-right", "scroll-down", "download-book",
       "value-comfort", "value-quality", "value-sustainability", "value-design",
@@ -175,7 +175,7 @@ export default async function Home() {
     getTeaserAmbienteImages(),
   ]);
 
-  const sections = FALLBACK_SECTIONS;
+  const sections = homepageData?.sections || FALLBACK_SECTIONS;
 
   return (
     <>

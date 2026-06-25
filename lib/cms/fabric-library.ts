@@ -1,6 +1,8 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { getMediaUrl } from "@/lib/cms/media-url";
+import type { Locale } from "@/lib/i18n/config";
+import { overlayCmsBatch } from "@/lib/i18n/cms-overlay";
 
 export interface FrontendFabricFamily {
   id: string;
@@ -39,7 +41,7 @@ export interface FabricLibraryData {
   productTypes: FrontendFabricProductType[];
 }
 
-export async function getFabricLibraryData(): Promise<FabricLibraryData> {
+export async function getFabricLibraryData(locale: Locale = "de"): Promise<FabricLibraryData> {
   try {
     const [families, swatches, productTypes] = await Promise.all([
       prisma.fabricFamily.findMany({
@@ -67,10 +69,19 @@ export async function getFabricLibraryData(): Promise<FabricLibraryData> {
       }),
     ]);
 
+    const mappedFamilies = await overlayCmsBatch(
+      "fabricFamily", families.map(mapFamily), "slug",
+      ["name", "description", "eyebrow"], locale,
+    );
+    const mappedProductTypes = await overlayCmsBatch(
+      "fabricProductType", productTypes.map(mapProductType), "slug",
+      ["name"], locale,
+    );
+
     return {
-      families: families.map(mapFamily),
+      families: mappedFamilies,
       swatches: swatches.map(mapSwatch),
-      productTypes: productTypes.map(mapProductType),
+      productTypes: mappedProductTypes,
     };
   } catch (error) {
     console.error("CMS: getFabricLibraryData failed", error);
@@ -93,14 +104,14 @@ export interface HubFabricFamily {
   isHighlighted: boolean;
 }
 
-export async function getFabricFamiliesForHub(): Promise<HubFabricFamily[]> {
+export async function getFabricFamiliesForHub(locale: Locale = "de"): Promise<HubFabricFamily[]> {
   try {
     const families = await prisma.fabricFamily.findMany({
       where: { isActive: true },
       orderBy: { order: "asc" },
     });
 
-    return families.map((f) => ({
+    const mapped = families.map((f) => ({
       id: f.id,
       slug: f.slug || "",
       name: f.name || "",
@@ -117,6 +128,11 @@ export async function getFabricFamiliesForHub(): Promise<HubFabricFamily[]> {
         .filter(Boolean),
       isHighlighted: f.isHighlighted,
     }));
+    return overlayCmsBatch(
+      "fabricFamily", mapped, "slug",
+      ["name", "subtitle", "description", "material", "weight", "dyeing", "comfort", "cushionThickness"],
+      locale,
+    );
   } catch (error) {
     console.error("CMS: getFabricFamiliesForHub failed", error);
     return [];

@@ -9,12 +9,14 @@ import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import {
-  nerioStoryEn as nerioStory,
-  nerioPromiseEn as nerioPromise,
-  nerioHighlightsEn as nerioHighlights,
-  nerioTechnicalFactsEn as nerioTechnicalFacts,
-  oceanCycleProcessEn as oceanCycleProcess,
+  nerioStory,
+  nerioPromise,
+  nerioHighlights,
+  nerioTechnicalFacts,
+  oceanCycleProcess,
 } from "@/lib/mosaroma/materials";
+import { getTranslations } from "@/lib/i18n/get-translation";
+import { localizedHref } from "@/lib/i18n/routes";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getIconSlots } from "@/lib/cms/icons";
 import { NERIO_PROMISE_KEY_MAP, SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
@@ -34,20 +36,22 @@ import NerioAnchorNavEn from "@/components/nerio/NerioAnchorNavEn";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("nerio", "nerio", "en");
+  const [hero, seoT] = await Promise.all([
+    getPageHeroData("nerio", "nerio", "en"),
+    getTranslations("pageHero", "nerio", "en"),
+  ]);
   return {
-    title: "NERIO | Mosaroma",
-    description:
-      "NERIO: Performance fabrics made from 50% recycled ocean polypropylene. OceanCycle® certified, PFAS-free and solution-dyed for outstanding colourfastness.",
+    title: seoT.seoTitle || hero.seoTitle || "NERIO | Mosaroma",
+    description: seoT.seoDescription || hero.seoDescription || "NERIO: Performance-Stoffe aus 50 % recyceltem Ozean-Polypropylen.",
   };
 }
 
 const NERIO_PRODUCT_CARDS_FALLBACK = [
-  { id: "dekokissen", title: "Scatter Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 1, fallbackImage: "/images/placeholders/categories/dekokissen.svg" },
-  { id: "hochlehner", title: "High-back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 2, fallbackImage: "/images/placeholders/categories/hochlehner.svg" },
-  { id: "niedriglehner", title: "Low-back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 3, fallbackImage: "/images/placeholders/categories/niedriglehner.svg" },
-  { id: "sitzkissen", title: "Seat Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 4, fallbackImage: "/images/placeholders/categories/sitzkissen.svg" },
-  { id: "bankauflagen", title: "Bench Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 5, fallbackImage: "/images/placeholders/categories/bankauflagen.svg" },
+  { id: "dekokissen", title: "Deko-Kissen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 1, fallbackImage: "/images/placeholders/categories/dekokissen.svg" },
+  { id: "hochlehner", title: "Hochlehner", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 2, fallbackImage: "/images/placeholders/categories/hochlehner.svg" },
+  { id: "niedriglehner", title: "Niedriglehner", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 3, fallbackImage: "/images/placeholders/categories/niedriglehner.svg" },
+  { id: "sitzkissen", title: "Sitzkissen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 4, fallbackImage: "/images/placeholders/categories/sitzkissen.svg" },
+  { id: "bankauflagen", title: "Bankauflagen", href: "/kollektionen/nerio-oceana", imageId: null as string | null, isActive: true, order: 5, fallbackImage: "/images/placeholders/categories/bankauflagen.svg" },
 ];
 
 
@@ -86,11 +90,22 @@ export default async function NerioPageEn() {
     getIconSlots([...SERVICE_SECTION_ICON_KEYS, "nerio-recycle", "nerio-droplet", "nerio-sun", "nerio-shield", "nerio-fabric-grid", "nerio-collection-box"]),
   ]);
 
+  const [storyT, promiseT, highlightsT, techT, oceanT, videosT, productsT, ctaT] = await Promise.all([
+    getTranslations("material", "nerio-story", "en"),
+    getTranslations("material", "nerio-promise", "en"),
+    getTranslations("material", "nerio-highlights", "en"),
+    getTranslations("material", "nerio-technical-facts", "en"),
+    getTranslations("material", "nerio-ocean-cycle", "en"),
+    getTranslations("material", "nerio-videos", "en"),
+    getTranslations("material", "nerio-products", "en"),
+    getTranslations("material", "nerio-cta", "en"),
+  ]);
+
   const story = {
-    eyebrow: nerioStory.eyebrow,
-    title: nerioStory.title,
+    eyebrow: storyT.eyebrow || nerioStory.eyebrow,
+    title: storyT.title || nerioStory.title,
     content: null,
-    fallbackParagraphs: nerioStory.paragraphs,
+    fallbackParagraphs: nerioStory.paragraphs.map((p, i) => storyT[`paragraph.${i + 1}`] || p),
   };
 
   type OceanStep = { title: string; description: string; imageId?: string | null; imageFit?: "contain" | "cover" };
@@ -98,8 +113,8 @@ export default async function NerioPageEn() {
     ? (oceanData.settings.steps as OceanStep[])
     : null;
   const oceanSteps: OceanStep[] = oceanCycleProcess.steps.map((fallback, i) => ({
-    title: fallback.title,
-    description: fallback.description,
+    title: oceanT[`step.${i + 1}.title`] || fallback.title,
+    description: oceanT[`step.${i + 1}.description`] || fallback.description,
     imageId: cmsOceanSteps?.[i]?.imageId ?? null,
     imageFit: cmsOceanSteps?.[i]?.imageFit ?? "contain",
   }));
@@ -110,59 +125,63 @@ export default async function NerioPageEn() {
 
   const ocean = {
     eyebrow: "OceanCycle®",
-    title: oceanCycleProcess.title,
+    title: oceanT.title || oceanCycleProcess.title,
     content: null,
-    fallbackDescription: oceanCycleProcess.description,
-    steps: oceanSteps.map((s) => ({
-      ...s,
-      imageFit: s.imageFit || "contain",
-      image: s.imageId ? oceanStepImages[s.imageId] ?? null : null,
-    })),
-    highlights: oceanCycleProcess.highlights,
+    fallbackDescription: oceanT.description || oceanCycleProcess.description,
+    steps: oceanSteps.map((s) => ({ ...s, imageFit: s.imageFit || "contain", image: s.imageId ? oceanStepImages[s.imageId] ?? null : null })),
+    highlights: oceanCycleProcess.highlights.map((hl, i) => oceanT[`highlight.${i + 1}`] || hl),
   };
 
   const promise = {
-    eyebrow: nerioPromise.eyebrow,
-    title: nerioPromise.title,
+    eyebrow: promiseT.eyebrow || nerioPromise.eyebrow,
+    title: promiseT.title || nerioPromise.title,
     content: null,
-    items: nerioPromise.items,
+    items: nerioPromise.items.map((item, i) => ({
+      ...item,
+      title: promiseT[`item.${i + 1}.title`] || item.title,
+      text: promiseT[`item.${i + 1}.text`] || item.text,
+    })),
   };
 
   const highlights = {
-    eyebrow: nerioHighlights.eyebrow,
-    title: nerioHighlights.title,
-    stats: nerioHighlights.stats,
+    eyebrow: highlightsT.eyebrow || nerioHighlights.eyebrow,
+    title: highlightsT.title || nerioHighlights.title,
+    stats: nerioHighlights.stats.map((stat, i) => ({
+      value: stat.value,
+      label: highlightsT[`stat.${i + 1}.label`] || stat.label,
+      detail: highlightsT[`stat.${i + 1}.detail`] || stat.detail,
+    })),
   };
 
   const fallbackVideos = [
     {
       enabled: true,
       youtubeUrl: "https://www.youtube.com/watch?v=DzLeef6Mxak",
-      title: "From fishing net to new raw material",
-      description: "This film shows how recycled fishing nets are processed into plastic granulate. This step turns collected material back into a usable raw material for new applications.",
+      title: videosT["video.1.title"] || "Vom Fischernetz zum neuen Rohstoff",
+      description: videosT["video.1.description"] || "Dieser Film zeigt, wie recycelte Fischernetze zu Kunststoffgranulat verarbeitet werden.",
       startSeconds: null,
       thumbnailMediaId: null,
-      label: "Process video",
+      label: videosT["video.1.label"] || "Prozessvideo",
       order: 1,
     },
     {
       enabled: true,
       youtubeUrl: "https://www.youtube.com/watch?v=OwGfs0qwIlE&t=26s",
-      title: "Textile cycles reimagined",
-      description: "An insight into new recycling processes where textile materials are more efficiently reprocessed and prepared for new product cycles.",
+      title: videosT["video.2.title"] || "Textilkreisläufe neu gedacht",
+      description: videosT["video.2.description"] || "Ein Einblick in neue Recyclingverfahren, bei denen textile Materialien effizienter aufbereitet werden.",
       startSeconds: 26,
       thumbnailMediaId: null,
-      label: "Recycling",
+      label: videosT["video.2.label"] || "Recycling",
       order: 2,
     },
     {
       enabled: true,
       youtubeUrl: "https://www.youtube.com/watch?v=xP6PFrg9IHY",
-      title: "One material. One clearer cycle.",
-      description: "This video shows the approach of a mono-material polypropylene system. The focus is on simpler recyclability, reduced material complexity and future-proof cycles.",
+      title: videosT["video.3.title"] || "Ein Material. Ein klarerer Kreislauf.",
+      description: videosT["video.3.description"] || "Dieses Video zeigt den Ansatz eines Mono-Material-Systems aus Polypropylen.",
       startSeconds: null,
       thumbnailMediaId: null,
-      label: "Material cycle",
+      label: videosT["video.3.label"] || "Materialkreislauf",
       order: 3,
     },
   ];
@@ -174,10 +193,9 @@ export default async function NerioPageEn() {
   );
 
   const nerioVideos = {
-    eyebrow: "Processes & Cycles",
-    title: "How responsibility becomes new material",
-    intro:
-      "The NERIO material story becomes more tangible when you see the individual steps: from collected raw material through processing and recycling to new applications in the textile sector.",
+    eyebrow: videosT.eyebrow || "Prozesse & Kreisläufe",
+    title: videosT.title || "Wie Verantwortung zu neuem Material wird",
+    intro: videosT.intro || "Die NERIO-Materialgeschichte wird greifbarer, wenn man die einzelnen Schritte sieht: vom gesammelten Rohstoff über Verarbeitung und Recycling bis zur neuen Anwendung im Textilbereich.",
     videos: rawVideos
       .filter((v) => v.enabled)
       .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -197,10 +215,13 @@ export default async function NerioPageEn() {
   };
 
   const techFacts = {
-    eyebrow: nerioTechnicalFacts.eyebrow,
-    title: nerioTechnicalFacts.title,
+    eyebrow: techT.eyebrow || nerioTechnicalFacts.eyebrow,
+    title: techT.title || nerioTechnicalFacts.title,
     content: null,
-    facts: nerioTechnicalFacts.facts,
+    facts: nerioTechnicalFacts.facts.map((fact, i) => ({
+      label: techT[`fact.${i + 1}.label`] || fact.label,
+      value: techT[`fact.${i + 1}.value`] || fact.value,
+    })),
   };
 
   type ProductCard = { id: string; title: string; href: string; imageId: string | null; isActive: boolean; order: number; fallbackImage?: string };
@@ -216,26 +237,28 @@ export default async function NerioPageEn() {
     .map((c) => {
       const resolved = c.imageId ? productCardImages[c.imageId] : null;
       const fallback = NERIO_PRODUCT_CARDS_FALLBACK.find((f) => f.id === c.id);
+      const title = productsT[`card.${c.id}.title`] || c.title;
       return {
         ...c,
+        title,
+        href: c.href ? localizedHref(c.href, "en") : "/en/collections/nerio-oceana",
         imageUrl: resolved?.url || fallback?.fallbackImage || "/images/placeholders/categories/dekokissen.svg",
-        imageAlt: resolved?.alt || c.title,
+        imageAlt: resolved?.alt || title,
       };
     });
 
   const productsPreview = {
-    eyebrow: "Products & Fabrics",
-    title: "Discover NERIO Fabrics",
+    eyebrow: productsT.eyebrow || "Produkte & Stoffe",
+    title: productsT.title || "NERIO-Stoffe entdecken",
     content: null,
-    fallbackDescription:
-      "All NERIO fabrics made from recycled ocean polypropylene at a glance — available as cushions, pads and accessories.",
+    fallbackDescription: productsT.description || "Alle NERIO-Stoffe aus recyceltem Ozean-Polypropylen auf einen Blick — erhältlich als Kissen, Polster und Accessoires.",
     cards: activeCards,
   };
 
   const cta = {
-    title: "Experience NERIO",
-    content: "Discover the complete NERIO collection and request your personal sample set.",
-    buttonLabel: "Request sample set",
+    title: ctaT.title || "NERIO erleben",
+    content: ctaT.content || "Entdecken Sie die komplette NERIO-Kollektion und fordern Sie Ihr persönliches Musterset an.",
+    buttonLabel: ctaT.buttonLabel || "Musterset anfordern",
     buttonHref: "/en/contact",
   };
 
@@ -297,13 +320,13 @@ export default async function NerioPageEn() {
                   href="/en/collections/nerio-oceana"
                   className="btn-primary"
                 >
-                  View collection
+                  {productsT["heroButton.primary"] || "Kollektion ansehen"}
                 </Link>
                 <Link
                   href="/en/materials/fabrics-samples?family=nerio"
                   className="btn-outline-white"
                 >
-                  View fabrics
+                  {productsT["heroButton.secondary"] || "Stoffe ansehen"}
                 </Link>
               </div>
             </div>
@@ -359,7 +382,7 @@ export default async function NerioPageEn() {
                         ))}
                         <div className="mt-3 bg-[#1B6B6D]/[0.06] p-5 md:p-6">
                           <p className="font-heading text-anthracite text-base md:text-lg font-semibold leading-snug">
-                            50% recycled ocean polypropylene — no compromise on performance.
+                            {storyT["quote"] || "50 % recyceltes Ozean-Polypropylen — kein Kompromiss bei der Leistung."}
                           </p>
                         </div>
                       </div>
@@ -644,7 +667,7 @@ export default async function NerioPageEn() {
                 {nerioSwatches.length > 0 && (
                   <div className="mt-16">
                     <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
-                      Current NERIO Fabrics
+                      {productsT["fabricsHeading"] || "Aktuelle NERIO-Stoffe"}
                     </h3>
                     <FabricLibraryPreview swatches={nerioSwatches} icons={icons} limit={5} locale="en" />
                   </div>
@@ -655,7 +678,7 @@ export default async function NerioPageEn() {
                     href="/en/materials/fabrics-samples?family=nerio"
                     className="btn-primary"
                   >
-                    View all NERIO fabrics
+                    {productsT["fabricsButton"] || "Alle NERIO-Stoffe ansehen"}
                   </Link>
                 </div>
               </div>
@@ -680,13 +703,13 @@ export default async function NerioPageEn() {
                       <CmsIcon icon={icons["nerio-fabric-grid"]} width={28} height={28} />
                     </div>
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
-                      NERIO Fabrics
+                      {ctaT["card.fabrics.title"] || "NERIO-Stoffe"}
                     </h3>
                     <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
-                      Discover all fabrics, samples and colours of the NERIO line.
+                      {ctaT["card.fabrics.description"] || "Entdecken Sie alle Stoffe, Muster und Farben der NERIO-Linie."}
                     </p>
                     <span className="font-heading text-anthracite text-xs font-semibold uppercase tracking-[0.12em] group-hover:text-pumpkin group-hover:tracking-[0.16em] transition-all duration-300">
-                      View fabrics
+                      {ctaT["card.fabrics.button"] || "Stoffe ansehen"}
                     </span>
                   </Link>
 
@@ -698,13 +721,13 @@ export default async function NerioPageEn() {
                       <CmsIcon icon={icons["nerio-collection-box"]} width={28} height={28} />
                     </div>
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-2">
-                      NERIO Collection
+                      {ctaT["card.collection.title"] || "NERIO-Kollektion"}
                     </h3>
                     <p className="font-body text-text-muted text-sm leading-relaxed mb-6">
-                      The NERIO Oceana collection with all products.
+                      {ctaT["card.collection.description"] || "Die NERIO-Oceana-Kollektion mit allen Produkten."}
                     </p>
                     <span className="font-heading text-anthracite text-xs font-semibold uppercase tracking-[0.12em] group-hover:text-pumpkin group-hover:tracking-[0.16em] transition-all duration-300">
-                      View collection
+                      {ctaT["card.collection.button"] || "Kollektion ansehen"}
                     </span>
                   </Link>
                 </div>

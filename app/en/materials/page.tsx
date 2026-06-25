@@ -10,10 +10,11 @@ import FabricLibraryPreview from "@/components/materials/FabricLibraryPreview";
 import ServiceSectionRenderer from "@/components/service/ServiceSectionRenderer";
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import {
-  mackintoshTechnologyEn as mackintoshTechnology,
-  olefinBenefitsEn as olefinBenefits,
-  oceanCycleProcessEn as oceanCycleProcess,
+  mackintoshTechnology,
+  olefinBenefits,
+  oceanCycleProcess,
 } from "@/lib/mosaroma/materials";
+import { getTranslations } from "@/lib/i18n/get-translation";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getServicePageBySlug, getSectionImage, getSectionData } from "@/lib/cms/service-pages";
@@ -27,11 +28,13 @@ import PageCta from "@/components/PageCta";
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("materialien", "materialien", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("materialien", "materialien", "en"),
+    getTranslations("page", "materials", "en"),
+  ]);
   return {
-    title: "Materials | Mosaroma",
-    description:
-      "Discover Mosaroma's fabric qualities: Mackintosh® solution-dyed olefin, Nerio recycled ocean plastic, and Basic outdoor fabrics.",
+    title: t["seoTitle"] || "Materialien | Mosaroma",
+    description: t["seoDescription"] || "Entdecken Sie die Stoffqualitäten von Mosaroma.",
   };
 }
 
@@ -42,7 +45,7 @@ export default async function MaterialsPage() {
     getServicePageBySlug("materialien"),
     getFabricPreviewSwatches(6),
     getSectionImage("materialien", "materials-olefin"),
-    getFabricFamiliesForHub(),
+    getFabricFamiliesForHub("en"),
     getSectionData("materialien", "materials-catalog-cta"),
     getSectionData("materialien", "materials-technology"),
     getSectionData("materialien", "materials-olefin"),
@@ -50,32 +53,44 @@ export default async function MaterialsPage() {
     getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
   ]);
 
+  const [techT, olefinT, oceanT, pageT] = await Promise.all([
+    getTranslations("material", "mackintosh-technology", "en"),
+    getTranslations("material", "olefin-benefits", "en"),
+    getTranslations("material", "ocean-cycle", "en"),
+    getTranslations("page", "materials", "en"),
+  ]);
+
   const tech = {
-    eyebrow: "Technology",
-    title: mackintoshTechnology.title,
+    eyebrow: techT.eyebrow || "Technologie",
+    title: techT.title || mackintoshTechnology.title,
     content: null,
-    fallbackParagraphs: mackintoshTechnology.description,
+    fallbackParagraphs: mackintoshTechnology.description.map((p, i) => techT[`description.${i + 1}`] || p),
     steps: mackintoshTechnology.steps.map((s, i) => ({
       ...s,
-      label: ["100 % PP", "Additively water-repellent", "Spin-dyed UV pigments"][i] || "",
+      title: techT[`step.${i + 1}.title`] || s.title,
+      description: techT[`step.${i + 1}.description`] || s.description,
+      label: techT[`step.${i + 1}.label`] || ["100 % PP", "Additiv wasserabweisend", "Spinndüsengefärbte UV-Pigmente"][i] || "",
     })),
-    benefits: mackintoshTechnology.benefits,
+    benefits: mackintoshTechnology.benefits.map((b, i) => techT[`benefit.${i + 1}`] || b),
   };
 
   const olefin = {
-    title: "Why Olefin?",
-    tags: olefinBenefits.tags,
+    title: olefinT.title || "Warum Olefin?",
+    tags: olefinBenefits.tags.map((tag, i) => olefinT[`tag.${i + 1}`] || tag),
     content: null,
-    fallbackParagraphs: olefinBenefits.paragraphs,
+    fallbackParagraphs: olefinBenefits.paragraphs.map((p, i) => olefinT[`paragraph.${i + 1}`] || p),
   };
 
   const ocean = {
-    eyebrow: "Sustainability",
-    title: oceanCycleProcess.title,
+    eyebrow: oceanT.eyebrow || "Nachhaltigkeit",
+    title: oceanT.title || oceanCycleProcess.title,
     content: null,
-    fallbackDescription: oceanCycleProcess.description,
-    steps: oceanCycleProcess.steps,
-    highlights: oceanCycleProcess.highlights,
+    fallbackDescription: oceanT.description || oceanCycleProcess.description,
+    steps: oceanCycleProcess.steps.map((s, i) => ({
+      title: oceanT[`step.${i + 1}.title`] || s.title,
+      description: oceanT[`step.${i + 1}.description`] || s.description,
+    })),
+    highlights: oceanCycleProcess.highlights.map((hl, i) => oceanT[`highlight.${i + 1}`] || hl),
   };
 
   const contentSections =
@@ -98,7 +113,7 @@ export default async function MaterialsPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "Materials" }]} />
+        <BreadcrumbBar items={[{ label: pageT["breadcrumb"] || "Materialien" }]} />
         <MaterialAnchorNavEn />
 
         {hasCmsSections ? (
@@ -171,7 +186,7 @@ export default async function MaterialsPage() {
                 <ScrollReveal>
                   <div className="bg-cream p-8 md:p-12">
                     <h3 className="font-heading text-anthracite text-xl font-bold mb-6">
-                      Advantages of Mackintosh® Technology
+                      {techT["benefitsTitle"] || "Vorteile der Mackintosh® Technologie"}
                     </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {tech.benefits.map((benefit) => (
@@ -194,7 +209,7 @@ export default async function MaterialsPage() {
                 <div className={`grid grid-cols-1 items-start gap-10 lg:gap-10 ${olefinImage ? "lg:grid-cols-[5fr_4fr]" : ""}`}>
                   <div>
                     <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-                      Why <em className="text-pumpkin-accessible not-italic">Olefin?</em>
+                      {olefin.title}
                     </h2>
 
                     <div className="flex flex-wrap gap-2.5 mb-10">
@@ -249,15 +264,15 @@ export default async function MaterialsPage() {
             <section id="stofffamilien" className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <p className="font-accent text-text-muted text-[10px] tracking-[0.15em] uppercase mb-3">
-                  {hubFamilies.length} Qualities
+                  {hubFamilies.length} {pageT["qualitiesLabel"] || "Qualitäten"}
                 </p>
 
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  Our Fabric Families
+                  {pageT["familiesTitle"] || "Unsere Stofffamilien"}
                 </h2>
 
                 <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-12">
-                  {hubFamilies.length} fabric families, developed for different outdoor requirements — from premium olefin to recycled ocean polypropylene.
+                  {pageT["familiesDescription"] || `${hubFamilies.length} Stofffamilien, entwickelt für verschiedene Outdoor-Anforderungen — von Premium-Olefin bis recyceltem Ozean-Polypropylen.`}
                 </p>
 
                 <div className={`grid grid-cols-1 sm:grid-cols-2 gap-6 ${hubFamilies.length >= 4 ? "lg:grid-cols-4" : hubFamilies.length === 3 ? "lg:grid-cols-3" : ""}`}>
@@ -294,7 +309,7 @@ export default async function MaterialsPage() {
                             {family.material && (
                               <div>
                                 <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
-                                  Material
+                                  {pageT["label.material"] || "Material"}
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
                                   {family.material}
@@ -304,7 +319,7 @@ export default async function MaterialsPage() {
                             {family.weight && (
                               <div>
                                 <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
-                                  Weight
+                                  {pageT["label.weight"] || "Gewicht"}
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
                                   {family.weight}
@@ -314,7 +329,7 @@ export default async function MaterialsPage() {
                             {family.dyeing && (
                               <div>
                                 <span className={`font-heading text-[10px] font-semibold uppercase tracking-[0.1em] ${isDark ? "text-white/70" : "text-text-muted"}`}>
-                                  Dyeing
+                                  {pageT["label.dyeing"] || "Färbung"}
                                 </span>
                                 <p className={`font-body leading-relaxed ${isDark ? "text-white/80" : "text-anthracite"}`}>
                                   {family.dyeing}
@@ -339,7 +354,7 @@ export default async function MaterialsPage() {
                           )}
 
                           <div className="mt-5 pt-4 flex items-center gap-2 font-heading text-xs font-semibold uppercase tracking-[0.1em] text-pumpkin-accessible">
-                            <span>View fabrics</span>
+                            <span>{pageT["viewFabrics"] || "Stoffe ansehen"}</span>
                             <CmsIcon icon={icons["arrow-right"]} width={12} height={12} className="motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                           </div>
                         </Link>
@@ -411,11 +426,11 @@ export default async function MaterialsPage() {
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
-                  Discover Fabrics & Samples
+                  {pageT["fabricsTitle"] || "Stoffe & Muster entdecken"}
                 </h2>
 
                 <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-10">
-                  Browse our complete fabric library — filter by fabric family, product type, or search by fabric name and article number.
+                  {pageT["fabricsDescription"] || "Durchsuchen Sie unsere komplette Stoffbibliothek — filtern Sie nach Stofffamilie, Produkttyp oder suchen Sie nach Stoffname und Artikelnummer."}
                 </p>
 
                 <FabricLibraryPreview swatches={previewSwatches} icons={icons} locale="en" />
@@ -425,9 +440,9 @@ export default async function MaterialsPage() {
             {/* CTA */}
             <PageCta
               variant="light"
-              title="All Details in the Catalogue"
-              description="Discover all fabric qualities, colours and technical data in our current catalogue."
-              primaryLabel="View catalogue"
+              title={pageT["cta.title"] || "Alle Details im Katalog"}
+              description={pageT["cta.description"] || "Entdecken Sie alle Stoffqualitäten, Farben und technischen Daten in unserem aktuellen Katalog."}
+              primaryLabel={pageT["cta.primaryLabel"] || "Katalog ansehen"}
               primaryHref="/en/catalogues"
             />
           </>

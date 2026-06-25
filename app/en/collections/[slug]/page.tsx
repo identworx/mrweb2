@@ -59,7 +59,7 @@ function staticToFrontend(sc: StaticCollection): FrontendCollection {
 }
 
 async function resolveCollection(slug: string): Promise<FrontendCollection | null> {
-  const result = await getCollectionBySlugWithStatus(slug);
+  const result = await getCollectionBySlugWithStatus(slug, "en");
   if (result.state === "published") return result.collection;
   if (result.state === "not-public") return null;
   const staticCol = getStaticCollectionBySlug(slug);

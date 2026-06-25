@@ -1,6 +1,8 @@
 import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { getMediaUrl } from "@/lib/cms/media-url";
+import type { Locale } from "@/lib/i18n/config";
+import { overlayHomepageSections } from "@/lib/i18n/cms-overlay";
 
 export interface HomepageSection {
   id: string;
@@ -37,7 +39,7 @@ function parseSettings(raw: unknown): Record<string, unknown> {
   return {};
 }
 
-export async function getHomepageData(): Promise<HomepageData | null> {
+export async function getHomepageData(locale: Locale = "de"): Promise<HomepageData | null> {
   try {
     const page = await prisma.page.findUnique({
       where: { slug: "home" },
@@ -52,23 +54,27 @@ export async function getHomepageData(): Promise<HomepageData | null> {
 
     if (!page || page.status !== "PUBLISHED") return null;
 
+    const sections: HomepageSection[] = page.sections.map((s) => ({
+      id: s.id,
+      style: (parseSettings(s.settings).style as string) || "",
+      eyebrow: s.eyebrow,
+      title: s.title,
+      content: s.content,
+      imageUrl: s.image ? getMediaUrl(s.image, "") : null,
+      imageAlt: s.image?.alt || null,
+      buttonLabel: s.buttonLabel,
+      buttonHref: s.buttonHref,
+      settings: parseSettings(s.settings),
+      order: s.order,
+      isActive: s.isActive,
+    }));
+
+    const overlaid = await overlayHomepageSections(sections, locale);
+
     return {
       seoTitle: page.seoTitle,
       seoDescription: page.seoDescription,
-      sections: page.sections.map((s) => ({
-        id: s.id,
-        style: (parseSettings(s.settings).style as string) || "",
-        eyebrow: s.eyebrow,
-        title: s.title,
-        content: s.content,
-        imageUrl: s.image ? getMediaUrl(s.image, "") : null,
-        imageAlt: s.image?.alt || null,
-        buttonLabel: s.buttonLabel,
-        buttonHref: s.buttonHref,
-        settings: parseSettings(s.settings),
-        order: s.order,
-        isActive: s.isActive,
-      })),
+      sections: overlaid,
     };
   } catch (error) {
     console.warn("[homepage] Failed to load homepage data:", error);

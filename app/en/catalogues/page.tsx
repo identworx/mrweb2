@@ -78,7 +78,7 @@ export default async function CataloguesPage() {
   const [layout, hero, catalogs, icons] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("kataloge", "kataloge", "en"),
-    getPublicDownloadsByType("catalog"),
+    getPublicDownloadsByType("catalog", "en"),
     getIconSlots(["service-ruler", "service-shield", "service-fabric", "external-link", "arrow-right"]),
   ]);
 

@@ -84,6 +84,23 @@ const dictionaries = {
     legal: {
       translationDisclaimer: "",
     },
+    fabricLibrary: {
+      emptyState: "Noch keine Stoffe in der Bibliothek vorhanden.",
+      all: "Alle",
+      searchPlaceholder: "Stoff suchen (Name, Artikelnummer…)",
+      searchAriaLabel: "Stoffe durchsuchen",
+      filterByProductType: "Nach Produktart filtern",
+      allProductTypes: "Alle Produktarten",
+      gridView: "Kachelansicht",
+      matrixView: "Matrixansicht",
+      nerioLink: "Mehr zur NERIO Materialstory",
+      fabricSingular: "Stoff",
+      fabricPlural: "Stoffe",
+      shown: "angezeigt",
+      resetFilters: "Filter zurücksetzen",
+      noFabricsFound: "Keine Stoffe gefunden.",
+      showMore: "Mehr anzeigen...",
+    },
   },
   en: {
     nav: {
@@ -168,6 +185,23 @@ const dictionaries = {
     legal: {
       translationDisclaimer:
         "This English translation is provided for convenience only. The German version is legally binding.",
+    },
+    fabricLibrary: {
+      emptyState: "No fabrics in the library yet.",
+      all: "All",
+      searchPlaceholder: "Search fabrics (name, article number…)",
+      searchAriaLabel: "Search fabrics",
+      filterByProductType: "Filter by product type",
+      allProductTypes: "All product types",
+      gridView: "Grid view",
+      matrixView: "Matrix view",
+      nerioLink: "More about the NERIO material story",
+      fabricSingular: "fabric",
+      fabricPlural: "fabrics",
+      shown: "shown",
+      resetFilters: "Reset filters",
+      noFabricsFound: "No fabrics found.",
+      showMore: "Show more...",
     },
   },
 } as const;

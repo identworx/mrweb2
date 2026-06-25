@@ -13,24 +13,28 @@ import { getIconSlots } from "@/lib/cms/icons";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicMeasurements } from "@/lib/cms/measurements";
 import PageCta from "@/components/PageCta";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("produktmasse", "produktmasse", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("produktmasse", "produktmasse", "en"),
+    getTranslations("page", "product-dimensions", "en"),
+  ]);
   return {
-    title: "Product Dimensions | Mosaroma",
-    description:
-      "Overview of key Mosaroma product dimensions for cushions, pads, back cushions, bench cushions, poufs, placemats and table runners.",
+    title: t["seoTitle"] || "Produktmaße | Mosaroma",
+    description: t["seoDescription"] || "Übersicht der wichtigsten Mosaroma-Produktmaße für Kissen, Auflagen, Rückenkissen, Bankauflagen, Poufs, Tischsets und Tischläufer.",
   };
 }
 
 export default async function ProductDimensionsPage() {
-  const [layout, hero, allMeasurements, icons] = await Promise.all([
+  const [layout, hero, allMeasurements, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("produktmasse", "produktmasse", "en"),
     getPublicMeasurements(),
     getIconSlots(["arrow-right"]),
+    getTranslations("page", "product-dimensions", "en"),
   ]);
 
   const kissenItems = allMeasurements.filter((m) => m.group === "kissen-auflagen");
@@ -52,8 +56,8 @@ export default async function ProductDimensionsPage() {
           height="compact"
         />
         <BreadcrumbBar items={[
-          { label: "Catalogues", href: "/en/catalogues" },
-          { label: "Product Dimensions" },
+          { label: t["breadcrumb.catalogues"] || "Kataloge", href: "/en/catalogues" },
+          { label: t["breadcrumb.self"] || "Produktmaße" },
         ]} />
 
         {/* Notice + Quick Nav */}
@@ -62,11 +66,10 @@ export default async function ProductDimensionsPage() {
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
               <div>
                 <p className="font-body text-text-gray text-sm leading-relaxed">
-                  All dimensions are approximate and should be checked for fit
-                  before ordering.
+                  {t["notice"] || "Alle Maße sind Richtwerte und sollten vor der Bestellung auf Passgenauigkeit geprüft werden."}
                 </p>
                 <p className="font-body text-text-muted text-xs mt-1">
-                  Custom sizes available on request.
+                  {t["customNote"] || "Sondermaße auf Anfrage."}
                 </p>
               </div>
             </div>
@@ -80,11 +83,11 @@ export default async function ProductDimensionsPage() {
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
               <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
-                Cushions & Pads
+                {t["kissenTitle"] || "Kissen & Auflagen"}
               </p>
             </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              Cushions & Pads
+              {t["kissenTitle"] || "Kissen & Auflagen"}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -99,7 +102,7 @@ export default async function ProductDimensionsPage() {
         <section id="lehner" className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              High-Back & Low-Back Cushions
+              {t["lehnerTitle"] || "Hoch- & Niedriglehner"}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -114,7 +117,7 @@ export default async function ProductDimensionsPage() {
         <section id="bankauflagen" className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              Bench Cushions
+              {t["bankTitle"] || "Bankauflagen"}
             </h2>
 
             {bankauflagenItem && (
@@ -127,7 +130,7 @@ export default async function ProductDimensionsPage() {
         <section id="poufs" className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              Poufs
+              {t["poufsTitle"] || "Poufs"}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -142,7 +145,7 @@ export default async function ProductDimensionsPage() {
         <section id="tischsets" className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              Placemats & Table Runners
+              {t["tischTitle"] || "Tischsets & Tischläufer"}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -168,11 +171,11 @@ export default async function ProductDimensionsPage() {
 
         <PageCta
           variant="minimal"
-          title="Questions about product dimensions?"
-          description="Get in touch — we are happy to advise on dimensions, custom sizes and availability."
-          primaryLabel="Contact us"
+          title={t["cta.title"] || "Fragen zu Produktmaßen?"}
+          description={t["cta.description"] || "Kontaktieren Sie uns — wir beraten Sie gern zu Maßen, Sondermaßen und Verfügbarkeit."}
+          primaryLabel={t["cta.primaryLabel"] || "Kontakt aufnehmen"}
           primaryHref="/en/contact"
-          secondaryLabel="Back to Catalogues"
+          secondaryLabel={t["cta.secondaryLabel"] || "Zurück zu Kataloge"}
           secondaryHref="/en/catalogues"
         />
       </main>

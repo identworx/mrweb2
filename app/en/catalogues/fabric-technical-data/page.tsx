@@ -18,24 +18,28 @@ import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 import DataRow from "@/components/DataRow";
 import PageCta from "@/components/PageCta";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en"),
+    getTranslations("page", "fabric-technical-data", "en"),
+  ]);
   return {
-    title: "Fabric Technical Data | Mosaroma",
-    description:
-      "Technical information on Mosaroma fabric qualities, materials, weights and test values.",
+    title: t["seoTitle"] || "Stoff- & technische Daten | Mosaroma",
+    description: t["seoDescription"] || "Technische Informationen zu Mosaroma-Stoffqualitäten, Materialien, Gewichten und Prüfwerten.",
   };
 }
 
 export default async function FabricTechnicalDataPage() {
-  const [layout, hero, result, icons] = await Promise.all([
+  const [layout, hero, result, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en"),
     getServicePageBySlug("stoff-technische-daten"),
     getIconSlots([...SERVICE_SECTION_ICON_KEYS]),
+    getTranslations("page", "fabric-technical-data", "en"),
   ]);
 
   if (result.state === "not-public") {
@@ -58,8 +62,8 @@ export default async function FabricTechnicalDataPage() {
           height="compact"
         />
         <BreadcrumbBar items={[
-          { label: "Catalogues", href: "/en/catalogues" },
-          { label: "Fabric Technical Data" },
+          { label: t["breadcrumb.catalogues"] || "Kataloge", href: "/en/catalogues" },
+          { label: t["breadcrumb.self"] || "Stoff- & technische Daten" },
         ]} />
 
         {hasCmsSections ? (
@@ -80,11 +84,11 @@ export default async function FabricTechnicalDataPage() {
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
-                    Fabric Qualities
+                    {t["qualitiesEyebrow"] || "Stoffqualitäten"}
                   </p>
                 </div>
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-                  Material & Weight
+                  {t["qualitiesTitle"] || "Material & Gewicht"}
                 </h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,7 +132,7 @@ export default async function FabricTechnicalDataPage() {
             <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-                  Properties Comparison
+                  {t["comparisonTitle"] || "Eigenschaftsvergleich"}
                 </h2>
 
                 <div className="overflow-x-auto">
@@ -136,16 +140,16 @@ export default async function FabricTechnicalDataPage() {
                     <thead>
                       <tr className="bg-anthracite">
                         <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
-                          Property
+                          {t["table.property"] || "Eigenschaft"}
                         </th>
                         <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
-                          Test Standard
+                          {t["table.standard"] || "Prüfnorm"}
                         </th>
                         <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-pumpkin-accessible">
-                          Solution Dyed Olefin
+                          {t["table.olefin"] || "Solution Dyed Olefin"}
                         </th>
                         <th scope="col" className="px-5 py-4 text-left font-accent text-[11px] font-normal uppercase tracking-[0.1em] text-white/70">
-                          Piece Dyed Polyester
+                          {t["table.polyester"] || "Stückgefärbter Polyester"}
                         </th>
                       </tr>
                     </thead>
@@ -181,7 +185,7 @@ export default async function FabricTechnicalDataPage() {
             <section className="section-padding bg-white">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
                 <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
-                  Mackintosh® in Detail
+                  {t["mackintoshTitle"] || "Mackintosh® im Detail"}
                 </h2>
 
                 {fabricQualities[0].highlights && (
@@ -205,7 +209,7 @@ export default async function FabricTechnicalDataPage() {
                   className="inline-flex items-center gap-3 text-anthracite hover:text-pumpkin mt-10 group transition-colors duration-300"
                 >
                   <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
-                    Discover all materials
+                    {t["discoverLink"] || "Alle Materialien entdecken"}
                   </span>
                   <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
                 </Link>
@@ -214,11 +218,11 @@ export default async function FabricTechnicalDataPage() {
 
             <PageCta
               variant="light"
-              title="Questions about fabrics or technical data?"
-              description="We are happy to advise on materials, test values and fabric qualities."
-              primaryLabel="Contact us"
+              title={t["cta.title"] || "Fragen zu Stoffen oder technischen Daten?"}
+              description={t["cta.description"] || "Wir beraten Sie gern zu Materialien, Prüfwerten und Stoffqualitäten."}
+              primaryLabel={t["cta.primaryLabel"] || "Kontakt aufnehmen"}
               primaryHref="/en/contact"
-              secondaryLabel="Back to Catalogues"
+              secondaryLabel={t["cta.secondaryLabel"] || "Zurück zu Kataloge"}
               secondaryHref="/en/catalogues"
             />
           </>

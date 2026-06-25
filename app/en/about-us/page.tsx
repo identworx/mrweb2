@@ -8,52 +8,66 @@ import ScrollReveal from "@/components/ScrollReveal";
 import PageCta from "@/components/PageCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("ueber-uns", "ueberUns", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("ueber-uns", "ueberUns", "en"),
+    getTranslations("page", "about-us", "en"),
+  ]);
   return {
-    title: "About Us | Mosaroma",
-    description:
-      "For generations, we have been developing and producing premium outdoor textiles. Design, performance and responsible practice — that is MOSAROMA.",
+    title: t["seoTitle"] || "Über uns | Mosaroma",
+    description: t["seoDescription"] || "Seit Generationen entwickeln und produzieren wir hochwertige Outdoor-Textilien.",
   };
 }
 
 const promises = [
   {
-    title: "Comfort",
+    title: "Komfort",
     description:
-      "Soft touch, durable quality and timeless design for relaxed moments outdoors.",
+      "Weiche Haptik, langlebige Qualität und zeitloses Design für entspannte Momente im Freien.",
   },
   {
-    title: "Quality",
+    title: "Qualität",
     description:
-      "Premium materials and Mackintosh® Inside Technology provide lasting protection against sun, rain and dirt.",
+      "Hochwertige Materialien und die Mackintosh® Inside Technology sorgen für dauerhaften Schutz vor Sonne, Regen und Schmutz.",
   },
   {
-    title: "Responsibility",
+    title: "Verantwortung",
     description:
-      "We develop long-lasting products with a conscious approach to resources.",
+      "Wir entwickeln langlebige Produkte mit einem bewussten Umgang mit Ressourcen.",
   },
   {
     title: "Design",
     description:
-      "Clean forms and timeless aesthetics create products that blend harmoniously into any setting.",
+      "Klare Formen und eine zeitlose Ästhetik schaffen Produkte, die sich harmonisch in jede Umgebung einfügen.",
   },
 ];
 
 const sustainabilityStats = [
-  { value: "42 %", label: "less water" },
-  { value: "38 %", label: "fewer chemicals" },
-  { value: "71 %", label: "solar power" },
+  { value: "42 %", label: "weniger Wasser" },
+  { value: "38 %", label: "weniger Chemie" },
+  { value: "71 %", label: "Solarstrom" },
 ];
 
 export default async function AboutUsPage() {
-  const [layout, hero] = await Promise.all([
+  const [layout, hero, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("ueber-uns", "ueberUns", "en"),
+    getTranslations("page", "about-us", "en"),
   ]);
+
+  const localizedPromises = promises.map((p, i) => ({
+    title: t[`promises.${i + 1}.title`] || p.title,
+    description: t[`promises.${i + 1}.description`] || p.description,
+  }));
+
+  const localizedStats = sustainabilityStats.map((s, i) => ({
+    value: s.value,
+    label: t[`stats.${i + 1}.label`] || s.label,
+  }));
 
   return (
     <>
@@ -67,24 +81,17 @@ export default async function AboutUsPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "About Us" }]} />
+        <BreadcrumbBar items={[{ label: t["breadcrumb"] || "Über uns" }]} />
 
         {/* About text */}
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <div className="max-w-3xl">
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] mb-5">
-                For generations, we have been developing and producing premium
-                outdoor textiles and products. We combine ambitious design, high
-                performance and responsible practice. Durable materials,
-                innovative production processes and a consistent focus on
-                sustainable cycles define our work. The well-being of people and
-                nature is always at the heart of everything we do.
+                {t["intro.p1"] || "Seit Generationen entwickeln und produzieren wir hochwertige Outdoor-Textilien und -Produkte. Wir verbinden anspruchsvolles Design, hohe Leistungsfähigkeit und verantwortungsvolles Handeln. Langlebige Materialien, innovative Produktionsverfahren und der konsequente Blick auf nachhaltige Kreisläufe bestimmen unsere Arbeit. Das Wohl von Mensch und Natur steht dabei immer im Mittelpunkt."}
               </p>
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
-                We are convinced that outdoor textiles must deliver far more
-                than mere functionality. They should create comfort, relaxation
-                and well-being.
+                {t["intro.p2"] || "Wir sind überzeugt, dass Outdoor-Textilien weit mehr bieten müssen als reine Funktionalität. Sie sollen Komfort, Entspannung und Wohlbefinden schaffen."}
               </p>
             </div>
           </div>
@@ -94,11 +101,11 @@ export default async function AboutUsPage() {
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
-              What Drives Us.
+              {t["promisesTitle"] || "Was uns antreibt."}
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {promises.map((promise, i) => (
+              {localizedPromises.map((promise, i) => (
                 <ScrollReveal key={promise.title} delay={i * 80}>
                   <div className="bg-white p-8 transition-all duration-300 motion-safe:hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
                     <h3 className="font-heading text-anthracite text-lg font-bold mb-3">
@@ -118,18 +125,15 @@ export default async function AboutUsPage() {
         <section className="section-padding bg-anthracite">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-6">
-              Green by Design. From the First Thread.
+              {t["sustainabilityTitle"] || "Green by Design. Vom ersten Faden an."}
             </h2>
 
             <p className="font-body text-white/70 text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl mb-14">
-              Solution-dyed polypropylene (PP) saves significant water, energy
-              and CO&#8322; compared to conventionally dyed fibres. The colour is
-              added during fibre production — subsequent dyeing and washing are
-              eliminated entirely.
+              {t["sustainabilityDescription"] || "Spinndüsengefärbtes Polypropylen (PP) spart im Vergleich zu konventionell gefärbten Fasern erheblich Wasser, Energie und CO₂. Die Farbe wird bereits bei der Faserherstellung eingebracht — nachträgliches Färben und Waschen entfallen komplett."}
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-14">
-              {sustainabilityStats.map((stat, i) => (
+              {localizedStats.map((stat, i) => (
                 <ScrollReveal key={stat.label} delay={i * 100}>
                   <div className="text-center">
                     <span className="block font-heading text-pumpkin text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
@@ -144,8 +148,7 @@ export default async function AboutUsPage() {
             </div>
 
             <p className="font-body text-white/70 text-sm leading-[1.8] max-w-2xl">
-              Compared to conventionally piece-dyed polyester. Values based on
-              internal calculations and industry data.
+              {t["sustainabilityNote"] || "Im Vergleich zu konventionell stückgefärbtem Polyester. Werte basierend auf internen Berechnungen und Branchendaten."}
             </p>
           </div>
         </section>
@@ -154,7 +157,7 @@ export default async function AboutUsPage() {
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              Oyten near Bremen
+              {t["locationTitle"] || "Oyten bei Bremen"}
             </h2>
 
             <ScrollReveal>
@@ -164,23 +167,23 @@ export default async function AboutUsPage() {
                     14.000m²
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
-                    Area
+                    {t["location.area.label"] || "Fläche"}
                   </span>
                 </div>
                 <div>
                   <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                    since 2021
+                    {t["location.since.value"] || "seit 2021"}
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
-                    at the location
+                    {t["location.since.label"] || "am Standort"}
                   </span>
                 </div>
                 <div>
                   <span className="block font-heading text-pumpkin text-2xl md:text-3xl font-bold">
-                    2–4 days
+                    {t["location.delivery.value"] || "2–4 Tage"}
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
-                    Delivery DACH
+                    {t["location.delivery.label"] || "Lieferung DACH"}
                   </span>
                 </div>
                 <div>
@@ -188,14 +191,14 @@ export default async function AboutUsPage() {
                     DACH
                   </span>
                   <span className="block font-body text-text-gray text-sm mt-1">
-                    Delivery area
+                    {t["location.region.label"] || "Liefergebiet"}
                   </span>
                 </div>
               </div>
             </ScrollReveal>
 
             <Link href="/en/contact" className="btn-outline">
-              Get in touch
+              {t["locationButton"] || "Kontakt aufnehmen"}
             </Link>
           </div>
         </section>
@@ -204,14 +207,12 @@ export default async function AboutUsPage() {
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
-              3-Year Warranty.
+              {t["warrantyTitle"] || "3 Jahre Garantie."}
             </h2>
 
             <div className="max-w-3xl space-y-5">
               <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8]">
-                We offer a 3-year warranty on all Mosaroma cover fabrics —
-                protection against loss of strength or colour, pilling and
-                abrasion from normal use and weather conditions.
+                {t["warrantyDescription"] || "Wir bieten eine 3-Jahres-Garantie auf alle Mosaroma-Bezugsstoffe — Schutz vor Festigkeits- oder Farbverlust, Pilling und Abrieb bei normaler Nutzung und Witterungsbedingungen."}
               </p>
             </div>
           </div>
@@ -219,11 +220,11 @@ export default async function AboutUsPage() {
 
         <PageCta
           variant="dark"
-          title="Ready for Your Next Project?"
-          description="Whether retail, hospitality or gastronomy — we advise you personally on collections, materials and individual solutions."
-          primaryLabel="Get in touch"
+          title={t["cta.title"] || "Bereit für Ihr nächstes Projekt?"}
+          description={t["cta.description"] || "Ob Einzelhandel, Hotellerie oder Gastronomie — wir beraten Sie persönlich zu Kollektionen, Materialien und individuellen Lösungen."}
+          primaryLabel={t["cta.primaryLabel"] || "Kontakt aufnehmen"}
           primaryHref="/en/contact"
-          secondaryLabel="Discover collections"
+          secondaryLabel={t["cta.secondaryLabel"] || "Kollektionen entdecken"}
           secondaryHref="/en/collections"
         />
       </main>

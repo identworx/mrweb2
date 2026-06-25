@@ -10,6 +10,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { getDictionaryAsync } from "@/lib/i18n/dictionary-async";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import { localizedHref } from "@/lib/i18n/routes";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 interface LayoutData {
   header: {
@@ -127,6 +128,17 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
     socialLinks = rawSocial as { platform: string; url: string }[];
   }
 
+  // Overlay footer CMS text fields with ContentTranslation for non-DE
+  const footerTranslations = locale !== "de"
+    ? await getTranslations("footer", "", locale)
+    : {};
+
+  function ft(cmsValue: string | null | undefined, fieldName: string, dictFallback?: string): string | null {
+    if (!cmsValue) return dictFallback ?? null;
+    if (locale === "de") return cmsValue;
+    return footerTranslations[fieldName] || dictFallback || cmsValue;
+  }
+
   return {
     header: {
       navItems: headerItems,
@@ -137,7 +149,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       dictionary,
     },
     footer: {
-      description: footerSettings?.description ?? null,
+      description: ft(footerSettings?.description, "description"),
       copyrightText: footerSettings?.copyrightText ?? null,
       logoUrl: footerSettings?.logoMedia?.url || footerSettings?.logoUrl || "/mosaroma_logo.png",
       siteName: settings?.siteName ?? null,
@@ -145,22 +157,22 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       legalLinks,
       socialLinks,
       ctaEnabled: footerSettings?.ctaEnabled ?? false,
-      ctaEyebrow: footerSettings?.ctaEyebrow ?? null,
-      ctaTitle: footerSettings?.ctaTitle ?? null,
-      ctaText: footerSettings?.ctaText ?? null,
-      ctaPrimaryLabel: footerSettings?.ctaPrimaryLabel ?? null,
+      ctaEyebrow: ft(footerSettings?.ctaEyebrow, "ctaEyebrow", dictionary.footer.ctaEyebrow),
+      ctaTitle: ft(footerSettings?.ctaTitle, "ctaTitle", dictionary.footer.ctaTitle),
+      ctaText: ft(footerSettings?.ctaText, "ctaText", dictionary.footer.ctaText),
+      ctaPrimaryLabel: ft(footerSettings?.ctaPrimaryLabel, "ctaPrimaryLabel", dictionary.footer.ctaPrimary),
       ctaPrimaryHref: footerSettings?.ctaPrimaryHref ? localizedHref(footerSettings.ctaPrimaryHref, locale) : null,
-      ctaSecondaryLabel: footerSettings?.ctaSecondaryLabel ?? null,
+      ctaSecondaryLabel: ft(footerSettings?.ctaSecondaryLabel, "ctaSecondaryLabel", dictionary.footer.ctaSecondary),
       ctaSecondaryHref: footerSettings?.ctaSecondaryHref ? localizedHref(footerSettings.ctaSecondaryHref, locale) : null,
-      contactTitle: footerSettings?.contactTitle ?? null,
+      contactTitle: ft(footerSettings?.contactTitle, "contactTitle", dictionary.footer.contactTitle),
       companyName: footerSettings?.companyName ?? null,
       addressLine1: footerSettings?.addressLine1 ?? null,
       addressLine2: footerSettings?.addressLine2 ?? null,
       postalCity: footerSettings?.postalCity ?? null,
-      country: footerSettings?.country ?? null,
+      country: ft(footerSettings?.country, "country", dictionary.common.country),
       email: footerSettings?.email ?? null,
       phone: footerSettings?.phone ?? null,
-      contactButtonLabel: footerSettings?.contactButtonLabel ? localizeLabel(footerSettings.contactButtonLabel, locale) : null,
+      contactButtonLabel: ft(footerSettings?.contactButtonLabel, "contactButtonLabel", dictionary.footer.contactButton),
       contactButtonHref: footerSettings?.contactButtonHref ? localizedHref(footerSettings.contactButtonHref, locale) : null,
       bottomNote: footerSettings?.bottomNote ?? null,
       icons: layoutIcons,

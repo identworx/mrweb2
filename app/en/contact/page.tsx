@@ -9,6 +9,7 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { getTranslations } from "@/lib/i18n/get-translation";
 
 export const revalidate = 60;
 
@@ -16,43 +17,59 @@ const FALLBACK_FORM: PublicForm = {
   slug: "contact",
   title: null,
   description: null,
-  submitLabel: "Send message",
-  successMessage: "Thank you for your message. We will be in touch shortly.",
-  errorMessage: "An error occurred. Please try again.",
+  submitLabel: "Nachricht senden",
+  successMessage: "Vielen Dank für Ihre Nachricht. Wir melden uns in Kürze.",
+  errorMessage: "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
   privacyText: null,
   honeypotField: null,
   fields: [
-    { name: "name", type: "TEXT", label: "Name", placeholder: "Your name", helpText: null, required: true, options: null },
-    { name: "email", type: "EMAIL", label: "Email", placeholder: "Your email address", helpText: null, required: true, options: null },
-    { name: "message", type: "TEXTAREA", label: "Message", placeholder: "Your message", helpText: null, required: true, options: null },
+    { name: "name", type: "TEXT", label: "Name", placeholder: "Ihr Name", helpText: null, required: true, options: null },
+    { name: "email", type: "EMAIL", label: "E-Mail", placeholder: "Ihre E-Mail-Adresse", helpText: null, required: true, options: null },
+    { name: "message", type: "TEXTAREA", label: "Nachricht", placeholder: "Ihre Nachricht", helpText: null, required: true, options: null },
   ],
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const hero = await getPageHeroData("kontakt", "kontakt", "en");
+  const [hero, t] = await Promise.all([
+    getPageHeroData("kontakt", "kontakt", "en"),
+    getTranslations("page", "contact", "en"),
+  ]);
   return {
-    title: "Contact | Mosaroma",
-    description:
-      "Contact MOSAROMA — Mosaroma Industries GmbH in Oyten near Bremen. We look forward to hearing from you.",
+    title: t["seoTitle"] || "Kontakt | Mosaroma",
+    description: t["seoDescription"] || "Kontaktieren Sie MOSAROMA — Mosaroma Industries GmbH in Oyten bei Bremen.",
   };
 }
 
 export default async function ContactPage() {
-  const [layout, hero, { form, status }, icons] = await Promise.all([
+  const [layout, hero, { form, status }, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("kontakt", "kontakt", "en"),
     getPublicFormBySlug("contact"),
     getIconSlots(["contact-email", "contact-globe", "contact-clock"]),
+    getTranslations("page", "contact", "en"),
   ]);
 
   const isInactive = status === "inactive";
-  const displayForm = form || (isInactive ? null : FALLBACK_FORM);
+
+  const localizedFallbackForm: PublicForm = {
+    ...FALLBACK_FORM,
+    submitLabel: t["form.submitLabel"] || FALLBACK_FORM.submitLabel,
+    successMessage: t["form.successMessage"] || FALLBACK_FORM.successMessage,
+    errorMessage: t["form.errorMessage"] || FALLBACK_FORM.errorMessage,
+    fields: FALLBACK_FORM.fields.map((f) => ({
+      ...f,
+      label: t[`form.${f.name}.label`] || f.label,
+      placeholder: t[`form.${f.name}.placeholder`] || f.placeholder,
+    })),
+  };
+
+  const displayForm = form || (isInactive ? null : localizedFallbackForm);
 
   const companyName = layout.footer.companyName || "Mosaroma Industries GmbH";
   const addressLine1 = layout.footer.addressLine1 || "Rudolf-Diesel-Str. 11–13";
   const addressLine2 = layout.footer.addressLine2 || null;
   const postalCity = layout.footer.postalCity || "28876 Oyten";
-  const country = layout.footer.country || "Germany";
+  const country = layout.footer.country || "Deutschland";
   const email = layout.footer.email || layout.siteSettings.contactEmail || "info@mosaroma.de";
 
   return (
@@ -66,7 +83,7 @@ export default async function ContactPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "Contact" }]} />
+        <BreadcrumbBar items={[{ label: t["breadcrumb"] || "Kontakt" }]} />
 
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -76,7 +93,7 @@ export default async function ContactPage() {
                 <div className="flex items-center gap-4 mb-5">
                   <div className="accent-line" />
                   <p className="font-accent text-pumpkin-accessible text-xs tracking-[0.3em] uppercase">
-                    Contact Details
+                    {t["contactDetails"] || "Kontaktdaten"}
                   </p>
                 </div>
 
@@ -122,7 +139,7 @@ export default async function ContactPage() {
                   <div className="flex items-center gap-3">
                     <CmsIcon icon={icons["contact-clock"]} width={16} height={16} className="text-pumpkin flex-shrink-0" />
                     <p className="font-body text-anthracite text-sm">
-                      Mon–Fri &middot; 9 am–5 pm
+                      {t["businessHours"] || "Mo–Fr · 9:00–17:00 Uhr"}
                     </p>
                   </div>
                 </div>
@@ -131,13 +148,13 @@ export default async function ContactPage() {
               {/* Right: Contact form */}
               <div>
                 <h2 className="font-heading text-anthracite text-xl md:text-2xl font-bold tracking-tight mb-8">
-                  Write to Us
+                  {t["writeToUs"] || "Schreiben Sie uns"}
                 </h2>
 
                 {isInactive ? (
                   <div className="bg-gray-50 border border-gray-200 p-6 text-center">
                     <p className="font-body text-text-gray text-base">
-                      The contact form is currently unavailable. Please contact us by email.
+                      {t["formUnavailable"] || "Das Kontaktformular ist derzeit nicht verfügbar. Bitte kontaktieren Sie uns per E-Mail."}
                     </p>
                   </div>
                 ) : displayForm ? (
