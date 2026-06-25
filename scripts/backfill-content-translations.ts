@@ -613,6 +613,7 @@ add("material", "ocean-cycle", "highlight.1", "OceanCycle® zertifiziert", "Ocea
 add("material", "ocean-cycle", "highlight.2", "50 % recyceltes Ozean-Polypropylen", "50% recycled ocean polypropylene");
 add("material", "ocean-cycle", "highlight.3", "PFAS-frei", "PFAS-free");
 add("material", "ocean-cycle", "highlight.4", "Spinndüsengefärbt für höchste Farbechtheit", "Solution-dyed for highest colour fastness");
+add("material", "ocean-cycle", "highlight.5", "Reduziert ozeangebundene Plastikverschmutzung", "Reduces ocean-bound plastic pollution");
 
 /* ------------------------------------------------------------------ */
 /*  31. NERIO page section translations                               */

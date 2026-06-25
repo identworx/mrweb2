@@ -23,6 +23,7 @@ interface NerioVideoSectionProps {
   title: string;
   intro: string;
   videos: NerioVideo[];
+  locale?: string;
 }
 
 /* ------------------------------------------------------------------ */
@@ -94,9 +95,11 @@ function CloseIcon() {
 function VideoModal({
   video,
   onClose,
+  locale = "de",
 }: {
   video: NerioVideo;
   onClose: () => void;
+  locale?: string;
 }) {
   const videoId = parseYouTubeId(video.youtubeUrl);
   const start = video.startSeconds ?? 0;
@@ -149,7 +152,7 @@ function VideoModal({
         <button
           onClick={onClose}
           className="absolute -top-12 right-0 md:-right-2 md:-top-12 text-white/70 hover:text-white transition-colors duration-200 p-1"
-          aria-label="Video schliessen"
+          aria-label={locale === "en" ? "Close video" : "Video schliessen"}
           type="button"
         >
           <CloseIcon />
@@ -191,16 +194,18 @@ function VideoModal({
 function VideoCard({
   video,
   onPlay,
+  locale = "de",
 }: {
   video: NerioVideo;
   onPlay: () => void;
+  locale?: string;
 }) {
   return (
     <button
       type="button"
       onClick={onPlay}
       className="group text-left w-full bg-[#0C3D40] border border-[#e8e4df] overflow-hidden shadow-[0_2px_8px_rgba(45,45,45,0.04)] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(45,45,45,0.08)] motion-safe:hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1B6B6D] focus-visible:ring-offset-2"
-      aria-label={`Video abspielen: ${video.title}`}
+      aria-label={locale === "en" ? `Play video: ${video.title}` : `Video abspielen: ${video.title}`}
     >
       {/* Thumbnail area (16:9) */}
       <div className="relative aspect-video overflow-hidden">
@@ -257,7 +262,7 @@ function VideoCard({
           </p>
         )}
         <p className="font-body text-text-muted text-xs leading-relaxed">
-          Mit Klick wird ein YouTube-Video geladen.
+          {locale === "en" ? "Clicking will load a YouTube video." : "Mit Klick wird ein YouTube-Video geladen."}
         </p>
       </div>
     </button>
@@ -272,6 +277,7 @@ export default function NerioVideoSection({
   title,
   intro,
   videos,
+  locale = "de",
 }: NerioVideoSectionProps) {
   const [activeVideo, setActiveVideo] = useState<NerioVideo | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -314,6 +320,7 @@ export default function NerioVideoSection({
               key={`${video.youtubeUrl}-${i}`}
               video={video}
               onPlay={() => setActiveVideo(video)}
+              locale={locale}
             />
           ))}
         </div>
@@ -321,7 +328,7 @@ export default function NerioVideoSection({
 
       {/* Modal */}
       {mounted && activeVideo && (
-        <VideoModal video={activeVideo} onClose={handleClose} />
+        <VideoModal video={activeVideo} onClose={handleClose} locale={locale} />
       )}
     </section>
   );

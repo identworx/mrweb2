@@ -47,11 +47,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const NERIO_PRODUCT_CARDS_FALLBACK = [
-  { id: "dekokissen", title: "Decorative Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 1, fallbackImage: "/images/placeholders/categories/dekokissen.svg" },
-  { id: "hochlehner", title: "High-Back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 2, fallbackImage: "/images/placeholders/categories/hochlehner.svg" },
-  { id: "niedriglehner", title: "Low-Back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 3, fallbackImage: "/images/placeholders/categories/niedriglehner.svg" },
-  { id: "sitzkissen", title: "Seat Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 4, fallbackImage: "/images/placeholders/categories/sitzkissen.svg" },
-  { id: "bankauflagen", title: "Bench Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 5, fallbackImage: "/images/placeholders/categories/bankauflagen.svg" },
+  { id: "dekokissen", title: "Decorative Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 1, fallbackImage: "/images/placeholders/categories/en/dekokissen.svg" },
+  { id: "hochlehner", title: "High-Back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 2, fallbackImage: "/images/placeholders/categories/en/hochlehner.svg" },
+  { id: "niedriglehner", title: "Low-Back Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 3, fallbackImage: "/images/placeholders/categories/en/niedriglehner.svg" },
+  { id: "sitzkissen", title: "Seat Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 4, fallbackImage: "/images/placeholders/categories/en/sitzkissen.svg" },
+  { id: "bankauflagen", title: "Bench Cushions", href: "/en/collections/nerio-oceana", imageId: null as string | null, isActive: true, order: 5, fallbackImage: "/images/placeholders/categories/en/bankauflagen.svg" },
 ];
 
 
@@ -186,7 +186,15 @@ export default async function NerioPageEn() {
     },
   ];
 
-  const rawVideos = fallbackVideos;
+  const cmsVideos = Array.isArray(videosData?.settings?.videos) &&
+    (videosData.settings.videos as typeof fallbackVideos).length > 0
+      ? (videosData.settings.videos as typeof fallbackVideos)
+      : null;
+
+  const rawVideos = fallbackVideos.map((fb, i) => ({
+    ...fb,
+    thumbnailMediaId: cmsVideos?.[i]?.thumbnailMediaId ?? fb.thumbnailMediaId,
+  }));
 
   const videoThumbnails = await resolveVideoThumbnails(
     videosData?.settings ?? { videos: rawVideos },
@@ -225,7 +233,11 @@ export default async function NerioPageEn() {
   };
 
   type ProductCard = { id: string; title: string; href: string; imageId: string | null; isActive: boolean; order: number; fallbackImage?: string };
-  const rawCards: ProductCard[] = NERIO_PRODUCT_CARDS_FALLBACK;
+  const rawCards: ProductCard[] =
+    Array.isArray(productsData?.settings?.cards) &&
+    (productsData.settings.cards as ProductCard[]).length > 0
+      ? (productsData.settings.cards as ProductCard[])
+      : NERIO_PRODUCT_CARDS_FALLBACK;
 
   const productCardImages = await resolveMediaIds(
     rawCards.map((c) => c.imageId),
@@ -563,6 +575,7 @@ export default async function NerioPageEn() {
               title={nerioVideos.title}
               intro={nerioVideos.intro}
               videos={nerioVideos.videos}
+              locale="en"
             />
 
             {/* Technical Facts */}
