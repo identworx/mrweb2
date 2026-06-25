@@ -185,7 +185,7 @@ export default async function ProductPage({ params }: PageProps) {
           { label: "Collections", href: "/en/collections" },
           { label: displayCollection, href: `/en/collections/${product.collectionSlug}` },
           { label: displayName },
-        ]} />
+        ]} locale="en" />
 
         {/* -- Product Stage -- */}
         <section className="bg-cream py-10 md:py-14">

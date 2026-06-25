@@ -245,7 +245,7 @@ export default async function CollectionPage({ params }: PageProps) {
         <BreadcrumbBar items={[
           { label: "Collections", href: "/en/collections" },
           { label: `${collection.name} Collection` },
-        ]} />
+        ]} locale="en" />
 
         {/* -- Anchor Navigation -- */}
         <CollectionAnchorNav items={anchorItems} />

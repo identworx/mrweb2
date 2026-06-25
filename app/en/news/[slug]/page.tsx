@@ -103,7 +103,7 @@ export default async function NewsDetailPage({
           <BreadcrumbBar items={[
             { label: "News", href: "/en/news" },
             { label: article.title },
-          ]} />
+          ]} locale="en" />
 
           <section className="section-padding bg-white">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
@@ -191,7 +191,7 @@ export default async function NewsDetailPage({
         <BreadcrumbBar items={[
           { label: "News", href: "/en/news" },
           { label: staticItem.title },
-        ]} />
+        ]} locale="en" />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

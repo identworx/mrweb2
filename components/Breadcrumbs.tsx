@@ -11,14 +11,18 @@ interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   variant?: "dark" | "light";
   icons?: Record<string, ResolvedIcon>;
+  locale?: "de" | "en";
 }
 
 export default function Breadcrumbs({
   items,
   variant = "dark",
   icons = {},
+  locale = "de",
 }: BreadcrumbsProps) {
   const isLight = variant === "light";
+  const homeLabel = locale === "en" ? "Home" : "Startseite";
+  const homeHref = locale === "en" ? "/en" : "/";
 
   return (
     <nav aria-label="Breadcrumb">
@@ -29,12 +33,12 @@ export default function Breadcrumbs({
       >
         <li>
           <Link
-            href="/"
+            href={homeHref}
             className={`transition-colors duration-200 ${
               isLight ? "hover:text-white" : "hover:text-pumpkin"
             }`}
           >
-            Startseite
+            {homeLabel}
           </Link>
         </li>
         {items.map((item, i) => (

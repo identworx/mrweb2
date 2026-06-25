@@ -2,13 +2,17 @@ import type { Locale } from "./config";
 import { getTranslationsForType } from "./get-translation";
 
 const productTypeTranslations: Record<string, string> = {
-  Hochlehner: "High-back Cushion",
-  Niedriglehner: "Low-back Cushion",
+  Hochlehner: "High-Back Cushion",
+  Niedriglehner: "Low-Back Cushion",
   Sitzkissen: "Seat Cushion",
   Bankauflage: "Bench Cushion",
+  Bankauflagen: "Bench Cushions",
   Dekokissen: "Decorative Cushion",
+  "Deko-Kissen": "Decorative Cushion",
   Tischset: "Placemat",
   Tischläufer: "Table Runner",
+  "Tischsets & Tischläufer": "Placemats & Table Runners",
+  Sitzpolster: "Seat Pad",
   Decke: "Blanket",
   Pouf: "Pouf",
 };

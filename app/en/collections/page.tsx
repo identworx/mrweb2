@@ -238,7 +238,7 @@ export default async function CollectionsPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "Collections" }]} />
+        <BreadcrumbBar items={[{ label: "Collections" }]} locale="en" />
 
         {contentBlocks.map((b) => b.node)}
       </main>

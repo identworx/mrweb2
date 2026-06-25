@@ -122,7 +122,7 @@ export default async function CategoryPage({ params }: PageProps) {
               <BreadcrumbBar items={[
                 { label: "Product Categories", href: "/en/product-categories" },
                 { label: displayName },
-              ]} />
+              ]} locale="en" />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
               <div>

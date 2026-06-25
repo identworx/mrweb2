@@ -1,10 +1,39 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useConsent } from "./ConsentProvider";
 
+const T = {
+  de: {
+    ariaLabel: "Cookie-Hinweis",
+    eyebrow: "Datenschutz & Cookies",
+    heading: "Wir verwenden Cookies bewusst.",
+    body: "Wir nutzen notwendige Cookies für den Betrieb der Webseite. Optionale Dienste helfen uns, Inhalte zu verbessern und externe Medien bereitzustellen. Sie entscheiden, was aktiv ist.",
+    privacyLink: "Datenschutzerklärung",
+    privacyHref: "/datenschutz",
+    reject: "Ablehnen",
+    settings: "Einstellungen",
+    acceptAll: "Alle akzeptieren",
+  },
+  en: {
+    ariaLabel: "Cookie notice",
+    eyebrow: "Privacy & Cookies",
+    heading: "We use cookies with care.",
+    body: "We use necessary cookies for the operation of this website. Optional services help us improve content and provide external media. You decide what is active.",
+    privacyLink: "Privacy Policy",
+    privacyHref: "/en/privacy-policy",
+    reject: "Decline",
+    settings: "Settings",
+    acceptAll: "Accept all",
+  },
+};
+
 export default function CookieConsentBanner() {
   const { hasAnswered, acceptAll, rejectAll, openSettings } = useConsent();
+  const pathname = usePathname();
+  const locale = pathname?.startsWith("/en") ? "en" : "de";
+  const t = T[locale];
 
   if (hasAnswered) return null;
 
@@ -26,23 +55,21 @@ export default function CookieConsentBanner() {
           opacity: 0,
         }}
         role="region"
-        aria-label="Cookie-Hinweis"
+        aria-label={t.ariaLabel}
       >
         <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.25em] uppercase mb-2">
-          Datenschutz &amp; Cookies
+          {t.eyebrow}
         </p>
         <h2 className="font-heading text-white text-lg md:text-xl font-bold tracking-tight leading-snug mb-3">
-          Wir verwenden Cookies bewusst.
+          {t.heading}
         </h2>
         <p className="font-body text-white/60 text-sm leading-[1.8] mb-6 max-w-[58ch]">
-          Wir nutzen notwendige Cookies für den Betrieb der Webseite. Optionale
-          Dienste helfen uns, Inhalte zu verbessern und externe Medien
-          bereitzustellen. Sie entscheiden, was aktiv ist.{" "}
+          {t.body}{" "}
           <Link
-            href="/datenschutz"
+            href={t.privacyHref}
             className="text-white/70 underline underline-offset-2 hover:text-white transition-colors duration-300"
           >
-            Datenschutzerklärung
+            {t.privacyLink}
           </Link>
         </p>
 
@@ -52,21 +79,21 @@ export default function CookieConsentBanner() {
             onClick={rejectAll}
             className="px-5 py-2.5 rounded-lg border border-white/20 font-heading text-white/70 text-[11px] font-semibold uppercase tracking-[0.12em] hover:border-white/40 hover:text-white transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
           >
-            Ablehnen
+            {t.reject}
           </button>
           <button
             type="button"
             onClick={openSettings}
             className="px-5 py-2.5 rounded-lg border border-white/20 font-heading text-white/70 text-[11px] font-semibold uppercase tracking-[0.12em] hover:border-white/40 hover:text-white transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
           >
-            Einstellungen
+            {t.settings}
           </button>
           <button
             type="button"
             onClick={acceptAll}
             className="px-5 py-2.5 rounded-lg bg-pumpkin-button font-heading text-white text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-burnt-orange transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:ml-auto"
           >
-            Alle akzeptieren
+            {t.acceptAll}
           </button>
         </div>
       </div>

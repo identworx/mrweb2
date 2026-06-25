@@ -39,7 +39,7 @@ export default async function ProductCategoriesPage() {
           title="Product Categories"
           description="Discover all MOSAROMA product categories — from decorative cushions and pads to poufs, placemats and blankets. Each category combines premium materials with thoughtful design for the outdoors."
         />
-        <BreadcrumbBar items={[{ label: "Product Categories" }]} />
+        <BreadcrumbBar items={[{ label: "Product Categories" }]} locale="en" />
 
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

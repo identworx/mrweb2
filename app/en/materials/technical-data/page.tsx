@@ -23,43 +23,43 @@ const fabricLabelsBase: Record<string, Record<string, string>> = {
   mackintosh: {
     material: "100 % Olefin",
     weight: "ab 260 g/m²",
-    dyeing: "spinndüsengefärbt",
-    comfort: "hoher Sitzkomfort",
-    cushionThickness: "5–6 cm starke Kissen",
+    dyeing: "solution-dyed",
+    comfort: "high seating comfort",
+    cushionThickness: "5–6 cm thick cushions",
     description: "",
   },
   "mackintosh-lite": {
     material: "100 % Olefin",
     weight: "ca. 170–300 g/m²",
-    dyeing: "spinndüsengefärbt",
-    comfort: "hoher Sitzkomfort",
-    cushionThickness: "5–6 cm Kissen",
-    description: "etwas leichteres Gewebe",
+    dyeing: "solution-dyed",
+    comfort: "high seating comfort",
+    cushionThickness: "5–6 cm cushions",
+    description: "slightly lighter fabric",
   },
   nerio: {
     material: "100 % Olefin (50 % recycelt)",
     weight: "ca. 200–230 g/m²",
-    dyeing: "spinndüsengefärbt",
-    comfort: "hoher Sitzkomfort",
-    cushionThickness: "5–6 cm Kissen",
-    subtitle: "Aus dem Ozean geboren. Für die Zukunft gemacht.",
+    dyeing: "solution-dyed",
+    comfort: "high seating comfort",
+    cushionThickness: "5–6 cm cushions",
+    subtitle: "Born from the ocean. Made for the future.",
   },
   basic: {
     material: "100 % Polyester",
     weight: "ca. 280 g/m²",
-    dyeing: "stückgefärbt",
-    comfort: "angenehmer Sitzkomfort",
-    description: "weiche Haptik",
+    dyeing: "piece-dyed",
+    comfort: "comfortable seating",
+    description: "soft feel",
   },
 };
 
 const mackintoshHighlightsBase = [
-  "Höchste Lichtechtheit (7–8)",
-  "UV-Beständigkeit 5/5",
-  "Wasseraufnahme < 0,1 %",
-  "Bleichfest",
-  "Schimmelfest",
-  "PFAS-frei",
+  "Highest lightfastness (7–8)",
+  "UV resistance 5/5",
+  "Water absorption < 0.1%",
+  "Bleach resistant",
+  "Mould resistant",
+  "PFAS-free",
 ];
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -68,8 +68,8 @@ export async function generateMetadata(): Promise<Metadata> {
     getTranslations("page", "technical-data", "en"),
   ]);
   return {
-    title: t["seoTitle"] || "Technische Daten | Mosaroma",
-    description: t["seoDescription"] || "Technische Materialeigenschaften, Prüfwerte und Outdoor-Performance der Mosaroma-Stoffqualitäten im Vergleich.",
+    title: t["seoTitle"] || "Technical Data | Mosaroma",
+    description: t["seoDescription"] || "Technical material properties, test values and outdoor performance of Mosaroma fabric qualities compared.",
   };
 }
 
@@ -107,9 +107,10 @@ export default async function TechnicalDataPage() {
         />
         <BreadcrumbBar
           items={[
-            { label: t["breadcrumb.materials"] || "Materialien", href: "/en/materials" },
-            { label: t["breadcrumb.self"] || "Technische Daten" },
+            { label: t["breadcrumb.materials"] || "Materials", href: "/en/materials" },
+            { label: t["breadcrumb.self"] || "Technical Data" },
           ]}
+          locale="en"
         />
         <MaterialAnchorNavEn />
 
@@ -119,11 +120,11 @@ export default async function TechnicalDataPage() {
             <div className="flex items-center gap-4 mb-5">
               <div className="accent-line" />
               <p className="font-accent text-text-muted text-xs tracking-[0.3em] uppercase">
-                {t["qualitiesEyebrow"] || "Stoffqualitäten"}
+                {t["qualitiesEyebrow"] || "Fabric Qualities"}
               </p>
             </div>
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-10">
-              {t["qualitiesTitle"] || "Material & Gewicht"}
+              {t["qualitiesTitle"] || "Material & Weight"}
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -142,12 +143,12 @@ export default async function TechnicalDataPage() {
                       )}
                       <div className="space-y-3">
                         <DataRow label={t["label.material"] || "Material"} value={en.material || fabric.material} />
-                        <DataRow label={t["label.weight"] || "Gewicht"} value={en.weight || fabric.weight} />
-                        <DataRow label={t["label.dyeing"] || "Färbung"} value={en.dyeing || fabric.dyeing} />
-                        <DataRow label={t["label.comfort"] || "Komfort"} value={en.comfort || fabric.comfort} />
+                        <DataRow label={t["label.weight"] || "Weight"} value={en.weight || fabric.weight} />
+                        <DataRow label={t["label.dyeing"] || "Dyeing"} value={en.dyeing || fabric.dyeing} />
+                        <DataRow label={t["label.comfort"] || "Comfort"} value={en.comfort || fabric.comfort} />
                         {fabric.cushionThickness && (
                           <DataRow
-                            label={t["label.cushion"] || "Kissen"}
+                            label={t["label.cushion"] || "Cushions"}
                             value={en.cushionThickness || fabric.cushionThickness}
                           />
                         )}
@@ -169,7 +170,7 @@ export default async function TechnicalDataPage() {
         <section className="section-padding bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-12">
-              {t["comparisonTitle"] || "Eigenschaftsvergleich"}
+              {t["comparisonTitle"] || "Properties Comparison"}
             </h2>
 
             <TechnicalDataTableEn />
@@ -180,7 +181,7 @@ export default async function TechnicalDataPage() {
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <h2 className="font-heading text-anthracite text-2xl md:text-3xl font-bold tracking-tight mb-8">
-              {t["mackintoshTitle"] || "Mackintosh® im Detail"}
+              {t["mackintoshTitle"] || "Mackintosh® in Detail"}
             </h2>
 
             <ScrollReveal>
@@ -204,7 +205,7 @@ export default async function TechnicalDataPage() {
               className="inline-flex items-center gap-3 text-anthracite hover:text-pumpkin mt-10 group transition-colors duration-300"
             >
               <span className="font-heading text-[12px] font-semibold uppercase tracking-[0.12em]">
-                {t["discoverLink"] || "Alle Materialien entdecken"}
+                {t["discoverLink"] || "Discover all materials"}
               </span>
               <CmsIcon icon={icons["arrow-right"]} width={14} height={14} className="text-pumpkin motion-safe:group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
@@ -213,11 +214,11 @@ export default async function TechnicalDataPage() {
 
         <PageCta
           variant="light"
-          title={t["cta.title"] || "Fragen zu Stoffen oder technischen Daten?"}
-          description={t["cta.description"] || "Wir beraten Sie gern zu Materialien, Prüfwerten und Stoffqualitäten."}
-          primaryLabel={t["cta.primaryLabel"] || "Kontakt aufnehmen"}
+          title={t["cta.title"] || "Questions about fabrics or technical data?"}
+          description={t["cta.description"] || "We are happy to advise you on materials, test values and fabric qualities."}
+          primaryLabel={t["cta.primaryLabel"] || "Contact us"}
           primaryHref="/en/contact"
-          secondaryLabel={t["cta.secondaryLabel"] || "Katalog ansehen"}
+          secondaryLabel={t["cta.secondaryLabel"] || "View catalogue"}
           secondaryHref="/en/catalogues"
         />
       </main>

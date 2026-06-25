@@ -37,6 +37,7 @@ export default async function AmbienteGalleryPage() {
             { label: "Collections", href: "/en/collections" },
             { label: "Ambiente" },
           ]}
+          locale="en"
         />
 
         <section className="pt-14 md:pt-20 pb-20 md:pb-28 bg-white">

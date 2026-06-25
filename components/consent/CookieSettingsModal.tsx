@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useConsent } from "./ConsentProvider";
 
-const CATEGORIES = [
+const CATEGORIES_DE = [
   {
     key: "necessary" as const,
     label: "Notwendig",
@@ -32,6 +33,37 @@ const CATEGORIES = [
     label: "Externe Medien",
     description:
       "Ermöglichen das Einbetten von Inhalten externer Plattformen wie YouTube, Vimeo oder Kartenanbietern.",
+    locked: false,
+  },
+] as const;
+
+const CATEGORIES_EN = [
+  {
+    key: "necessary" as const,
+    label: "Necessary",
+    description:
+      "Basic functions such as page navigation, security and session management. These cookies are required for the website to operate.",
+    locked: true,
+  },
+  {
+    key: "statistics" as const,
+    label: "Statistics",
+    description:
+      "Help us understand how visitors interact with the website in order to improve content and user experience.",
+    locked: false,
+  },
+  {
+    key: "marketing" as const,
+    label: "Marketing",
+    description:
+      "Used to make advertising more relevant and to measure the effectiveness of campaigns.",
+    locked: false,
+  },
+  {
+    key: "externalMedia" as const,
+    label: "External Media",
+    description:
+      "Allow embedding content from external platforms such as YouTube, Vimeo or map providers.",
     locked: false,
   },
 ] as const;
@@ -70,6 +102,35 @@ function Toggle({
   );
 }
 
+const MODAL_T = {
+  de: {
+    eyebrow: "Datenschutz",
+    heading: "Cookie-Einstellungen",
+    ariaLabel: "Cookie-Einstellungen",
+    closeLabel: "Schließen",
+    alwaysActive: "Immer aktiv",
+    privacyNote: "Weitere Informationen finden Sie in unserer",
+    privacyLink: "Datenschutzerklärung",
+    privacyHref: "/datenschutz",
+    rejectAll: "Alle ablehnen",
+    save: "Auswahl speichern",
+    acceptAll: "Alle akzeptieren",
+  },
+  en: {
+    eyebrow: "Privacy",
+    heading: "Cookie Settings",
+    ariaLabel: "Cookie Settings",
+    closeLabel: "Close",
+    alwaysActive: "Always active",
+    privacyNote: "For more information, see our",
+    privacyLink: "Privacy Policy",
+    privacyHref: "/en/privacy-policy",
+    rejectAll: "Reject all",
+    save: "Save selection",
+    acceptAll: "Accept all",
+  },
+};
+
 export default function CookieSettingsModal() {
   const {
     preferences,
@@ -79,6 +140,10 @@ export default function CookieSettingsModal() {
     savePreferences,
     closeSettings,
   } = useConsent();
+  const pathname = usePathname();
+  const locale = pathname?.startsWith("/en") ? "en" : "de";
+  const t = MODAL_T[locale];
+  const CATEGORIES = locale === "en" ? CATEGORIES_EN : CATEGORIES_DE;
 
   const [local, setLocal] = useState({
     statistics: false,
@@ -160,7 +225,7 @@ export default function CookieSettingsModal() {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Cookie-Einstellungen"
+          aria-label={t.ariaLabel}
           className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-2xl"
           style={{
             animation: reducedMotion
@@ -172,10 +237,10 @@ export default function CookieSettingsModal() {
           <div className="sticky top-0 bg-white rounded-t-xl border-b border-black/[0.06] px-6 py-5 flex items-start justify-between gap-4 z-10">
             <div>
               <p className="font-accent text-pumpkin/70 text-[10px] tracking-[0.25em] uppercase mb-1">
-                Datenschutz
+                {t.eyebrow}
               </p>
               <h2 className="font-heading text-anthracite text-lg font-bold tracking-tight">
-                Cookie-Einstellungen
+                {t.heading}
               </h2>
             </div>
             <button
@@ -183,7 +248,7 @@ export default function CookieSettingsModal() {
               type="button"
               onClick={closeSettings}
               className="text-text-gray/60 hover:text-anthracite transition-colors duration-300 p-1 -mr-1 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin rounded"
-              aria-label="Schließen"
+              aria-label={t.closeLabel}
             >
               <svg
                 width="20"
@@ -218,7 +283,7 @@ export default function CookieSettingsModal() {
                       {cat.label}
                       {cat.locked && (
                         <span className="ml-2 font-accent text-pumpkin/60 text-[9px] tracking-[0.15em] uppercase">
-                          Immer aktiv
+                          {t.alwaysActive}
                         </span>
                       )}
                     </label>
@@ -243,13 +308,13 @@ export default function CookieSettingsModal() {
 
           <div className="px-6 pb-3">
             <p className="font-body text-text-gray/60 text-[12px] leading-[1.7]">
-              Weitere Informationen finden Sie in unserer{" "}
+              {t.privacyNote}{" "}
               <Link
-                href="/datenschutz"
+                href={t.privacyHref}
                 className="text-pumpkin/70 underline underline-offset-2 hover:text-pumpkin transition-colors duration-300"
                 onClick={closeSettings}
               >
-                Datenschutzerklärung
+                {t.privacyLink}
               </Link>
               .
             </p>
@@ -261,21 +326,21 @@ export default function CookieSettingsModal() {
               onClick={rejectAll}
               className="px-4 py-2.5 rounded-lg border border-black/[0.10] font-heading text-text-gray text-[11px] font-semibold uppercase tracking-[0.12em] hover:border-black/[0.20] hover:text-anthracite transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
             >
-              Alle ablehnen
+              {t.rejectAll}
             </button>
             <button
               type="button"
               onClick={handleSave}
               className="px-4 py-2.5 rounded-lg border border-black/[0.10] font-heading text-anthracite text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-anthracite hover:text-white hover:border-anthracite transition-all duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin sm:ml-auto"
             >
-              Auswahl speichern
+              {t.save}
             </button>
             <button
               type="button"
               onClick={acceptAll}
               className="px-4 py-2.5 rounded-lg bg-pumpkin-button font-heading text-white text-[11px] font-semibold uppercase tracking-[0.12em] hover:bg-burnt-orange transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pumpkin"
             >
-              Alle akzeptieren
+              {t.acceptAll}
             </button>
           </div>
         </div>

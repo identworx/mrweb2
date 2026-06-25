@@ -104,7 +104,7 @@ export default function Footer({
       ? "Design meets performance. Premium outdoor textiles for lasting moments in the open air."
       : footerData.brand.description);
   const copyright =
-    copyrightText || `© ${new Date().getFullYear()} MOSAROMA GmbH. ${t.footer.copyright}`;
+    (locale === "de" ? copyrightText : null) || `© ${new Date().getFullYear()} MOSAROMA GmbH. ${t.footer.copyright}`;
   const fallbackLabelMap: Record<string, string> = locale === "en" ? {
     Kollektionen: "Collections",
     Materialien: "Materials",

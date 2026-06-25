@@ -96,7 +96,7 @@ export default async function CataloguesPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "Catalogues" }]} />
+        <BreadcrumbBar items={[{ label: "Catalogues" }]} locale="en" />
 
         {/* Catalogue 2027 Feature Card */}
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-white">

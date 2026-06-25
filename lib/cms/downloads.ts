@@ -26,6 +26,15 @@ const DOWNLOAD_TEXT_FIELDS: (keyof FrontendDownload & string)[] = [
 const BUTTON_LABEL_DE = "Ansehen";
 const BUTTON_LABEL_EN = "View";
 
+const BUTTON_LABEL_TRANSLATIONS: Record<string, string> = {
+  "Deutsch ansehen": "View German",
+  "English ansehen": "View English",
+  "Ansehen": "View",
+  "Herunterladen": "Download",
+  "PDF herunterladen": "Download PDF",
+  "Katalog ansehen": "View Catalogue",
+};
+
 export async function getPublicDownloads(locale: Locale = "de"): Promise<FrontendDownload[]> {
   try {
     const downloads = await prisma.download.findMany({
@@ -66,8 +75,14 @@ export async function getPublicDownloadsByType(type: string, locale: Locale = "d
 
 type DbDownload = NonNullable<Awaited<ReturnType<typeof prisma.download.findFirst<{ include: { image: true } }>>>>;
 
+function translateButtonLabel(label: string, locale: Locale): string {
+  if (locale === "de") return label;
+  return BUTTON_LABEL_TRANSLATIONS[label] || label;
+}
+
 function mapDownloadForFrontend(dl: DbDownload, locale: Locale = "de"): FrontendDownload {
   const defaultLabel = locale === "en" ? BUTTON_LABEL_EN : BUTTON_LABEL_DE;
+  const rawLabel = dl.buttonLabel || defaultLabel;
   return {
     id: dl.id,
     title: dl.title,
@@ -76,7 +91,7 @@ function mapDownloadForFrontend(dl: DbDownload, locale: Locale = "de"): Frontend
     language: dl.language || "de",
     fileUrl: dl.fileUrl || null,
     externalUrl: dl.externalUrl || null,
-    buttonLabel: dl.buttonLabel || defaultLabel,
+    buttonLabel: translateButtonLabel(rawLabel, locale),
     opensInNewTab: dl.opensInNewTab,
     imageUrl: dl.image ? getMediaUrl(dl.image, "") : null,
     order: dl.order,

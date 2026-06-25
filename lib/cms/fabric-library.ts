@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db/prisma";
 import { getMediaUrl } from "@/lib/cms/media-url";
 import type { Locale } from "@/lib/i18n/config";
 import { overlayCmsBatch } from "@/lib/i18n/cms-overlay";
+import { getTranslationsForType } from "@/lib/i18n/get-translation";
+import { translateProductType } from "@/lib/i18n/product-types";
 
 export interface FrontendFabricFamily {
   id: string;
@@ -78,10 +80,23 @@ export async function getFabricLibraryData(locale: Locale = "de"): Promise<Fabri
       ["name"], locale,
     );
 
+    const translatedProductTypes = mappedProductTypes.map((pt) => ({
+      ...pt,
+      name: translateProductType(pt.name, locale),
+    }));
+
+    const mappedSwatches = swatches.map(mapSwatch).map((s) => ({
+      ...s,
+      availableProductTypes: s.availableProductTypes.map((apt) => ({
+        ...apt,
+        name: translateProductType(apt.name, locale),
+      })),
+    }));
+
     return {
       families: mappedFamilies,
-      swatches: swatches.map(mapSwatch),
-      productTypes: mappedProductTypes,
+      swatches: mappedSwatches,
+      productTypes: translatedProductTypes,
     };
   } catch (error) {
     console.error("CMS: getFabricLibraryData failed", error);
@@ -128,11 +143,22 @@ export async function getFabricFamiliesForHub(locale: Locale = "de"): Promise<Hu
         .filter(Boolean),
       isHighlighted: f.isHighlighted,
     }));
-    return overlayCmsBatch(
+    const overlaid = await overlayCmsBatch(
       "fabricFamily", mapped, "slug",
       ["name", "subtitle", "description", "material", "weight", "dyeing", "comfort", "cushionThickness"],
       locale,
     );
+
+    if (locale !== "de") {
+      const translationMap = await getTranslationsForType("fabricFamily", locale);
+      for (const family of overlaid) {
+        const t = translationMap.get(family.slug);
+        if (!t || family.highlights.length === 0) continue;
+        family.highlights = family.highlights.map((hl, i) => t[`highlight.${i + 1}`] || hl);
+      }
+    }
+
+    return overlaid;
   } catch (error) {
     console.error("CMS: getFabricFamiliesForHub failed", error);
     return [];

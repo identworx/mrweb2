@@ -41,7 +41,7 @@ export default async function LegalNoticePage() {
           description={page.introText || undefined}
           height="compact"
         />
-        <BreadcrumbBar items={[{ label: "Legal Notice" }]} />
+        <BreadcrumbBar items={[{ label: "Legal Notice" }]} locale="en" />
 
         <section className="section-padding bg-white">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

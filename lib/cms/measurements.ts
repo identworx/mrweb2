@@ -9,6 +9,38 @@ import {
   type DrawingType,
   type MeasurementVariant,
 } from "@/lib/mosaroma/measurements";
+import type { Locale } from "@/lib/i18n/config";
+import { translateProductDisplayName } from "@/lib/i18n/product-types";
+
+const MEASUREMENT_TITLE_EN: Record<string, string> = {
+  "Deko-Kissen Mackintosh & Lite / Nerio": "Decorative Cushion Mackintosh & Lite / Nerio",
+  "Deko-Kissen Basic": "Decorative Cushion Basic",
+  "Sitzkissen": "Seat Cushion",
+  "Sitzpolster eckig": "Seat Pad Square",
+  "Sitzpolster halbrund": "Seat Pad Half-Round",
+  "Hochlehner": "High-Back Cushion",
+  "Niedriglehner": "Low-Back Cushion",
+  "Bankauflagen": "Bench Cushions",
+  "Pouf klein": "Pouf Small",
+  "Pouf groß": "Pouf Large",
+  "Tischset": "Placemat",
+  "Tischläufer": "Table Runner",
+};
+
+const MEASUREMENT_NOTE_EN: Record<string, string> = {
+  "Grundmaß: 46 × 45 cm": "Base dimensions: 46 × 45 cm",
+  "Tiefe 49 cm": "Depth 49 cm",
+  "Dicke 6 cm bei allen Längen identisch": "Thickness 6 cm identical for all lengths",
+};
+
+function translateMeasurement(m: FrontendMeasurement, locale: Locale): FrontendMeasurement {
+  if (locale === "de") return m;
+  return {
+    ...m,
+    title: MEASUREMENT_TITLE_EN[m.title] || translateProductDisplayName(m.title, locale),
+    notes: m.notes.map((n) => MEASUREMENT_NOTE_EN[n] || n),
+  };
+}
 
 export type { MeasurementItem, MeasurementGroup, DrawingType, MeasurementVariant };
 
@@ -30,7 +62,7 @@ export interface FrontendMeasurement {
   order: number;
 }
 
-export async function getPublicMeasurements(): Promise<FrontendMeasurement[]> {
+export async function getPublicMeasurements(locale: Locale = "de"): Promise<FrontendMeasurement[]> {
   try {
     const items = await prisma.measurement.findMany({
       where: { isActive: true },
@@ -38,12 +70,14 @@ export async function getPublicMeasurements(): Promise<FrontendMeasurement[]> {
       include: { image: true },
     });
 
-    if (items.length === 0) return staticMeasurements.map(mapStaticToFrontend);
+    const results = items.length === 0
+      ? staticMeasurements.map(mapStaticToFrontend)
+      : items.map(mapDbToFrontend);
 
-    return items.map(mapDbToFrontend);
+    return results.map((m) => translateMeasurement(m, locale));
   } catch (error) {
     console.error("CMS: getPublicMeasurements failed", error);
-    return staticMeasurements.map(mapStaticToFrontend);
+    return staticMeasurements.map(mapStaticToFrontend).map((m) => translateMeasurement(m, locale));
   }
 }
 

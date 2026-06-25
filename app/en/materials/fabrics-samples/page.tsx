@@ -53,6 +53,7 @@ export default async function FabricsSamplesPage({
             { label: "Materials", href: "/en/materials" },
             { label: "Fabrics & Samples" },
           ]}
+          locale="en"
         />
         <MaterialAnchorNavEn />
 

@@ -45,12 +45,19 @@ const NAV_LABEL_EN: Record<string, string> = {
   AGB: "Terms & Conditions",
   "Allgemeine Geschäftsbedingungen": "Terms & Conditions",
   "Cookie-Einstellungen": "Cookie Settings",
+  "Datenschutz & Cookies": "Privacy & Cookies",
+  "Neue Kollektionen Saison 2027": "New Collections Season 2027",
   "Pflege & Garantie": "Care & Warranty",
   Produktmaße: "Product Dimensions",
   "Stoff- & technische Daten": "Fabric & Technical Data",
   "Kontakt aufnehmen": "Contact us",
   "Mehr erfahren": "Learn more",
   Service: "Service",
+  Nachhaltigkeit: "Sustainability",
+  "Stoffe & Muster": "Fabrics & Samples",
+  "Technische Daten": "Technical Data",
+  Produkte: "Products",
+  Produktkategorien: "Product Categories",
 };
 
 function localizeLabel(label: string, locale: Locale): string {

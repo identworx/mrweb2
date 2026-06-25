@@ -37,7 +37,7 @@ export default async function NewsPage() {
           image={hero.image}
           alt={hero.alt}
         />
-        <BreadcrumbBar items={[{ label: "News" }]} />
+        <BreadcrumbBar items={[{ label: "News" }]} locale="en" />
 
         <section className="pt-12 md:pt-16 pb-24 md:pb-32 lg:pb-40 bg-cream">
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">

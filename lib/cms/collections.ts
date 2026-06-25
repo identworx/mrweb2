@@ -66,6 +66,7 @@ async function fetchCollectionBySlug(slug: string) {
 export function mapCollectionForFrontend(
   dbCol: DbCollection,
   fallbackSlug?: string,
+  locale: Locale = "de",
 ): FrontendCollection {
   const staticFallback = getStaticCollectionBySlug(fallbackSlug ?? dbCol.slug);
 
@@ -86,7 +87,9 @@ export function mapCollectionForFrontend(
     number: formatNumber(dbCol.number),
     eyebrow:
       dbCol.eyebrow ||
-      (dbCol.number ? `Kollektion ${formatNumber(dbCol.number)}` : "Kollektion"),
+      (dbCol.number
+        ? `${locale === "en" ? "Collection" : "Kollektion"} ${formatNumber(dbCol.number)}`
+        : locale === "en" ? "Collection" : "Kollektion"),
     subtitle: dbCol.subtitle ?? staticFallback?.subtitle,
     shortDescription:
       dbCol.shortDescription ||
@@ -134,13 +137,13 @@ export async function getPublishedCollections(locale: Locale = "de"): Promise<Fr
     let collections: FrontendCollection[];
 
     if (dbCollections.length > 0) {
-      collections = dbCollections.map((c) => mapCollectionForFrontend(c));
+      collections = dbCollections.map((c) => mapCollectionForFrontend(c, undefined, locale));
     } else {
       collections = staticCollections.map((sc) => ({
         slug: sc.slug,
         name: sc.name,
         number: sc.number,
-        eyebrow: `Kollektion ${sc.number}`,
+        eyebrow: locale === "en" ? `Collection ${sc.number}` : `Kollektion ${sc.number}`,
         subtitle: sc.subtitle,
         shortDescription: sc.description,
         longDescription: sc.extendedDescription,
@@ -193,7 +196,7 @@ export async function getCollectionBySlugWithStatus(
     const dbCol = await fetchCollectionBySlug(slug);
 
     if (dbCol && dbCol.status === "PUBLISHED") {
-      const collection = mapCollectionForFrontend(dbCol);
+      const collection = mapCollectionForFrontend(dbCol, undefined, locale);
       const [overlaid] = await overlayCmsBatch("collection", [collection], "slug", COLLECTION_TEXT_FIELDS, locale);
       return { state: "published", collection: overlaid };
     }

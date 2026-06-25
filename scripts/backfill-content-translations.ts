@@ -545,6 +545,10 @@ add("collection", "natural", "shortDescription", "Natürliche Erdtöne und organ
 add("collection", "nerio-oceana", "eyebrow", "Kollektion 07", "Collection 07");
 add("collection", "nerio-oceana", "shortDescription", "Nachhaltige Performance-Stoffe aus recyceltem Ozean-Polypropylen.", "Sustainable performance fabrics from recycled ocean polypropylene.");
 
+add("collection", "basic", "fabric", "Basic (100 % Polyester, ca. 280 g/m², stückgefärbt)", "Basic (100% Polyester, approx. 280 g/m², piece-dyed)");
+add("collection", "basic", "shortDescription", "Unkomplizierte Outdoor-Textilien für starke Saisonflächen.", "Simple outdoor textiles for high-volume seasonal areas.");
+add("collection", "basic", "longDescription", "Leichte Polyesterqualitäten, vielseitig kombinierbar und angenehm pflegeleicht im Alltag.", "Lightweight polyester qualities, versatile to combine and pleasantly easy to maintain in everyday use.");
+
 /* ------------------------------------------------------------------ */
 /*  29. Fabric Library UI labels (dictionary)                         */
 /* ------------------------------------------------------------------ */
@@ -620,14 +624,16 @@ add("material", "nerio-story", "paragraph.1", "NERIO ist mehr als ein Stoff — 
 add("material", "nerio-story", "paragraph.2", "Jede NERIO-Faser erzählt die Geschichte einer Transformation: von gesammeltem Meereskunststoff zu einem hochwertigen, spinndüsengefärbten Outdoor-Stoff, der über Jahre hinweg Farbe, Form und Funktion behält.", "Every NERIO fibre tells a story of transformation: from collected marine plastic to a premium, solution-dyed outdoor fabric that retains its colour, shape and function for years.");
 add("material", "nerio-story", "paragraph.3", "Dabei setzen wir bewusst auf OceanCycle®-zertifizierte Lieferketten und verzichten konsequent auf PFAS — für Produkte, die nicht nur draußen bestehen, sondern auch einen Beitrag leisten.", "We deliberately rely on OceanCycle® certified supply chains and consistently avoid PFAS — for products that don't just perform outdoors, but also make a contribution.");
 
+add("material", "nerio-promise", "eyebrow", "Unser Versprechen", "Our Promise");
+add("material", "nerio-promise", "title", "Nachhaltigkeit ohne Kompromisse", "Sustainability Without Compromise");
 add("material", "nerio-promise", "item.1.title", "OceanCycle® zertifiziert", "OceanCycle® Certified");
-add("material", "nerio-promise", "item.1.description", "Geprüfte Lieferkette für recyceltes Ozean-Polypropylen.", "Verified supply chain for recycled ocean polypropylene.");
+add("material", "nerio-promise", "item.1.text", "Geprüfte Lieferkette für recyceltes Ozean-Polypropylen.", "Verified supply chain for recycled ocean polypropylene.");
 add("material", "nerio-promise", "item.2.title", "PFAS-frei", "PFAS-free");
-add("material", "nerio-promise", "item.2.description", "Keine per- und polyfluorierten Alkylsubstanzen.", "No per- and polyfluorinated alkyl substances.");
+add("material", "nerio-promise", "item.2.text", "Keine per- und polyfluorierten Alkylsubstanzen.", "No per- and polyfluorinated alkyl substances.");
 add("material", "nerio-promise", "item.3.title", "Spinndüsengefärbt", "Solution-dyed");
-add("material", "nerio-promise", "item.3.description", "Farbe in der Faser — maximale Lichtechtheit.", "Colour in the fibre — maximum lightfastness.");
+add("material", "nerio-promise", "item.3.text", "Farbe in der Faser — maximale Lichtechtheit.", "Colour in the fibre — maximum lightfastness.");
 add("material", "nerio-promise", "item.4.title", "Langlebig", "Durable");
-add("material", "nerio-promise", "item.4.description", "Designed für Jahre, nicht Saisons.", "Designed for years, not seasons.");
+add("material", "nerio-promise", "item.4.text", "Designed für Jahre, nicht Saisons.", "Designed for years, not seasons.");
 
 /* ------------------------------------------------------------------ */
 /*  32. Materials page CTA translations                               */
@@ -783,8 +789,14 @@ add("page", "contact", "form.successMessage", "Vielen Dank für Ihre Nachricht. 
 add("page", "contact", "form.errorMessage", "Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.", "An error occurred. Please try again.");
 add("page", "contact", "form.name.label", "Name", "Name");
 add("page", "contact", "form.name.placeholder", "Ihr Name", "Your name");
+add("page", "contact", "form.company.label", "Unternehmen", "Company");
+add("page", "contact", "form.company.placeholder", "Ihr Unternehmen", "Your company");
 add("page", "contact", "form.email.label", "E-Mail", "Email");
 add("page", "contact", "form.email.placeholder", "Ihre E-Mail-Adresse", "Your email address");
+add("page", "contact", "form.phone.label", "Telefon", "Phone");
+add("page", "contact", "form.phone.placeholder", "Ihre Telefonnummer", "Your phone number");
+add("page", "contact", "form.subject.label", "Betreff", "Subject");
+add("page", "contact", "form.subject.placeholder", "Betreff Ihrer Anfrage", "Subject of your enquiry");
 add("page", "contact", "form.message.label", "Nachricht", "Message");
 add("page", "contact", "form.message.placeholder", "Ihre Nachricht", "Your message");
 
@@ -944,6 +956,59 @@ add("page", "technical-data", "highlight.3", "Wasseraufnahme < 0,1 %", "Water up
 add("page", "technical-data", "highlight.4", "Bleichfest", "Bleach-resistant");
 add("page", "technical-data", "highlight.5", "Schimmelfest", "Mould-resistant");
 add("page", "technical-data", "highlight.6", "PFAS-frei", "PFAS-free");
+
+/* ------------------------------------------------------------------ */
+/*  42. News article translations                                      */
+/* ------------------------------------------------------------------ */
+
+add("newsArticle", "neue-kollektionen-2027", "title", "Neue Kollektionen Saison 2027", "New Collections Season 2027");
+add("newsArticle", "neue-kollektionen-2027", "tag", "Kollektionen", "Collections");
+add("newsArticle", "neue-kollektionen-2027", "description", "Sieben neue Farbwelten für die Saison 2027: Von frischen Grüntönen über kühles Blau und warmes Rot bis zu sonnigem Gelb, erdigen Naturtönen, der nachhaltigen NERIO Oceana Linie und unkomplizierter Basic-Qualität.", "Seven new colour worlds for the 2027 season: from fresh greens through cool blues and warm reds to sunny yellows, earthy natural tones, the sustainable NERIO Oceana line and simple Basic quality.");
+
+add("newsArticle", "mackintosh-technologie", "title", "Mackintosh® Technologie erklärt", "Mackintosh® Technology Explained");
+add("newsArticle", "mackintosh-technologie", "tag", "Materialien", "Materials");
+add("newsArticle", "mackintosh-technologie", "description", "Spinndüsengefärbtes Olefin bildet die Grundlage unserer Mackintosh®-Stoffe. Die Farbe wird bereits bei der Faserherstellung eingebracht — für außergewöhnliche Lichtechtheit, UV-Beständigkeit und eine niedrige CO₂-Bilanz.", "Solution-dyed olefin forms the basis of our Mackintosh® fabrics. The colour is introduced during fibre production — for exceptional lightfastness, UV resistance and a low carbon footprint.");
+
+add("newsArticle", "nerio-oceana", "tag", "Nachhaltigkeit", "Sustainability");
+add("newsArticle", "nerio-oceana", "description", "Performance-Outdoorstoffe auf Basis von OceanCycle recyceltem Polypropylen. Solution-dyed, PFAS-frei und entwickelt für hohe Anforderungen im Außenbereich — aus dem Ozean geboren, für die Zukunft gemacht.", "Performance outdoor fabrics based on OceanCycle recycled polypropylene. Solution-dyed, PFAS-free and developed for demanding outdoor use — born from the ocean, made for the future.");
+
+add("newsArticle", "pflegehinweise", "title", "Pflegehinweise für Outdoor-Textilien", "Care Instructions for Outdoor Textiles");
+add("newsArticle", "pflegehinweise", "tag", "Service", "Service");
+add("newsArticle", "pflegehinweise", "description", "Richtige Pflege verlängert die Lebensdauer Ihrer Outdoor-Textilien erheblich. Unsere Empfehlungen zu Reinigung, Lagerung und Fleckenentfernung für alle MOSAROMA-Stoffqualitäten.", "Proper care significantly extends the life of your outdoor textiles. Our recommendations on cleaning, storage and stain removal for all MOSAROMA fabric qualities.");
+
+/* ------------------------------------------------------------------ */
+/*  43. Download translations                                          */
+/* ------------------------------------------------------------------ */
+
+add("download", "cmq6hi25z007uyd7d905ahqdm", "title", "Mosaroma Katalog 2027 Deutsch", "Mosaroma Catalogue 2027 German");
+add("download", "cmq6hi25z007uyd7d905ahqdm", "description", "Vollständiger Produktkatalog mit allen Kollektionen, Maßen und Stoffqualitäten der Saison 2027.", "Complete product catalogue with all collections, dimensions and fabric qualities for the 2027 season.");
+
+/* ------------------------------------------------------------------ */
+/*  43. Fabric family hub translations (materials page cards)          */
+/* ------------------------------------------------------------------ */
+
+add("fabricFamily", "mackintosh", "dyeing", "spinndüsengefärbt", "solution-dyed");
+add("fabricFamily", "mackintosh", "comfort", "hoher Sitzkomfort", "high seating comfort");
+add("fabricFamily", "mackintosh", "cushionThickness", "5–6 cm starke Auflagen", "5–6 cm thick cushions");
+add("fabricFamily", "mackintosh", "highlight.1", "Höchste Lichtechtheit (7–8)", "Highest lightfastness (7–8)");
+add("fabricFamily", "mackintosh", "highlight.2", "UV-Beständigkeit 5/5", "UV resistance 5/5");
+add("fabricFamily", "mackintosh", "highlight.3", "Wasseraufnahme < 0,1 %", "Water absorption < 0.1%");
+add("fabricFamily", "mackintosh", "highlight.4", "Bleichfest", "Bleach resistant");
+add("fabricFamily", "mackintosh", "highlight.5", "Schimmelfest", "Mould resistant");
+add("fabricFamily", "mackintosh", "highlight.6", "PFAS-frei", "PFAS-free");
+
+add("fabricFamily", "mackintosh-lite", "dyeing", "spinndüsengefärbt", "solution-dyed");
+add("fabricFamily", "mackintosh-lite", "comfort", "hoher Sitzkomfort", "high seating comfort");
+add("fabricFamily", "mackintosh-lite", "cushionThickness", "5–6 cm Auflagen", "5–6 cm cushions");
+
+add("fabricFamily", "basic", "dyeing", "konventionell gefärbt", "conventionally dyed");
+add("fabricFamily", "basic", "comfort", "guter Sitzkomfort", "comfortable seating");
+add("fabricFamily", "basic", "cushionThickness", "4–5 cm Auflagen", "4–5 cm cushions");
+
+add("fabricFamily", "nerio", "dyeing", "spinndüsengefärbt", "solution-dyed");
+add("fabricFamily", "nerio", "subtitle", "Aus dem Ozean geboren. Für die Zukunft gemacht.", "Born from the ocean. Made for the future.");
+add("fabricFamily", "nerio", "comfort", "hoher Sitzkomfort", "high seating comfort");
+add("fabricFamily", "nerio", "cushionThickness", "5–6 cm Auflagen", "5–6 cm cushions");
 
 add("glossary", "", "spinndüsengefärbt", "spinndüsengefärbt", "solution-dyed");
 add("glossary", "", "wasserabweisend", "wasserabweisend", "water-repellent");
