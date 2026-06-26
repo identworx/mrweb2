@@ -4,7 +4,7 @@ import { getMediaUrl } from "@/lib/cms/media-url";
 import type { Locale } from "@/lib/i18n/config";
 import { overlayCmsBatch } from "@/lib/i18n/cms-overlay";
 import { getTranslationsForType } from "@/lib/i18n/get-translation";
-import { translateProductType } from "@/lib/i18n/product-types";
+import { translateProductType, translateAvailabilityNote } from "@/lib/i18n/product-types";
 
 export interface FrontendFabricFamily {
   id: string;
@@ -90,6 +90,7 @@ export async function getFabricLibraryData(locale: Locale = "de"): Promise<Fabri
       availableProductTypes: s.availableProductTypes.map((apt) => ({
         ...apt,
         name: translateProductType(apt.name, locale),
+        note: translateAvailabilityNote(apt.note, locale),
       })),
     }));
 

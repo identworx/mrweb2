@@ -211,6 +211,8 @@ add("homepage", "news", "eyebrow", "Neuigkeiten", "News");
 add("homepage", "news", "title", "Aktuelles.", "Latest News.");
 add("homepage", "news", "content", "Neues aus der Welt von Mosaroma — Kollektionen, Materialien und mehr.", "Updates from the world of Mosaroma — collections, materials and more.");
 
+add("homepage", "ambiente-teaser", "buttonLabel", "Alle Ambiente-Bilder", "View all ambience images");
+
 add("homepage", "cta", "title", "Bereit für Ihre Outdoor-Saison?", "Ready for Your Outdoor Space?");
 add("homepage", "cta", "description", "Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Materialien und Sondermaßen beraten.", "Request a sample set or get personal advice on collections, materials and custom dimensions.");
 add("homepage", "cta", "primaryLabel", "Muster anfordern", "Request samples");

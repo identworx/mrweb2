@@ -29,6 +29,21 @@ export function getProductTypeMap(): Record<string, string> {
   return { ...productTypeTranslations };
 }
 
+const availabilityNoteTranslations: Record<string, string> = {
+  "mit Keder": "With piping",
+  "ohne Keder": "Without piping",
+  "Mit Keder": "With piping",
+  "Ohne Keder": "Without piping",
+};
+
+export function translateAvailabilityNote(
+  germanNote: string,
+  locale: Locale,
+): string {
+  if (locale === "de" || !germanNote) return germanNote;
+  return availabilityNoteTranslations[germanNote] || germanNote;
+}
+
 export function translateProductDisplayName(
   name: string,
   locale: Locale,

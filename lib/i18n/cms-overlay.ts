@@ -87,6 +87,7 @@ const HOMEPAGE_STYLE_MAP: Record<string, string> = {
   "sustainability-stats": "sustainability",
   "downloads-teaser": "downloads",
   "news-teaser": "news",
+  "homepage-ambiente-teaser": "ambiente-teaser",
 };
 
 const STAT_KEY_INDEX: Record<string, number> = {
