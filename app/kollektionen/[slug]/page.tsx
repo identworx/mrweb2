@@ -26,6 +26,7 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -140,6 +141,8 @@ const SERVICE_LINKS = [
 
 export default async function KollektionPage({ params }: PageProps) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled(`/kollektionen/${slug}`))) notFound();
+
   const [layout, collection, products, icons] = await Promise.all([
     getPublicLayoutData(),
     resolveCollection(slug),

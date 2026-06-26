@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -55,6 +56,8 @@ const staticCareSymbols = [
 ];
 
 export default async function CareWarrantyPage() {
+  if (!(await isPublicPathEnabled("/kataloge/pflege-garantie"))) notFound();
+
   const [layout, hero, result, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("pflege-garantie", "pflegeGarantie", "en"),

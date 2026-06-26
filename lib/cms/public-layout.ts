@@ -11,6 +11,7 @@ import { getDictionaryAsync } from "@/lib/i18n/dictionary-async";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 import { localizedHref } from "@/lib/i18n/routes";
 import { getTranslations } from "@/lib/i18n/get-translation";
+import { getDisabledNavTargets, isPathDisabled } from "./nav-visibility";
 
 interface LayoutData {
   header: {
@@ -67,7 +68,7 @@ function localizeLabel(label: string, locale: Locale): string {
 }
 
 export async function getPublicLayoutData(locale: Locale = "de"): Promise<LayoutData> {
-  const [settings, headerNav, footerMenus, footerSettings, layoutIcons, dictionary] = await Promise.all([
+  const [settings, headerNav, footerMenus, footerSettings, layoutIcons, dictionary, disabledTargets] = await Promise.all([
     getSiteSettings(),
     getHeaderNavigation(),
     getFooterNavigation(),
@@ -83,6 +84,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       "social-houzz",
     ]),
     getDictionaryAsync(locale),
+    getDisabledNavTargets(),
   ]);
 
   const headerItems: HeaderNavItem[] = headerNav?.items
@@ -107,7 +109,8 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
     for (const menu of footerMenus) {
       const resolved = menu.items
         .map((item) => resolveNavigationLink(item))
-        .filter((link) => link.href && link.status === "ok");
+        .filter((link) => link.href && link.status === "ok")
+        .filter((link) => !isPathDisabled(link.href!, disabledTargets));
 
       if (menu.location === "LEGAL") {
         for (const link of resolved) {
@@ -118,14 +121,17 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
           });
         }
       } else {
-        footerColumns.push({
-          title: localizeLabel(menu.name, locale),
-          links: resolved.map((link) => ({
-            label: localizeLabel(link.label, locale),
-            href: localizedHref(link.href!, locale),
-            target: link.target,
-          })),
-        });
+        const links = resolved.map((link) => ({
+          label: localizeLabel(link.label, locale),
+          href: localizedHref(link.href!, locale),
+          target: link.target,
+        }));
+        if (links.length > 0) {
+          footerColumns.push({
+            title: localizeLabel(menu.name, locale),
+            links,
+          });
+        }
       }
     }
   }

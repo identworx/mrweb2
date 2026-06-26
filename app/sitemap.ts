@@ -3,6 +3,11 @@ import { getCollectionStaticParams } from "@/lib/cms/collections";
 import { getProductStaticParams } from "@/lib/cms/products";
 import { getProductGroupStaticParams } from "@/lib/cms/product-groups";
 import { getNewsStaticParams } from "@/lib/cms/news";
+import {
+  getDisabledNavTargets,
+  filterSitemapRoutes,
+  isPathDisabled,
+} from "@/lib/cms/nav-visibility";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mosaroma.de";
 
@@ -49,41 +54,51 @@ const staticEnRoutes = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [collections, products, productGroups, news] = await Promise.all([
+  const [collections, products, productGroups, news, disabledTargets] = await Promise.all([
     getCollectionStaticParams(),
     getProductStaticParams(),
     getProductGroupStaticParams(),
     getNewsStaticParams(),
+    getDisabledNavTargets(),
   ]);
 
   const entries: MetadataRoute.Sitemap = [];
 
-  for (const route of staticDeRoutes) {
+  const enabledDeRoutes = filterSitemapRoutes(staticDeRoutes, disabledTargets);
+  const enabledEnRoutes = filterSitemapRoutes(staticEnRoutes, disabledTargets);
+
+  for (const route of enabledDeRoutes) {
     entries.push({ url: `${BASE_URL}${route}`, changeFrequency: "weekly", priority: route === "/" ? 1.0 : 0.8 });
   }
 
-  for (const route of staticEnRoutes) {
+  for (const route of enabledEnRoutes) {
     entries.push({ url: `${BASE_URL}${route}`, changeFrequency: "weekly", priority: route === "/en" ? 0.9 : 0.7 });
   }
 
-  for (const { slug } of collections) {
-    entries.push({ url: `${BASE_URL}/kollektionen/${slug}`, changeFrequency: "weekly", priority: 0.7 });
-    entries.push({ url: `${BASE_URL}/en/collections/${slug}`, changeFrequency: "weekly", priority: 0.6 });
+  if (!isPathDisabled("/kollektionen", disabledTargets)) {
+    for (const { slug } of collections) {
+      entries.push({ url: `${BASE_URL}/kollektionen/${slug}`, changeFrequency: "weekly", priority: 0.7 });
+      entries.push({ url: `${BASE_URL}/en/collections/${slug}`, changeFrequency: "weekly", priority: 0.6 });
+    }
+
+    for (const { slug } of products) {
+      entries.push({ url: `${BASE_URL}/produkte/${slug}`, changeFrequency: "weekly", priority: 0.7 });
+      entries.push({ url: `${BASE_URL}/en/products/${slug}`, changeFrequency: "weekly", priority: 0.6 });
+    }
   }
 
-  for (const { slug } of products) {
-    entries.push({ url: `${BASE_URL}/produkte/${slug}`, changeFrequency: "weekly", priority: 0.7 });
-    entries.push({ url: `${BASE_URL}/en/products/${slug}`, changeFrequency: "weekly", priority: 0.6 });
+  if (!isPathDisabled("/produktkategorien", disabledTargets)) {
+    for (const { slug } of productGroups) {
+      entries.push({ url: `${BASE_URL}/produktkategorien/${slug}`, changeFrequency: "weekly", priority: 0.7 });
+      entries.push({ url: `${BASE_URL}/en/product-categories/${slug}`, changeFrequency: "weekly", priority: 0.6 });
+    }
   }
 
-  for (const { slug } of productGroups) {
-    entries.push({ url: `${BASE_URL}/produktkategorien/${slug}`, changeFrequency: "weekly", priority: 0.7 });
-    entries.push({ url: `${BASE_URL}/en/product-categories/${slug}`, changeFrequency: "weekly", priority: 0.6 });
-  }
-
-  for (const { slug } of news) {
-    entries.push({ url: `${BASE_URL}/neuigkeiten/${slug}`, changeFrequency: "monthly", priority: 0.5 });
-    entries.push({ url: `${BASE_URL}/en/news/${slug}`, changeFrequency: "monthly", priority: 0.4 });
+  if (!isPathDisabled("/neuigkeiten", disabledTargets)) {
+    for (const { slug } of news) {
+      entries.push({ url: `${BASE_URL}/neuigkeiten/${slug}`, changeFrequency: "monthly", priority: 0.5 });
+      entries.push({ url: `${BASE_URL}/en/news/${slug}`, changeFrequency: "monthly", priority: 0.4 });
+    }
   }
 
   return entries;

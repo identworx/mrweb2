@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -96,6 +97,8 @@ function groupProductsByCollection(products: FrontendProduct[]) {
 
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled("/produktkategorien"))) notFound();
+
   const [layout, group, products, icons] = await Promise.all([
     getPublicLayoutData("en"),
     resolveGroup(slug),

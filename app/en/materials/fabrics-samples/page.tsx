@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -27,6 +29,8 @@ export default async function FabricsSamplesPage({
 }: {
   searchParams: Promise<{ family?: string }>;
 }) {
+  if (!(await isPublicPathEnabled("/materialien/stoffe-muster"))) notFound();
+
   const { family } = await searchParams;
   const [layout, hero, fabricData, icons, dictionary] = await Promise.all([
     getPublicLayoutData("en"),

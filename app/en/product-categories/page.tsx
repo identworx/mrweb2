@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -18,6 +20,8 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ProductCategoriesPage() {
+  if (!(await isPublicPathEnabled("/produktkategorien"))) notFound();
+
   const [layout, groups] = await Promise.all([
     getPublicLayoutData("en"),
     getActiveProductGroups(),

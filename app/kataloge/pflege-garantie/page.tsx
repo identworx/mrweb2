@@ -15,6 +15,7 @@ import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import PageCta from "@/components/PageCta";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -55,6 +56,8 @@ const staticCareSymbols = [
 ];
 
 export default async function PflegeGarantiePage() {
+  if (!(await isPublicPathEnabled("/kataloge/pflege-garantie"))) notFound();
+
   const [layout, hero, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("pflege-garantie", "pflegeGarantie"),

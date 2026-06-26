@@ -21,6 +21,7 @@ import { getSiteSettings } from "@/lib/cms/settings";
 import PageCta from "@/components/PageCta";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -94,6 +95,8 @@ function groupProductsByCollection(products: FrontendProduct[]) {
 
 export default async function KategoriePage({ params }: PageProps) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled("/produktkategorien"))) notFound();
+
   const [layout, group, products, icons] = await Promise.all([
     getPublicLayoutData(),
     resolveGroup(slug),

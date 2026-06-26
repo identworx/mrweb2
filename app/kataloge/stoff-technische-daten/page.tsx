@@ -18,6 +18,7 @@ import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 import DataRow from "@/components/DataRow";
 import PageCta from "@/components/PageCta";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -32,6 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function StoffTechnischeDatenPage() {
+  if (!(await isPublicPathEnabled("/kataloge/stoff-technische-daten"))) notFound();
+
   const [layout, hero, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten"),

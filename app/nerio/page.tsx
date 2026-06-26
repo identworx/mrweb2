@@ -30,6 +30,8 @@ import {
 import { getNerioFabricSwatches } from "@/lib/cms/fabric-library";
 import NerioVideoSection from "@/components/nerio/NerioVideoSection";
 import NerioAnchorNav from "@/components/nerio/NerioAnchorNav";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -55,6 +57,8 @@ const NERIO_PRODUCT_CARDS_FALLBACK = [
 
 
 export default async function NerioPage() {
+  if (!(await isPublicPathEnabled("/nerio"))) notFound();
+
   const [
     layout,
     hero,

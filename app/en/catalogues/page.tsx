@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -75,6 +77,8 @@ function CatalogCard({ download, icons }: { download: FrontendDownload; icons: R
 }
 
 export default async function CataloguesPage() {
+  if (!(await isPublicPathEnabled("/kataloge"))) notFound();
+
   const [layout, hero, catalogs, icons] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("kataloge", "kataloge", "en"),

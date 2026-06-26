@@ -18,6 +18,11 @@ import HomepageSustainability from "@/components/homepage/HomepageSustainability
 import HomepageDownloads from "@/components/homepage/HomepageDownloads";
 import HomepageNews from "@/components/homepage/HomepageNews";
 import AmbienteTeaser from "@/components/collections/AmbienteTeaser";
+import {
+  getDisabledNavTargets,
+  filterHomepageSections,
+  isHrefEnabled,
+} from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -162,7 +167,7 @@ const FALLBACK_SECTIONS: HomepageSection[] = [
 ];
 
 export default async function Home() {
-  const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots] = await Promise.all([
+  const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots, disabledTargets] = await Promise.all([
     getPublicLayoutData("en"),
     getHomepageData("en"),
     getPublishedCollections("en"),
@@ -173,9 +178,11 @@ export default async function Home() {
       "value-comfort", "value-quality", "value-sustainability", "value-design",
     ]),
     getTeaserAmbienteImages(),
+    getDisabledNavTargets(),
   ]);
 
-  const sections = homepageData?.sections || FALLBACK_SECTIONS;
+  const allSections = homepageData?.sections || FALLBACK_SECTIONS;
+  const sections = filterHomepageSections(allSections, disabledTargets);
 
   return (
     <>
@@ -214,15 +221,17 @@ export default async function Home() {
               return null;
           }
         })}
-        <PageCta
-          variant="minimal"
-          title="Ready for Your Outdoor Space?"
-          description="Request a sample set or get personal advice on collections, materials and custom dimensions."
-          primaryLabel="Request samples"
-          primaryHref="/en/contact"
-          secondaryLabel="View catalogues"
-          secondaryHref="/en/catalogues"
-        />
+        {isHrefEnabled("/kontakt", disabledTargets) && (
+          <PageCta
+            variant="minimal"
+            title="Ready for Your Outdoor Space?"
+            description="Request a sample set or get personal advice on collections, materials and custom dimensions."
+            primaryLabel="Request samples"
+            primaryHref="/en/contact"
+            secondaryLabel={isHrefEnabled("/kataloge", disabledTargets) ? "View catalogues" : undefined}
+            secondaryHref={isHrefEnabled("/kataloge", disabledTargets) ? "/en/catalogues" : undefined}
+          />
+        )}
       </main>
       <Footer {...layout.footer} locale="en" />
     </>

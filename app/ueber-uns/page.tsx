@@ -8,6 +8,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import PageCta from "@/components/PageCta";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -51,6 +53,8 @@ const sustainabilityStats = [
 ];
 
 export default async function UeberUnsPage() {
+  if (!(await isPublicPathEnabled("/ueber-uns"))) notFound();
+
   const [layout, hero] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("ueber-uns", "ueberUns"),

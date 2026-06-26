@@ -12,6 +12,7 @@ import { pageSlugToPublicPath } from "@/lib/cms/page-paths";
 import { prisma } from "@/lib/db/prisma";
 import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -59,6 +60,8 @@ export default async function CmsPage({
   if (!isRootLevelSlug(slug)) {
     notFound();
   }
+
+  if (!(await isPublicPathEnabled(`/${slug}`))) notFound();
 
   const [layout, result, icons] = await Promise.all([
     getPublicLayoutData(),

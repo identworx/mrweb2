@@ -7,6 +7,8 @@ import BreadcrumbBar from "@/components/BreadcrumbBar";
 import CategoryCard from "@/components/CategoryCard";
 import { getActiveProductGroups } from "@/lib/cms/product-groups";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const metadata: Metadata = {
   title: "Produktkategorien | Mosaroma Outdoor-Textilien",
@@ -17,6 +19,8 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ProduktkategorienPage() {
+  if (!(await isPublicPathEnabled("/produktkategorien"))) notFound();
+
   const [layout, groups] = await Promise.all([
     getPublicLayoutData(),
     getActiveProductGroups(),

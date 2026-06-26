@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -141,6 +142,8 @@ const SERVICE_LINKS = [
 
 export default async function CollectionPage({ params }: PageProps) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled(`/kollektionen/${slug}`))) notFound();
+
   const [layout, collection, products, icons] = await Promise.all([
     getPublicLayoutData("en"),
     resolveCollection(slug),

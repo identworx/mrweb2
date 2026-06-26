@@ -9,6 +9,8 @@ import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublicFormBySlug, type PublicForm } from "@/lib/cms/forms";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -39,6 +41,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KontaktPage() {
+  if (!(await isPublicPathEnabled("/kontakt"))) notFound();
+
   const [layout, hero, { form, status }, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kontakt", "kontakt"),

@@ -9,6 +9,8 @@ import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getFabricLibraryData } from "@/lib/cms/fabric-library";
 import { getIconSlots } from "@/lib/cms/icons";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -28,6 +30,8 @@ export default async function StoffeMusterPage({
 }: {
   searchParams: Promise<{ family?: string }>;
 }) {
+  if (!(await isPublicPathEnabled("/materialien/stoffe-muster"))) notFound();
+
   const { family } = await searchParams;
   const [layout, hero, fabricData, icons] = await Promise.all([
     getPublicLayoutData(),

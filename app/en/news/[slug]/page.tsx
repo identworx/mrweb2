@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import BreadcrumbBar from "@/components/BreadcrumbBar";
@@ -55,6 +56,8 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled(`/neuigkeiten/${slug}`))) notFound();
+
   const [layout, result, icons] = await Promise.all([
     getPublicLayoutData("en"),
     getNewsArticleBySlugWithStatus(slug),

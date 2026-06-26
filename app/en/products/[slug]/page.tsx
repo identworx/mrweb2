@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -77,6 +78,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled("/kollektionen"))) notFound();
+
   const [layout, product, icons] = await Promise.all([
     getPublicLayoutData("en"),
     resolveProduct(slug),

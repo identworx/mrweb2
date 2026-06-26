@@ -8,6 +8,8 @@ import AmbienteGalleryClient from "@/components/collections/AmbienteGalleryClien
 import { getActiveAmbienteImages } from "@/lib/cms/ambiente";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import PageCta from "@/components/PageCta";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -18,6 +20,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AmbienteGalleryPage() {
+  if (!(await isPublicPathEnabled("/kollektionen/ambiente"))) notFound();
+
   const [layout, images] = await Promise.all([
     getPublicLayoutData(),
     getActiveAmbienteImages(),

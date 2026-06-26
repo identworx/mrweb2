@@ -236,6 +236,10 @@ export default function NavigationEditForm({
           </button>
         </div>
 
+        <p className="text-xs text-gray-400 leading-relaxed">
+          Deaktivierte Einträge blenden verknüpfte öffentliche Seiten und Startseiten-Sektionen aus. Inhalte und Übersetzungen bleiben erhalten.
+        </p>
+
         {form.items.length === 0 && (
           <p className="text-sm text-gray-400 text-center py-6">
             Keine Einträge vorhanden. Klicken Sie auf &quot;Element hinzufügen&quot; um einen neuen Eintrag zu erstellen.

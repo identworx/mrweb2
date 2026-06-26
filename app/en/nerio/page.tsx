@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -56,6 +58,8 @@ const NERIO_PRODUCT_CARDS_FALLBACK = [
 
 
 export default async function NerioPageEn() {
+  if (!(await isPublicPathEnabled("/nerio"))) notFound();
+
   const [
     layout,
     hero,

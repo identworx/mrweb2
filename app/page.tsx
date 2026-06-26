@@ -18,6 +18,11 @@ import HomepageSustainability from "@/components/homepage/HomepageSustainability
 import HomepageDownloads from "@/components/homepage/HomepageDownloads";
 import HomepageNews from "@/components/homepage/HomepageNews";
 import AmbienteTeaser from "@/components/collections/AmbienteTeaser";
+import {
+  getDisabledNavTargets,
+  filterHomepageSections,
+  isHrefEnabled,
+} from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -162,7 +167,7 @@ const FALLBACK_SECTIONS: HomepageSection[] = [
 ];
 
 export default async function Home() {
-  const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots] = await Promise.all([
+  const [layout, homepageData, collections, downloads, articles, icons, ambienteSlots, disabledTargets] = await Promise.all([
     getPublicLayoutData(),
     getHomepageData(),
     getPublishedCollections(),
@@ -173,11 +178,13 @@ export default async function Home() {
       "value-comfort", "value-quality", "value-sustainability", "value-design",
     ]),
     getTeaserAmbienteImages(),
+    getDisabledNavTargets(),
   ]);
 
-  const sections = homepageData?.sections.length
+  const allSections = homepageData?.sections.length
     ? homepageData.sections
     : FALLBACK_SECTIONS;
+  const sections = filterHomepageSections(allSections, disabledTargets);
 
   return (
     <>
@@ -215,15 +222,17 @@ export default async function Home() {
               return null;
           }
         })}
-        <PageCta
-          variant="minimal"
-          title="Bereit für Ihren Außenbereich?"
-          description="Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Materialien und Sondermaßen beraten."
-          primaryLabel="Muster anfordern"
-          primaryHref="/kontakt"
-          secondaryLabel="Kataloge ansehen"
-          secondaryHref="/kataloge"
-        />
+        {isHrefEnabled("/kontakt", disabledTargets) && (
+          <PageCta
+            variant="minimal"
+            title="Bereit für Ihren Außenbereich?"
+            description="Fordern Sie ein Musterset an oder lassen Sie sich persönlich zu Kollektionen, Materialien und Sondermaßen beraten."
+            primaryLabel="Muster anfordern"
+            primaryHref="/kontakt"
+            secondaryLabel={isHrefEnabled("/kataloge", disabledTargets) ? "Kataloge ansehen" : undefined}
+            secondaryHref={isHrefEnabled("/kataloge", disabledTargets) ? "/kataloge" : undefined}
+          />
+        )}
       </main>
       <Footer {...layout.footer} />
     </>

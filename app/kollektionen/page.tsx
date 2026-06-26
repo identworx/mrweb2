@@ -17,6 +17,8 @@ import { getServicePageBySlug } from "@/lib/cms/service-pages";
 import type { FrontendServiceSection } from "@/lib/cms/service-pages";
 import { getIconSlots } from "@/lib/cms/icons";
 import AmbienteTeaser from "@/components/collections/AmbienteTeaser";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
+import { notFound } from "next/navigation";
 
 export const revalidate = 60;
 
@@ -93,6 +95,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KollektionenPage() {
+  if (!(await isPublicPathEnabled("/kollektionen"))) notFound();
+
   const [layout, hero, collections, ambienteSlots, pageResult, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kollektionen", "kollektionen"),

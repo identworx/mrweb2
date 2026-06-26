@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -53,6 +55,8 @@ const sustainabilityStats = [
 ];
 
 export default async function AboutUsPage() {
+  if (!(await isPublicPathEnabled("/ueber-uns"))) notFound();
+
   const [layout, hero, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("ueber-uns", "ueberUns", "en"),

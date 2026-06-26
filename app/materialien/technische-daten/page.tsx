@@ -15,6 +15,8 @@ import CmsIcon from "@/components/cms/CmsIcon";
 import PageCta from "@/components/PageCta";
 
 import DataRow from "@/components/DataRow";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -30,6 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function TechnischeDatenPage() {
+  if (!(await isPublicPathEnabled("/materialien/technische-daten"))) notFound();
+
   const [layout, hero, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("technische-daten", "technischeDaten"),

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -41,6 +43,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ContactPage() {
+  if (!(await isPublicPathEnabled("/kontakt"))) notFound();
+
   const [layout, hero, { form, status }, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("kontakt", "kontakt", "en"),

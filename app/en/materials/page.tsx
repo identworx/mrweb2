@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -39,6 +41,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialsPage() {
+  if (!(await isPublicPathEnabled("/materialien"))) notFound();
+
   const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData, icons] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("materialien", "materialien", "en"),

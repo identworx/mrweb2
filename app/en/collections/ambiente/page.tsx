@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -18,6 +20,8 @@ export const metadata: Metadata = {
 };
 
 export default async function AmbienteGalleryPage() {
+  if (!(await isPublicPathEnabled("/kollektionen/ambiente"))) notFound();
+
   const [layout, images] = await Promise.all([
     getPublicLayoutData("en"),
     getActiveAmbienteImages(),

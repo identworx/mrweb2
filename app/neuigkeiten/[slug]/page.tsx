@@ -14,6 +14,7 @@ import {
 import RichTextRenderer from "@/components/rich-text/RichTextRenderer";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export async function generateStaticParams() {
   return getNewsStaticParams();
@@ -55,6 +56,8 @@ export default async function NeuigkeitDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (!(await isPublicPathEnabled(`/neuigkeiten/${slug}`))) notFound();
+
   const [layout, result, icons] = await Promise.all([
     getPublicLayoutData(),
     getNewsArticleBySlugWithStatus(slug),

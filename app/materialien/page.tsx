@@ -23,6 +23,8 @@ import { getIconSlots } from "@/lib/cms/icons";
 import { SERVICE_SECTION_ICON_KEYS } from "@/lib/cms/icon-key-map";
 import CmsIcon from "@/components/cms/CmsIcon";
 import PageCta from "@/components/PageCta";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -37,6 +39,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function MaterialienPage() {
+  if (!(await isPublicPathEnabled("/materialien"))) notFound();
+
   const [layout, hero, result, previewSwatches, olefinImage, hubFamilies, ctaData, techData, olefinData, oceanData, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("materialien", "materialien"),

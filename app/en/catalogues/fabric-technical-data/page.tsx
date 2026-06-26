@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -33,6 +34,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function FabricTechnicalDataPage() {
+  if (!(await isPublicPathEnabled("/kataloge/stoff-technische-daten"))) notFound();
+
   const [layout, hero, result, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("stoff-technische-daten", "stoffTechnischeDaten", "en"),

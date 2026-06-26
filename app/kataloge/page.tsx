@@ -12,6 +12,8 @@ import { getPublicDownloadsByType } from "@/lib/cms/downloads";
 import type { FrontendDownload } from "@/lib/cms/downloads";
 import { getIconSlots } from "@/lib/cms/icons";
 import CmsIcon from "@/components/cms/CmsIcon";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -49,6 +51,8 @@ function CatalogCard({ download, icons }: { download: FrontendDownload; icons: R
 }
 
 export default async function KatalogePage() {
+  if (!(await isPublicPathEnabled("/kataloge"))) notFound();
+
   const [layout, hero, catalogs, icons] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("kataloge", "kataloge"),

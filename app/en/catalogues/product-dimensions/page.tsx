@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageHero from "@/components/sections/PageHero";
@@ -29,6 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProductDimensionsPage() {
+  if (!(await isPublicPathEnabled("/kataloge/produktmasse"))) notFound();
+
   const [layout, hero, allMeasurements, icons, t] = await Promise.all([
     getPublicLayoutData("en"),
     getPageHeroData("produktmasse", "produktmasse", "en"),

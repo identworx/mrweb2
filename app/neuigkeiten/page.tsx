@@ -7,6 +7,8 @@ import NewsCard from "@/components/NewsCard";
 import { getPublicLayoutData } from "@/lib/cms/public-layout";
 import { getPageHeroData } from "@/lib/cms/page-hero";
 import { getPublishedNewsArticles } from "@/lib/cms/news";
+import { notFound } from "next/navigation";
+import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
 
 export const revalidate = 60;
 
@@ -21,6 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NeuigkeitenPage() {
+  if (!(await isPublicPathEnabled("/neuigkeiten"))) notFound();
+
   const [layout, hero, articles] = await Promise.all([
     getPublicLayoutData(),
     getPageHeroData("neuigkeiten", "neuigkeiten"),
