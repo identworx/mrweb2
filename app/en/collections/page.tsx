@@ -122,11 +122,11 @@ export default async function CollectionsPage() {
     <AmbienteTeaser
       key="ambiente"
       slots={ambienteSlots}
-      eyebrow={ambienteSection?.eyebrow || undefined}
-      title={ambienteSection?.title || undefined}
+      eyebrow="Ambiente"
+      title="Mosaroma in Use."
       intro={ambienteSection?.content || undefined}
-      ctaLabel={ambienteSection?.buttonLabel || undefined}
-      ctaHref={ambienteSection?.buttonHref || undefined}
+      ctaLabel="All ambience images"
+      ctaHref={ambienteSection?.buttonHref || "/kollektionen/ambiente"}
       locale="en"
     />
   );

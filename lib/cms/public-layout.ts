@@ -58,6 +58,7 @@ const NAV_LABEL_EN: Record<string, string> = {
   "Technische Daten": "Technical Data",
   Produkte: "Products",
   Produktkategorien: "Product Categories",
+  NEU: "NEW",
 };
 
 function localizeLabel(label: string, locale: Locale): string {
@@ -92,7 +93,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
           label: localizeLabel(link.label, locale),
           href: localizedHref(link.href!, locale),
           target: link.target,
-          badgeText: link.badgeText,
+          badgeText: link.badgeText ? localizeLabel(link.badgeText, locale) : link.badgeText,
           badgeVariant: link.badgeVariant,
         }))
     : [];

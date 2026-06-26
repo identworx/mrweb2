@@ -533,8 +533,8 @@ add("collection", "red", "eyebrow", "Kollektion 03", "Collection 03");
 add("collection", "red", "shortDescription", "Warme Rottöne und kraftvolle Akzente.", "Warm reds and bold accents.");
 add("collection", "red", "longDescription", "Die Red Collection setzt auf warme Rottöne und kraftvolle Akzente — von erdigem Terrakotta bis leuchtendem Karmin. Alle Stoffe in Mackintosh® Technology.", "The Red Collection features warm reds and bold accents — from earthy terracotta to glowing carmine. All fabrics in Mackintosh® Technology.");
 
-add("collection", "yellow", "eyebrow", "Kollektion 04", "Collection 04");
-add("collection", "yellow", "shortDescription", "Sonnige Töne und warme Goldakzente.", "Sunny tones and warm gold accents.");
+add("collection", "golden", "eyebrow", "Kollektion 04", "Collection 04");
+add("collection", "golden", "shortDescription", "Sonnige Gelb- und Citron-Töne für helle, freundliche Outdoor-Bereiche.", "Sunny yellow and citron tones for bright, welcoming outdoor spaces.");
 
 add("collection", "earth-grey", "eyebrow", "Kollektion 05", "Collection 05");
 add("collection", "earth-grey", "shortDescription", "Erdige Naturtöne und ruhige Graunuancen für zeitlose Outdoor-Konzepte.", "Earthy natural tones and calm shades of grey for timeless outdoor concepts.");
