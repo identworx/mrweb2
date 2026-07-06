@@ -38,11 +38,18 @@ export default function ImageExportForm({
       });
 
       if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        setMessage({
-          type: "error",
-          text: data?.error || `Fehler ${res.status}`,
-        });
+        let errorText = `Fehler ${res.status}`;
+        try {
+          const ct = res.headers.get("content-type") || "";
+          if (ct.includes("application/json")) {
+            const data = await res.json();
+            errorText = data?.error || errorText;
+          } else {
+            const text = await res.text();
+            if (text) errorText = text.slice(0, 500);
+          }
+        } catch {}
+        setMessage({ type: "error", text: errorText });
         return;
       }
 

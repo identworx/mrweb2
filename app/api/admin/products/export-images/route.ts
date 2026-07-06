@@ -3,9 +3,10 @@ import { getSessionUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/db/prisma";
 import path from "node:path";
 import fs from "node:fs";
+import { createWriteStream, createReadStream } from "node:fs";
+import { randomUUID } from "node:crypto";
 import sharp from "sharp";
-import { ZipArchive } from "archiver";
-import { PassThrough } from "node:stream";
+import archiver from "archiver";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -62,9 +63,46 @@ function buildProductPrefix(code: string | null, name: string): string {
   return `${codeStr}_${sanitizeFilename(displayName)}`;
 }
 
-function resolveFilePath(url: string): string {
-  const cleaned = url.startsWith("/") ? url.slice(1) : url;
-  return path.join(process.cwd(), "public", cleaned);
+function resolveImageFile(rawUrl: string): string | null {
+  if (!rawUrl || rawUrl.startsWith("http://") || rawUrl.startsWith("https://")) {
+    return null;
+  }
+
+  let cleaned = rawUrl;
+  const qIdx = cleaned.indexOf("?");
+  if (qIdx !== -1) cleaned = cleaned.slice(0, qIdx);
+
+  try {
+    cleaned = decodeURIComponent(cleaned);
+  } catch {}
+
+  if (cleaned.startsWith("/")) cleaned = cleaned.slice(1);
+
+  const cwd = process.cwd();
+  const candidates = [
+    path.join(cwd, "public", cleaned),
+    path.join(cwd, cleaned),
+    path.join(cwd, "public", "uploads", path.basename(cleaned)),
+    path.join(cwd, "uploads", path.basename(cleaned)),
+  ];
+
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+        return candidate;
+      }
+    } catch {}
+  }
+
+  return null;
+}
+
+function cleanupDir(dirPath: string) {
+  setTimeout(() => {
+    try {
+      fs.rmSync(dirPath, { recursive: true, force: true });
+    } catch {}
+  }, 5000);
 }
 
 export async function POST(request: NextRequest) {
@@ -103,24 +141,33 @@ export async function POST(request: NextRequest) {
     where.productGroupId = body.productGroupId;
   }
 
-  const products = await prisma.product.findMany({
-    where,
-    select: {
-      id: true,
-      name: true,
-      code: true,
-      mainImage: { select: { url: true, normalizedUrl: true } },
-      images: {
-        select: {
-          url: true,
-          order: true,
-          mediaAsset: { select: { url: true, normalizedUrl: true } },
+  let products;
+  try {
+    products = await prisma.product.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        mainImage: { select: { url: true, normalizedUrl: true } },
+        images: {
+          select: {
+            url: true,
+            order: true,
+            mediaAsset: { select: { url: true, normalizedUrl: true } },
+          },
+          orderBy: { order: "asc" },
         },
-        orderBy: { order: "asc" },
       },
-    },
-    orderBy: { name: "asc" },
-  });
+      orderBy: { name: "asc" },
+    });
+  } catch (err) {
+    console.error("export-images: Prisma query failed", err);
+    return new Response(
+      JSON.stringify({ error: "Datenbankfehler beim Laden der Produkte" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
   if (products.length === 0) {
     return new Response(
@@ -129,15 +176,23 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const passthrough = new PassThrough();
-  const archive = new ZipArchive({ zlib: { level: 5 } });
+  const tmpDir = path.join(
+    process.cwd(),
+    "tmp",
+    "product-image-exports",
+    `${Date.now()}-${randomUUID().slice(0, 8)}`,
+  );
+  const zipPath = path.join(tmpDir, "mosaroma-product-images-png.zip");
 
-  archive.on("error", (err) => {
-    console.error("archiver error:", err);
-    passthrough.destroy(err);
-  });
-
-  archive.pipe(passthrough);
+  try {
+    fs.mkdirSync(tmpDir, { recursive: true });
+  } catch (err) {
+    console.error("export-images: failed to create tmp dir", err);
+    return new Response(
+      JSON.stringify({ error: "Temporäres Verzeichnis konnte nicht erstellt werden" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
   const usedFilenames = new Set<string>();
   let exported = 0;
@@ -155,104 +210,151 @@ export async function POST(request: NextRequest) {
     return candidate;
   }
 
-  async function addImage(
-    imageUrl: string,
-    filenameBase: string,
-    suffix: string | null,
-  ): Promise<boolean> {
-    const filePath = resolveFilePath(imageUrl);
-    if (!fs.existsSync(filePath)) {
-      missing.push(`${filenameBase}: ${imageUrl}`);
-      skipped++;
-      return false;
-    }
+  try {
+    const archive = archiver("zip", { zlib: { level: 5 } });
+    const output = createWriteStream(zipPath);
 
-    try {
-      const pngBuffer = await sharp(filePath).png().toBuffer();
-      const name = suffix
-        ? `${filenameBase}_${suffix}.png`
-        : `${filenameBase}.png`;
-      const finalName = uniqueName(name);
-      archive.append(pngBuffer, { name: finalName });
-      exported++;
-      return true;
-    } catch (err) {
-      console.error(`sharp conversion failed for ${filePath}:`, err);
-      missing.push(`${filenameBase}: conversion error (${imageUrl})`);
-      skipped++;
-      return false;
-    }
-  }
+    const zipDone = new Promise<void>((resolve, reject) => {
+      output.on("close", resolve);
+      archive.on("error", (err) => {
+        console.error("export-images: archiver error", err);
+        reject(err);
+      });
+      output.on("error", (err) => {
+        console.error("export-images: output stream error", err);
+        reject(err);
+      });
+    });
 
-  for (const product of products) {
-    const prefix = buildProductPrefix(product.code, product.name);
-    const imageUrls: string[] = [];
+    archive.pipe(output);
 
-    const mainUrl =
-      product.mainImage?.normalizedUrl || product.mainImage?.url;
-    if (mainUrl) {
-      imageUrls.push(mainUrl);
-    }
+    for (const product of products) {
+      const prefix = buildProductPrefix(product.code, product.name);
+      const imageUrls: string[] = [];
 
-    if (!body.mainOnly && product.images.length > 0) {
-      for (const img of product.images) {
-        const url =
-          img.mediaAsset?.normalizedUrl ||
-          img.mediaAsset?.url ||
-          img.url;
-        if (url && !imageUrls.includes(url)) {
-          imageUrls.push(url);
+      const mainUrl =
+        product.mainImage?.normalizedUrl || product.mainImage?.url;
+      if (mainUrl) {
+        imageUrls.push(mainUrl);
+      }
+
+      if (!body.mainOnly && product.images.length > 0) {
+        for (const img of product.images) {
+          const url =
+            img.mediaAsset?.normalizedUrl ||
+            img.mediaAsset?.url ||
+            img.url;
+          if (url && !imageUrls.includes(url)) {
+            imageUrls.push(url);
+          }
+        }
+      }
+
+      if (imageUrls.length === 0) {
+        skipped++;
+        missing.push(`${prefix}: kein Bild vorhanden`);
+        continue;
+      }
+
+      const needsSuffix = imageUrls.length > 1;
+
+      for (let i = 0; i < imageUrls.length; i++) {
+        const imageUrl = imageUrls[i];
+        const filePath = resolveImageFile(imageUrl);
+
+        if (!filePath) {
+          const isExternal =
+            imageUrl.startsWith("http://") || imageUrl.startsWith("https://");
+          missing.push(
+            `${prefix}: ${isExternal ? "externe URL übersprungen" : "Datei nicht gefunden"} (${imageUrl})`,
+          );
+          skipped++;
+          continue;
+        }
+
+        try {
+          const pngBuffer = await sharp(filePath).png().toBuffer();
+          const baseName = needsSuffix
+            ? `${prefix}_${String(i + 1).padStart(2, "0")}.png`
+            : `${prefix}.png`;
+          const finalName = uniqueName(baseName);
+          archive.append(pngBuffer, { name: finalName });
+          exported++;
+        } catch (err) {
+          console.error(`export-images: sharp failed for ${filePath}`, err);
+          missing.push(`${prefix}: Konvertierungsfehler (${imageUrl})`);
+          skipped++;
         }
       }
     }
 
-    if (imageUrls.length === 0) {
-      skipped++;
-      missing.push(`${prefix}: kein Bild vorhanden`);
-      continue;
-    }
+    const report = {
+      timestamp: new Date().toISOString(),
+      totalProducts: products.length,
+      exported,
+      skipped,
+      missing,
+    };
 
-    if (imageUrls.length === 1) {
-      await addImage(imageUrls[0], prefix, null);
-    } else {
-      for (let i = 0; i < imageUrls.length; i++) {
-        await addImage(
-          imageUrls[i],
-          prefix,
-          String(i + 1).padStart(2, "0"),
-        );
-      }
-    }
+    archive.append(JSON.stringify(report, null, 2), {
+      name: "export-report.json",
+    });
+
+    await archive.finalize();
+    await zipDone;
+  } catch (err) {
+    console.error("export-images: ZIP creation failed", err);
+    cleanupDir(tmpDir);
+    return new Response(
+      JSON.stringify({ error: "ZIP-Erzeugung fehlgeschlagen" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
   }
 
-  const report = {
-    timestamp: new Date().toISOString(),
-    totalProducts: products.length,
-    exported,
-    skipped,
-    missing,
-  };
+  if (exported === 0) {
+    const reportOnly = { exported: 0, skipped, missing };
+    cleanupDir(tmpDir);
+    return new Response(
+      JSON.stringify({
+        error: "Keine Bilder konnten exportiert werden",
+        report: reportOnly,
+      }),
+      { status: 422, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
-  archive.append(JSON.stringify(report, null, 2), {
-    name: "export-report.json",
-  });
+  let zipStat;
+  try {
+    zipStat = fs.statSync(zipPath);
+  } catch (err) {
+    console.error("export-images: cannot stat ZIP file", err);
+    cleanupDir(tmpDir);
+    return new Response(
+      JSON.stringify({ error: "ZIP-Datei nicht lesbar" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
+  }
 
-  await archive.finalize();
+  const fileStream = createReadStream(zipPath);
 
   const readableStream = new ReadableStream({
     start(controller) {
-      passthrough.on("data", (chunk: Buffer) => {
-        controller.enqueue(new Uint8Array(chunk));
+      fileStream.on("data", (chunk) => {
+        controller.enqueue(new Uint8Array(Buffer.from(chunk)));
       });
-      passthrough.on("end", () => {
+      fileStream.on("end", () => {
         controller.close();
+        cleanupDir(tmpDir);
       });
-      passthrough.on("error", (err) => {
+      fileStream.on("error", (err) => {
+        console.error("export-images: file read error", err);
         controller.error(err);
+        cleanupDir(tmpDir);
       });
     },
     cancel() {
-      passthrough.destroy();
+      fileStream.destroy();
+      cleanupDir(tmpDir);
     },
   });
 
@@ -260,6 +362,7 @@ export async function POST(request: NextRequest) {
     status: 200,
     headers: {
       "Content-Type": "application/zip",
+      "Content-Length": String(zipStat.size),
       "Content-Disposition":
         'attachment; filename="mosaroma-product-images-png.zip"',
       "Cache-Control": "no-store",
