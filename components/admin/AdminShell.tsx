@@ -22,6 +22,7 @@ const navGroups = [
       { label: "Seiten", href: "/admin/pages", icon: "file" },
       { label: "Kollektionen", href: "/admin/collections", icon: "palette" },
       { label: "Produkte", href: "/admin/products", icon: "box" },
+      { label: "Bildexport", href: "/admin/products/export-images", icon: "download" },
       { label: "Produktgruppen", href: "/admin/product-groups", icon: "grid" },
       { label: "Materialien", href: "/admin/materials", icon: "layers" },
       { label: "Stoffbibliothek", href: "/admin/fabrics", icon: "swatch" },
