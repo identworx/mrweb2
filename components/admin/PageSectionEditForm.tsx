@@ -2073,7 +2073,7 @@ interface ProfessionalAppItem {
   title: string;
   description: string;
   iconKey: string;
-  imageUrl: string;
+  imageId: string | null;
 }
 
 const PROFESSIONAL_APP_ICON_OPTIONS = [
@@ -2126,11 +2126,11 @@ function ProfessionalApplicationsFields({
 }) {
   const items = Array.isArray(settings.items) ? (settings.items as ProfessionalAppItem[]) : [];
 
-  function updateItem(index: number, field: keyof ProfessionalAppItem, value: string) {
+  function updateItem(index: number, field: keyof ProfessionalAppItem, value: string | null) {
     const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
     updateSettings("items", next);
   }
-  function addItem() { updateSettings("items", [...items, { title: "", description: "", iconKey: "sun", imageUrl: "" }]); }
+  function addItem() { updateSettings("items", [...items, { title: "", description: "", iconKey: "sun", imageId: null }]); }
   function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
 
   return (
@@ -2161,10 +2161,11 @@ function ProfessionalApplicationsFields({
               <textarea rows={2} value={item.description} onChange={(e) => updateItem(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
             </div>
           </div>
-          <div>
-            <label className="block text-xs text-gray-500 mb-0.5">Bild-URL (leer = Platzhalter)</label>
-            <input type="text" value={item.imageUrl || ""} onChange={(e) => updateItem(i, "imageUrl", e.target.value)} placeholder="/uploads/media/..." className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-          </div>
+          <MediaPickerField
+            label="Bild (leer = Platzhalter)"
+            value={item.imageId || ""}
+            onChange={(id) => updateItem(i, "imageId", id || null)}
+          />
         </div>
       ))}
     </div>

@@ -17,6 +17,7 @@ import {
   getServicePageBySlug,
   getSectionData,
   getSectionImage,
+  resolveMediaIds,
 } from "@/lib/cms/service-pages";
 import { notFound } from "next/navigation";
 import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
@@ -55,35 +56,35 @@ const APPLICATIONS_FALLBACK = [
     description:
       "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme mit UV-Schutz und Wetterbeständigkeit.",
     iconKey: "sun",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Outdoor-Möbeltextilien",
     description:
       "Strapazierfähige, farbechte Stoffe für Gartenmöbel, Lounges und Hospitality-Einrichtungen im Außenbereich.",
     iconKey: "furniture",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Architektonische Textilien",
     description:
       "Textile Lösungen für Fassaden, Innenräume und baukonstruktive Anwendungen mit technischem Anspruch.",
     iconKey: "building",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Wetterfeste Dekor-Textilien",
     description:
       "Dekorative Outdoor-Materialien, die auch bei intensiver Witterung ihre Farbe und Form behalten.",
     iconKey: "palette",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Projektspezifische Entwicklungen",
     description:
       "Maßgeschneiderte textile Lösungen für individuelle Projektanforderungen — von der Materialauswahl bis zur Serie.",
     iconKey: "custom",
-    imageUrl: "",
+    imageId: null as string | null,
   },
 ];
 
@@ -179,18 +180,23 @@ export default async function ProfessionalPage() {
     highlight: ABOUT_FALLBACK.highlight,
   };
 
-  type AppItem = { title: string; description: string; iconKey: string; imageUrl?: string };
+  type AppItem = { title: string; description: string; iconKey: string; imageId?: string | null };
   const applications: AppItem[] =
     Array.isArray(appsData?.settings?.items) &&
     (appsData.settings.items as AppItem[]).length > 0
       ? (appsData.settings.items as AppItem[])
       : APPLICATIONS_FALLBACK;
 
+  const appImages = await resolveMediaIds(applications.map((a) => a.imageId));
+
   const appsSection = {
     eyebrow: appsData?.eyebrow || null,
     title: appsData?.title || "Anwendungsbereiche",
     content: appsData?.content?.trim() || "Von Sonnenschutz bis architektonische Textilien — unsere Lösungen für professionelle Outdoor-Projekte.",
-    items: applications,
+    items: applications.map((a) => ({
+      ...a,
+      imageUrl: a.imageId ? appImages[a.imageId]?.url || null : null,
+    })),
   };
 
   type Benefit = { text: string };

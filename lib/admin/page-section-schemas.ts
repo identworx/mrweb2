@@ -419,7 +419,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       style: "professional-applications",
       helper: true,
       items: [
-        { title: "Sonnenschutz & Beschattung", description: "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme.", iconKey: "sun", imageUrl: "" },
+        { title: "Sonnenschutz & Beschattung", description: "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme.", iconKey: "sun", imageId: null },
       ],
     },
   },

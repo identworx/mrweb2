@@ -17,6 +17,7 @@ import {
   getServicePageBySlug,
   getSectionData,
   getSectionImage,
+  resolveMediaIds,
 } from "@/lib/cms/service-pages";
 import { notFound } from "next/navigation";
 import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
@@ -55,35 +56,35 @@ const APPLICATIONS_FALLBACK = [
     description:
       "High-performance textiles for awnings, shade sails and shading systems with UV protection and weather resistance.",
     iconKey: "sun",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Outdoor Furniture Textiles",
     description:
       "Durable, colour-fast fabrics for garden furniture, lounges and hospitality settings in outdoor areas.",
     iconKey: "furniture",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Architectural Textiles",
     description:
       "Textile solutions for facades, interiors and structural applications with technical demands.",
     iconKey: "building",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Weather-Resistant Decor Textiles",
     description:
       "Decorative outdoor materials that retain their colour and shape even under intense weathering.",
     iconKey: "palette",
-    imageUrl: "",
+    imageId: null as string | null,
   },
   {
     title: "Project-Specific Developments",
     description:
       "Tailor-made textile solutions for individual project requirements — from material selection to series production.",
     iconKey: "custom",
-    imageUrl: "",
+    imageId: null as string | null,
   },
 ];
 
@@ -179,12 +180,18 @@ export default async function ProfessionalPageEn() {
     highlight: ABOUT_FALLBACK.highlight,
   };
 
-  type AppItem = { title: string; description: string; iconKey: string; imageUrl?: string };
+  type AppItem = { title: string; description: string; iconKey: string; imageId?: string | null };
+  const applications = APPLICATIONS_FALLBACK as AppItem[];
+  const appImages = await resolveMediaIds(applications.map((a) => a.imageId));
+
   const appsSection = {
     eyebrow: null as string | null,
     title: "Applications",
     content: "From sun protection to architectural textiles — our solutions for professional outdoor projects.",
-    items: APPLICATIONS_FALLBACK as AppItem[],
+    items: applications.map((a) => ({
+      ...a,
+      imageUrl: a.imageId ? appImages[a.imageId]?.url || null : null,
+    })),
   };
 
   const oyten = {
