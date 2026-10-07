@@ -55,30 +55,35 @@ const APPLICATIONS_FALLBACK = [
     description:
       "High-performance textiles for awnings, shade sails and shading systems with UV protection and weather resistance.",
     iconKey: "sun",
+    imageUrl: "",
   },
   {
     title: "Outdoor Furniture Textiles",
     description:
       "Durable, colour-fast fabrics for garden furniture, lounges and hospitality settings in outdoor areas.",
     iconKey: "furniture",
+    imageUrl: "",
   },
   {
     title: "Architectural Textiles",
     description:
       "Textile solutions for facades, interiors and structural applications with technical demands.",
     iconKey: "building",
+    imageUrl: "",
   },
   {
     title: "Weather-Resistant Decor Textiles",
     description:
       "Decorative outdoor materials that retain their colour and shape even under intense weathering.",
     iconKey: "palette",
+    imageUrl: "",
   },
   {
     title: "Project-Specific Developments",
     description:
       "Tailor-made textile solutions for individual project requirements — from material selection to series production.",
     iconKey: "custom",
+    imageUrl: "",
   },
 ];
 
@@ -174,7 +179,7 @@ export default async function ProfessionalPageEn() {
     highlight: ABOUT_FALLBACK.highlight,
   };
 
-  type AppItem = { title: string; description: string; iconKey: string };
+  type AppItem = { title: string; description: string; iconKey: string; imageUrl?: string };
   const appsSection = {
     eyebrow: null as string | null,
     title: "Applications",
@@ -403,16 +408,26 @@ export default async function ProfessionalPageEn() {
                         <div
                           className="w-full aspect-[4/3] relative overflow-hidden"
                           style={{
-                            background: tealGradients[i % tealGradients.length],
+                            background: app.imageUrl ? undefined : tealGradients[i % tealGradients.length],
                           }}
                         >
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              backgroundImage:
-                                "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
-                            }}
-                          />
+                          {app.imageUrl ? (
+                            <Image
+                              src={app.imageUrl}
+                              alt={app.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                            />
+                          ) : (
+                            <div
+                              className="absolute inset-0"
+                              style={{
+                                backgroundImage:
+                                  "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
+                              }}
+                            />
+                          )}
                         </div>
                         <div className="mt-4 flex flex-col items-center gap-2">
                           <CmsIcon

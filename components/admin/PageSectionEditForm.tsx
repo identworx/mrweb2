@@ -2073,6 +2073,7 @@ interface ProfessionalAppItem {
   title: string;
   description: string;
   iconKey: string;
+  imageUrl: string;
 }
 
 const PROFESSIONAL_APP_ICON_OPTIONS = [
@@ -2129,7 +2130,7 @@ function ProfessionalApplicationsFields({
     const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
     updateSettings("items", next);
   }
-  function addItem() { updateSettings("items", [...items, { title: "", description: "", iconKey: "sun" }]); }
+  function addItem() { updateSettings("items", [...items, { title: "", description: "", iconKey: "sun", imageUrl: "" }]); }
   function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
 
   return (
@@ -2159,6 +2160,10 @@ function ProfessionalApplicationsFields({
               <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
               <textarea rows={2} value={item.description} onChange={(e) => updateItem(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
             </div>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Bild-URL (leer = Platzhalter)</label>
+            <input type="text" value={item.imageUrl || ""} onChange={(e) => updateItem(i, "imageUrl", e.target.value)} placeholder="/uploads/media/..." className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
           </div>
         </div>
       ))}

@@ -55,30 +55,35 @@ const APPLICATIONS_FALLBACK = [
     description:
       "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme mit UV-Schutz und Wetterbeständigkeit.",
     iconKey: "sun",
+    imageUrl: "",
   },
   {
     title: "Outdoor-Möbeltextilien",
     description:
       "Strapazierfähige, farbechte Stoffe für Gartenmöbel, Lounges und Hospitality-Einrichtungen im Außenbereich.",
     iconKey: "furniture",
+    imageUrl: "",
   },
   {
     title: "Architektonische Textilien",
     description:
       "Textile Lösungen für Fassaden, Innenräume und baukonstruktive Anwendungen mit technischem Anspruch.",
     iconKey: "building",
+    imageUrl: "",
   },
   {
     title: "Wetterfeste Dekor-Textilien",
     description:
       "Dekorative Outdoor-Materialien, die auch bei intensiver Witterung ihre Farbe und Form behalten.",
     iconKey: "palette",
+    imageUrl: "",
   },
   {
     title: "Projektspezifische Entwicklungen",
     description:
       "Maßgeschneiderte textile Lösungen für individuelle Projektanforderungen — von der Materialauswahl bis zur Serie.",
     iconKey: "custom",
+    imageUrl: "",
   },
 ];
 
@@ -174,7 +179,7 @@ export default async function ProfessionalPage() {
     highlight: ABOUT_FALLBACK.highlight,
   };
 
-  type AppItem = { title: string; description: string; iconKey: string };
+  type AppItem = { title: string; description: string; iconKey: string; imageUrl?: string };
   const applications: AppItem[] =
     Array.isArray(appsData?.settings?.items) &&
     (appsData.settings.items as AppItem[]).length > 0
@@ -421,16 +426,26 @@ export default async function ProfessionalPage() {
                         <div
                           className="w-full aspect-[4/3] relative overflow-hidden"
                           style={{
-                            background: tealGradients[i % tealGradients.length],
+                            background: app.imageUrl ? undefined : tealGradients[i % tealGradients.length],
                           }}
                         >
-                          <div
-                            className="absolute inset-0"
-                            style={{
-                              backgroundImage:
-                                "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
-                            }}
-                          />
+                          {app.imageUrl ? (
+                            <Image
+                              src={app.imageUrl}
+                              alt={app.title}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                            />
+                          ) : (
+                            <div
+                              className="absolute inset-0"
+                              style={{
+                                backgroundImage:
+                                  "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
+                              }}
+                            />
+                          )}
                         </div>
                         <div className="mt-4 flex flex-col items-center gap-2">
                           <CmsIcon
