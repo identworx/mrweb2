@@ -538,8 +538,8 @@ export default async function ProfessionalPage() {
                   {supply.nodes.map((node, i) => (
                     <ScrollReveal key={node.title} delay={i * 100} className="contents">
                       {i > 0 && (
-                        <div className="flex items-center justify-center py-3 md:py-0 md:px-3">
-                          <span className="font-heading text-2xl font-light text-pumpkin">
+                        <div className="flex items-center justify-center py-4 md:py-0 md:px-5 self-center">
+                          <span className="font-heading text-4xl font-light text-pumpkin">
                             +
                           </span>
                         </div>
