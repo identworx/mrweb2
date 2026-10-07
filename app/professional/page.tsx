@@ -369,16 +369,10 @@ export default async function ProfessionalPage() {
                         ))}
                       </div>
                     )}
-
-                    <div className="mt-6 bg-[#1B6B6D]/[0.06] p-5 md:p-6">
-                      <p className="font-heading text-anthracite text-base md:text-lg font-semibold leading-snug">
-                        {about.highlight}
-                      </p>
-                    </div>
                   </div>
 
                   <ScrollReveal>
-                    <div className="lg:mt-16">
+                    <div className="relative lg:mt-16">
                       <Image
                         src={
                           aboutImage?.url ||
@@ -389,6 +383,12 @@ export default async function ProfessionalPage() {
                         height={480}
                         className="w-full aspect-[5/4] object-cover shadow-[0_6px_28px_rgba(45,45,45,0.06)]"
                       />
+                      <div className="lg:absolute lg:bottom-0 lg:right-0 lg:max-w-[340px] bg-pumpkin p-5 md:p-6">
+                        <div className="w-6 h-[3px] bg-white mb-3" />
+                        <p className="font-heading text-white text-[0.9375rem] font-semibold leading-snug">
+                          {about.highlight}
+                        </p>
+                      </div>
                     </div>
                   </ScrollReveal>
                 </div>
@@ -401,29 +401,25 @@ export default async function ProfessionalPage() {
               className="section-padding bg-cream"
             >
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-4">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="accent-line" />
+                </div>
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2">
                   {appsSection.title}
                 </h2>
-                <p className="font-body text-text-gray text-base md:text-[1.0625rem] leading-[1.8] max-w-3xl">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.25em] uppercase">
                   {appsSection.content}
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-6 gap-6 mt-12">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mt-10">
                   {appsSection.items.map((app, i) => (
                     <ScrollReveal
                       key={app.title}
-                      delay={i * 80}
-                      className={
-                        i < 3
-                          ? "sm:col-span-2"
-                          : i === 3
-                            ? "sm:col-start-2 sm:col-span-2"
-                            : "sm:col-span-2"
-                      }
+                      delay={i * 60}
                     >
-                      <div className="bg-white h-full">
+                      <div className="flex flex-col items-center text-center">
                         <div
-                          className="aspect-[4/3] relative overflow-hidden flex items-center justify-center"
+                          className="w-full aspect-[4/3] relative overflow-hidden"
                           style={{
                             background: tealGradients[i % tealGradients.length],
                           }}
@@ -432,19 +428,19 @@ export default async function ProfessionalPage() {
                             className="absolute inset-0"
                             style={{
                               backgroundImage:
-                                "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.03) 14px, rgba(255,255,255,0.03) 15px)",
+                                "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
                             }}
                           />
-                          <span className="relative z-10 w-12 h-12 flex items-center justify-center bg-white/10 text-white/60 font-heading text-lg font-bold">
-                            {i + 1}
-                          </span>
                         </div>
-                        <div className="p-6 md:p-8">
-                          <h3 className="font-heading text-anthracite text-base font-bold mb-2">
+                        <div className="mt-4 flex flex-col items-center gap-2">
+                          <CmsIcon
+                            icon={icons[app.iconKey]}
+                            width={28}
+                            height={28}
+                            className="text-pumpkin"
+                          />
+                          <p className="font-body text-anthracite text-[0.8125rem] font-medium leading-snug max-w-[160px]">
                             {app.title}
-                          </h3>
-                          <p className="font-body text-text-gray text-sm leading-[1.8]">
-                            {app.description}
                           </p>
                         </div>
                       </div>
@@ -466,9 +462,12 @@ export default async function ProfessionalPage() {
                       </p>
                     </div>
 
-                    <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-8">
+                    <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2">
                       {oyten.title}
                     </h2>
+                    <p className="font-accent text-text-muted text-[10px] tracking-[0.25em] uppercase mb-6">
+                      Ihr lokaler Ansprechpartner in Deutschland
+                    </p>
 
                     {oytenData?.content ? (
                       <RichTextRenderer
@@ -484,11 +483,11 @@ export default async function ProfessionalPage() {
                       </p>
                     )}
 
-                    <ul className="mt-8 space-y-4">
+                    <ul className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-3 gap-x-8 list-none p-0">
                       {oyten.benefits.map((b) => (
                         <li
                           key={b.text}
-                          className="flex items-start gap-3.5"
+                          className="flex items-start gap-2.5"
                         >
                           <CmsIcon
                             icon={icons["checkmark"]}
@@ -496,7 +495,7 @@ export default async function ProfessionalPage() {
                             height={16}
                             className="text-pumpkin flex-shrink-0 mt-0.5"
                           />
-                          <span className="font-body text-anthracite text-[0.9375rem] leading-relaxed">
+                          <span className="font-body text-anthracite text-[0.875rem] leading-relaxed">
                             {b.text}
                           </span>
                         </li>
@@ -523,12 +522,15 @@ export default async function ProfessionalPage() {
             </section>
 
             {/* Supply Chain */}
-            <section className="section-padding bg-anthracite">
+            <section className="section-padding bg-cream">
               <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-                <h2 className="font-heading text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-3">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="accent-line" />
+                </div>
+                <h2 className="font-heading text-anthracite text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight mb-2">
                   {supply.title}
                 </h2>
-                <p className="font-body text-white/65 text-base md:text-[1.0625rem] leading-[1.7] max-w-2xl mb-12">
+                <p className="font-accent text-text-muted text-[10px] tracking-[0.25em] uppercase mb-10">
                   {supply.content}
                 </p>
 
@@ -536,42 +538,38 @@ export default async function ProfessionalPage() {
                   {supply.nodes.map((node, i) => (
                     <ScrollReveal key={node.title} delay={i * 100} className="contents">
                       {i > 0 && (
-                        <div className="flex items-center justify-center py-4 md:py-0 md:px-2">
-                          <svg
-                            viewBox="0 0 28 28"
-                            fill="none"
-                            className="w-7 h-7 text-pumpkin md:rotate-0 rotate-90"
-                          >
-                            <path
-                              d="M6 14h16M18 9l5 5-5 5"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
+                        <div className="flex items-center justify-center py-3 md:py-0 md:px-3">
+                          <span className="font-heading text-2xl font-light text-pumpkin">
+                            +
+                          </span>
                         </div>
                       )}
-                      <div
-                        className="flex-1 p-8 flex flex-col justify-center"
-                        style={{
-                          background:
-                            i === 0
-                              ? "rgba(255,255,255,0.05)"
-                              : i === 2
-                                ? "rgba(255,255,255,0.03)"
-                                : "transparent",
-                        }}
-                      >
-                        <p className="font-accent text-pumpkin text-[10px] tracking-[0.25em] uppercase mb-2.5">
-                          {node.flag}
-                        </p>
-                        <h3 className="font-heading text-white text-lg font-bold mb-2.5">
-                          {node.title}
-                        </h3>
-                        <p className="font-body text-white/70 text-sm leading-[1.7]">
-                          {node.description}
-                        </p>
+                      <div className="flex-1 flex flex-col">
+                        <div
+                          className="w-full aspect-[3/2] relative overflow-hidden"
+                          style={{
+                            background: tealGradients[i % tealGradients.length],
+                          }}
+                        >
+                          <div
+                            className="absolute inset-0"
+                            style={{
+                              backgroundImage:
+                                "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
+                            }}
+                          />
+                        </div>
+                        <div className="py-5 px-1">
+                          <h3 className="font-heading text-anthracite text-[0.9375rem] font-bold mb-0.5">
+                            {node.title}
+                          </h3>
+                          <p className="font-body text-text-muted text-[0.8125rem] mb-2.5">
+                            {node.flag}
+                          </p>
+                          <p className="font-body text-text-gray text-[0.8125rem] leading-[1.6]">
+                            {node.description}
+                          </p>
+                        </div>
                       </div>
                     </ScrollReveal>
                   ))}
