@@ -95,6 +95,14 @@ export const pageHeroes: Record<string, PageHeroData> = {
     image: "/images/placeholders/page-heroes/stoff-technische-daten-hero.svg",
     alt: "Mosaroma Stoff und technische Daten Hero Platzhalter",
   },
+  professional: {
+    eyebrow: "Mosaroma Industries GmbH",
+    title: "Mosaroma Professional",
+    description:
+      "Technical Textiles. Local Support. Professional Solutions.",
+    image: "/images/placeholders/page-heroes/default-hero.svg",
+    alt: "Mosaroma Professional Hero",
+  },
   nerio: {
     eyebrow: "Nachhaltigkeit · OceanCycle®",
     title: "NERIO — Aus dem Ozean geboren.",
@@ -171,6 +179,12 @@ export const pageHeroesEn: Record<string, Partial<PageHeroData>> = {
     title: "Fabric & Technical Data",
     description: "Technical information on fabric qualities, material composition and test values.",
     alt: "Mosaroma Fabric and Technical Data Hero",
+  },
+  professional: {
+    eyebrow: "Mosaroma Industries GmbH",
+    title: "Mosaroma Professional",
+    description: "Technical Textiles. Local Support. Professional Solutions.",
+    alt: "Mosaroma Professional Hero",
   },
   nerio: {
     eyebrow: "Sustainability · OceanCycle®",

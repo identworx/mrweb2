@@ -389,6 +389,67 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       helper: true,
     },
   },
+  {
+    style: "professional-about",
+    label: "Professional Über uns",
+    description: "Helper-Section: Einleitung und Vorstellung von Mosaroma Professional.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "professional-about",
+      helper: true,
+    },
+  },
+  {
+    style: "professional-applications",
+    label: "Professional Anwendungsbereiche",
+    description: "Helper-Section: Karten-Grid mit Anwendungsbereichen (Sonnenschutz, Möbel, Architektur etc.).",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "professional-applications",
+      helper: true,
+      items: [
+        { title: "Sonnenschutz & Beschattung", description: "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme.", iconKey: "sun" },
+      ],
+    },
+  },
+  {
+    style: "professional-oyten",
+    label: "Professional Oyten B2B",
+    description: "Helper-Section: Standort Oyten mit Text, Vorteile-Liste und Bild.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "professional-oyten",
+      helper: true,
+      benefits: [
+        { text: "Persönliche Beratungstermine vor Ort" },
+      ],
+    },
+  },
+  {
+    style: "professional-supply-chain",
+    label: "Professional Lieferkette",
+    description: "Helper-Section: Horizontale Kette Taiwan → Deutschland → International.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "professional-supply-chain",
+      helper: true,
+      nodes: [
+        { flag: "Taiwan", title: "axroma® Technical Textiles", description: "Materialentwicklung und Fertigung." },
+        { flag: "Deutschland", title: "Mosaroma Industries GmbH", description: "B2B-Support und Projektkoordination." },
+        { flag: "International", title: "Produktion & Lieferung", description: "Kapazitäten für europäische Märkte." },
+      ],
+    },
+  },
+  {
+    style: "professional-cta",
+    label: "Professional CTA",
+    description: "Helper-Section: Kontakt- und CTA-Block der Professional-Seite.",
+    sectionType: "CTA",
+    defaultSettings: {
+      style: "professional-cta",
+      helper: true,
+    },
+  },
 ];
 
 export function getStyleDef(style: string): SectionStyleDef | undefined {
@@ -404,6 +465,7 @@ export function isHelperSection(settings: Record<string, unknown>): boolean {
   return (
     settings.helper === true ||
     style.startsWith("materials-") ||
-    style.startsWith("nerio-")
+    style.startsWith("nerio-") ||
+    style.startsWith("professional-")
   );
 }

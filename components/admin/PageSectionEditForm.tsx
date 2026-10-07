@@ -138,7 +138,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       </div>
 
-      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || style === "nerio-story" || style === "nerio-oceancycle" || style === "nerio-promise" || style === "nerio-highlights" || style === "nerio-technical-facts" || style === "nerio-products-preview" || style === "nerio-videos" || style === "nerio-final-cta" || !style) && (
+      {(style === "cross-link" || style === "cta" || style === "text" || style === "home-hero" || style === "image-text-feature" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "process-chain" || style === "fabric-pattern-overview" || style === "collection-consultation-card" || style === "collection-benefits" || style === "collection-cta" || style === "materials-catalog-cta" || style === "materials-technology" || style === "materials-olefin" || style === "materials-oceancycle" || style === "nerio-story" || style === "nerio-oceancycle" || style === "nerio-promise" || style === "nerio-highlights" || style === "nerio-technical-facts" || style === "nerio-products-preview" || style === "nerio-videos" || style === "nerio-final-cta" || style === "professional-about" || style === "professional-oyten" || style === "professional-cta" || !style) && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Inhalt</label>
           <RichTextEditor
@@ -149,7 +149,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || style === "materials-catalog-cta" || style === "nerio-final-cta" || !style) && (
+      {(style === "cross-link" || style === "highlight-cards" || style === "image-text-feature" || style === "value-props" || style === "collection-showcase" || style === "sustainability-stats" || style === "downloads-teaser" || style === "news-teaser" || style === "collection-consultation-card" || style === "materials-catalog-cta" || style === "nerio-final-cta" || style === "professional-cta" || !style) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Button Label</label>
@@ -172,7 +172,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story" || style === "nerio-technical-facts") && (
+      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story" || style === "nerio-technical-facts" || style === "professional-about" || style === "professional-oyten") && (
         <MediaPickerField
           label="Bild"
           value={form.imageId || ""}
@@ -237,6 +237,18 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "nerio-technical-facts" && <NerioTechnicalFactsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-videos" && <NerioVideosFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-products-preview" && <NerioProductsPreviewFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "professional-applications" && <ProfessionalApplicationsFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "professional-oyten" && <ProfessionalOytenFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "professional-supply-chain" && <ProfessionalSupplyChainFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "professional-cta" && (
+        <CtaFields
+          buttonLabel={form.buttonLabel}
+          buttonHref={form.buttonHref}
+          settings={form.settings}
+          updateField={updateField}
+          updateSettings={updateSettings}
+        />
+      )}
 
       {helper && (
         <details className="p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -2050,6 +2062,166 @@ function NerioProductsPreviewFields({
             value={card.imageId || ""}
             onChange={(id) => updateCard(i, "imageId", id || null)}
           />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface ProfessionalAppItem {
+  title: string;
+  description: string;
+  iconKey: string;
+}
+
+const PROFESSIONAL_APP_ICON_OPTIONS = [
+  { value: "sun", label: "Sonne (Sonnenschutz)" },
+  { value: "furniture", label: "Möbel" },
+  { value: "building", label: "Architektur" },
+  { value: "palette", label: "Dekor" },
+  { value: "custom", label: "Projekt" },
+];
+
+function ProfessionalApplicationsFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const items = Array.isArray(settings.items) ? (settings.items as ProfessionalAppItem[]) : [];
+
+  function updateItem(index: number, field: keyof ProfessionalAppItem, value: string) {
+    const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
+    updateSettings("items", next);
+  }
+  function addItem() { updateSettings("items", [...items, { title: "", description: "", iconKey: "sun" }]); }
+  function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Anwendungsbereiche ({items.length})</p>
+        <button type="button" onClick={addItem} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Bereich</button>
+      </div>
+      {items.map((item, i) => (
+        <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{item.title || `Bereich ${i + 1}`}</span>
+            <button type="button" onClick={() => removeItem(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Icon</label>
+              <select value={item.iconKey} onChange={(e) => updateItem(i, "iconKey", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                {PROFESSIONAL_APP_ICON_OPTIONS.map((opt) => (<option key={opt.value} value={opt.value}>{opt.label}</option>))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+              <input type="text" value={item.title} onChange={(e) => updateItem(i, "title", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+              <textarea rows={2} value={item.description} onChange={(e) => updateItem(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface ProfessionalBenefit {
+  text: string;
+}
+
+function ProfessionalOytenFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const benefits = Array.isArray(settings.benefits) ? (settings.benefits as ProfessionalBenefit[]) : [];
+
+  function updateBenefit(index: number, value: string) {
+    const next = benefits.map((b, i) => (i === index ? { text: value } : b));
+    updateSettings("benefits", next);
+  }
+  function addBenefit() { updateSettings("benefits", [...benefits, { text: "" }]); }
+  function removeBenefit(index: number) { updateSettings("benefits", benefits.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Vorteile ({benefits.length})</p>
+        <button type="button" onClick={addBenefit} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Vorteil</button>
+      </div>
+      {benefits.map((b, i) => (
+        <div key={i} className="flex items-start gap-2">
+          <input
+            type="text"
+            value={b.text}
+            onChange={(e) => updateBenefit(i, e.target.value)}
+            placeholder="z.B. Persönliche Beratungstermine vor Ort"
+            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          />
+          <button type="button" onClick={() => removeBenefit(i)} className="text-gray-400 hover:text-red-500 text-sm" title="Entfernen">✕</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface SupplyChainNode {
+  flag: string;
+  title: string;
+  description: string;
+}
+
+function ProfessionalSupplyChainFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const nodes = Array.isArray(settings.nodes) ? (settings.nodes as SupplyChainNode[]) : [];
+
+  function updateNode(index: number, field: keyof SupplyChainNode, value: string) {
+    const next = nodes.map((n, i) => (i === index ? { ...n, [field]: value } : n));
+    updateSettings("nodes", next);
+  }
+  function addNode() { updateSettings("nodes", [...nodes, { flag: "", title: "", description: "" }]); }
+  function removeNode(index: number) { updateSettings("nodes", nodes.filter((_, i) => i !== index)); }
+
+  return (
+    <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Lieferkette ({nodes.length})</p>
+        <button type="button" onClick={addNode} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Station</button>
+      </div>
+      {nodes.map((node, i) => (
+        <div key={i} className="p-4 bg-white rounded border border-gray-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-700">{node.title || `Station ${i + 1}`}</span>
+            <button type="button" onClick={() => removeNode(i)} className="text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Standort / Flag</label>
+              <input type="text" value={node.flag} onChange={(e) => updateNode(i, "flag", e.target.value)} placeholder="z.B. Taiwan" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
+              <input type="text" value={node.title} onChange={(e) => updateNode(i, "title", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
+              <textarea rows={2} value={node.description} onChange={(e) => updateNode(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            </div>
+          </div>
         </div>
       ))}
     </div>
