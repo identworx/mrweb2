@@ -99,7 +99,7 @@ export const pageHeroes: Record<string, PageHeroData> = {
     eyebrow: "Mosaroma Industries GmbH",
     title: "Mosaroma Professional",
     description:
-      "Technical Textiles. Local Support. Professional Solutions.",
+      "Technische Textilien. Lokaler Support. Professionelle Lösungen.",
     image: "/images/placeholders/page-heroes/default-hero.svg",
     alt: "Mosaroma Professional Hero",
   },

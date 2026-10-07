@@ -42,12 +42,12 @@ async function main() {
           eyebrow: "Mosaroma Industries GmbH",
           headline: "Mosaroma Professional",
           introText:
-            "Technical Textiles. Local Support. Professional Solutions.",
+            "Technische Textilien. Lokaler Support. Professionelle Lösungen.",
           status: "PUBLISHED",
           type: "STANDARD",
-          seoTitle: "Mosaroma Professional — Technical Textiles & B2B Solutions | Mosaroma",
+          seoTitle: "Mosaroma Professional — Technische Textilien & B2B-Lösungen | Mosaroma",
           seoDescription:
-            "Technical Textiles für Sonnenschutz, Outdoor-Möbel und architektonische Anwendungen. Lokaler B2B-Support in Oyten, Deutschland.",
+            "Technische Textilien für Sonnenschutz, Outdoor-Möbel und architektonische Anwendungen. Lokaler B2B-Support in Oyten, Deutschland.",
         },
       });
       console.log(`  -> Created page (id: ${page.id}).\n`);
@@ -83,7 +83,7 @@ async function main() {
       style: "professional-about",
       type: "CUSTOM",
       eyebrow: "Über uns",
-      title: "About Mosaroma Professional",
+      title: "Über Mosaroma Professional",
       content: [
         "Mosaroma Professional steht für hochwertige technische und textile Lösungen für professionelle Outdoor-Anwendungen.",
         "Unser Produktportfolio basiert auf mehr als 30 Jahren Erfahrung in der Entwicklung von Outdoor-Textilien und verbindet bewährte Materialien, zuverlässige Lieferstrukturen und eine kontinuierliche Weiterentwicklung für anspruchsvolle Einsatzbereiche.",
@@ -140,9 +140,9 @@ async function main() {
       style: "professional-oyten",
       type: "CUSTOM",
       eyebrow: "Oyten, Deutschland",
-      title: "Technical & B2B Support Centre",
+      title: "Technik- & B2B-Servicezentrum",
       content:
-        "Mosaroma Professional ist nicht nur Fernsourcing aus Asien — wir bieten praktischen, lokalen Support in Deutschland. Unser Standort in Oyten ist die zentrale Anlaufstelle für B2B-Kunden in Europa: persönlich, direkt und praxisnah.",
+        "Mosaroma Professional ist nicht nur Fernsourcing aus Asien — wir bieten praktische, lokale Unterstützung in Deutschland. Unser Standort in Oyten ist die zentrale Anlaufstelle für B2B-Kunden in Europa: persönlich, direkt und praxisnah.",
       settings: {
         style: "professional-oyten",
         helper: true,

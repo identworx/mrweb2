@@ -28,16 +28,16 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       hero.seoTitle ||
-      "Mosaroma Professional — Technical Textiles & B2B Solutions | Mosaroma",
+      "Mosaroma Professional — Technische Textilien & B2B-Lösungen | Mosaroma",
     description:
       hero.seoDescription ||
-      "Technical Textiles für Sonnenschutz, Outdoor-Möbel und architektonische Anwendungen. Lokaler B2B-Support in Oyten, Deutschland.",
+      "Technische Textilien für Sonnenschutz, Outdoor-Möbel und architektonische Anwendungen. Lokaler B2B-Support in Oyten, Deutschland.",
   };
 }
 
 const ABOUT_FALLBACK = {
   eyebrow: "Über uns",
-  title: "About Mosaroma Professional",
+  title: "Über Mosaroma Professional",
   paragraphs: [
     "Mosaroma Professional steht für hochwertige technische und textile Lösungen für professionelle Outdoor-Anwendungen.",
     "Unser Produktportfolio basiert auf mehr als 30 Jahren Erfahrung in der Entwicklung von Outdoor-Textilien und verbindet bewährte Materialien, zuverlässige Lieferstrukturen und eine kontinuierliche Weiterentwicklung für anspruchsvolle Einsatzbereiche.",
@@ -45,7 +45,7 @@ const ABOUT_FALLBACK = {
     "Design, Qualität und Funktionalität bilden dabei die Grundlage unserer Produktentwicklung. Gleichzeitig setzen wir auf langlebige Materialien, verlässliche Lieferketten und eine verantwortungsbewusste, nachhaltige Weiterentwicklung unserer Produkte.",
   ],
   highlight:
-    "Technical Textiles for Shading, Outdoor and Architectural Applications — Wir vertreten exklusiv axroma® Technical Textiles aus Taiwan.",
+    "Technische Textilien für Beschattung, Outdoor und architektonische Anwendungen — Wir vertreten exklusiv axroma® Technical Textiles aus Taiwan.",
 };
 
 const APPLICATIONS_FALLBACK = [
@@ -83,9 +83,9 @@ const APPLICATIONS_FALLBACK = [
 
 const OYTEN_FALLBACK = {
   eyebrow: "Oyten, Deutschland",
-  title: "Technical & B2B Support Centre",
+  title: "Technik- & B2B-Servicezentrum",
   description:
-    "Mosaroma Professional ist nicht nur Fernsourcing aus Asien — wir bieten praktischen, lokalen Support in Deutschland. Unser Standort in Oyten ist die zentrale Anlaufstelle für B2B-Kunden in Europa: persönlich, direkt und praxisnah.",
+    "Mosaroma Professional ist nicht nur Fernsourcing aus Asien — wir bieten praktische, lokale Unterstützung in Deutschland. Unser Standort in Oyten ist die zentrale Anlaufstelle für B2B-Kunden in Europa: persönlich, direkt und praxisnah.",
   benefits: [
     { text: "Persönliche Beratungstermine vor Ort" },
     { text: "Stoffkollektionen begutachten, Farben und Materialien vergleichen" },
