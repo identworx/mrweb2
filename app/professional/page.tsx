@@ -534,17 +534,18 @@ export default async function ProfessionalPage() {
                   {supply.content}
                 </p>
 
-                <div className="flex flex-col md:flex-row md:items-stretch gap-0">
+                {/* Mobile: stacked */}
+                <div className="flex flex-col md:hidden">
                   {supply.nodes.map((node, i) => (
-                    <ScrollReveal key={node.title} delay={i * 100} className="contents">
+                    <ScrollReveal key={node.title} delay={i * 100}>
                       {i > 0 && (
-                        <div className="flex items-center justify-center py-4 md:py-0 md:px-5 self-center">
+                        <div className="flex items-center justify-center py-4">
                           <span className="font-heading text-4xl font-light text-pumpkin">
                             +
                           </span>
                         </div>
                       )}
-                      <div className="flex-1 flex flex-col">
+                      <div>
                         <div
                           className="w-full aspect-[3/2] relative overflow-hidden"
                           style={{
@@ -573,6 +574,54 @@ export default async function ProfessionalPage() {
                       </div>
                     </ScrollReveal>
                   ))}
+                </div>
+
+                {/* Desktop: grid — connectors aligned to image center */}
+                <div className="hidden md:grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-0">
+                  {supply.nodes.flatMap((node, i) => [
+                    ...(i > 0
+                      ? [
+                          <div
+                            key={`conn-${i}`}
+                            className="flex items-center justify-center px-5"
+                          >
+                            <span className="font-heading text-4xl font-light text-pumpkin">
+                              +
+                            </span>
+                          </div>,
+                        ]
+                      : []),
+                    <ScrollReveal key={node.title} delay={i * 100}>
+                      <div
+                        className="w-full aspect-[3/2] relative overflow-hidden"
+                        style={{
+                          background: tealGradients[i % tealGradients.length],
+                        }}
+                      >
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            backgroundImage:
+                              "repeating-linear-gradient(45deg, transparent, transparent 14px, rgba(255,255,255,0.04) 14px, rgba(255,255,255,0.04) 15px)",
+                          }}
+                        />
+                      </div>
+                    </ScrollReveal>,
+                  ])}
+                  {supply.nodes.flatMap((node, i) => [
+                    ...(i > 0 ? [<div key={`spacer-${i}`} />] : []),
+                    <div key={`text-${node.title}`} className="py-5 px-1">
+                      <h3 className="font-heading text-anthracite text-[0.9375rem] font-bold mb-0.5">
+                        {node.title}
+                      </h3>
+                      <p className="font-body text-text-muted text-[0.8125rem] mb-2.5">
+                        {node.flag}
+                      </p>
+                      <p className="font-body text-text-gray text-[0.8125rem] leading-[1.6]">
+                        {node.description}
+                      </p>
+                    </div>,
+                  ])}
                 </div>
               </div>
             </section>
