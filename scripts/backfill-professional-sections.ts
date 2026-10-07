@@ -3,11 +3,12 @@
  *
  * Creates:
  *   1. Page "professional" (if not exists, status = PUBLISHED)
- *   2. professional-about          — introduction text + optional image
- *   3. professional-applications   — application area cards
- *   4. professional-oyten          — B2B support centre info + benefits
- *   5. professional-supply-chain   — supply chain nodes (Taiwan → Germany → International)
- *   6. professional-cta            — closing CTA block
+ *   2. professional-hero            — hero video URL + poster image
+ *   3. professional-about          — introduction text + optional image
+ *   4. professional-applications   — application area cards
+ *   5. professional-oyten          — B2B support centre info + benefits
+ *   6. professional-supply-chain   — supply chain nodes (Taiwan → Germany → International)
+ *   7. professional-cta            — closing CTA block
  *
  * Idempotent: skips creation if a section with that style already exists.
  *
@@ -79,6 +80,14 @@ async function main() {
   let maxOrder = existing.reduce((max, s) => Math.max(max, s.order), 0);
 
   const sections = [
+    {
+      style: "professional-hero",
+      type: "CUSTOM",
+      eyebrow: null,
+      title: "Professional Hero-Medien",
+      content: null,
+      settings: { style: "professional-hero", helper: true, videoUrl: "" },
+    },
     {
       style: "professional-about",
       type: "CUSTOM",

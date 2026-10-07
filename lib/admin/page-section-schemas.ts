@@ -390,6 +390,17 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
+    style: "professional-hero",
+    label: "Professional Hero-Medien",
+    description: "Helper-Section: Video-URL und Poster-Bild für den Hero-Bereich der Professional-Seite.",
+    sectionType: "CUSTOM",
+    defaultSettings: {
+      style: "professional-hero",
+      helper: true,
+      videoUrl: "",
+    },
+  },
+  {
     style: "professional-about",
     label: "Professional Über uns",
     description: "Helper-Section: Einleitung und Vorstellung von Mosaroma Professional.",

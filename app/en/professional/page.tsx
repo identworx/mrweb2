@@ -20,6 +20,7 @@ import {
 } from "@/lib/cms/service-pages";
 import { notFound } from "next/navigation";
 import { isPublicPathEnabled } from "@/lib/cms/nav-visibility";
+import HeroVideo from "@/components/HeroVideo";
 
 export const revalidate = 60;
 
@@ -136,6 +137,8 @@ export default async function ProfessionalPageEn() {
     layout,
     hero,
     result,
+    heroSectionData,
+    heroSectionImage,
     ,
     aboutImage,
     ,
@@ -148,6 +151,8 @@ export default async function ProfessionalPageEn() {
     getPublicLayoutData("en"),
     getPageHeroData("professional", "professional", "en"),
     getServicePageBySlug("professional"),
+    getSectionData("professional", "professional-hero"),
+    getSectionImage("professional", "professional-hero"),
     getSectionData("professional", "professional-about"),
     getSectionImage("professional", "professional-about"),
     getSectionData("professional", "professional-applications"),
@@ -157,6 +162,9 @@ export default async function ProfessionalPageEn() {
     getSectionData("professional", "professional-cta"),
     getIconSlots([...SERVICE_SECTION_ICON_KEYS, "checkmark"]),
   ]);
+
+  const heroVideoUrl = String(heroSectionData?.settings?.videoUrl ?? "").trim() || null;
+  const heroPosterUrl = heroSectionImage?.url || null;
 
   const about = {
     eyebrow: ABOUT_FALLBACK.eyebrow,
@@ -233,15 +241,28 @@ export default async function ProfessionalPageEn() {
                 "repeating-linear-gradient(120deg, transparent, transparent 80px, rgba(255,255,255,0.015) 80px, rgba(255,255,255,0.015) 81px)",
             }}
           />
-          {hero.image && !hero.image.includes("placeholder") && (
-            <Image
-              src={hero.image}
-              alt={hero.alt}
-              fill
-              className="object-cover"
-              sizes="100vw"
-              priority
+          {heroVideoUrl ? (
+            <HeroVideo
+              src={heroVideoUrl}
+              poster={
+                heroPosterUrl ||
+                (hero.image && !hero.image.includes("placeholder")
+                  ? hero.image
+                  : undefined)
+              }
             />
+          ) : (
+            hero.image &&
+            !hero.image.includes("placeholder") && (
+              <Image
+                src={hero.image}
+                alt={hero.alt}
+                fill
+                className="object-cover"
+                sizes="100vw"
+                priority
+              />
+            )
           )}
           <div
             className="absolute inset-0"

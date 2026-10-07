@@ -172,7 +172,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
         </div>
       )}
 
-      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story" || style === "nerio-technical-facts" || style === "professional-about" || style === "professional-oyten") && (
+      {(style === "home-hero" || style === "image-text-feature" || style === "materials-olefin" || style === "nerio-story" || style === "nerio-technical-facts" || style === "professional-hero" || style === "professional-about" || style === "professional-oyten") && (
         <MediaPickerField
           label="Bild"
           value={form.imageId || ""}
@@ -237,6 +237,7 @@ export default function PageSectionEditForm({ section, onSave, onCancel, saving 
       {style === "nerio-technical-facts" && <NerioTechnicalFactsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-videos" && <NerioVideosFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "nerio-products-preview" && <NerioProductsPreviewFields settings={form.settings} updateSettings={updateSettings} />}
+      {style === "professional-hero" && <ProfessionalHeroFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "professional-applications" && <ProfessionalApplicationsFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "professional-oyten" && <ProfessionalOytenFields settings={form.settings} updateSettings={updateSettings} />}
       {style === "professional-supply-chain" && <ProfessionalSupplyChainFields settings={form.settings} updateSettings={updateSettings} />}
@@ -2081,6 +2082,39 @@ const PROFESSIONAL_APP_ICON_OPTIONS = [
   { value: "palette", label: "Dekor" },
   { value: "custom", label: "Projekt" },
 ];
+
+function ProfessionalHeroFields({
+  settings,
+  updateSettings,
+}: {
+  settings: Record<string, unknown>;
+  updateSettings: (key: string, value: unknown) => void;
+}) {
+  const videoUrl = String(settings.videoUrl ?? "");
+
+  return (
+    <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+      <h4 className="font-medium text-gray-900">Hero-Video (optional)</h4>
+      <p className="text-xs text-gray-500">
+        Video-URL eingeben für ein Hintergrundvideo im Hero-Bereich. Leer lassen für nur das Bild.
+        Empfehlung: MP4, max. 5 MB, 10–30 Sekunden, 1920×480 oder 2560×640 px.
+      </p>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Video-URL (MP4)</label>
+        <input
+          type="text"
+          value={videoUrl}
+          onChange={(e) => updateSettings("videoUrl", e.target.value || "")}
+          placeholder="z.B. /uploads/videos/professional-hero.mp4"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+        />
+      </div>
+      <p className="text-xs text-gray-500">
+        Das Bild oben dient als Poster (Vorschaubild während das Video lädt). Wird auch als Fallback angezeigt, wenn kein Video gesetzt ist.
+      </p>
+    </div>
+  );
+}
 
 function ProfessionalApplicationsFields({
   settings,
