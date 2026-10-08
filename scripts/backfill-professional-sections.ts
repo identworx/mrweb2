@@ -1,5 +1,5 @@
 /**
- * Backfill Page + PageSection helpers for the Mosaroma Professional page at /professional.
+ * Backfill Page + PageSection helpers for the Mosaroma Professional page at /pro.
  *
  * Target structure (all sections helper sections on page slug "professional"):
  *   1. professional-hero          — video URL, poster image, hero button

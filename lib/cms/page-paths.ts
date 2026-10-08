@@ -15,7 +15,7 @@ export const PAGE_SLUG_TO_PATH: Record<string, string> = {
   neuigkeiten: "/neuigkeiten",
   kontakt: "/kontakt",
   nerio: "/nerio",
-  professional: "/professional",
+  professional: "/pro",
 };
 
 export function pageSlugToPublicPath(slug: string): string {

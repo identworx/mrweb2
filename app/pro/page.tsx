@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProfessionalPage() {
-  if (!(await isPublicPathEnabled("/professional"))) notFound();
+  if (!(await isPublicPathEnabled("/pro"))) notFound();
 
   const [layout, hero, result, heroImage, ctaImage] = await Promise.all([
     getPublicLayoutData(),

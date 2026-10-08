@@ -15,7 +15,7 @@ import { isHelperSection } from "@/lib/admin/page-section-schemas";
 import { localizedHref } from "@/lib/i18n/routes";
 import type { ProfessionalCopy } from "@/lib/mosaroma/professional-copy";
 
-/* ── Data helpers shared by /professional and /en/professional ── */
+/* ── Data helpers shared by /pro and /en/pro ── */
 
 export type RawItem = Record<string, unknown>;
 
