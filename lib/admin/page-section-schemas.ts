@@ -413,6 +413,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       background: "white",
       items: professionalCopyDe.applications.items.map((item) => ({
         title: item.title,
+        recommendation: item.recommendation,
         imageId: null,
       })),
     },
@@ -428,7 +429,10 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       background: "cream",
       items: professionalCopyDe.materials.items.map((item) => ({
         title: item.title,
+        subtitle: item.subtitle,
         description: item.description,
+        specs: [],
+        downloadId: null,
         imageId: null,
       })),
     },
@@ -444,6 +448,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
       background: "cream",
       items: professionalCopyDe.service.items.map((item) => ({
         title: item.title,
+        detail: item.detail,
         iconKey: item.iconKey,
         iconImageId: null,
       })),

@@ -3,9 +3,10 @@
  *
  * Target structure (all sections helper sections on page slug "professional"):
  *   1. professional-hero          — video URL, poster image, hero button
- *   2. professional-applications  — application cards (title + image)
- *   3. professional-materials     — material cards (title + description + image)
- *   4. professional-service       — service items (title + icon)
+ *   2. professional-applications  — application cards (title + recommendation + image)
+ *   3. professional-materials     — material cards (title + subtitle + description +
+ *                                   specs + datasheet downloadId + image)
+ *   4. professional-service       — service items (title + detail + icon)
  *   5. professional-cta           — contact CTA with image on the right
  *
  * Old styles professional-about / professional-oyten / professional-supply-chain
@@ -18,6 +19,10 @@
  *   - Texts are only replaced when they are empty or still equal to the old
  *     backfill defaults; manual edits are kept.
  *   - imageId / iconImageId / videoUrl are never overwritten.
+ *   - Stage 2 item keys (recommendation / subtitle / detail / specs / downloadId)
+ *     are only added when missing on an existing item (texts from the copy by
+ *     index, specs = [], downloadId = null); existing values and the number of
+ *     items are never changed.
  *   - Existing translatedText is never overwritten (unless it still equals a known
  *     old default); a changed sourceText marks the entry STALE — except when the
  *     translatedText still equals the previous EN copy (PREVIOUS_EN_COPY): then it
@@ -181,7 +186,11 @@ const TARGETS: TargetSection[] = [
       style: "professional-applications",
       helper: true,
       background: "white",
-      items: de.applications.items.map((i) => ({ title: i.title, imageId: null })),
+      items: de.applications.items.map((i) => ({
+        title: i.title,
+        recommendation: i.recommendation,
+        imageId: null,
+      })),
     },
   },
   {
@@ -198,7 +207,10 @@ const TARGETS: TargetSection[] = [
       background: "cream",
       items: de.materials.items.map((i) => ({
         title: i.title,
+        subtitle: i.subtitle,
         description: i.description,
+        specs: [],
+        downloadId: null,
         imageId: null,
       })),
     },
@@ -217,6 +229,7 @@ const TARGETS: TargetSection[] = [
       background: "cream",
       items: de.service.items.map((i) => ({
         title: i.title,
+        detail: i.detail,
         iconKey: i.iconKey,
         iconImageId: null,
       })),
@@ -249,13 +262,36 @@ interface TranslationEntry {
   fieldName: string;
   sourceText: string;
   translatedText: string;
+  /** Status for newly created entries (default PUBLISHED). */
+  createStatus?: string;
 }
 
-function buildTranslations(): TranslationEntry[] {
+interface MaterialSpecSource {
+  /** 1-based item index */
+  item: number;
+  /** 1-based spec index */
+  spec: number;
+  label: string;
+  value: string;
+}
+
+/**
+ * @param materialSpecs DE spec values currently stored in the materials section.
+ *   They have no EN copy, so they are seeded as DRAFT with the DE text (editors
+ *   translate them in the translation UI). Only specs with a value are seeded.
+ */
+function buildTranslations(materialSpecs: MaterialSpecSource[] = []): TranslationEntry[] {
   const out: TranslationEntry[] = [];
-  const add = (entityType: string, entityId: string, fieldName: string, src: string, tr: string) => {
+  const add = (
+    entityType: string,
+    entityId: string,
+    fieldName: string,
+    src: string,
+    tr: string,
+    createStatus?: string,
+  ) => {
     if (!src || !tr) return;
-    out.push({ entityType, entityId, fieldName, sourceText: src, translatedText: tr });
+    out.push({ entityType, entityId, fieldName, sourceText: src, translatedText: tr, createStatus });
   };
   const ps = (style: string, field: string, src: string, tr: string) =>
     add("pageSection", style, field, src, tr);
@@ -269,14 +305,27 @@ function buildTranslations(): TranslationEntry[] {
   ps("professional-applications", "content", de.applications.content, en.applications.content);
   de.applications.items.forEach((item, i) => {
     ps("professional-applications", `item.${i + 1}.title`, item.title, en.applications.items[i]?.title ?? "");
+    ps(
+      "professional-applications",
+      `item.${i + 1}.recommendation`,
+      item.recommendation,
+      en.applications.items[i]?.recommendation ?? "",
+    );
   });
 
   // Materials
   ps("professional-materials", "eyebrow", de.materials.eyebrow, en.materials.eyebrow);
   ps("professional-materials", "title", de.materials.title, en.materials.title);
   ps("professional-materials", "content", de.materials.content, en.materials.content);
+  ps("professional-materials", "datasheetLabel", de.materials.datasheetLabel, en.materials.datasheetLabel);
   de.materials.items.forEach((item, i) => {
     ps("professional-materials", `item.${i + 1}.title`, item.title, en.materials.items[i]?.title ?? "");
+    ps(
+      "professional-materials",
+      `item.${i + 1}.subtitle`,
+      item.subtitle,
+      en.materials.items[i]?.subtitle ?? "",
+    );
     ps(
       "professional-materials",
       `item.${i + 1}.description`,
@@ -284,6 +333,11 @@ function buildTranslations(): TranslationEntry[] {
       en.materials.items[i]?.description ?? "",
     );
   });
+  for (const spec of materialSpecs) {
+    const base = `item.${spec.item}.spec.${spec.spec}`;
+    add("pageSection", "professional-materials", `${base}.label`, spec.label, spec.label, "DRAFT");
+    add("pageSection", "professional-materials", `${base}.value`, spec.value, spec.value, "DRAFT");
+  }
 
   // Service
   ps("professional-service", "eyebrow", de.service.eyebrow, en.service.eyebrow);
@@ -291,6 +345,7 @@ function buildTranslations(): TranslationEntry[] {
   ps("professional-service", "content", de.service.content, en.service.content);
   de.service.items.forEach((item, i) => {
     ps("professional-service", `item.${i + 1}.title`, item.title, en.service.items[i]?.title ?? "");
+    ps("professional-service", `item.${i + 1}.detail`, item.detail, en.service.items[i]?.detail ?? "");
   });
 
   // CTA
@@ -313,9 +368,9 @@ function buildTranslations(): TranslationEntry[] {
   return out;
 }
 
-async function upsertTranslations() {
+async function upsertTranslations(materialSpecs: MaterialSpecSource[] = []) {
   log("\n── Translations (EN) ─────────────────────────────────────────");
-  const entries = buildTranslations();
+  const entries = buildTranslations(materialSpecs);
   let created = 0;
   let skipped = 0;
   let stale = 0;
@@ -333,10 +388,12 @@ async function upsertTranslations() {
     });
 
     if (!existing) {
-      action(`CREATE ${id} = ${short(entry.translatedText)}`);
+      const { createStatus, ...data } = entry;
+      const status = createStatus ?? "PUBLISHED";
+      action(`CREATE ${id} = ${short(entry.translatedText)}${status !== "PUBLISHED" ? ` (${status})` : ""}`);
       if (!dryRun) {
         await prisma.contentTranslation.create({
-          data: { ...entry, locale: "en", status: "PUBLISHED" },
+          data: { ...data, locale: "en", status },
         });
       }
       created++;
@@ -411,6 +468,41 @@ function getSettings(value: unknown): Record<string, unknown> {
     ? (value as Record<string, unknown>)
     : {};
 }
+
+/** Stage 2 keys per item index (texts from the DE copy by index, empty when beyond the copy). */
+const STAGE2_ITEM_DEFAULTS: Record<string, (index: number) => Record<string, unknown>> = {
+  "professional-applications": (i) => ({
+    recommendation: de.applications.items[i]?.recommendation ?? "",
+  }),
+  "professional-materials": (i) => ({
+    subtitle: de.materials.items[i]?.subtitle ?? "",
+    specs: [],
+    downloadId: null,
+  }),
+  "professional-service": (i) => ({
+    detail: de.service.items[i]?.detail ?? "",
+  }),
+};
+
+/** DE spec label/value pairs with a non-empty value (1-based indices). */
+function collectMaterialSpecs(items: unknown): MaterialSpecSource[] {
+  if (!Array.isArray(items)) return [];
+  const out: MaterialSpecSource[] = [];
+  items.forEach((it, i) => {
+    const specs = getSettings(it).specs;
+    if (!Array.isArray(specs)) return;
+    specs.forEach((spec, j) => {
+      const s = getSettings(spec);
+      const label = typeof s.label === "string" ? s.label.trim() : "";
+      const value = typeof s.value === "string" ? s.value.trim() : "";
+      if (!value) return;
+      out.push({ item: i + 1, spec: j + 1, label, value });
+    });
+  });
+  return out;
+}
+
+let materialSpecs: MaterialSpecSource[] = [];
 
 async function main() {
   log(`Mode: ${dryRun ? "DRY-RUN (no changes will be written)" : "APPLY"}`);
@@ -595,6 +687,7 @@ async function main() {
             const old = items[i] as Record<string, unknown> | undefined;
             return {
               title: item.title,
+              recommendation: item.recommendation,
               imageId: typeof old?.imageId === "string" ? old.imageId : null,
             };
           });
@@ -605,6 +698,34 @@ async function main() {
       if (!Array.isArray(settings.items)) {
         setSetting("items", target.settings.items, "→ default items (missing)");
       }
+    }
+
+    // Stage 2: add missing item keys (never overwrite, never change item count)
+    const stage2 = STAGE2_ITEM_DEFAULTS[target.style];
+    if (stage2 && Array.isArray(settings.items) && settings.items !== target.settings.items) {
+      const items = settings.items as unknown[];
+      let itemsChanged = false;
+      const nextItems = items.map((it, i) => {
+        if (typeof it !== "object" || it === null || Array.isArray(it)) return it;
+        const item = it as Record<string, unknown>;
+        const defaults = stage2(i);
+        const missing = Object.keys(defaults).filter((key) => !(key in item));
+        if (missing.length === 0) return it;
+        itemsChanged = true;
+        for (const key of missing) {
+          action(`settings.items[${i}].${key} = ${key === "specs" ? "[]" : short(defaults[key])} (missing)`);
+        }
+        const added = Object.fromEntries(missing.map((key) => [key, defaults[key]]));
+        return { ...item, ...added };
+      });
+      if (itemsChanged) {
+        settings.items = nextItems;
+        settingsChanged = true;
+      }
+    }
+
+    if (target.style === "professional-materials") {
+      materialSpecs = collectMaterialSpecs(settings.items);
     }
 
     // Section type
@@ -642,7 +763,7 @@ async function main() {
     }
   }
 
-  await upsertTranslations();
+  await upsertTranslations(materialSpecs);
 }
 
 main()

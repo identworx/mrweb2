@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import { SECTION_STYLES, getStyleDef, isHelperSection } from "@/lib/admin/page-section-schemas";
 import RichTextEditor from "./RichTextEditor";
 import MediaPickerField from "./MediaPickerField";
@@ -2082,19 +2083,69 @@ function NerioProductsPreviewFields({
 
 interface ProfessionalAppItem {
   title: string;
+  recommendation?: string;
   imageId: string | null;
+}
+
+interface ProfessionalMaterialSpec {
+  label: string;
+  value: string;
 }
 
 interface ProfessionalMaterialItem {
   title: string;
+  subtitle?: string;
   description: string;
+  specs?: ProfessionalMaterialSpec[];
+  downloadId?: string | null;
   imageId: string | null;
 }
 
 interface ProfessionalServiceItem {
   title: string;
+  detail?: string;
   iconKey: string;
   iconImageId: string | null;
+}
+
+const PROFESSIONAL_MATERIAL_MAX_SPECS = 6;
+
+interface DatasheetOption {
+  id: string;
+  label: string;
+}
+
+/** Loads active download entries (with file or link) as datasheet options. Errors are swallowed. */
+function useDatasheetOptions(): DatasheetOption[] {
+  const [options, setOptions] = useState<DatasheetOption[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/downloads")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: unknown) => {
+        if (cancelled || !Array.isArray(data)) return;
+        const next = data
+          .filter(
+            (d): d is { id: string; title: string; language?: string | null; fileUrl?: string | null; externalUrl?: string | null; isActive?: boolean } =>
+              typeof d === "object" && d !== null && typeof (d as { id?: unknown }).id === "string",
+          )
+          .filter((d) => d.isActive !== false && Boolean(d.fileUrl || d.externalUrl))
+          .map((d) => ({
+            id: d.id,
+            label: d.language ? `${d.title} (${d.language})` : d.title,
+          }));
+        setOptions(next);
+      })
+      .catch(() => {
+        /* silently ignore – only the hint is shown */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return options;
 }
 
 const PROFESSIONAL_SERVICE_ICON_GROUPS = ["professional", "service", "benefits", "nerio"];
@@ -2178,7 +2229,7 @@ function ProfessionalApplicationsFields({
     const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
     updateSettings("items", next);
   }
-  function addItem() { updateSettings("items", [...items, { title: "", imageId: null }]); }
+  function addItem() { updateSettings("items", [...items, { title: "", recommendation: "", imageId: null }]); }
   function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
 
   return (
@@ -2196,6 +2247,11 @@ function ProfessionalApplicationsFields({
           <div>
             <label className="block text-xs text-gray-500 mb-0.5">Titel</label>
             <input type="text" value={item.title ?? ""} onChange={(e) => updateItem(i, "title", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Empfehlung</label>
+            <input type="text" value={item.recommendation ?? ""} onChange={(e) => updateItem(i, "recommendation", e.target.value)} placeholder="z.B. Empfohlen: SDP" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <p className="text-xs text-gray-400 mt-1">z.B. „Empfohlen: SDP“ – leer = keine Zeile</p>
           </div>
           <MediaPickerField
             label="Bild (leer = Platzhalter)"
@@ -2216,12 +2272,33 @@ function ProfessionalMaterialsFields({
   updateSettings: (key: string, value: unknown) => void;
 }) {
   const items = Array.isArray(settings.items) ? (settings.items as ProfessionalMaterialItem[]) : [];
+  const datasheetOptions = useDatasheetOptions();
 
-  function updateItem(index: number, field: keyof ProfessionalMaterialItem, value: string | null) {
+  function updateItem<K extends keyof ProfessionalMaterialItem>(index: number, field: K, value: ProfessionalMaterialItem[K]) {
     const next = items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
     updateSettings("items", next);
   }
-  function addItem() { updateSettings("items", [...items, { title: "", description: "", imageId: null }]); }
+  function getSpecs(item: ProfessionalMaterialItem): ProfessionalMaterialSpec[] {
+    return Array.isArray(item.specs) ? item.specs : [];
+  }
+  function updateSpec(index: number, specIndex: number, field: keyof ProfessionalMaterialSpec, value: string) {
+    const specs = getSpecs(items[index]).map((spec, j) => (j === specIndex ? { ...spec, [field]: value } : spec));
+    updateItem(index, "specs", specs);
+  }
+  function addSpec(index: number) {
+    const specs = getSpecs(items[index]);
+    if (specs.length >= PROFESSIONAL_MATERIAL_MAX_SPECS) return;
+    updateItem(index, "specs", [...specs, { label: "", value: "" }]);
+  }
+  function removeSpec(index: number, specIndex: number) {
+    updateItem(index, "specs", getSpecs(items[index]).filter((_, j) => j !== specIndex));
+  }
+  function addItem() {
+    updateSettings("items", [
+      ...items,
+      { title: "", subtitle: "", description: "", specs: [], downloadId: null, imageId: null },
+    ]);
+  }
   function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
 
   return (
@@ -2241,8 +2318,52 @@ function ProfessionalMaterialsFields({
             <input type="text" value={item.title ?? ""} onChange={(e) => updateItem(i, "title", e.target.value)} placeholder="z.B. SDP | Solution-Dyed Polyester" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
           </div>
           <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Kurzerklärung</label>
+            <input type="text" value={item.subtitle ?? ""} onChange={(e) => updateItem(i, "subtitle", e.target.value)} placeholder="z.B. Spinndüsengefärbtes Polyester" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+            <p className="text-xs text-gray-400 mt-1">Fachbegriff in einem Halbsatz</p>
+          </div>
+          <div>
             <label className="block text-xs text-gray-500 mb-0.5">Beschreibung</label>
             <textarea rows={3} value={item.description ?? ""} onChange={(e) => updateItem(i, "description", e.target.value)} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs text-gray-500">Kennwerte ({getSpecs(item).length}/{PROFESSIONAL_MATERIAL_MAX_SPECS})</label>
+              {getSpecs(item).length < PROFESSIONAL_MATERIAL_MAX_SPECS && (
+                <button type="button" onClick={() => addSpec(i)} className="text-xs text-orange-600 hover:text-orange-700 font-medium">+ Kennwert</button>
+              )}
+            </div>
+            {getSpecs(item).map((spec, j) => (
+              <div key={j} className="flex items-center gap-2">
+                <input type="text" value={spec.label ?? ""} onChange={(e) => updateSpec(i, j, "label", e.target.value)} placeholder="Label, z.B. Breite" aria-label={`Kennwert ${j + 1} Label`} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                <input type="text" value={spec.value ?? ""} onChange={(e) => updateSpec(i, j, "value", e.target.value)} placeholder="Wert, z.B. 150 cm" aria-label={`Kennwert ${j + 1} Wert`} className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+                <button type="button" onClick={() => removeSpec(i, j)} className="shrink-0 text-gray-400 hover:text-red-500 text-xs">Entfernen</button>
+              </div>
+            ))}
+            <p className="text-xs text-gray-400">
+              Beispiele: „Breite · 150 cm“, „Gewicht · 300 g/m²“, „Lichtechtheit · 7–8“, „Farben · 24“. Nur Zeilen mit Wert werden angezeigt.
+            </p>
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-0.5">Datenblatt</label>
+            <select
+              value={item.downloadId ?? ""}
+              onChange={(e) => updateItem(i, "downloadId", e.target.value || null)}
+              className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            >
+              <option value="">— kein Datenblatt —</option>
+              {item.downloadId && !datasheetOptions.some((opt) => opt.id === item.downloadId) && (
+                <option value={item.downloadId}>Unbekannter/inaktiver Eintrag ({item.downloadId})</option>
+              )}
+              {datasheetOptions.map((opt) => (
+                <option key={opt.id} value={opt.id}>{opt.label}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-400 mt-1">
+              PDFs werden unter{" "}
+              <Link href="/admin/downloads" className="text-orange-600 hover:text-orange-700 underline">Kataloge &amp; Downloads</Link>{" "}
+              hochgeladen.
+            </p>
           </div>
           <MediaPickerField
             label="Bild (leer = Platzhalter)"
@@ -2269,7 +2390,7 @@ function ProfessionalServiceFields({
     updateSettings("items", next);
   }
   function addItem() {
-    updateSettings("items", [...items, { title: "", iconKey: "professional-samples", iconImageId: null }]);
+    updateSettings("items", [...items, { title: "", detail: "", iconKey: "professional-samples", iconImageId: null }]);
   }
   function removeItem(index: number) { updateSettings("items", items.filter((_, i) => i !== index)); }
 
@@ -2306,6 +2427,11 @@ function ProfessionalServiceFields({
                 </select>
                 <p className="text-xs text-gray-400 mt-1">Icons aus der Icon-Verwaltung (/admin/icons).</p>
               </div>
+            </div>
+            <div>
+              <label className="block text-xs text-gray-500 mb-0.5">Detail</label>
+              <input type="text" value={item.detail ?? ""} onChange={(e) => updateItem(i, "detail", e.target.value)} placeholder="z.B. Mengen nach Absprache" className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
+              <p className="text-xs text-gray-400 mt-1">Subline unter dem Titel, z.B. „Mengen nach Absprache“ – leer = keine Zeile</p>
             </div>
             <MediaPickerField
               label="Eigenes Icon (optional)"

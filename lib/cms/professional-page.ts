@@ -1,4 +1,5 @@
 import "server-only";
+import { prisma } from "@/lib/db/prisma";
 import { getIconSlots, type ResolvedIcon } from "@/lib/cms/icons";
 import {
   PROFESSIONAL_ICON_KEYS,
@@ -37,6 +38,24 @@ export function cmsItems(settings: Record<string, unknown> | undefined): RawItem
 
 export function str(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
+}
+
+/** Present string key → its trimmed value (may be empty = hidden); missing key → fallback. */
+function strOr(value: unknown, fallback: string | undefined): string {
+  return typeof value === "string" ? value.trim() : (fallback ?? "");
+}
+
+export interface MaterialSpec {
+  label: string;
+  value: string;
+}
+
+/** `specs` from CMS settings: only well-formed `{ label, value }` rows (trimmed). */
+export function cmsSpecs(value: unknown): MaterialSpec[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((row): row is RawItem => typeof row === "object" && row !== null && !Array.isArray(row))
+    .map((row) => ({ label: str(row.label), value: str(row.value) }));
 }
 
 /** CMS-HTML hat Vorrang, sonst Plaintext aus der Copy. Leer → nichts. */
@@ -132,25 +151,39 @@ export function professionalDeItems(
     cmsApps.length > 0
       ? cmsApps.map((it, i) => ({
           title: str(it.title) || copy.applications.items[i]?.title || "",
+          recommendation: strOr(it.recommendation, copy.applications.items[i]?.recommendation),
           imageId: str(it.imageId) || null,
         }))
-      : copy.applications.items.map((it) => ({ title: it.title, imageId: null as string | null }));
+      : copy.applications.items.map((it) => ({
+          title: it.title,
+          recommendation: it.recommendation,
+          imageId: null as string | null,
+        }));
 
   const cmsMaterials = cmsItems(sections.materials?.settings);
   const materials =
     cmsMaterials.length > 0
       ? cmsMaterials.map((it, i) => ({
           title: str(it.title) || copy.materials.items[i]?.title || "",
+          subtitle: strOr(it.subtitle, copy.materials.items[i]?.subtitle),
           description: str(it.description) || copy.materials.items[i]?.description || "",
+          specs: cmsSpecs(it.specs),
+          downloadId: str(it.downloadId) || null,
           imageId: str(it.imageId) || null,
         }))
-      : copy.materials.items.map((it) => ({ ...it, imageId: null as string | null }));
+      : copy.materials.items.map((it) => ({
+          ...it,
+          specs: [] as MaterialSpec[],
+          downloadId: null as string | null,
+          imageId: null as string | null,
+        }));
 
   const cmsService = cmsItems(sections.service?.settings);
   const service =
     cmsService.length > 0
       ? cmsService.map((it, i) => ({
           title: str(it.title) || copy.service.items[i]?.title || "",
+          detail: strOr(it.detail, copy.service.items[i]?.detail),
           iconKey: str(it.iconKey) || copy.service.items[i]?.iconKey || "",
           iconImageId: str(it.iconImageId) || null,
         }))
@@ -197,19 +230,55 @@ export function enButton(
   );
 }
 
-/** Icons + item media for the Professional page in one parallel round-trip. */
+export interface ResolvedDownloadLink {
+  href: string;
+  newTab: boolean;
+}
+
+/**
+ * Active downloads by id → link target (fileUrl, else externalUrl). Downloads
+ * without any target, inactive or missing ones are omitted; DB errors → {}.
+ */
+export async function resolveDownloads(
+  ids: (string | null)[],
+): Promise<Record<string, ResolvedDownloadLink>> {
+  const unique = Array.from(new Set(ids.filter((id): id is string => Boolean(id))));
+  if (unique.length === 0) return {};
+  try {
+    const rows = await prisma.download.findMany({
+      where: { id: { in: unique }, isActive: true },
+      select: { id: true, fileUrl: true, externalUrl: true, opensInNewTab: true },
+    });
+    const map: Record<string, ResolvedDownloadLink> = {};
+    for (const row of rows) {
+      const fileUrl = row.fileUrl?.trim() || "";
+      const externalUrl = row.externalUrl?.trim() || "";
+      const href = fileUrl || externalUrl;
+      if (!href) continue;
+      map[row.id] = { href, newTab: row.opensInNewTab || (!fileUrl && Boolean(externalUrl)) };
+    }
+    return map;
+  } catch (error) {
+    console.error("CMS: resolveDownloads failed", error);
+    return {};
+  }
+}
+
+/** Icons + item media + datasheet links for the Professional page in one parallel round-trip. */
 export async function loadProfessionalAssets(input: {
   appImageIds: (string | null)[];
   materialImageIds: (string | null)[];
+  materialDownloadIds: (string | null)[];
   serviceIconImageIds: (string | null)[];
   serviceIconKeys: string[];
 }): Promise<{
   icons: Record<string, ResolvedIcon>;
   appImages: Record<string, ResolvedMedia>;
   materialImages: Record<string, ResolvedMedia>;
+  materialDownloads: Record<string, ResolvedDownloadLink>;
   serviceIconImages: Record<string, ResolvedMedia>;
 }> {
-  const [icons, appImages, materialImages, serviceIconImages] = await Promise.all([
+  const [icons, appImages, materialImages, materialDownloads, serviceIconImages] = await Promise.all([
     getIconSlots(
       Array.from(
         new Set<string>([
@@ -221,14 +290,22 @@ export async function loadProfessionalAssets(input: {
     ),
     resolveMediaIds(input.appImageIds),
     resolveMediaIds(input.materialImageIds),
+    resolveDownloads(input.materialDownloadIds),
     resolveMediaIds(input.serviceIconImageIds),
   ]);
-  return { icons, appImages, materialImages, serviceIconImages };
+  return { icons, appImages, materialImages, materialDownloads, serviceIconImages };
 }
 
 export function mediaFor(
   map: Record<string, ResolvedMedia>,
   id: string | null,
 ): ResolvedMedia | null {
+  return id ? map[id] ?? null : null;
+}
+
+export function downloadFor(
+  map: Record<string, ResolvedDownloadLink>,
+  id: string | null,
+): ResolvedDownloadLink | null {
   return id ? map[id] ?? null : null;
 }

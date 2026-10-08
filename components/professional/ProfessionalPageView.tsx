@@ -17,12 +17,16 @@ import type {
   SectionImage,
 } from "@/lib/cms/service-pages";
 import type { ResolvedSectionBackground, SectionTone } from "@/lib/cms/section-background";
-import type { BodyContent } from "@/lib/cms/professional-page";
+import type {
+  BodyContent,
+  MaterialSpec,
+  ResolvedDownloadLink,
+} from "@/lib/cms/professional-page";
 import type { Locale } from "@/lib/i18n/config";
 
 /* ── View-model ──────────────────────────────────────────── */
 
-export type { BodyContent };
+export type { BodyContent, MaterialSpec, ResolvedDownloadLink };
 
 export interface ProfessionalButton {
   label: string;
@@ -57,17 +61,32 @@ export interface ProfessionalServiceView {
 
 export interface ProfessionalApplicationItem {
   title: string;
+  /** Short material recommendation below the title (empty → hidden). */
+  recommendation: string;
   image: ResolvedMedia | null;
 }
 
 export interface ProfessionalMaterialItem {
   title: string;
+  /** Technical name below the title (empty → hidden). */
+  subtitle: string;
   description: string;
+  /** Key figures; rows with an empty value are not rendered. */
+  specs: MaterialSpec[];
+  /** Resolved datasheet download (null → no link). */
+  datasheet: ResolvedDownloadLink | null;
   image: ResolvedMedia | null;
+}
+
+export interface ProfessionalMaterialsView extends ProfessionalSectionView<ProfessionalMaterialItem> {
+  /** Link text for the datasheet link, e.g. "Datenblatt (PDF)". */
+  datasheetLabel: string;
 }
 
 export interface ProfessionalServiceItem {
   title: string;
+  /** Short detail line below the title (empty → hidden). */
+  detail: string;
   iconKey: string;
   iconImage: ResolvedMedia | null;
 }
@@ -92,7 +111,7 @@ export interface ProfessionalPageViewProps {
   layout: Awaited<ReturnType<typeof getPublicLayoutData>>;
   hero: ProfessionalHeroView;
   applications: ProfessionalSectionView<ProfessionalApplicationItem>;
-  materials: ProfessionalSectionView<ProfessionalMaterialItem>;
+  materials: ProfessionalMaterialsView;
   service: ProfessionalServiceView;
   contentSections: FrontendServiceSection[];
   cta: ProfessionalCtaView;
@@ -117,6 +136,10 @@ const TONE_CLASSES: Record<
     icon: string;
     link: string;
     divider: string;
+    accent: string;
+    detail: string;
+    specDivider: string;
+    datasheetLink: string;
   }
 > = {
   light: {
@@ -128,6 +151,10 @@ const TONE_CLASSES: Record<
     icon: "text-pumpkin",
     link: "text-anthracite hover:text-pumpkin-accessible",
     divider: "border-anthracite/10",
+    accent: "text-pumpkin-accessible",
+    detail: "text-text-muted",
+    specDivider: "border-anthracite/10",
+    datasheetLink: "text-anthracite hover:text-pumpkin-accessible",
   },
   dark: {
     label: "text-white/60",
@@ -138,6 +165,10 @@ const TONE_CLASSES: Record<
     icon: "text-white/70",
     link: "text-white/80 hover:text-white",
     divider: "border-white/10",
+    accent: "text-white/70",
+    detail: "text-white/60",
+    specDivider: "border-white/15",
+    datasheetLink: "text-white hover:text-white/80",
   },
 };
 
@@ -342,6 +373,11 @@ export default function ProfessionalPageView({
                   <h3 className={`font-heading ${appsT.strong} text-[0.9375rem] md:text-base font-bold mt-3`}>
                     {app.title}
                   </h3>
+                  {app.recommendation && (
+                    <p className={`font-accent ${appsT.accent} text-[11px] tracking-[0.15em] uppercase mt-1`}>
+                      {app.recommendation}
+                    </p>
+                  )}
                 </ScrollReveal>
               ))}
             </div>
@@ -357,33 +393,66 @@ export default function ProfessionalPageView({
               content={materials.content}
             />
             <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6 sm:gap-4 mt-8 md:mt-10">
-              {materials.items.map((m, i) => (
-                <ScrollReveal key={`${m.title}-${i}`} delay={i * 80}>
-                  <div className="relative w-full aspect-[3/2] overflow-hidden">
-                    {m.image ? (
-                      <Image
-                        src={m.image.url}
-                        alt={m.image.alt || m.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1400px) 50vw, 680px"
-                      />
-                    ) : (
-                      <Placeholder gradient={MATERIAL_GRADIENTS[i % MATERIAL_GRADIENTS.length]} />
-                    )}
-                  </div>
-                  <div className="pt-3.5 px-0.5">
-                    <h3 className={`font-heading ${materialsT.strong} text-[0.9375rem] md:text-base font-bold`}>
-                      {m.title}
-                    </h3>
-                    {m.description && (
-                      <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1 max-w-[52ch]`}>
-                        {m.description}
-                      </p>
-                    )}
-                  </div>
-                </ScrollReveal>
-              ))}
+              {materials.items.map((m, i) => {
+                const specs = m.specs.filter((spec) => spec.value);
+                return (
+                  <ScrollReveal key={`${m.title}-${i}`} delay={i * 80}>
+                    <div className="relative w-full aspect-[3/2] overflow-hidden">
+                      {m.image ? (
+                        <Image
+                          src={m.image.url}
+                          alt={m.image.alt || m.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1400px) 50vw, 680px"
+                        />
+                      ) : (
+                        <Placeholder gradient={MATERIAL_GRADIENTS[i % MATERIAL_GRADIENTS.length]} />
+                      )}
+                    </div>
+                    <div className="pt-3.5 px-0.5">
+                      <h3 className={`font-heading ${materialsT.strong} text-[0.9375rem] md:text-base font-bold`}>
+                        {m.title}
+                      </h3>
+                      {m.subtitle && (
+                        <p className={`font-body ${materialsT.detail} text-[0.8125rem] mt-0.5`}>{m.subtitle}</p>
+                      )}
+                      {m.description && (
+                        <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1 max-w-[52ch]`}>
+                          {m.description}
+                        </p>
+                      )}
+                      {specs.length > 0 && (
+                        <dl
+                          className={`grid grid-cols-2 gap-x-6 gap-y-2 mt-4 pt-4 border-t ${materialsT.specDivider}`}
+                        >
+                          {specs.map((spec, j) => (
+                            <div key={`${spec.label}-${j}`}>
+                              <dt
+                                className={`font-accent ${materialsT.muted} text-[10px] tracking-[0.15em] uppercase`}
+                              >
+                                {spec.label}
+                              </dt>
+                              <dd className={`font-body ${materialsT.strong} text-[0.9375rem]`}>{spec.value}</dd>
+                            </div>
+                          ))}
+                        </dl>
+                      )}
+                      {m.datasheet && materials.datasheetLabel && (
+                        <a
+                          href={m.datasheet.href}
+                          {...(m.datasheet.newTab ? { target: "_blank", rel: "noopener" } : {})}
+                          aria-label={`${materials.datasheetLabel}: ${m.title}`}
+                          className={`inline-flex items-center gap-2 mt-4 font-heading text-[0.8125rem] font-semibold tracking-wide underline underline-offset-4 decoration-pumpkin transition-colors ${materialsT.datasheetLink}`}
+                        >
+                          {materials.datasheetLabel}
+                          <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
+                        </a>
+                      )}
+                    </div>
+                  </ScrollReveal>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -407,8 +476,8 @@ export default function ProfessionalPageView({
                 {service.items.map((s, i) => (
                   <li key={`${s.title}-${i}`}>
                     <ScrollReveal delay={i * 80}>
-                      <div className="flex items-center gap-4">
-                        <span className={`flex-shrink-0 w-10 h-10 ${serviceT.icon}`}>
+                      <div className={`flex ${s.detail ? "items-start" : "items-center"} gap-4`}>
+                        <span className={`flex-shrink-0 w-10 h-10 ${s.detail ? "mt-0.5" : ""} ${serviceT.icon}`}>
                           {s.iconImage ? (
                             <Image
                               src={s.iconImage.url}
@@ -426,8 +495,17 @@ export default function ProfessionalPageView({
                             />
                           )}
                         </span>
-                        <span className={`font-body ${serviceT.strong} text-[0.9375rem] font-medium leading-[1.45]`}>
-                          {s.title}
+                        <span className="min-w-0">
+                          <span
+                            className={`block font-body ${serviceT.strong} text-[0.9375rem] font-medium leading-[1.45]`}
+                          >
+                            {s.title}
+                          </span>
+                          {s.detail && (
+                            <span className={`block font-body ${serviceT.detail} text-[0.8125rem] mt-0.5`}>
+                              {s.detail}
+                            </span>
+                          )}
                         </span>
                       </div>
                     </ScrollReveal>

@@ -8,6 +8,7 @@ import { resolveSectionBackground } from "@/lib/cms/section-background";
 import {
   PROFESSIONAL_STYLES as STYLES,
   contentSectionsOf,
+  downloadFor,
   enBodyContent,
   enButton,
   enText,
@@ -73,6 +74,12 @@ export default async function ProfessionalPageEn() {
       copyDe.applications.items[i]?.title,
       copy.applications.items[i]?.title,
     ),
+    recommendation: enText(
+      appsT[`item.${i + 1}.recommendation`],
+      it.recommendation,
+      copyDe.applications.items[i]?.recommendation,
+      copy.applications.items[i]?.recommendation,
+    ),
   }));
   const materialItems = deItems.materials.map((it, i) => ({
     ...it,
@@ -82,12 +89,23 @@ export default async function ProfessionalPageEn() {
       copyDe.materials.items[i]?.title,
       copy.materials.items[i]?.title,
     ),
+    subtitle: enText(
+      materialsT[`item.${i + 1}.subtitle`],
+      it.subtitle,
+      copyDe.materials.items[i]?.subtitle,
+      copy.materials.items[i]?.subtitle,
+    ),
     description: enText(
       materialsT[`item.${i + 1}.description`],
       it.description,
       copyDe.materials.items[i]?.description,
       copy.materials.items[i]?.description,
     ),
+    /* No copy defaults for specs: translation || DE value */
+    specs: it.specs.map((spec, j) => ({
+      label: materialsT[`item.${i + 1}.spec.${j + 1}.label`] || spec.label,
+      value: materialsT[`item.${i + 1}.spec.${j + 1}.value`] || spec.value,
+    })),
   }));
   const serviceItems = deItems.service.map((it, i) => ({
     ...it,
@@ -97,11 +115,18 @@ export default async function ProfessionalPageEn() {
       copyDe.service.items[i]?.title,
       copy.service.items[i]?.title,
     ),
+    detail: enText(
+      serviceT[`item.${i + 1}.detail`],
+      it.detail,
+      copyDe.service.items[i]?.detail,
+      copy.service.items[i]?.detail,
+    ),
   }));
 
-  const { icons, appImages, materialImages, serviceIconImages } = await loadProfessionalAssets({
+  const { icons, appImages, materialImages, materialDownloads, serviceIconImages } = await loadProfessionalAssets({
     appImageIds: appItems.map((a) => a.imageId),
     materialImageIds: materialItems.map((m) => m.imageId),
+    materialDownloadIds: materialItems.map((m) => m.downloadId),
     serviceIconImageIds: serviceItems.map((s) => s.iconImageId),
     serviceIconKeys: serviceItems.map((s) => s.iconKey),
   });
@@ -134,15 +159,23 @@ export default async function ProfessionalPageEn() {
         background: resolveSectionBackground(appsData?.settings?.background, "white"),
         title: sectionText(appsT, "title", appsData?.title, copyDe.applications.title, copy.applications.title),
         content: enBodyContent(appsT.content, appsData?.content, copyDe.applications.content, copy.applications.content),
-        items: appItems.map((a) => ({ title: a.title, image: mediaFor(appImages, a.imageId) })),
+        items: appItems.map((a) => ({
+          title: a.title,
+          recommendation: a.recommendation,
+          image: mediaFor(appImages, a.imageId),
+        })),
       }}
       materials={{
         background: resolveSectionBackground(materialsData?.settings?.background, "cream"),
         title: sectionText(materialsT, "title", materialsData?.title, copyDe.materials.title, copy.materials.title),
         content: enBodyContent(materialsT.content, materialsData?.content, copyDe.materials.content, copy.materials.content),
+        datasheetLabel: materialsT.datasheetLabel || copy.materials.datasheetLabel,
         items: materialItems.map((m) => ({
           title: m.title,
+          subtitle: m.subtitle,
           description: m.description,
+          specs: m.specs,
+          datasheet: downloadFor(materialDownloads, m.downloadId),
           image: mediaFor(materialImages, m.imageId),
         })),
       }}
@@ -151,6 +184,7 @@ export default async function ProfessionalPageEn() {
         title: sectionText(serviceT, "title", serviceData?.title, copyDe.service.title, copy.service.title),
         items: serviceItems.map((s) => ({
           title: s.title,
+          detail: s.detail,
           iconKey: s.iconKey,
           iconImage: mediaFor(serviceIconImages, s.iconImageId),
         })),

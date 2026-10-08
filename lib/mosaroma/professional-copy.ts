@@ -1,9 +1,9 @@
 export interface ProfessionalCopy {
   seo: { title: string; description: string };
   hero: { eyebrow: string; title: string; description: string; buttonLabel: string; buttonHref: string };
-  applications: { eyebrow: string; title: string; content: string; items: { title: string }[] };
-  materials: { eyebrow: string; title: string; content: string; items: { title: string; description: string }[] };
-  service: { eyebrow: string; title: string; content: string; items: { title: string; iconKey: string }[] };
+  applications: { eyebrow: string; title: string; content: string; items: { title: string; recommendation: string }[] };
+  materials: { eyebrow: string; title: string; content: string; datasheetLabel: string; items: { title: string; subtitle: string; description: string }[] };
+  service: { eyebrow: string; title: string; content: string; items: { title: string; detail: string; iconKey: string }[] };
   cta: { eyebrow: string; title: string; subtitle: string; content: string; buttonLabel: string; buttonHref: string };
 }
 
@@ -26,9 +26,9 @@ export const professionalCopyDe: ProfessionalCopy = {
     title: "Materialien für Ihre Anwendung",
     content: "Für Hersteller, Verarbeiter und Objektausstatter.",
     items: [
-      { title: "Sonnensegel" },
-      { title: "Markisen & Schirme" },
-      { title: "Outdoor-Projekte" },
+      { title: "Sonnensegel", recommendation: "Empfohlen: SDP" },
+      { title: "Markisen & Schirme", recommendation: "Empfohlen: SDP oder Topgun" },
+      { title: "Outdoor-Projekte", recommendation: "Empfohlen: SDP oder Topgun" },
     ],
   },
   materials: {
@@ -36,14 +36,17 @@ export const professionalCopyDe: ProfessionalCopy = {
     title: "Solution-Dyed – Farbe in der Faser",
     content:
       "Bei Solution-Dyed-Garnen wird die Farbe schon vor dem Spinnen in die Faser eingebracht. So bleibt sie auch bei starker Sonneneinstrahlung und Bewitterung stabil.",
+    datasheetLabel: "Datenblatt (PDF)",
     items: [
       {
         title: "SDP | Solution-Dyed Polyester",
+        subtitle: "Spinndüsengefärbtes Polyester",
         description:
           "Hohe Reißfestigkeit, formstabil und UV-stabil. Geeignet für Sonnensegel und Markisen.",
       },
       {
         title: "Topgun | Solution-Dyed Olefin",
+        subtitle: "Spinndüsengefärbtes Polypropylen",
         description:
           "Sehr leicht, farbecht, wasserabweisend und schnell trocknend. Geeignet für Schirme und Möbel.",
       },
@@ -54,9 +57,9 @@ export const professionalCopyDe: ProfessionalCopy = {
     title: "Persönliche Unterstützung aus Deutschland",
     content: "Wir begleiten Sie von der Materialwahl bis zur Bestellung.",
     items: [
-      { title: "Materialauswahl & Muster", iconKey: "professional-samples" },
-      { title: "Kleine Mengen auf Anfrage", iconKey: "professional-quantity" },
-      { title: "Technische Abstimmung", iconKey: "professional-consulting" },
+      { title: "Materialauswahl & Muster", detail: "Musterkarten und Einzelmuster", iconKey: "professional-samples" },
+      { title: "Kleine Mengen auf Anfrage", detail: "Mengen nach Absprache", iconKey: "professional-quantity" },
+      { title: "Technische Abstimmung", detail: "Rückfragen zu Einsatz und Verarbeitung", iconKey: "professional-consulting" },
     ],
   },
   cta: {
@@ -89,9 +92,9 @@ export const professionalCopyEn: ProfessionalCopy = {
     title: "Materials for Your Application",
     content: "For manufacturers, fabricators and contract furnishers.",
     items: [
-      { title: "Shade sails" },
-      { title: "Awnings & parasols" },
-      { title: "Outdoor projects" },
+      { title: "Shade sails", recommendation: "Recommended: SDP" },
+      { title: "Awnings & parasols", recommendation: "Recommended: SDP or Topgun" },
+      { title: "Outdoor projects", recommendation: "Recommended: SDP or Topgun" },
     ],
   },
   materials: {
@@ -99,14 +102,17 @@ export const professionalCopyEn: ProfessionalCopy = {
     title: "Solution-Dyed – Colour in the Fibre",
     content:
       "With solution-dyed yarns, the colour is added before the fibre is spun. It stays stable under strong sunlight and weathering.",
+    datasheetLabel: "Data sheet (PDF)",
     items: [
       {
         title: "SDP | Solution-Dyed Polyester",
+        subtitle: "Spun-dyed polyester",
         description:
           "High tear strength, dimensionally stable and UV-resistant. Well suited to shade sails and awnings.",
       },
       {
         title: "Topgun | Solution-Dyed Olefin",
+        subtitle: "Spun-dyed polypropylene",
         description:
           "Very light, colourfast, water-repellent and quick-drying. Well suited to parasols and furniture.",
       },
@@ -117,9 +123,9 @@ export const professionalCopyEn: ProfessionalCopy = {
     title: "Personal Support from Germany",
     content: "We help you from choosing a material to placing your order.",
     items: [
-      { title: "Material selection & samples", iconKey: "professional-samples" },
-      { title: "Small quantities on request", iconKey: "professional-quantity" },
-      { title: "Technical consultation", iconKey: "professional-consulting" },
+      { title: "Material selection & samples", detail: "Sample cards and individual swatches", iconKey: "professional-samples" },
+      { title: "Small quantities on request", detail: "Quantities by arrangement", iconKey: "professional-quantity" },
+      { title: "Technical consultation", detail: "Questions on use and processing", iconKey: "professional-consulting" },
     ],
   },
   cta: {

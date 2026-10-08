@@ -10,6 +10,7 @@ import {
   bodyContent,
   contentSectionsOf,
   deButton,
+  downloadFor,
   findSection,
   loadProfessionalAssets,
   mediaFor,
@@ -56,9 +57,10 @@ export default async function ProfessionalPage() {
     copy,
   );
 
-  const { icons, appImages, materialImages, serviceIconImages } = await loadProfessionalAssets({
+  const { icons, appImages, materialImages, materialDownloads, serviceIconImages } = await loadProfessionalAssets({
     appImageIds: appItems.map((a) => a.imageId),
     materialImageIds: materialItems.map((m) => m.imageId),
+    materialDownloadIds: materialItems.map((m) => m.downloadId),
     serviceIconImageIds: serviceItems.map((s) => s.iconImageId),
     serviceIconKeys: serviceItems.map((s) => s.iconKey),
   });
@@ -82,15 +84,23 @@ export default async function ProfessionalPage() {
         background: resolveSectionBackground(appsData?.settings?.background, "white"),
         title: appsData?.title || copy.applications.title,
         content: bodyContent(appsData?.content, copy.applications.content),
-        items: appItems.map((a) => ({ title: a.title, image: mediaFor(appImages, a.imageId) })),
+        items: appItems.map((a) => ({
+          title: a.title,
+          recommendation: a.recommendation,
+          image: mediaFor(appImages, a.imageId),
+        })),
       }}
       materials={{
         background: resolveSectionBackground(materialsData?.settings?.background, "cream"),
         title: materialsData?.title || copy.materials.title,
         content: bodyContent(materialsData?.content, copy.materials.content),
+        datasheetLabel: copy.materials.datasheetLabel,
         items: materialItems.map((m) => ({
           title: m.title,
+          subtitle: m.subtitle,
           description: m.description,
+          specs: m.specs,
+          datasheet: downloadFor(materialDownloads, m.downloadId),
           image: mediaFor(materialImages, m.imageId),
         })),
       }}
@@ -99,6 +109,7 @@ export default async function ProfessionalPage() {
         title: serviceData?.title || copy.service.title,
         items: serviceItems.map((s) => ({
           title: s.title,
+          detail: s.detail,
           iconKey: s.iconKey,
           iconImage: mediaFor(serviceIconImages, s.iconImageId),
         })),
