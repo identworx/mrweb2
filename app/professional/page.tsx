@@ -105,7 +105,7 @@ export default async function ProfessionalPage() {
         })),
       }}
       service={{
-        background: resolveSectionBackground(serviceData?.settings?.background, "cream"),
+        background: resolveSectionBackground(serviceData?.settings?.background, "anthracite"),
         title: serviceData?.title || copy.service.title,
         items: serviceItems.map((s) => ({
           title: s.title,
@@ -116,7 +116,7 @@ export default async function ProfessionalPage() {
       }}
       contentSections={contentSectionsOf(result)}
       cta={{
-        background: resolveSectionBackground(ctaData?.settings?.background, "anthracite"),
+        background: resolveSectionBackground(ctaData?.settings?.background, "white"),
         title: ctaData?.title || copy.cta.title,
         subtitle: str(ctaData?.settings?.subtitle) || copy.cta.subtitle,
         content: bodyContent(ctaData?.content, copy.cta.content),

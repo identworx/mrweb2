@@ -117,7 +117,8 @@ const OLD_SECTION_TEXTS: Record<string, { eyebrow: string[]; title: string[]; co
 
 /** Old default backgrounds that may be replaced by the current target background. */
 const OLD_BACKGROUNDS: Record<string, string[]> = {
-  "professional-service": ["anthracite"],
+  "professional-service": ["cream"],
+  "professional-cta": ["anthracite"],
 };
 
 const OLD_CTA_BUTTON = { label: ["Kontakt aufnehmen"], href: ["/kontakt"] };
@@ -226,7 +227,7 @@ const TARGETS: TargetSection[] = [
     settings: {
       style: "professional-service",
       helper: true,
-      background: "cream",
+      background: "anthracite",
       items: de.service.items.map((i) => ({
         title: i.title,
         detail: i.detail,
@@ -246,7 +247,7 @@ const TARGETS: TargetSection[] = [
     settings: {
       style: "professional-cta",
       helper: true,
-      background: "anthracite",
+      background: "white",
       subtitle: de.cta.subtitle,
     },
   },
