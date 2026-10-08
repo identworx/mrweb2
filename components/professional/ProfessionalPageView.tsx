@@ -395,7 +395,7 @@ export default function ProfessionalPageView({
               {service.title && (
                 <p
                   id={serviceLabelId}
-                  className={`font-accent ${serviceT.label} text-xs tracking-[0.2em] uppercase mb-6`}
+                  className={`font-accent ${serviceT.label} text-sm tracking-[0.12em] mb-6`}
                 >
                   {service.title}
                 </p>
