@@ -1,7 +1,8 @@
 /**
  * Backfill IconSlot records from the icon registry.
  *
- * Idempotent: skips creation if a slot with that key already exists.
+ * Idempotent: creates missing slots and refreshes label/description/defaultIcon
+ * of existing ones from the registry (admin overrides stay untouched).
  *
  * Usage:
  *   npx tsx scripts/backfill-icon-slots.ts          # dry-run
@@ -12,7 +13,7 @@ import "dotenv/config";
 import { PrismaClient } from "../lib/generated/prisma/client.js";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const raw = process.env.DATABASE_URL ?? "file:./dev.db";
+const raw = process.env.DATABASE_URL ?? "file:./prisma/dev.db";
 const adapter = new PrismaBetterSqlite3({ url: raw });
 const prisma = new PrismaClient({ adapter });
 
@@ -40,17 +41,35 @@ async function main() {
   console.log(`Registry has ${registry.length} icon slot definitions.`);
 
   const existing = await prisma.iconSlot.findMany({
-    select: { key: true },
+    select: { key: true, label: true, description: true, defaultIcon: true },
   });
-  const existingKeys = new Set(existing.map((e) => e.key));
-  console.log(`Database has ${existingKeys.size} existing icon slots.`);
+  const existingByKey = new Map(existing.map((e) => [e.key, e]));
+  console.log(`Database has ${existingByKey.size} existing icon slots.`);
 
   let created = 0;
+  let updated = 0;
   let skipped = 0;
 
   for (const def of registry) {
-    if (existingKeys.has(def.key)) {
-      skipped++;
+    const row = existingByKey.get(def.key);
+    if (row) {
+      // Keep admin overrides (libraryIcon / media) untouched; only refresh the registry default.
+      if (
+        row.defaultIcon === def.defaultIcon &&
+        row.label === def.label &&
+        row.description === def.description
+      ) {
+        skipped++;
+        continue;
+      }
+      console.log(`  ~ ${def.key} (${def.groupName}) default icon/label refreshed`);
+      if (!dryRun) {
+        await prisma.iconSlot.update({
+          where: { key: def.key },
+          data: { label: def.label, description: def.description, defaultIcon: def.defaultIcon },
+        });
+      }
+      updated++;
       continue;
     }
 
@@ -73,7 +92,7 @@ async function main() {
     created++;
   }
 
-  console.log(`\nDone: ${created} created, ${skipped} skipped.`);
+  console.log(`\nDone: ${created} created, ${updated} updated, ${skipped} skipped.`);
   if (dryRun) {
     console.log("Run with --apply to write to the database.");
   }

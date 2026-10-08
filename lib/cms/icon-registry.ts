@@ -291,9 +291,9 @@ const professional: IconSlotDefinition[] = [
   {
     key: "professional-quantity",
     label: "Kleine Mengen",
-    description: "Stoffrollen-Icon für kleine Mengen auf Anfrage (Professional-Seite)",
+    description: "Paket-Icon für kleine Mengen auf Anfrage (Professional-Seite)",
     groupName: "professional",
-    defaultIcon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="7" cy="10" rx="3" ry="5"/><ellipse cx="7" cy="10" rx="1" ry="1.7"/><path d="M7 5h9a3 5 0 013 5"/><path d="M7 15h5"/><path d="M19 10v9.5L16 18l-3 1.5V15"/></svg>`,
+    defaultIcon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5"/><path d="M12 12v9"/><path d="M7.5 5.25 16.5 9.75"/></svg>`,
     sizeHint: "lg",
   },
   {
