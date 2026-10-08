@@ -421,7 +421,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
   {
     style: "professional-materials",
     label: "Professional Materialien",
-    description: "Helper-Section: Materialkarten mit Titel, Beschreibung und Bild (z.B. SDP, Topgun).",
+    description: "Helper-Section: Materialkarten mit Titel, Beschreibung und Bild (z.B. WOVEN Canvas, TOPGUN Supreme).",
     sectionType: "CUSTOM",
     defaultSettings: {
       style: "professional-materials",
@@ -431,7 +431,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
         title: item.title,
         subtitle: item.subtitle,
         description: item.description,
-        specs: [],
+        specs: item.specs.map((spec) => ({ ...spec })),
         downloadId: null,
         imageId: null,
       })),

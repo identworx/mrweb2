@@ -20,13 +20,20 @@
  *     backfill defaults; manual edits are kept.
  *   - imageId / iconImageId / videoUrl are never overwritten.
  *   - Stage 2 item keys (recommendation / subtitle / detail / specs / downloadId)
- *     are only added when missing on an existing item (texts from the copy by
- *     index, specs = [], downloadId = null); existing values and the number of
- *     items are never changed.
+ *     are only added when missing on an existing item (texts and specs from the
+ *     copy by index, downloadId = null); the number of items is never changed.
+ *   - Item texts (applications: recommendation; materials: title / subtitle /
+ *     description) are replaced by the current copy only when they still exactly
+ *     equal a previous copy default (OLD_ITEM_TEXTS); manual edits are kept.
+ *   - Material specs: a missing or empty `specs` array is filled with the copy
+ *     specs (by index); non-empty arrays are never touched.
  *   - Existing translatedText is never overwritten (unless it still equals a known
  *     old default); a changed sourceText marks the entry STALE — except when the
- *     translatedText still equals the previous EN copy (PREVIOUS_EN_COPY): then it
- *     is replaced by the new EN copy and the status is kept.
+ *     translatedText still equals a previous EN copy value (PREVIOUS_EN_COPY): then
+ *     it is replaced by the new EN copy and the status is kept.
+ *   - Spec translations (item.N.spec.M.label / .value) are seeded PUBLISHED with
+ *     the EN copy when the DE value equals the DE copy, otherwise DRAFT with the
+ *     DE text (editors translate them in the translation UI).
  *   - settings.background is only changed when missing or still equal to an old
  *     default (OLD_BACKGROUNDS).
  *
@@ -140,12 +147,70 @@ const OLD_TRANSLATIONS: Record<string, string[]> = {
 
 /**
  * Previous EN copy values, keyed by `entityType/entityId/fieldName`. When the DE
- * sourceText changes and the stored translation still equals this value, it was
- * never edited manually and is replaced by the current EN copy (status kept).
+ * sourceText changes and the stored translation still equals one of these values,
+ * it was never edited manually and is replaced by the current EN copy (status kept).
  */
-const PREVIOUS_EN_COPY: Record<string, string> = {
-  "pageSection/professional-cta/title": "Your Contact in Oyten",
+const PREVIOUS_EN_COPY: Record<string, string[]> = {
+  "pageSection/professional-cta/title": ["Your Contact in Oyten"],
+  // Applications: recommendations before the official material names
+  "pageSection/professional-applications/item.1.recommendation": ["Recommended: SDP"],
+  "pageSection/professional-applications/item.2.recommendation": ["Recommended: SDP or Topgun"],
+  "pageSection/professional-applications/item.3.recommendation": ["Recommended: SDP or Topgun"],
+  // Materials: texts before the official customer material texts
+  "pageSection/professional-materials/item.1.title": ["SDP | Solution-Dyed Polyester"],
+  "pageSection/professional-materials/item.1.subtitle": ["Spun-dyed polyester"],
+  "pageSection/professional-materials/item.1.description": [
+    "High tear strength, dimensionally stable and UV-resistant. Well suited to shade sails and awnings.",
+  ],
+  "pageSection/professional-materials/item.2.title": ["Topgun | Solution-Dyed Olefin"],
+  "pageSection/professional-materials/item.2.subtitle": ["Spun-dyed polypropylene"],
+  "pageSection/professional-materials/item.2.description": [
+    "Very light, colourfast, water-repellent and quick-drying. Well suited to parasols and furniture.",
+  ],
 };
+
+/**
+ * Previous DE copy defaults of item texts, per section style and item index.
+ * A stored item text that still exactly equals one of these is replaced by the
+ * current DE copy; anything else counts as a manual edit and is kept.
+ */
+const OLD_ITEM_TEXTS: Record<string, Record<string, string[]>[]> = {
+  "professional-applications": [
+    { recommendation: ["Empfohlen: SDP"] },
+    { recommendation: ["Empfohlen: SDP oder Topgun"] },
+    { recommendation: ["Empfohlen: SDP oder Topgun"] },
+  ],
+  "professional-materials": [
+    {
+      title: ["SDP | Solution-Dyed Polyester"],
+      subtitle: [],
+      description: ["Hohe Reißfestigkeit, formstabil und UV-stabil. Geeignet für Sonnensegel und Markisen."],
+    },
+    {
+      title: ["Topgun | Solution-Dyed Olefin"],
+      subtitle: ["Spinndüsengefärbtes Polypropylen"],
+      description: [
+        "Sehr leicht, farbecht, wasserabweisend und schnell trocknend. Geeignet für Schirme und Möbel.",
+      ],
+    },
+  ],
+};
+
+/** Current DE copy item texts for the fields covered by OLD_ITEM_TEXTS. */
+function currentItemText(style: string, index: number, field: string): string | undefined {
+  const items: readonly Record<string, unknown>[] =
+    style === "professional-applications"
+      ? de.applications.items
+      : style === "professional-materials"
+        ? de.materials.items
+        : [];
+  const value = items[index]?.[field];
+  return typeof value === "string" ? value : undefined;
+}
+
+function copySpecsDe(index: number): { label: string; value: string }[] {
+  return (de.materials.items[index]?.specs ?? []).map((spec) => ({ ...spec }));
+}
 
 /* ------------------------------------------------------------------ */
 /*  Target section definitions                                        */
@@ -210,7 +275,7 @@ const TARGETS: TargetSection[] = [
         title: i.title,
         subtitle: i.subtitle,
         description: i.description,
-        specs: [],
+        specs: i.specs.map((spec) => ({ ...spec })),
         downloadId: null,
         imageId: null,
       })),
@@ -278,8 +343,9 @@ interface MaterialSpecSource {
 
 /**
  * @param materialSpecs DE spec values currently stored in the materials section.
- *   They have no EN copy, so they are seeded as DRAFT with the DE text (editors
- *   translate them in the translation UI). Only specs with a value are seeded.
+ *   A label/value that equals the DE copy is seeded PUBLISHED with the EN copy;
+ *   anything else is seeded as DRAFT with the DE text (editors translate it in the
+ *   translation UI). Only specs with a value are seeded.
  */
 function buildTranslations(materialSpecs: MaterialSpecSource[] = []): TranslationEntry[] {
   const out: TranslationEntry[] = [];
@@ -336,8 +402,17 @@ function buildTranslations(materialSpecs: MaterialSpecSource[] = []): Translatio
   });
   for (const spec of materialSpecs) {
     const base = `item.${spec.item}.spec.${spec.spec}`;
-    add("pageSection", "professional-materials", `${base}.label`, spec.label, spec.label, "DRAFT");
-    add("pageSection", "professional-materials", `${base}.value`, spec.value, spec.value, "DRAFT");
+    const copyDeSpec = de.materials.items[spec.item - 1]?.specs[spec.spec - 1];
+    const copyEnSpec = en.materials.items[spec.item - 1]?.specs[spec.spec - 1];
+    for (const field of ["label", "value"] as const) {
+      const src = spec[field];
+      const enCopy = copyEnSpec?.[field];
+      if (copyDeSpec && src === copyDeSpec[field] && enCopy) {
+        add("pageSection", "professional-materials", `${base}.${field}`, src, enCopy);
+      } else {
+        add("pageSection", "professional-materials", `${base}.${field}`, src, src, "DRAFT");
+      }
+    }
   }
 
   // Service
@@ -419,11 +494,10 @@ async function upsertTranslations(materialSpecs: MaterialSpecSource[] = []) {
       continue;
     }
 
-    const previousEn = PREVIOUS_EN_COPY[id];
+    const previousEn = PREVIOUS_EN_COPY[id] ?? [];
     if (
       existing.sourceText !== entry.sourceText &&
-      previousEn !== undefined &&
-      existing.translatedText.trim() === previousEn &&
+      previousEn.includes(existing.translatedText.trim()) &&
       existing.translatedText !== entry.translatedText
     ) {
       action(
@@ -477,7 +551,7 @@ const STAGE2_ITEM_DEFAULTS: Record<string, (index: number) => Record<string, unk
   }),
   "professional-materials": (i) => ({
     subtitle: de.materials.items[i]?.subtitle ?? "",
-    specs: [],
+    specs: copySpecsDe(i),
     downloadId: null,
   }),
   "professional-service": (i) => ({
@@ -577,6 +651,9 @@ async function main() {
     if (!ex) {
       const order = nextOrder++;
       action(`CREATE section (type ${target.type}, order ${order}, title ${short(target.title)})`);
+      if (target.style === "professional-materials") {
+        materialSpecs = collectMaterialSpecs(target.settings.items);
+      }
       if (!dryRun) {
         await prisma.pageSection.create({
           data: {
@@ -714,10 +791,72 @@ async function main() {
         if (missing.length === 0) return it;
         itemsChanged = true;
         for (const key of missing) {
-          action(`settings.items[${i}].${key} = ${key === "specs" ? "[]" : short(defaults[key])} (missing)`);
+          const shown = key === "specs" ? `${(defaults[key] as unknown[]).length} copy spec(s)` : short(defaults[key]);
+          action(`settings.items[${i}].${key} = ${shown} (missing)`);
         }
         const added = Object.fromEntries(missing.map((key) => [key, defaults[key]]));
         return { ...item, ...added };
+      });
+      if (itemsChanged) {
+        settings.items = nextItems;
+        settingsChanged = true;
+      }
+    }
+
+    // Item texts: replace only values that still equal a previous copy default
+    const oldItemTexts = OLD_ITEM_TEXTS[target.style];
+    if (oldItemTexts && Array.isArray(settings.items) && settings.items !== target.settings.items) {
+      const items = settings.items as unknown[];
+      let itemsChanged = false;
+      const nextItems = items.map((it, i) => {
+        if (typeof it !== "object" || it === null || Array.isArray(it)) return it;
+        const item = { ...(it as Record<string, unknown>) };
+        let changed = false;
+        for (const [field, oldValues] of Object.entries(oldItemTexts[i] ?? {})) {
+          const next = currentItemText(target.style, i, field);
+          const current = item[field];
+          if (next === undefined || typeof current !== "string" || current === next) continue;
+          if (oldValues.includes(current.trim())) {
+            action(`settings.items[${i}].${field}: ${short(current)} → ${short(next)} (old default)`);
+            item[field] = next;
+            changed = true;
+          } else {
+            log(`  keep items[${i}].${field} (manually edited): ${short(current)}`);
+          }
+        }
+        if (!changed) return it;
+        itemsChanged = true;
+        return item;
+      });
+      if (itemsChanged) {
+        settings.items = nextItems;
+        settingsChanged = true;
+      }
+    }
+
+    // Material specs: fill missing / empty arrays from the copy; non-empty arrays stay
+    if (
+      target.style === "professional-materials" &&
+      Array.isArray(settings.items) &&
+      settings.items !== target.settings.items
+    ) {
+      const items = settings.items as unknown[];
+      let itemsChanged = false;
+      const nextItems = items.map((it, i) => {
+        if (typeof it !== "object" || it === null || Array.isArray(it)) return it;
+        const item = it as Record<string, unknown>;
+        const specs = item.specs;
+        // An empty array on an item whose title was edited counts as deliberately cleared.
+        const untouched = item.title === de.materials.items[i]?.title;
+        const isEmpty =
+          specs === undefined || (Array.isArray(specs) && specs.length === 0 && untouched);
+        const next = copySpecsDe(i);
+        if (!isEmpty || next.length === 0) return it;
+        itemsChanged = true;
+        action(
+          `settings.items[${i}].specs = ${next.map((s) => `${s.label}: ${s.value}`).join("; ")} (${specs === undefined ? "missing" : "empty"})`,
+        );
+        return { ...item, specs: next };
       });
       if (itemsChanged) {
         settings.items = nextItems;

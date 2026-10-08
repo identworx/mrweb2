@@ -58,6 +58,11 @@ export function cmsSpecs(value: unknown): MaterialSpec[] {
     .map((row) => ({ label: str(row.label), value: str(row.value) }));
 }
 
+/** Copy specs of material item `index` (copied, so callers never mutate the copy). */
+export function copySpecs(copy: ProfessionalCopy, index: number): MaterialSpec[] {
+  return (copy.materials.items[index]?.specs ?? []).map((spec) => ({ ...spec }));
+}
+
 /** CMS-HTML hat Vorrang, sonst Plaintext aus der Copy. Leer → nichts. */
 export type BodyContent = { html: string } | { text: string } | null;
 
@@ -167,13 +172,14 @@ export function professionalDeItems(
           title: str(it.title) || copy.materials.items[i]?.title || "",
           subtitle: strOr(it.subtitle, copy.materials.items[i]?.subtitle),
           description: str(it.description) || copy.materials.items[i]?.description || "",
-          specs: cmsSpecs(it.specs),
+          /* Missing key → copy specs; present array (also empty) applies verbatim. */
+          specs: "specs" in it ? cmsSpecs(it.specs) : copySpecs(copy, i),
           downloadId: str(it.downloadId) || null,
           imageId: str(it.imageId) || null,
         }))
-      : copy.materials.items.map((it) => ({
+      : copy.materials.items.map((it, i) => ({
           ...it,
-          specs: [] as MaterialSpec[],
+          specs: copySpecs(copy, i),
           downloadId: null as string | null,
           imageId: null as string | null,
         }));

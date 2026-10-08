@@ -2,7 +2,7 @@ export interface ProfessionalCopy {
   seo: { title: string; description: string };
   hero: { eyebrow: string; title: string; description: string; buttonLabel: string; buttonHref: string };
   applications: { eyebrow: string; title: string; content: string; items: { title: string; recommendation: string }[] };
-  materials: { eyebrow: string; title: string; content: string; datasheetLabel: string; items: { title: string; subtitle: string; description: string }[] };
+  materials: { eyebrow: string; title: string; content: string; datasheetLabel: string; items: { title: string; subtitle: string; description: string; specs: { label: string; value: string }[] }[] };
   service: { eyebrow: string; title: string; content: string; items: { title: string; detail: string; iconKey: string }[] };
   cta: { eyebrow: string; title: string; subtitle: string; content: string; buttonLabel: string; buttonHref: string };
 }
@@ -26,9 +26,9 @@ export const professionalCopyDe: ProfessionalCopy = {
     title: "Materialien für Ihre Anwendung",
     content: "Für Hersteller, Verarbeiter und Objektausstatter.",
     items: [
-      { title: "Sonnensegel", recommendation: "Empfohlen: SDP" },
-      { title: "Markisen & Schirme", recommendation: "Empfohlen: SDP oder Topgun" },
-      { title: "Outdoor-Projekte", recommendation: "Empfohlen: SDP oder Topgun" },
+      { title: "Sonnensegel", recommendation: "Empfohlen: WOVEN Canvas" },
+      { title: "Markisen & Schirme", recommendation: "Empfohlen: WOVEN Canvas oder TOPGUN Supreme" },
+      { title: "Outdoor-Projekte", recommendation: "Empfohlen: WOVEN Canvas oder TOPGUN Supreme" },
     ],
   },
   materials: {
@@ -39,16 +39,18 @@ export const professionalCopyDe: ProfessionalCopy = {
     datasheetLabel: "Datenblatt (PDF)",
     items: [
       {
-        title: "SDP | Solution-Dyed Polyester",
+        title: "WOVEN Canvas | Solution-Dyed Polyester",
         subtitle: "Spinndüsengefärbtes Polyester",
         description:
-          "Hohe Reißfestigkeit, formstabil und UV-stabil. Geeignet für Sonnensegel und Markisen.",
+          "Hohe Reißfestigkeit, ausgezeichnete Formstabilität und UV-Beständigkeit. Ideal für Markisen, Sonnenschutzsysteme und Sonnenschirme.",
+        specs: [{ label: "Flächengewicht", value: "300 g/m², inkl. rückseitiger Beschichtung" }],
       },
       {
-        title: "Topgun | Solution-Dyed Olefin",
-        subtitle: "Spinndüsengefärbtes Polypropylen",
+        title: "TOPGUN Supreme | Solution-Dyed Polypropylene",
+        subtitle: "Powered by Mackintosh® Technology",
         description:
-          "Sehr leicht, farbecht, wasserabweisend und schnell trocknend. Geeignet für Schirme und Möbel.",
+          "Hohe Wasserdruckbeständigkeit, ausgezeichnete Farbechtheit sowie wasserabweisende und schnelltrocknende Eigenschaften. Ideal für Sonnenschutztextilien und Outdoor-Anwendungen.",
+        specs: [{ label: "Flächengewicht", value: "250 g/m², unbeschichtet" }],
       },
     ],
   },
@@ -92,9 +94,9 @@ export const professionalCopyEn: ProfessionalCopy = {
     title: "Materials for Your Application",
     content: "For manufacturers, fabricators and contract furnishers.",
     items: [
-      { title: "Shade sails", recommendation: "Recommended: SDP" },
-      { title: "Awnings & parasols", recommendation: "Recommended: SDP or Topgun" },
-      { title: "Outdoor projects", recommendation: "Recommended: SDP or Topgun" },
+      { title: "Shade sails", recommendation: "Recommended: WOVEN Canvas" },
+      { title: "Awnings & parasols", recommendation: "Recommended: WOVEN Canvas or TOPGUN Supreme" },
+      { title: "Outdoor projects", recommendation: "Recommended: WOVEN Canvas or TOPGUN Supreme" },
     ],
   },
   materials: {
@@ -105,16 +107,18 @@ export const professionalCopyEn: ProfessionalCopy = {
     datasheetLabel: "Data sheet (PDF)",
     items: [
       {
-        title: "SDP | Solution-Dyed Polyester",
+        title: "WOVEN Canvas | Solution-Dyed Polyester",
         subtitle: "Spun-dyed polyester",
         description:
-          "High tear strength, dimensionally stable and UV-resistant. Well suited to shade sails and awnings.",
+          "High tear strength, excellent dimensional stability and UV resistance. Ideal for awnings, outdoor shading and umbrella applications.",
+        specs: [{ label: "Weight", value: "300 g/m², including back coating" }],
       },
       {
-        title: "Topgun | Solution-Dyed Olefin",
-        subtitle: "Spun-dyed polypropylene",
+        title: "TOPGUN Supreme | Solution-Dyed Polypropylene",
+        subtitle: "Powered by Mackintosh® Technology",
         description:
-          "Very light, colourfast, water-repellent and quick-drying. Well suited to parasols and furniture.",
+          "High hydrostatic pressure resistance, excellent colourfastness, water-repellent and quick-drying properties. Ideal for shade fabrics and outdoor applications.",
+        specs: [{ label: "Weight", value: "250 g/m², non-coated" }],
       },
     ],
   },

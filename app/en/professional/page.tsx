@@ -101,10 +101,20 @@ export default async function ProfessionalPageEn() {
       copyDe.materials.items[i]?.description,
       copy.materials.items[i]?.description,
     ),
-    /* No copy defaults for specs: translation || DE value */
+    /* Specs: translation → (DE spec unchanged from DE copy ? EN copy : DE value) */
     specs: it.specs.map((spec, j) => ({
-      label: materialsT[`item.${i + 1}.spec.${j + 1}.label`] || spec.label,
-      value: materialsT[`item.${i + 1}.spec.${j + 1}.value`] || spec.value,
+      label: enText(
+        materialsT[`item.${i + 1}.spec.${j + 1}.label`],
+        spec.label,
+        copyDe.materials.items[i]?.specs[j]?.label,
+        copy.materials.items[i]?.specs[j]?.label,
+      ),
+      value: enText(
+        materialsT[`item.${i + 1}.spec.${j + 1}.value`],
+        spec.value,
+        copyDe.materials.items[i]?.specs[j]?.value,
+        copy.materials.items[i]?.specs[j]?.value,
+      ),
     })),
   }));
   const serviceItems = deItems.service.map((it, i) => ({
