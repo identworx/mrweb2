@@ -1,3 +1,5 @@
+import { professionalCopyDe, professionalCopyEn } from "./professional-copy";
+
 export interface PageHeroData {
   eyebrow?: string;
   title: string;
@@ -96,10 +98,9 @@ export const pageHeroes: Record<string, PageHeroData> = {
     alt: "Mosaroma Stoff und technische Daten Hero Platzhalter",
   },
   professional: {
-    eyebrow: "Mosaroma Industries GmbH",
-    title: "Mosaroma Professional",
-    description:
-      "Technische Textilien. Lokaler Support. Professionelle Lösungen.",
+    eyebrow: professionalCopyDe.hero.eyebrow,
+    title: professionalCopyDe.hero.title,
+    description: professionalCopyDe.hero.description,
     image: "/images/placeholders/page-heroes/default-hero.svg",
     alt: "Mosaroma Professional Hero",
   },
@@ -181,9 +182,9 @@ export const pageHeroesEn: Record<string, Partial<PageHeroData>> = {
     alt: "Mosaroma Fabric and Technical Data Hero",
   },
   professional: {
-    eyebrow: "Mosaroma Industries GmbH",
-    title: "Mosaroma Professional",
-    description: "Technical Textiles. Local Support. Professional Solutions.",
+    eyebrow: professionalCopyEn.hero.eyebrow,
+    title: professionalCopyEn.hero.title,
+    description: professionalCopyEn.hero.description,
     alt: "Mosaroma Professional Hero",
   },
   nerio: {

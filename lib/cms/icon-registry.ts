@@ -277,6 +277,35 @@ const service: IconSlotDefinition[] = [
   },
 ];
 
+// ── Professional ────────────────────────────────────────────────────────────
+
+const professional: IconSlotDefinition[] = [
+  {
+    key: "professional-samples",
+    label: "Materialauswahl & Muster",
+    description: "Stoffmuster-Icon für den Service-Bereich der Professional-Seite",
+    groupName: "professional",
+    defaultIcon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="12" height="13" rx="1.5"/><path d="M7 8V4.5A1.5 1.5 0 018.5 3h11A1.5 1.5 0 0121 4.5v10a1.5 1.5 0 01-1.5 1.5H15"/><path d="M3 12.5h12M3 17h12"/><circle cx="6" cy="5.5" r="0.5"/></svg>`,
+    sizeHint: "lg",
+  },
+  {
+    key: "professional-quantity",
+    label: "Kleine Mengen",
+    description: "Stoffrollen-Icon für kleine Mengen auf Anfrage (Professional-Seite)",
+    groupName: "professional",
+    defaultIcon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="7" cy="10" rx="3" ry="5"/><ellipse cx="7" cy="10" rx="1" ry="1.7"/><path d="M7 5h9a3 5 0 013 5"/><path d="M7 15h5"/><path d="M19 10v9.5L16 18l-3 1.5V15"/></svg>`,
+    sizeHint: "lg",
+  },
+  {
+    key: "professional-consulting",
+    label: "Technische Abstimmung",
+    description: "Beratungs-Icon (Person mit Sprechblase) für die Professional-Seite",
+    groupName: "professional",
+    defaultIcon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="10" r="3"/><path d="M2.5 20.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/><path d="M14.5 3h5A1.5 1.5 0 0121 4.5v4A1.5 1.5 0 0119.5 10H18l-2.5 2v-2h-1A1.5 1.5 0 0113 8.5v-4A1.5 1.5 0 0114.5 3z"/><path d="M15.5 6.5h3"/></svg>`,
+    sizeHint: "lg",
+  },
+];
+
 // ── Social ──────────────────────────────────────────────────────────────────
 
 const social: IconSlotDefinition[] = [
@@ -519,6 +548,7 @@ export const ICON_REGISTRY: IconSlotDefinition[] = [
   ...benefits,
   ...nerio,
   ...service,
+  ...professional,
   ...social,
   ...contact,
   ...downloads,
@@ -533,6 +563,7 @@ export const ICON_GROUPS = [
   { key: "benefits", label: "Vorteile & Benefits" },
   { key: "nerio", label: "NERIO" },
   { key: "service", label: "Service-Seiten" },
+  { key: "professional", label: "Professional" },
   { key: "social", label: "Social Media" },
   { key: "contact", label: "Kontakt" },
   { key: "downloads", label: "Downloads" },

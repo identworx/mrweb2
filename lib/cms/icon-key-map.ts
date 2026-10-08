@@ -54,6 +54,12 @@ export const SERVICE_SECTION_ICON_KEYS = [
   "category-default",
 ] as const;
 
+export const PROFESSIONAL_ICON_KEYS = [
+  "professional-samples",
+  "professional-quantity",
+  "professional-consulting",
+] as const;
+
 export const CATEGORY_KEY_MAP: Record<string, string> = {
   dekokissen: "category-dekokissen",
   hochlehner: "category-hochlehner",

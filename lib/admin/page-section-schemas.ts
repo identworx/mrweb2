@@ -1,3 +1,5 @@
+import { professionalCopyDe } from "@/lib/mosaroma/professional-copy";
+
 export interface SectionStyleDef {
   style: string;
   label: string;
@@ -391,8 +393,8 @@ export const SECTION_STYLES: SectionStyleDef[] = [
   },
   {
     style: "professional-hero",
-    label: "Professional Hero-Medien",
-    description: "Helper-Section: Video-URL und Poster-Bild für den Hero-Bereich der Professional-Seite.",
+    label: "Professional Hero",
+    description: "Helper-Section: Video-URL, Poster-Bild und Hero-Button der Professional-Seite. Texte kommen aus den Seiten-Einstellungen.",
     sectionType: "CUSTOM",
     defaultSettings: {
       style: "professional-hero",
@@ -401,64 +403,62 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     },
   },
   {
-    style: "professional-about",
-    label: "Professional Über uns",
-    description: "Helper-Section: Einleitung und Vorstellung von Mosaroma Professional.",
-    sectionType: "CUSTOM",
-    defaultSettings: {
-      style: "professional-about",
-      helper: true,
-    },
-  },
-  {
     style: "professional-applications",
-    label: "Professional Anwendungsbereiche",
-    description: "Helper-Section: Karten-Grid mit Anwendungsbereichen (Sonnenschutz, Möbel, Architektur etc.).",
+    label: "Professional Anwendungen",
+    description: "Helper-Section: Bildkarten mit Anwendungen (z.B. Sonnensegel, Markisen & Schirme, Outdoor-Projekte).",
     sectionType: "CUSTOM",
     defaultSettings: {
       style: "professional-applications",
       helper: true,
-      items: [
-        { title: "Sonnenschutz & Beschattung", description: "Hochleistungstextilien für Markisen, Sonnensegel und Beschattungssysteme.", iconKey: "sun", imageId: null },
-      ],
+      background: "white",
+      items: professionalCopyDe.applications.items.map((item) => ({
+        title: item.title,
+        imageId: null,
+      })),
     },
   },
   {
-    style: "professional-oyten",
-    label: "Professional Oyten B2B",
-    description: "Helper-Section: Standort Oyten mit Text, Vorteile-Liste und Bild.",
+    style: "professional-materials",
+    label: "Professional Materialien",
+    description: "Helper-Section: Materialkarten mit Titel, Beschreibung und Bild (z.B. SDP, Topgun).",
     sectionType: "CUSTOM",
     defaultSettings: {
-      style: "professional-oyten",
+      style: "professional-materials",
       helper: true,
-      benefits: [
-        { text: "Persönliche Beratungstermine vor Ort" },
-      ],
+      background: "cream",
+      items: professionalCopyDe.materials.items.map((item) => ({
+        title: item.title,
+        description: item.description,
+        imageId: null,
+      })),
     },
   },
   {
-    style: "professional-supply-chain",
-    label: "Professional Lieferkette",
-    description: "Helper-Section: Horizontale Kette Taiwan → Deutschland → International.",
+    style: "professional-service",
+    label: "Professional Service",
+    description: "Helper-Section: Service-Leistungen mit Icon und Titel.",
     sectionType: "CUSTOM",
     defaultSettings: {
-      style: "professional-supply-chain",
+      style: "professional-service",
       helper: true,
-      nodes: [
-        { flag: "Taiwan", title: "axroma® Technical Textiles", description: "Materialentwicklung und Fertigung." },
-        { flag: "Deutschland", title: "Mosaroma Industries GmbH", description: "B2B-Support und Projektkoordination." },
-        { flag: "International", title: "Produktion & Lieferung", description: "Kapazitäten für europäische Märkte." },
-      ],
+      background: "anthracite",
+      items: professionalCopyDe.service.items.map((item) => ({
+        title: item.title,
+        iconKey: item.iconKey,
+        iconImageId: null,
+      })),
     },
   },
   {
     style: "professional-cta",
-    label: "Professional CTA",
-    description: "Helper-Section: Kontakt- und CTA-Block der Professional-Seite.",
+    label: "Professional Kontakt-CTA",
+    description: "Helper-Section: Kontakt-Block mit Text, Button und Bild rechts.",
     sectionType: "CTA",
     defaultSettings: {
       style: "professional-cta",
       helper: true,
+      background: "anthracite",
+      subtitle: professionalCopyDe.cta.subtitle,
     },
   },
 ];
