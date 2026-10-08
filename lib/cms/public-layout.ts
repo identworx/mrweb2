@@ -60,15 +60,17 @@ const NAV_LABEL_EN: Record<string, string> = {
   Produkte: "Products",
   Produktkategorien: "Product Categories",
   NEU: "NEW",
+  Sonnenschutzstoffe: "Shade Fabrics",
 };
 
-function localizeLabel(label: string, locale: Locale): string {
+// CMS translations (entityType "navigation", fieldName = DE label) win over the static map.
+function localizeLabel(label: string, locale: Locale, cmsLabels: Record<string, string> = {}): string {
   if (locale === "de") return label;
-  return NAV_LABEL_EN[label] || label;
+  return cmsLabels[label] || NAV_LABEL_EN[label] || label;
 }
 
 export async function getPublicLayoutData(locale: Locale = "de"): Promise<LayoutData> {
-  const [settings, headerNav, footerMenus, footerSettings, layoutIcons, dictionary, disabledTargets] = await Promise.all([
+  const [settings, headerNav, footerMenus, footerSettings, layoutIcons, dictionary, disabledTargets, navLabels] = await Promise.all([
     getSiteSettings(),
     getHeaderNavigation(),
     getFooterNavigation(),
@@ -85,6 +87,7 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
     ]),
     getDictionaryAsync(locale),
     getDisabledNavTargets(),
+    getTranslations("navigation", "", locale),
   ]);
 
   const headerItems: HeaderNavItem[] = headerNav?.items
@@ -92,10 +95,10 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
         .map((item) => resolveNavigationLink(item))
         .filter((link) => link.href && link.status === "ok")
         .map((link) => ({
-          label: localizeLabel(link.label, locale),
+          label: localizeLabel(link.label, locale, navLabels),
           href: localizedHref(link.href!, locale),
           target: link.target,
-          badgeText: link.badgeText ? localizeLabel(link.badgeText, locale) : link.badgeText,
+          badgeText: link.badgeText ? localizeLabel(link.badgeText, locale, navLabels) : link.badgeText,
           badgeVariant: link.badgeVariant,
         }))
     : [];
@@ -115,20 +118,20 @@ export async function getPublicLayoutData(locale: Locale = "de"): Promise<Layout
       if (menu.location === "LEGAL") {
         for (const link of resolved) {
           legalLinks.push({
-            label: localizeLabel(link.label, locale),
+            label: localizeLabel(link.label, locale, navLabels),
             href: localizedHref(link.href!, locale),
             target: link.target,
           });
         }
       } else {
         const links = resolved.map((link) => ({
-          label: localizeLabel(link.label, locale),
+          label: localizeLabel(link.label, locale, navLabels),
           href: localizedHref(link.href!, locale),
           target: link.target,
         }));
         if (links.length > 0) {
           footerColumns.push({
-            title: localizeLabel(menu.name, locale),
+            title: localizeLabel(menu.name, locale, navLabels),
             links,
           });
         }

@@ -443,6 +443,9 @@ function buildTranslations(materialSpecs: MaterialSpecSource[] = []): Translatio
   add("pageHero", "professional", "description", de.hero.description, en.hero.description);
   add("pageHero", "professional", "alt", "Mosaroma Professional Hero", "Mosaroma Professional Hero");
 
+  // Navigation label of the menu item pointing to this page (fieldName = DE label)
+  add("navigation", "", "Sonnenschutzstoffe", "Sonnenschutzstoffe", "Shade Fabrics");
+
   // Page SEO
   add("page", "professional", "seoTitle", de.seo.title, en.seo.title);
   add("page", "professional", "seoDescription", de.seo.description, en.seo.description);
