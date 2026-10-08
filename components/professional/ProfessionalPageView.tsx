@@ -398,7 +398,7 @@ export default function ProfessionalPageView({
               {materials.items.map((m, i) => {
                 const specs = m.specs.filter((spec) => spec.value);
                 return (
-                  <ScrollReveal key={`${m.title}-${i}`} delay={i * 80}>
+                  <ScrollReveal key={`${m.title}-${i}`} delay={i * 80} className="flex h-full flex-col">
                     <div className="relative w-full aspect-[3/2] overflow-hidden">
                       {m.image ? (
                         <Image
@@ -412,18 +412,22 @@ export default function ProfessionalPageView({
                         <Placeholder gradient={MATERIAL_GRADIENTS[i % MATERIAL_GRADIENTS.length]} />
                       )}
                     </div>
-                    <div className="pt-3.5 px-0.5">
-                      <h3 className={`font-heading ${materialsT.strong} text-[0.9375rem] md:text-base font-bold`}>
-                        {m.title}
-                      </h3>
-                      {m.subtitle && (
-                        <p className={`font-body ${materialsT.detail} text-[0.8125rem] mt-0.5`}>{m.subtitle}</p>
-                      )}
-                      {m.description && (
-                        <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1 max-w-[52ch]`}>
-                          {m.description}
-                        </p>
-                      )}
+                    <div className="flex flex-1 flex-col pt-3.5 px-0.5">
+                      <div>
+                        <h3 className={`font-heading ${materialsT.strong} text-[0.9375rem] md:text-base font-bold`}>
+                          {m.title}
+                        </h3>
+                        {m.subtitle && (
+                          <p className={`font-body ${materialsT.detail} text-[0.8125rem] mt-0.5`}>{m.subtitle}</p>
+                        )}
+                        {m.description && (
+                          <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1 max-w-[52ch]`}>
+                            {m.description}
+                          </p>
+                        )}
+                      </div>
+                      {/* Specs and data sheet sit at the bottom so the dividers align across the row */}
+                      <div className="mt-auto">
                       {specs.length > 0 && (
                         <dl
                           className={`grid grid-cols-2 gap-x-6 gap-y-2 mt-4 pt-4 border-t ${materialsT.specDivider}`}
@@ -451,6 +455,7 @@ export default function ProfessionalPageView({
                           <CmsIcon icon={icons["arrow-right"]} width={14} height={14} />
                         </a>
                       )}
+                      </div>
                     </div>
                   </ScrollReveal>
                 );
