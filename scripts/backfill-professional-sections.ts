@@ -183,7 +183,7 @@ const OLD_ITEM_TEXTS: Record<string, Record<string, string[]>[]> = {
   "professional-materials": [
     {
       title: ["SDP | Solution-Dyed Polyester"],
-      subtitle: [],
+      subtitle: ["Spinndüsengefärbtes Polyester"],
       description: ["Hohe Reißfestigkeit, formstabil und UV-stabil. Geeignet für Sonnensegel und Markisen."],
     },
     {
@@ -330,6 +330,8 @@ interface TranslationEntry {
   translatedText: string;
   /** Status for newly created entries (default PUBLISHED). */
   createStatus?: string;
+  /** Copy text was removed: only clears an existing unedited translation, never creates one. */
+  clearOnly?: boolean;
 }
 
 interface MaterialSpecSource {
@@ -357,6 +359,10 @@ function buildTranslations(materialSpecs: MaterialSpecSource[] = []): Translatio
     tr: string,
     createStatus?: string,
   ) => {
+    if (!src && !tr) {
+      out.push({ entityType, entityId, fieldName, sourceText: "", translatedText: "", clearOnly: true });
+      return;
+    }
     if (!src || !tr) return;
     out.push({ entityType, entityId, fieldName, sourceText: src, translatedText: tr, createStatus });
   };
@@ -463,8 +469,10 @@ async function upsertTranslations(materialSpecs: MaterialSpecSource[] = []) {
       },
     });
 
+    if (!existing && entry.clearOnly) continue;
+
     if (!existing) {
-      const { createStatus, ...data } = entry;
+      const { createStatus, clearOnly: _clearOnly, ...data } = entry;
       const status = createStatus ?? "PUBLISHED";
       action(`CREATE ${id} = ${short(entry.translatedText)}${status !== "PUBLISHED" ? ` (${status})` : ""}`);
       if (!dryRun) {

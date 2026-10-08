@@ -40,7 +40,7 @@ export const professionalCopyDe: ProfessionalCopy = {
     items: [
       {
         title: "WOVEN Canvas | Solution-Dyed Polyester",
-        subtitle: "Spinndüsengefärbtes Polyester",
+        subtitle: "",
         description:
           "Hohe Reißfestigkeit, ausgezeichnete Formstabilität und UV-Beständigkeit. Ideal für Markisen, Sonnenschutzsysteme und Sonnenschirme.",
         specs: [{ label: "Flächengewicht", value: "300 g/m², inkl. rückseitiger Beschichtung" }],
@@ -108,7 +108,7 @@ export const professionalCopyEn: ProfessionalCopy = {
     items: [
       {
         title: "WOVEN Canvas | Solution-Dyed Polyester",
-        subtitle: "Spun-dyed polyester",
+        subtitle: "",
         description:
           "High tear strength, excellent dimensional stability and UV resistance. Ideal for awnings, outdoor shading and umbrella applications.",
         specs: [{ label: "Weight", value: "300 g/m², including back coating" }],
