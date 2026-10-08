@@ -125,6 +125,8 @@ const SECTION_IDS: Record<Locale, { applications: string; materials: string; ser
   en: { applications: "applications", materials: "materials", service: "service", contact: "contact" },
 };
 
+const SERVICE_ITEM_ALIGN = ["sm:justify-self-start", "sm:justify-self-center", "sm:justify-self-end"];
+
 const TONE_CLASSES: Record<
   SectionTone,
   {
@@ -464,17 +466,17 @@ export default function ProfessionalPageView({
               {service.title && (
                 <p
                   id={serviceLabelId}
-                  className={`font-accent ${serviceT.label} text-sm tracking-[0.12em] mb-6`}
+                  className={`font-accent ${serviceT.label} text-sm tracking-[0.12em] mb-6 sm:text-center`}
                 >
                   {service.title}
                 </p>
               )}
               <ul
                 aria-labelledby={service.title ? serviceLabelId : undefined}
-                className="grid sm:grid-cols-3 gap-6 list-none p-0"
+                className="grid grid-cols-1 sm:grid-cols-3 gap-6 list-none p-0"
               >
                 {service.items.map((s, i) => (
-                  <li key={`${s.title}-${i}`}>
+                  <li key={`${s.title}-${i}`} className={SERVICE_ITEM_ALIGN[i % 3]}>
                     <ScrollReveal delay={i * 80}>
                       <div className={`flex ${s.detail ? "items-start" : "items-center"} gap-4`}>
                         <span className={`flex-shrink-0 w-10 h-10 ${s.detail ? "mt-0.5" : ""} ${serviceT.icon}`}>
