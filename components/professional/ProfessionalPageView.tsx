@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
@@ -42,10 +43,16 @@ export interface ProfessionalHeroView {
 
 export interface ProfessionalSectionView<Item> {
   background: ResolvedSectionBackground;
-  eyebrow: string;
   title: string;
   content: BodyContent;
   items: Item[];
+}
+
+/** Service is a compact band: title rendered as label, no body text. */
+export interface ProfessionalServiceView {
+  background: ResolvedSectionBackground;
+  title: string;
+  items: ProfessionalServiceItem[];
 }
 
 export interface ProfessionalApplicationItem {
@@ -65,14 +72,19 @@ export interface ProfessionalServiceItem {
   iconImage: ResolvedMedia | null;
 }
 
+export interface ProfessionalCtaContact {
+  phone: string | null;
+  email: string | null;
+}
+
 export interface ProfessionalCtaView {
   background: ResolvedSectionBackground;
-  eyebrow: string;
   title: string;
   subtitle: string;
   content: BodyContent;
   button: ProfessionalButton | null;
   image: SectionImage | null;
+  contact: ProfessionalCtaContact;
 }
 
 export interface ProfessionalPageViewProps {
@@ -81,7 +93,7 @@ export interface ProfessionalPageViewProps {
   hero: ProfessionalHeroView;
   applications: ProfessionalSectionView<ProfessionalApplicationItem>;
   materials: ProfessionalSectionView<ProfessionalMaterialItem>;
-  service: ProfessionalSectionView<ProfessionalServiceItem>;
+  service: ProfessionalServiceView;
   contentSections: FrontendServiceSection[];
   cta: ProfessionalCtaView;
   icons: Record<string, ResolvedIcon>;
@@ -96,31 +108,62 @@ const SECTION_IDS: Record<Locale, { applications: string; materials: string; ser
 
 const TONE_CLASSES: Record<
   SectionTone,
-  { eyebrow: string; heading: string; body: string; muted: string; strong: string; icon: string }
+  {
+    label: string;
+    heading: string;
+    body: string;
+    muted: string;
+    strong: string;
+    icon: string;
+    link: string;
+    divider: string;
+  }
 > = {
   light: {
-    eyebrow: "text-pumpkin-accessible",
+    label: "text-text-muted",
     heading: "text-anthracite",
     body: "text-text-gray",
     muted: "text-text-muted",
     strong: "text-anthracite",
     icon: "text-pumpkin",
+    link: "text-anthracite hover:text-pumpkin-accessible",
+    divider: "border-anthracite/10",
   },
   dark: {
-    eyebrow: "text-white/70",
+    label: "text-white/60",
     heading: "text-white",
     body: "text-white/70",
     muted: "text-white/55",
     strong: "text-white",
     icon: "text-white/70",
+    link: "text-white/80 hover:text-white",
+    divider: "border-white/10",
   },
 };
 
 /** Custom service icon images are tinted white on dark backgrounds, untouched on light ones. */
 const SERVICE_ICON_IMAGE_CLASSES: Record<SectionTone, string> = {
-  light: "w-12 h-12 object-contain",
-  dark: "w-12 h-12 object-contain [filter:brightness(0)_invert(1)]",
+  light: "w-10 h-10 object-contain",
+  dark: "w-10 h-10 object-contain [filter:brightness(0)_invert(1)]",
 };
+
+/**
+ * Keeps a suspended hyphen together with the following conjunction
+ * ("Sonnen- und", "sun- and") so balanced headlines never end a line on "Sonnen-".
+ */
+function keepSuspendedHyphen(text: string): ReactNode {
+  const parts = text.split(/(\S+- (?:und|oder|bis|and|or|to)(?=\s|$))/);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <span key={i} className="whitespace-nowrap">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
+  );
+}
 
 function Body({ content, className }: { content: BodyContent; className: string }) {
   if (!content) return null;
@@ -130,24 +173,17 @@ function Body({ content, className }: { content: BodyContent; className: string 
 
 function SectionIntro({
   tone,
-  eyebrow,
   title,
   content,
 }: {
   tone: SectionTone;
-  eyebrow: string;
   title: string;
   content: BodyContent;
 }) {
   const t = TONE_CLASSES[tone];
   return (
     <div className="max-w-2xl">
-      <div className="accent-line mb-4" />
-      {eyebrow && (
-        <p className={`font-accent ${t.eyebrow} text-[11px] tracking-[0.3em] uppercase mb-2`}>
-          {eyebrow}
-        </p>
-      )}
+      <div className="accent-line mb-5" />
       <h2
         className={`font-heading ${t.heading} text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.15] [text-wrap:balance]`}
       >
@@ -155,7 +191,7 @@ function SectionIntro({
       </h2>
       <Body
         content={content}
-        className={`font-body ${t.body} text-[0.9375rem] md:text-base leading-[1.7] mt-3 max-w-[560px] [text-wrap:pretty]`}
+        className={`font-body ${t.body} text-[0.9375rem] md:text-base leading-[1.7] mt-3 max-w-[48ch] [text-wrap:pretty]`}
       />
     </div>
   );
@@ -203,6 +239,8 @@ export default function ProfessionalPageView({
   const ctaT = TONE_CLASSES[cta.background.tone];
   const ctaButtonClass = cta.background.value === "pumpkin" ? "btn-outline-white" : "btn-primary";
   const serviceIconImageClass = SERVICE_ICON_IMAGE_CLASSES[service.background.tone];
+  const serviceLabelId = `${ids.service}-label`;
+  const hasContact = Boolean(cta.contact.phone || cta.contact.email);
 
   return (
     <>
@@ -246,13 +284,16 @@ export default function ProfessionalPageView({
           <div className="relative z-10 w-full pb-10 md:pb-14">
             <div className="mx-auto max-w-[1400px] px-5 md:px-10">
               {hero.eyebrow && (
-                <p className="font-accent text-pumpkin-accessible text-[11px] tracking-[0.3em] uppercase mb-3">
-                  {hero.eyebrow}
-                </p>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-px bg-pumpkin" />
+                  <p className="font-accent text-white/80 text-[11px] tracking-[0.3em] uppercase">
+                    {hero.eyebrow}
+                  </p>
+                </div>
               )}
 
-              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[3.25rem] font-extrabold tracking-tight leading-[1.08] max-w-[600px] [text-wrap:balance]">
-                {hero.title}
+              <h1 className="font-heading text-white text-3xl md:text-4xl lg:text-[3.25rem] font-extrabold tracking-tight leading-[1.08] max-w-[680px] [text-wrap:balance]">
+                {keepSuspendedHyphen(hero.title)}
               </h1>
 
               {hero.description && (
@@ -275,15 +316,14 @@ export default function ProfessionalPageView({
         <BreadcrumbBar items={[{ label: "Professional" }]} locale={locale} />
 
         {/* Anwendungen / Applications */}
-        <section id={ids.applications} className={`section-padding ${apps.background.className}`}>
+        <section id={ids.applications} className={`py-20 lg:py-28 ${apps.background.className}`}>
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <SectionIntro
               tone={apps.background.tone}
-              eyebrow={apps.eyebrow}
               title={apps.title}
               content={apps.content}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-3 mt-8 md:mt-10">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4 sm:gap-3 mt-8 md:mt-10">
               {apps.items.map((app, i) => (
                 <ScrollReveal key={`${app.title}-${i}`} delay={i * 80}>
                   <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -299,7 +339,7 @@ export default function ProfessionalPageView({
                       <Placeholder gradient={TEAL_GRADIENTS[i % TEAL_GRADIENTS.length]} />
                     )}
                   </div>
-                  <h3 className={`font-body ${appsT.strong} text-[0.9375rem] font-semibold mt-3`}>
+                  <h3 className={`font-heading ${appsT.strong} text-[0.9375rem] md:text-base font-bold mt-3`}>
                     {app.title}
                   </h3>
                 </ScrollReveal>
@@ -309,18 +349,17 @@ export default function ProfessionalPageView({
         </section>
 
         {/* Materialien / Materials */}
-        <section id={ids.materials} className={`section-padding ${materials.background.className}`}>
+        <section id={ids.materials} className={`py-20 lg:py-28 ${materials.background.className}`}>
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
             <SectionIntro
               tone={materials.background.tone}
-              eyebrow={materials.eyebrow}
               title={materials.title}
               content={materials.content}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-4 mt-8 md:mt-10">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-6 sm:gap-4 mt-8 md:mt-10">
               {materials.items.map((m, i) => (
                 <ScrollReveal key={`${m.title}-${i}`} delay={i * 80}>
-                  <div className="relative w-full aspect-[16/9] overflow-hidden">
+                  <div className="relative w-full aspect-[3/2] overflow-hidden">
                     {m.image ? (
                       <Image
                         src={m.image.url}
@@ -338,7 +377,7 @@ export default function ProfessionalPageView({
                       {m.title}
                     </h3>
                     {m.description && (
-                      <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1`}>
+                      <p className={`font-body ${materialsT.muted} text-[0.875rem] leading-[1.6] mt-1 max-w-[52ch]`}>
                         {m.description}
                       </p>
                     )}
@@ -349,46 +388,53 @@ export default function ProfessionalPageView({
           </div>
         </section>
 
-        {/* Service */}
-        <section id={ids.service} className={`section-padding ${service.background.className}`}>
+        {/* Service — kompaktes Band / compact band */}
+        <section id={ids.service} className={service.background.className}>
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <SectionIntro
-              tone={service.background.tone}
-              eyebrow={service.eyebrow}
-              title={service.title}
-              content={service.content}
-            />
-            <ul className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 mt-8 md:mt-10 list-none p-0">
-              {service.items.map((s, i) => (
-                <li key={`${s.title}-${i}`}>
-                  <ScrollReveal delay={i * 80}>
-                    <div className="flex items-center gap-4">
-                      <span className={`flex-shrink-0 w-12 h-12 ${serviceT.icon}`}>
-                        {s.iconImage ? (
-                          <Image
-                            src={s.iconImage.url}
-                            alt=""
-                            width={48}
-                            height={48}
-                            className={serviceIconImageClass}
-                          />
-                        ) : (
-                          <CmsIcon
-                            icon={icons[s.iconKey]}
-                            width={48}
-                            height={48}
-                            className={serviceT.icon}
-                          />
-                        )}
-                      </span>
-                      <h3 className={`font-body ${serviceT.strong} text-[0.9375rem] font-medium leading-[1.45]`}>
-                        {s.title}
-                      </h3>
-                    </div>
-                  </ScrollReveal>
-                </li>
-              ))}
-            </ul>
+            <div className={`border-t ${serviceT.divider} py-12 md:py-14`}>
+              {service.title && (
+                <p
+                  id={serviceLabelId}
+                  className={`font-accent ${serviceT.label} text-xs tracking-[0.2em] uppercase mb-6`}
+                >
+                  {service.title}
+                </p>
+              )}
+              <ul
+                aria-labelledby={service.title ? serviceLabelId : undefined}
+                className="grid sm:grid-cols-3 gap-6 list-none p-0"
+              >
+                {service.items.map((s, i) => (
+                  <li key={`${s.title}-${i}`}>
+                    <ScrollReveal delay={i * 80}>
+                      <div className="flex items-center gap-4">
+                        <span className={`flex-shrink-0 w-10 h-10 ${serviceT.icon}`}>
+                          {s.iconImage ? (
+                            <Image
+                              src={s.iconImage.url}
+                              alt=""
+                              width={40}
+                              height={40}
+                              className={serviceIconImageClass}
+                            />
+                          ) : (
+                            <CmsIcon
+                              icon={icons[s.iconKey]}
+                              width={40}
+                              height={40}
+                              className={serviceT.icon}
+                            />
+                          )}
+                        </span>
+                        <span className={`font-body ${serviceT.strong} text-[0.9375rem] font-medium leading-[1.45]`}>
+                          {s.title}
+                        </span>
+                      </div>
+                    </ScrollReveal>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -406,16 +452,11 @@ export default function ProfessionalPageView({
         {/* Kontakt / Contact (CTA) */}
         <section id={ids.contact} className={cta.background.className}>
           <div className="grid grid-cols-1 md:grid-cols-2 md:min-h-[340px]">
-            <div className="flex flex-col justify-center px-5 py-12 md:py-14 md:pr-10 md:pl-[max(2.5rem,calc((100vw_-_1400px)/2_+_2.5rem))]">
+            <div className="flex flex-col justify-center px-5 py-14 md:py-16 md:pr-10 md:pl-[max(2.5rem,calc((100vw_-_1400px)/2_+_2.5rem))]">
               <div className="max-w-[560px]">
-                <div className="accent-line mb-4" />
-                {cta.eyebrow && (
-                  <p className={`font-accent ${ctaT.eyebrow} text-[11px] tracking-[0.3em] uppercase mb-2`}>
-                    {cta.eyebrow}
-                  </p>
-                )}
+                <div className="accent-line mb-5" />
                 <h2
-                  className={`font-heading ${ctaT.heading} text-xl md:text-2xl lg:text-[1.75rem] font-bold leading-[1.2] [text-wrap:balance]`}
+                  className={`font-heading ${ctaT.heading} text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight leading-[1.15] [text-wrap:balance]`}
                 >
                   {cta.title}
                 </h2>
@@ -434,6 +475,23 @@ export default function ProfessionalPageView({
                       {cta.button.label}
                     </Link>
                   </div>
+                )}
+                {hasContact && (
+                  <p className="mt-5 flex flex-wrap gap-x-6 gap-y-1 font-body text-[0.9375rem]">
+                    {cta.contact.phone && (
+                      <a
+                        href={`tel:${cta.contact.phone.replace(/[^\d+]/g, "")}`}
+                        className={`${ctaT.link} transition-colors`}
+                      >
+                        {cta.contact.phone}
+                      </a>
+                    )}
+                    {cta.contact.email && (
+                      <a href={`mailto:${cta.contact.email}`} className={`${ctaT.link} transition-colors`}>
+                        {cta.contact.email}
+                      </a>
+                    )}
+                  </p>
                 )}
               </div>
             </div>

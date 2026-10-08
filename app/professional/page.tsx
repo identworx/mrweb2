@@ -80,14 +80,12 @@ export default async function ProfessionalPage() {
       }}
       applications={{
         background: resolveSectionBackground(appsData?.settings?.background, "white"),
-        eyebrow: appsData?.eyebrow || copy.applications.eyebrow,
         title: appsData?.title || copy.applications.title,
         content: bodyContent(appsData?.content, copy.applications.content),
         items: appItems.map((a) => ({ title: a.title, image: mediaFor(appImages, a.imageId) })),
       }}
       materials={{
         background: resolveSectionBackground(materialsData?.settings?.background, "cream"),
-        eyebrow: materialsData?.eyebrow || copy.materials.eyebrow,
         title: materialsData?.title || copy.materials.title,
         content: bodyContent(materialsData?.content, copy.materials.content),
         items: materialItems.map((m) => ({
@@ -97,10 +95,8 @@ export default async function ProfessionalPage() {
         })),
       }}
       service={{
-        background: resolveSectionBackground(serviceData?.settings?.background, "anthracite"),
-        eyebrow: serviceData?.eyebrow || copy.service.eyebrow,
+        background: resolveSectionBackground(serviceData?.settings?.background, "cream"),
         title: serviceData?.title || copy.service.title,
-        content: bodyContent(serviceData?.content, copy.service.content),
         items: serviceItems.map((s) => ({
           title: s.title,
           iconKey: s.iconKey,
@@ -110,12 +106,15 @@ export default async function ProfessionalPage() {
       contentSections={contentSectionsOf(result)}
       cta={{
         background: resolveSectionBackground(ctaData?.settings?.background, "anthracite"),
-        eyebrow: ctaData?.eyebrow || copy.cta.eyebrow,
         title: ctaData?.title || copy.cta.title,
         subtitle: str(ctaData?.settings?.subtitle) || copy.cta.subtitle,
         content: bodyContent(ctaData?.content, copy.cta.content),
         button: deButton(ctaData, copy.cta),
         image: ctaImage,
+        contact: {
+          phone: layout.footer.phone || layout.siteSettings.phone || null,
+          email: layout.footer.email || layout.siteSettings.contactEmail || "info@mosaroma.de",
+        },
       }}
     />
   );

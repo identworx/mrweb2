@@ -109,7 +109,7 @@ export default async function ProfessionalPageEn() {
   /** Section-level text: DE value as the DE page shows it, then EN precedence. */
   const sectionText = (
     t: Record<string, string>,
-    field: "eyebrow" | "title",
+    field: "title",
     cmsValue: string | null | undefined,
     deCopy: string,
     enCopy: string,
@@ -132,14 +132,12 @@ export default async function ProfessionalPageEn() {
       }}
       applications={{
         background: resolveSectionBackground(appsData?.settings?.background, "white"),
-        eyebrow: sectionText(appsT, "eyebrow", appsData?.eyebrow, copyDe.applications.eyebrow, copy.applications.eyebrow),
         title: sectionText(appsT, "title", appsData?.title, copyDe.applications.title, copy.applications.title),
         content: enBodyContent(appsT.content, appsData?.content, copyDe.applications.content, copy.applications.content),
         items: appItems.map((a) => ({ title: a.title, image: mediaFor(appImages, a.imageId) })),
       }}
       materials={{
         background: resolveSectionBackground(materialsData?.settings?.background, "cream"),
-        eyebrow: sectionText(materialsT, "eyebrow", materialsData?.eyebrow, copyDe.materials.eyebrow, copy.materials.eyebrow),
         title: sectionText(materialsT, "title", materialsData?.title, copyDe.materials.title, copy.materials.title),
         content: enBodyContent(materialsT.content, materialsData?.content, copyDe.materials.content, copy.materials.content),
         items: materialItems.map((m) => ({
@@ -149,10 +147,8 @@ export default async function ProfessionalPageEn() {
         })),
       }}
       service={{
-        background: resolveSectionBackground(serviceData?.settings?.background, "anthracite"),
-        eyebrow: sectionText(serviceT, "eyebrow", serviceData?.eyebrow, copyDe.service.eyebrow, copy.service.eyebrow),
+        background: resolveSectionBackground(serviceData?.settings?.background, "cream"),
         title: sectionText(serviceT, "title", serviceData?.title, copyDe.service.title, copy.service.title),
-        content: enBodyContent(serviceT.content, serviceData?.content, copyDe.service.content, copy.service.content),
         items: serviceItems.map((s) => ({
           title: s.title,
           iconKey: s.iconKey,
@@ -162,7 +158,6 @@ export default async function ProfessionalPageEn() {
       contentSections={contentSectionsOf(result)}
       cta={{
         background: resolveSectionBackground(ctaData?.settings?.background, "anthracite"),
-        eyebrow: sectionText(ctaT, "eyebrow", ctaData?.eyebrow, copyDe.cta.eyebrow, copy.cta.eyebrow),
         title: sectionText(ctaT, "title", ctaData?.title, copyDe.cta.title, copy.cta.title),
         subtitle: enText(
           ctaT.subtitle,
@@ -173,6 +168,10 @@ export default async function ProfessionalPageEn() {
         content: enBodyContent(ctaT.content, ctaData?.content, copyDe.cta.content, copy.cta.content),
         button: enButton(ctaData, ctaT.buttonLabel, copyDe.cta, copy.cta),
         image: ctaImage,
+        contact: {
+          phone: layout.footer.phone || layout.siteSettings.phone || null,
+          email: layout.footer.email || layout.siteSettings.contactEmail || "info@mosaroma.de",
+        },
       }}
     />
   );

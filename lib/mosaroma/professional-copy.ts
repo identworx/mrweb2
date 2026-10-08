@@ -61,7 +61,7 @@ export const professionalCopyDe: ProfessionalCopy = {
   },
   cta: {
     eyebrow: "Kontakt",
-    title: "Ihr Ansprechpartner in Oyten",
+    title: "Direkt aus Oyten",
     subtitle: "Mosaroma Industries GmbH",
     content:
       "Schildern Sie uns Ihr Vorhaben. Wir beraten Sie zu Material, Mengen und Mustern.",
@@ -124,7 +124,7 @@ export const professionalCopyEn: ProfessionalCopy = {
   },
   cta: {
     eyebrow: "Contact",
-    title: "Your Contact in Oyten",
+    title: "Straight from Oyten",
     subtitle: "Mosaroma Industries GmbH",
     content:
       "Tell us about your project. We will advise you on materials, quantities and samples.",

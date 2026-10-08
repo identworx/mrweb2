@@ -441,7 +441,7 @@ export const SECTION_STYLES: SectionStyleDef[] = [
     defaultSettings: {
       style: "professional-service",
       helper: true,
-      background: "anthracite",
+      background: "cream",
       items: professionalCopyDe.service.items.map((item) => ({
         title: item.title,
         iconKey: item.iconKey,

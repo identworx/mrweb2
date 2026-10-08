@@ -19,7 +19,11 @@
  *     backfill defaults; manual edits are kept.
  *   - imageId / iconImageId / videoUrl are never overwritten.
  *   - Existing translatedText is never overwritten (unless it still equals a known
- *     old default); a changed sourceText marks the entry STALE.
+ *     old default); a changed sourceText marks the entry STALE — except when the
+ *     translatedText still equals the previous EN copy (PREVIOUS_EN_COPY): then it
+ *     is replaced by the new EN copy and the status is kept.
+ *   - settings.background is only changed when missing or still equal to an old
+ *     default (OLD_BACKGROUNDS).
  *
  * Usage:
  *   npx tsx scripts/backfill-professional-sections.ts          # dry-run
@@ -99,11 +103,16 @@ const OLD_SECTION_TEXTS: Record<string, { eyebrow: string[]; title: string[]; co
   },
   "professional-cta": {
     eyebrow: [],
-    title: ["Kontakt & Standort"],
+    title: ["Kontakt & Standort", "Ihr Ansprechpartner in Oyten"],
     content: [
       "Wir freuen uns auf Ihre Anfrage — ob Projektberatung, Bemusterung oder technische Fragen.",
     ],
   },
+};
+
+/** Old default backgrounds that may be replaced by the current target background. */
+const OLD_BACKGROUNDS: Record<string, string[]> = {
+  "professional-service": ["anthracite"],
 };
 
 const OLD_CTA_BUTTON = { label: ["Kontakt aufnehmen"], href: ["/kontakt"] };
@@ -121,6 +130,15 @@ const OLD_TRANSLATIONS: Record<string, string[]> = {
   "pageHero/professional/description": [
     "Technical Textiles. Local Support. Professional Solutions.",
   ],
+};
+
+/**
+ * Previous EN copy values, keyed by `entityType/entityId/fieldName`. When the DE
+ * sourceText changes and the stored translation still equals this value, it was
+ * never edited manually and is replaced by the current EN copy (status kept).
+ */
+const PREVIOUS_EN_COPY: Record<string, string> = {
+  "pageSection/professional-cta/title": "Your Contact in Oyten",
 };
 
 /* ------------------------------------------------------------------ */
@@ -196,7 +214,7 @@ const TARGETS: TargetSection[] = [
     settings: {
       style: "professional-service",
       helper: true,
-      background: "anthracite",
+      background: "cream",
       items: de.service.items.map((i) => ({
         title: i.title,
         iconKey: i.iconKey,
@@ -343,6 +361,26 @@ async function upsertTranslations() {
       continue;
     }
 
+    const previousEn = PREVIOUS_EN_COPY[id];
+    if (
+      existing.sourceText !== entry.sourceText &&
+      previousEn !== undefined &&
+      existing.translatedText.trim() === previousEn &&
+      existing.translatedText !== entry.translatedText
+    ) {
+      action(
+        `REPLACE unedited translation ${id}: ${short(existing.translatedText)} → ${short(entry.translatedText)} (status ${existing.status} kept)`,
+      );
+      if (!dryRun) {
+        await prisma.contentTranslation.update({
+          where: { id: existing.id },
+          data: { sourceText: entry.sourceText, translatedText: entry.translatedText },
+        });
+      }
+      replaced++;
+      continue;
+    }
+
     if (existing.sourceText !== entry.sourceText) {
       action(`UPDATE sourceText ${id} → STALE (translatedText kept)`);
       if (!dryRun) {
@@ -480,8 +518,19 @@ async function main() {
     if (settings.helper !== true) setSetting("helper", true, "= true");
 
     // Background
-    if (target.style !== "professional-hero" && isBlank(settings.background)) {
-      setSetting("background", target.settings.background, `= ${short(target.settings.background)} (missing)`);
+    if (target.style !== "professional-hero") {
+      if (isBlank(settings.background)) {
+        setSetting("background", target.settings.background, `= ${short(target.settings.background)} (missing)`);
+      } else if (
+        settings.background !== target.settings.background &&
+        isReplaceable(settings.background, OLD_BACKGROUNDS[target.style] ?? [])
+      ) {
+        setSetting(
+          "background",
+          target.settings.background,
+          `: ${short(settings.background)} → ${short(target.settings.background)} (old default)`,
+        );
+      }
     }
 
     // Text fields (only replace empty / old defaults)
