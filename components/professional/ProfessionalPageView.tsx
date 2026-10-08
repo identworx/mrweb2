@@ -462,11 +462,11 @@ export default function ProfessionalPageView({
         {/* Service — kompaktes Band / compact band */}
         <section id={ids.service} className={service.background.className}>
           <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-            <div className={`border-t ${serviceT.divider} py-12 md:py-14`}>
+            <div className={`border-t ${serviceT.divider} pt-10 pb-12 md:pt-12 md:pb-14`}>
               {service.title && (
                 <p
                   id={serviceLabelId}
-                  className={`font-accent ${serviceT.label} text-sm tracking-[0.12em] mb-6 sm:text-center`}
+                  className={`font-accent ${serviceT.label} text-base md:text-lg tracking-[0.12em] mb-10 md:mb-12 sm:text-center`}
                 >
                   {service.title}
                 </p>
